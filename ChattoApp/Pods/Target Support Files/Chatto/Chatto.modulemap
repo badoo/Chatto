@@ -1,0 +1,6 @@
+framework module Chatto {
+  umbrella header "Chatto-umbrella.h"
+
+  export *
+  module * { export * }
+}
