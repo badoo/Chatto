@@ -150,3 +150,8 @@ Seems like at this moment Carthage doesn't support building two frameworks from 
 
 ## License
 Source code is distributed under MIT license.
+
+<h2></h2>
+
+Discover other [open source projects](https://github.com/badoo) and [ideas](https://techblog.badoo.com)
+
