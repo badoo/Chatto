@@ -1,0 +1,7 @@
+language: objective-c
+osx_image: xcode7.1
+
+script:
+- xcodebuild clean build test -project ./Chatto/Chatto.xcodeproj -scheme Chatto -sdk iphonesimulator -configuration Debug | xcpretty; (curl -s https://codecov.io/bash) | bash
+- rm -rf ~/Library/Developer/Xcode/DerivedData
+- xcodebuild clean build test -project ./ChattoAdditions/ChattoAdditions.xcodeproj -scheme ChattoAdditions -sdk iphonesimulator -configuration Debug | xcpretty; (curl -s https://codecov.io/bash) | bash
