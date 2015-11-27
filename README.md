@@ -1,4 +1,4 @@
-# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master)
+# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master) [![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Chatto.svg)](https://img.shields.io/cocoapods/v/Chatto.svg)
 
 
 `Chatto` is a Swift lightweight framework to build chat applications. It's been designed to be extensible and performant. Along with `Chatto` there is `ChattoAdditions`, a companion framework which includes cells for messages and an extensible input component. See them in action!
