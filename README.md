@@ -65,7 +65,7 @@ public protocol ChatDataSourceProtocol: class {
     func adjustNumberOfMessages(preferredMaxCount preferredMaxCount: Int?, focusPosition: Double, completion:(didAdjust: Bool) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
 }
 ``` 
-If you want to handle smooth loading of new pages, or more challenging, smooth rotation with thousands of messages (calculating 10K text message sizes can take ~15s on iPhone 4s) you should opt-in for adjustNumberOfMessages(preferredMaxCount:focusPosition:completion:). See how is done in ChattoApp!
+If you want to handle smooth loading of new pages, or more challenging, smooth rotation with thousands of messages (calculating 10K text message sizes can take ~15s on iPhone 4s) you should opt-in for adjustNumberOfMessages(preferredMaxCount:focusPosition:completion:). See how it's done in ChattoApp!
 
 ### Presenters
 The presenter is the key entity that enables scalability in `Chatto`'s architecture. Each message will be paired with a presenter who will be responsible for the UI related to that message (cell configuration, calculation of size, user handling,... ). Take a look at `TextMessagePresenter`, `PhotoMessagePresenter` in ChattoAdditions and `ChatItemPresenterProtocol`
@@ -86,24 +86,24 @@ public protocol ChatItemPresenterProtocol: class {
 ```
 
 ### Decoration
-As you may have noticed, there's an interesing decorationAttributes parameter in `configureCell(_:decorationAttributes:)`
+As you may have noticed, there's an interesting decorationAttributes parameter in `configureCell(_:decorationAttributes:)`
 ```swift
 public protocol ChatItemDecorationAttributesProtocol {
     var bottomMargin: CGFloat { get }
 }
 ```
-Decoration attributtes have two different purposes:
+Decoration attributes have two different purposes:
 
 1. Provide margins for `ChatCollectionViewLayout`
 2. Provide context to your presenters so you can further customize your UI (for instance to flag if a bubble should show the tail)
 
-By default, no decorationAttribures will be provided to your presenters, and the margin between messages will be zero. You may opt-in for a message decorator as in ChattoApp
+By default, no decorationAttributes will be provided to your presenters, and the margin between messages will be zero. You may opt-in for a message decorator as in ChattoApp
 ```swift
 public protocol ChatItemsDecoratorProtocol {
     func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }
 ```
-In your decorator you may even create new ChatItems. The decorator in ChattoApp not only provides different margins for the bubbles, but it also inserts new ChatItems that represents sending/failed status. Decoration happens in background so the UI keeps responsive while scrolling.
+In your decorator you may even create new ChatItems. The decorator in ChattoApp not only provides different margins for the bubbles, but it also inserts new ChatItems that represents sending/failed status. Decoration happens in background so the UI stays responsive while scrolling.
 
 ### Input bar
 You can return your own input component when overriding `createChatInputView()` or use `ChattoAdditions.ChatInputBar`
@@ -146,7 +146,7 @@ If you like to live on the bleeding edge, you can use the `master` branch with:
 3. Add `Chatto` and/or `ChattoAdditions` to Embedded binaries
 
 ### Carthage
-Seems like at this moment Carthage doesn't support building two frameworks from the same respository :(
+Seems like at this moment Carthage doesn't support building two frameworks from the same repository :(
 
 ## License
 Source code is distributed under MIT license.
