@@ -129,6 +129,8 @@ struct BMACircleProgressIconPoints {
             points.bma_left = CGPointMake(points.bma_centre.x - (self.outterCircleRadius - self.horizontalMargin), points.bma_centre.y);
             points.bma_right = CGPointMake(points.bma_centre.x + (self.outterCircleRadius - self.horizontalMargin), points.bma_centre.y);
             break;
+        default:
+            break;
     }
 
     self.iconPoints = points;
