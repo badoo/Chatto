@@ -137,6 +137,8 @@
             break;
         case BMACircleProgressStatusCompleted:
             break;
+        default:
+            break;
     }
 }
 
@@ -166,6 +168,8 @@
             break;
         case BMACircleProgressStatusCompleted:
             [self.circleIconView setType:BMACircleIconTypeCheck];
+            break;
+        default:
             break;
     }
 }
