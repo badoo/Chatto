@@ -155,7 +155,7 @@ public class ChatInputBar: ReusableXibView {
 
 // MARK: - ChatInputItemViewDelegate
 extension ChatInputBar: ChatInputItemViewDelegate {
-    public func inputItemViewTapped(view: ChatInputItemView) {
+    func inputItemViewTapped(view: ChatInputItemView) {
         self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
     }
 }
