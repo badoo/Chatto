@@ -54,7 +54,7 @@ public class ChatInputBar: ReusableXibView {
         return view
     }
 
-    override class func nibName() -> String {
+    public override class func nibName() -> String {
         return "ChatInputBar"
     }
 
@@ -155,7 +155,7 @@ public class ChatInputBar: ReusableXibView {
 
 // MARK: - ChatInputItemViewDelegate
 extension ChatInputBar: ChatInputItemViewDelegate {
-    func inputItemViewTapped(view: ChatInputItemView) {
+    public func inputItemViewTapped(view: ChatInputItemView) {
         self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
     }
 }
