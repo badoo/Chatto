@@ -23,6 +23,7 @@
 */
 
 import PhotosUI
+import Photos
 
 protocol PhotosInputDataProviderProtocol {
     var count: Int { get }

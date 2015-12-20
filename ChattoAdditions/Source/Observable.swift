@@ -39,8 +39,9 @@ public struct Observable<T> {
             }
         }
     }
-
+    
     public mutating func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
+    // public mutating func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
