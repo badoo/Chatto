@@ -10,7 +10,6 @@
 		C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */; };
 		C35FE3C81C033E7800D42980 /* PhotoMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35FE3C71C033E7800D42980 /* PhotoMessagePresenterTests.swift */; };
 		C36F9C4B1BFE4A89001E9D8F /* ChattoAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C3C0CC961BFE4A2A0052747C /* ChattoAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C37015501C0631EB0068180E /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C370154D1C0631DF0068180E /* Chatto.framework */; };
 		C3815D001C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3815CFF1C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift */; };
 		C3815D021C036D1700DF95CA /* TextMessagePresenterBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3815D011C036D1700DF95CA /* TextMessagePresenterBuilderTests.swift */; };
 		C38658B21BFE55620012F181 /* AnimationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38658B11BFE55620012F181 /* AnimationUtils.swift */; };
@@ -78,23 +77,10 @@
 		C3C0CC8C1BFE49700052747C /* TextChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7E1BFE49700052747C /* TextChatInputItemTests.swift */; };
 		C3C0CC8D1BFE49700052747C /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7F1BFE49700052747C /* ObservableTests.swift */; };
 		C3EFA6B01C03607A0063CE22 /* BaseMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */; };
+		CA073E791C47F5B9009D5EBF /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA073E781C47F5B9009D5EBF /* Chatto.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C370154C1C0631DF0068180E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C37015471C0631DF0068180E /* Chatto.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C32BB7201BE0504D0069EC50;
-			remoteInfo = Chatto;
-		};
-		C370154E1C0631DF0068180E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C37015471C0631DF0068180E /* Chatto.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C32BB72A1BE0504D0069EC50;
-			remoteInfo = ChattoTests;
-		};
 		C3C0CBC41BFE49320052747C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C3C0CBAF1BFE49320052747C /* Project object */;
@@ -107,7 +93,6 @@
 /* Begin PBXFileReference section */
 		C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextMessagePresenterTests.swift; path = "Tests/Chat Items/TextMessages/TextMessagePresenterTests.swift"; sourceTree = SOURCE_ROOT; };
 		C35FE3C71C033E7800D42980 /* PhotoMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessagePresenterTests.swift; sourceTree = "<group>"; };
-		C37015471C0631DF0068180E /* Chatto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chatto.xcodeproj; path = ../Chatto/Chatto.xcodeproj; sourceTree = "<group>"; };
 		C3815CFF1C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessagePresenterBuilderTests.swift; sourceTree = "<group>"; };
 		C3815D011C036D1700DF95CA /* TextMessagePresenterBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMessagePresenterBuilderTests.swift; sourceTree = "<group>"; };
 		C38658B11BFE55620012F181 /* AnimationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationUtils.swift; sourceTree = "<group>"; };
@@ -179,6 +164,7 @@
 		C3C0CC7F1BFE49700052747C /* ObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		C3C0CC961BFE4A2A0052747C /* ChattoAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChattoAdditions.h; sourceTree = "<group>"; };
 		C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessagePresenterTests.swift; sourceTree = "<group>"; };
+		CA073E781C47F5B9009D5EBF /* Chatto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Chatto.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Chatto-gyrilfusfbpmohajjvmmctphuabr/Build/Products/Debug-iphoneos/Chatto.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,7 +172,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C37015501C0631EB0068180E /* Chatto.framework in Frameworks */,
+				CA073E791C47F5B9009D5EBF /* Chatto.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,19 +205,10 @@
 			path = PhotoMessages;
 			sourceTree = "<group>";
 		};
-		C37015481C0631DF0068180E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C370154D1C0631DF0068180E /* Chatto.framework */,
-				C370154F1C0631DF0068180E /* ChattoTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		C3C0CBAE1BFE49320052747C = {
 			isa = PBXGroup;
 			children = (
-				C37015471C0631DF0068180E /* Chatto.xcodeproj */,
+				CA073E781C47F5B9009D5EBF /* Chatto.framework */,
 				C3C0CBB91BFE49320052747C /* Products */,
 				C3C0CBD21BFE496A0052747C /* Source */,
 				C3C0CC6E1BFE49700052747C /* Tests */,
@@ -532,12 +509,6 @@
 			mainGroup = C3C0CBAE1BFE49320052747C;
 			productRefGroup = C3C0CBB91BFE49320052747C /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = C37015481C0631DF0068180E /* Products */;
-					ProjectRef = C37015471C0631DF0068180E /* Chatto.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				C3C0CBB71BFE49320052747C /* ChattoAdditions */,
@@ -545,23 +516,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		C370154D1C0631DF0068180E /* Chatto.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Chatto.framework;
-			remoteRef = C370154C1C0631DF0068180E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C370154F1C0631DF0068180E /* ChattoTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ChattoTests.xctest;
-			remoteRef = C370154E1C0631DF0068180E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C3C0CBB61BFE49320052747C /* Resources */ = {
