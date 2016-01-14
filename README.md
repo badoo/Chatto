@@ -1,4 +1,4 @@
-# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master) [![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Chatto.svg)](https://img.shields.io/cocoapods/v/Chatto.svg)
+# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master) [![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Chatto.svg)](https://img.shields.io/cocoapods/v/Chatto.svg) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 
 `Chatto` is a Swift lightweight framework to build chat applications. It's been designed to be extensible and performant. Along with `Chatto` there is `ChattoAdditions`, a companion framework which includes cells for messages and an extensible input component. You can find more details about how it was implemented in our [blog](https://techblog.badoo.com/blog/2015/12/04/how-we-made-chatto/). See them in action!
@@ -64,7 +64,7 @@ public protocol ChatDataSourceProtocol: class {
     func loadPrevious(completion: () -> Void)
     func adjustNumberOfMessages(preferredMaxCount preferredMaxCount: Int?, focusPosition: Double, completion:(didAdjust: Bool) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
 }
-``` 
+```
 If you want to handle smooth loading of new pages, or more challenging, smooth rotation with thousands of messages (calculating 10K text message sizes can take ~15s on iPhone 4s) you should opt-in for adjustNumberOfMessages(preferredMaxCount:focusPosition:completion:). See how it's done in ChattoApp!
 
 ### Presenters
@@ -146,7 +146,11 @@ If you like to live on the bleeding edge, you can use the `master` branch with:
 3. Add `Chatto` and/or `ChattoAdditions` to Embedded binaries
 
 ### Carthage
-Seems like at this moment Carthage doesn't support building two frameworks from the same repository :(
+
+Or, if you’re using [Carthage](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos), simply add Chatto to your Cartfile:
+```
+github "badoo/Chatto"
+```
 
 ## License
 Source code is distributed under MIT license.
@@ -154,4 +158,3 @@ Source code is distributed under MIT license.
 <h2></h2>
 
 Discover other [open source projects](https://github.com/badoo) and [ideas](https://techblog.badoo.com)
-
