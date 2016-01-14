@@ -139,18 +139,18 @@ If you like to live on the bleeding edge, you can use the `master` branch with:
     ```
 3. Run `pod install`
 
+### Carthage
+
+If you’re using [Carthage](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos), simply add Chatto to your Cartfile:
+```
+github "badoo/Chatto"
+```
+
 ### Manually
 
 1. Clone, add as a submodule or [download.](https://github.com/badoo/Chatto/archive/master.zip)
 2. Drag and drop `Chatto` and/or `ChattoAdditions` project to your workspace
 3. Add `Chatto` and/or `ChattoAdditions` to Embedded binaries
-
-### Carthage
-
-Or, if you’re using [Carthage](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos), simply add Chatto to your Cartfile:
-```
-github "badoo/Chatto"
-```
 
 ## License
 Source code is distributed under MIT license.
