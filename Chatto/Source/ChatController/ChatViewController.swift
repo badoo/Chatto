@@ -173,6 +173,14 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
         } else if !isInteracting || inputIsAtBottom {
             self.collectionView.contentOffset.y = newContentOffsetY
         }
+
+        self.workaroundContentInsetBugiOS_9_0_x()
+    }
+
+    func workaroundContentInsetBugiOS_9_0_x() {
+        // Fix for http://www.openradar.me/22106545
+        self.collectionView.contentInset.top = self.topLayoutGuide.length + self.constants.defaultContentinsets.top
+        self.collectionView.scrollIndicatorInsets.top = self.topLayoutGuide.length + self.constants.defaultScrollIndicatorInsets.top
     }
 
     func rectAtIndexPath(indexPath: NSIndexPath?) -> CGRect? {
