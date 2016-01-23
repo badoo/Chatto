@@ -41,7 +41,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
 
     public struct Constants {
         var updatesAnimationDuration: NSTimeInterval = 0.33
-        var defaultContentinsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        var defaultContentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         var defaultScrollIndicatorInsets = UIEdgeInsetsZero
         var preferredMaxMessageCount: Int? = 500 // It not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
         var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
@@ -82,7 +82,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
 
     private func addCollectionView() {
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: self.createCollectionViewLayout)
-        self.collectionView.contentInset = self.constants.defaultContentinsets
+        self.collectionView.contentInset = self.constants.defaultContentInsets
         self.collectionView.scrollIndicatorInsets = self.constants.defaultScrollIndicatorInsets
         self.collectionView.alwaysBounceVertical = true
         self.collectionView.backgroundColor = UIColor.clearColor()
@@ -156,7 +156,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
         if isBouncingAtTop { return }
 
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
-        let newInsetBottom = self.constants.defaultContentinsets.bottom + inputHeightWithKeyboard
+        let newInsetBottom = self.constants.defaultContentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
 
         let allContentFits = self.collectionView.bounds.height - newInsetBottom - (self.collectionView.contentSize.height + self.collectionView.contentInset.top) >= 0
@@ -179,7 +179,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
 
     func workaroundContentInsetBugiOS_9_0_x() {
         // Fix for http://www.openradar.me/22106545
-        self.collectionView.contentInset.top = self.topLayoutGuide.length + self.constants.defaultContentinsets.top
+        self.collectionView.contentInset.top = self.topLayoutGuide.length + self.constants.defaultContentInsets.top
         self.collectionView.scrollIndicatorInsets.top = self.topLayoutGuide.length + self.constants.defaultScrollIndicatorInsets.top
     }
 
