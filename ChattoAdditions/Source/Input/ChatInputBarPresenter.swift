@@ -25,7 +25,7 @@
 import UIKit
 
 @objc public class ChatInputBarPresenter: NSObject {
-    let chatInputView: ChatInputBar;
+    let chatInputView: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
 
     public init(chatInputView: ChatInputBar, chatInputItems: [ChatInputItemProtocol]) {

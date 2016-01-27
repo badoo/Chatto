@@ -28,8 +28,8 @@ public extension CABasicAnimation {
         animation.duration = duration
         animation.fromValue = 0
         animation.toValue = 1
-        animation.fillMode = kCAFillModeForwards;
-        animation.additive = false;
+        animation.fillMode = kCAFillModeForwards
+        animation.additive = false
         return animation
     }
 }

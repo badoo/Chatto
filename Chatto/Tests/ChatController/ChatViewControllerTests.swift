@@ -100,7 +100,7 @@ class ChatViewControllerTests: XCTestCase {
         self.fakeDidAppearAndLayout(controller: controller)
         controller.updateQueue.addTask { (completion) -> Void in
             fakeDataSource.hasMorePrevious = true
-            controller.collectionView.contentOffset = CGPointZero
+            controller.collectionView.contentOffset = CGPoint.zero
             controller.scrollViewDidScrollToTop(controller.collectionView)
             completion()
             asyncExpectation.fulfill()
@@ -185,7 +185,7 @@ class ChatViewControllerTests: XCTestCase {
         notificationCenter.postNotificationName(UIKeyboardWillShowNotification, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(CGRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         XCTAssertEqual(400, controller.view.convertRect(controller.chatInputView.bounds, fromView: controller.chatInputView).maxY)
     }
-    
+
     func testThat_LayoutAdaptsWhenKeyboardIsHidden() {
         let controller = TesteableChatViewController()
         let notificationCenter = NSNotificationCenter()

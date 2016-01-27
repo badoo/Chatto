@@ -202,8 +202,7 @@ extension ChatViewController: ChatDataSourceDelegateProtocol {
         let newDecoratedItems = self.chatItemsDecorator?.decorateItems(newItems) ?? newItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
         let changes = Chatto.generateChanges(
             oldCollection: oldItems.map { $0 },
-            newCollection: newDecoratedItems.map { $0.chatItem }
-        )
+            newCollection: newDecoratedItems.map { $0.chatItem })
         let layoutModel = self.createLayoutModel(newDecoratedItems, collectionViewWidth: collectionViewWidth)
         let updateModelClosure : () -> Void = { [weak self] in
             self?.layoutModel = layoutModel
@@ -252,7 +251,7 @@ extension ChatViewController: ChatDataSourceDelegateProtocol {
 
     public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
         if self.layoutModel.calculatedForWidth != self.collectionView.bounds.width {
-            self.layoutModel = self.createLayoutModel(self.decoratedChatItems, collectionViewWidth: self.collectionView.bounds.width);
+            self.layoutModel = self.createLayoutModel(self.decoratedChatItems, collectionViewWidth: self.collectionView.bounds.width)
 
         }
         return self.layoutModel

@@ -42,7 +42,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     func testThat_RegistersAndDequeuesCells() {
 
-        let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
@@ -56,7 +56,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_CellIsConfigured() {
-        let cell = TextMessageCollectionViewCell(frame: CGRectZero)
+        let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         XCTAssertEqual("Some text", cell.bubbleView.textMessageViewModel.text)
     }
@@ -66,7 +66,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_ShouldShowMenuReturnsTrue() {
-        let cell = TextMessageCollectionViewCell(frame: CGRectZero)
+        let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.cellWillBeShown(cell) // Needs to have a reference to the current cell before getting menu calls
         XCTAssertTrue(self.presenter.shouldShowMenu())
     }

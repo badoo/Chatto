@@ -83,7 +83,7 @@ public extension CGSize {
 
 public extension CGRect {
     var bma_bounds: CGRect {
-        return CGRect(origin: CGPointZero, size: self.size)
+        return CGRect(origin: CGPoint.zero, size: self.size)
     }
 
     var bma_center: CGPoint {
@@ -145,7 +145,7 @@ public extension UIEdgeInsets {
 public extension UIImage {
 
     public func bma_tintWithColor(color: UIColor) -> UIImage {
-        let rect = CGRect(origin: CGPointZero, size: self.size)
+        let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, self.scale)
         let context = UIGraphicsGetCurrentContext()
         color.setFill()
@@ -157,7 +157,7 @@ public extension UIImage {
     }
 
     public func bma_blendWithColor(color: UIColor) -> UIImage {
-        let rect = CGRect(origin: CGPointZero, size: self.size)
+        let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.mainScreen().scale)
         let context = UIGraphicsGetCurrentContext()
         CGContextTranslateCTM(context, 0, rect.height)
@@ -166,15 +166,15 @@ public extension UIImage {
         CGContextDrawImage(context, rect, self.CGImage)
         CGContextClipToMask(context, rect, self.CGImage)
         color.setFill()
-        CGContextAddRect(context, rect);
-        CGContextDrawPath(context, .Fill);
+        CGContextAddRect(context, rect)
+        CGContextDrawPath(context, .Fill)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image.resizableImageWithCapInsets(self.capInsets)
     }
 
     public static func bma_imageWithColor(color: UIColor, size: CGSize) -> UIImage {
-        let rect = CGRectMake(0, 0, size.width, size.height)
+        let rect = CGRect(origin: CGPoint.zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()
         UIRectFill(rect)

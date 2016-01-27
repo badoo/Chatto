@@ -26,7 +26,7 @@ import XCTest
 @testable import Chatto
 
 class SerialTaskQueueTests: XCTestCase {
-    
+
     func testThat_GivenIsFreshlyCreated_WhenNewTaskIsAdded_ThenTaskIsNotExecuted() {
         let queue = SerialTaskQueue()
         var executed = false

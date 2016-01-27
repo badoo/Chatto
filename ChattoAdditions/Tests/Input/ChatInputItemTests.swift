@@ -30,7 +30,7 @@ class ChatInputItemTests: XCTestCase {
 
 @objc
 class MockInputItem: NSObject, ChatInputItemProtocol {
-    var selected = false;
+    var selected = false
     var presentationMode: ChatInputItemPresentationMode = .Keyboard
     var showsSendButton = false
     var inputView: UIView? = nil

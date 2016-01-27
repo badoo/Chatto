@@ -194,9 +194,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
 private final class TextBubbleLayoutModel {
     let layoutContext: LayoutContext
-    var textFrame: CGRect = CGRectZero
-    var bubbleFrame: CGRect = CGRectZero
-    var size: CGSize = CGSizeZero
+    var textFrame: CGRect = CGRect.zero
+    var bubbleFrame: CGRect = CGRect.zero
+    var size: CGSize = CGSize.zero
 
     init(layoutContext: LayoutContext) {
         self.layoutContext = layoutContext
@@ -226,7 +226,7 @@ private final class TextBubbleLayoutModel {
         let maxTextWidth = self.layoutContext.preferredMaxLayoutWidth - textHorizontalInset
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
         let bubbleSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
-        self.bubbleFrame = CGRect(origin: CGPointZero, size: bubbleSize)
+        self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
         self.textFrame = UIEdgeInsetsInsetRect(self.bubbleFrame, self.layoutContext.textInsets)
         self.size = bubbleSize
     }

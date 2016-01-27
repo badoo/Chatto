@@ -133,7 +133,7 @@ extension PhotosInputView: UICollectionViewDataSource {
 
     func configureCollectionView() {
         self.collectionViewLayout = UICollectionViewFlowLayout()
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: self.collectionViewLayout)
+        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionViewLayout)
         self.collectionView.backgroundColor = UIColor.whiteColor()
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: "bar")

@@ -79,7 +79,7 @@ class FakeMessageFactory {
     }
 
     class func createPhotoMessageModel(uid: String, isIncoming: Bool) -> PhotoMessageModel {
-        var imageSize = CGSizeZero
+        var imageSize = CGSize.zero
         switch arc4random_uniform(100) % 3 {
         case 0:
             imageSize = CGSize(width: 400, height: 300)

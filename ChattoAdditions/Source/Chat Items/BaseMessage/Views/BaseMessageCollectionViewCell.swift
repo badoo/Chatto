@@ -197,13 +197,13 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         // TODO: refactor accessorView?
 
         if let accessoryView = self.accessoryTimestamp {
-            accessoryView.bounds = CGRect(origin: CGPointZero, size: accessoryView.intrinsicContentSize())
+            accessoryView.bounds = CGRect(origin: CGPoint.zero, size: accessoryView.intrinsicContentSize())
             let accessoryViewWidth = CGRectGetWidth(accessoryView.bounds)
             let accessoryViewMargin: CGFloat = 10
             let leftDisplacement = max(0, min(self.timestampMaxVisibleOffset, accessoryViewWidth + accessoryViewMargin))
             var contentViewframe = self.contentView.frame
             if self.messageViewModel.isIncoming {
-                contentViewframe.origin = CGPointZero
+                contentViewframe.origin = CGPoint.zero
             } else {
                 contentViewframe.origin.x = -leftDisplacement
             }
@@ -308,9 +308,9 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
 }
 
 struct BaseMessageLayoutModel {
-    private (set) var size = CGSizeZero
-    private (set) var failedViewFrame = CGRectZero
-    private (set) var bubbleViewFrame = CGRectZero
+    private (set) var size = CGSize.zero
+    private (set) var failedViewFrame = CGRect.zero
+    private (set) var bubbleViewFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
     mutating func calculateLayout(parameters parameters: BaseMessageLayoutModelParameters) {
@@ -324,7 +324,7 @@ struct BaseMessageLayoutModel {
 
         let preferredWidthForBubble = containerWidth * parameters.maxContainerWidthPercentageForBubbleView
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: CGFloat.max))
-        let containerRect = CGRect(origin: CGPointZero, size: CGSize(width: containerWidth, height: bubbleSize.height))
+        let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
 
 
         self.bubbleViewFrame = bubbleSize.bma_rect(inContainer: containerRect, xAlignament: .Center, yAlignment: .Center, dx: 0, dy: 0)

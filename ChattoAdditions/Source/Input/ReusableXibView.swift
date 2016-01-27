@@ -35,14 +35,14 @@ import UIKit
 
     override public func awakeAfterUsingCoder(aDecoder: NSCoder) -> AnyObject? {
         if self.subviews.count > 0 {
-            return self;
+            return self
         }
 
         let bundle = NSBundle(forClass: self.dynamicType)
         if let loadedView = bundle.loadNibNamed(self.dynamicType.nibName(), owner: nil, options: nil).first as! UIView? {
             loadedView.frame = frame
             loadedView.autoresizingMask = autoresizingMask
-            loadedView.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints;
+            loadedView.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
             for constraint in constraints {
                 let firstItem = constraint.firstItem === self ? loadedView : constraint.firstItem
                 let secondItem = constraint.secondItem === self ? loadedView : constraint.secondItem
@@ -55,7 +55,7 @@ import UIKit
     }
 
     class func nibName() -> String {
-        assert(false, "Must be overriden");
+        assert(false, "Must be overriden")
         return ""
     }
 }
