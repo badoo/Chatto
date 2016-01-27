@@ -27,7 +27,7 @@ struct PhotosInputViewItemSizeCalculator {
     var interitemSpace: CGFloat = 0
 
     func itemSizeForWidth(width: CGFloat, atIndex index: Int) -> CGSize {
-        let availableWidth = width - self.interitemSpace * CGFloat((self.itemsPerRow - 1));
+        let availableWidth = width - self.interitemSpace * CGFloat((self.itemsPerRow - 1))
         if availableWidth <= 0 {
             return CGSize.zero
         }
@@ -37,7 +37,7 @@ struct PhotosInputViewItemSizeCalculator {
         let extraPixels = Int(availableWidth) % self.itemsPerRow
         let isItemWithExtraPixel = index % self.itemsPerRow < extraPixels
         if isItemWithExtraPixel {
-            itemWidth++
+            itemWidth += 1
         }
         return CGSize(width: itemWidth, height: itemHeigth)
     }

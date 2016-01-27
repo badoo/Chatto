@@ -90,7 +90,7 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
         ]
         statusCell.text = NSAttributedString(
             string: self.statusText(),
-            attributes: attrs);
+            attributes: attrs)
     }
 
     func statusText() -> String {

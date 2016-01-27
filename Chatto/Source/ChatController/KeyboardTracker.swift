@@ -134,12 +134,12 @@ class KeyboardTracker {
         let inputContainerHeight = self.inputContainer.bounds.height
         let trackerViewHeight = self.trackingView.bounds.height
         if trackerViewHeight != inputContainerHeight {
-            self.keyboardTrackerView.bounds = CGRect(origin: CGPointZero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: inputContainerHeight))
+            self.keyboardTrackerView.bounds = CGRect(origin: CGPoint.zero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: inputContainerHeight))
         }
     }
 
     private func layoutInputAtBottom() {
-        self.keyboardTrackerView.bounds = CGRect(origin: CGPointZero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: 0))
+        self.keyboardTrackerView.bounds = CGRect(origin: CGPoint.zero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: 0))
         self.inputContainerBottomConstraint.constant = 0
         self.view.layoutIfNeeded()
     }
@@ -154,7 +154,7 @@ class KeyboardTracker {
 
 private class KeyboardTrackingView: UIView {
 
-    var positionChangedCallback: (() -> Void)?;
+    var positionChangedCallback: (() -> Void)?
     var observedView: UIView?
 
     deinit {

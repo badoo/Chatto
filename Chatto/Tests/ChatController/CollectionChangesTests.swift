@@ -89,7 +89,7 @@ func Item(uid: String) -> UniqueIdentificable {
     return UniqueIdentificableItem(uid: uid)
 }
 
-func Move(from: Int, to:Int) -> CollectionChangeMove {
+func Move(from: Int, to: Int) -> CollectionChangeMove {
     return CollectionChangeMove(indexPathOld: NSIndexPath(forItem: from, inSection: 0), indexPathNew: NSIndexPath(forItem: to, inSection: 0))
 }
 

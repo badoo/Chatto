@@ -81,7 +81,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     private func addCollectionView() {
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: self.createCollectionViewLayout)
+        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout)
         self.collectionView.contentInset = self.constants.defaultContentInsets
         self.collectionView.scrollIndicatorInsets = self.constants.defaultScrollIndicatorInsets
         self.collectionView.alwaysBounceVertical = true
@@ -111,7 +111,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
     private func addInputViews() {
-        self.inputContainer = UIView(frame: CGRectZero)
+        self.inputContainer = UIView(frame: CGRect.zero)
         self.inputContainer.autoresizingMask = .None
         self.inputContainer.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.inputContainer)

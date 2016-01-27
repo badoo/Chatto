@@ -29,7 +29,7 @@ public typealias TextMessageCollectionViewCellStyleProtocol = TextBubbleViewStyl
 public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<TextBubbleView> {
 
     public static func sizingCell() -> TextMessageCollectionViewCell {
-        let cell = TextMessageCollectionViewCell(frame: CGRectZero)
+        let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         cell.viewContext = .Sizing
         return cell
     }

@@ -89,7 +89,7 @@ class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
     }
 
     func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        self.presentersCreatedCount++
+        self.presentersCreatedCount += 1
         return FakePresenter()
     }
 

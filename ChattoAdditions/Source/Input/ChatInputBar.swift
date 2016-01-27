@@ -50,7 +50,7 @@ public class ChatInputBar: ReusableXibView {
     class public func loadNib() -> ChatInputBar {
         let view = NSBundle(forClass: self).loadNibNamed(self.nibName(), owner: nil, options: nil).first as! ChatInputBar
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.frame = CGRectZero
+        view.frame = CGRect.zero
         return view
     }
 
@@ -212,7 +212,7 @@ class SingleViewContainerView: UIView {
         if let subview = self.subviews.first {
             return subview.intrinsicContentSize()
         } else {
-            return CGSizeZero
+            return CGSize.zero
         }
     }
 

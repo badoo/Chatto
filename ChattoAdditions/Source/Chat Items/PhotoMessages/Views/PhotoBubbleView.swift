@@ -193,7 +193,7 @@ public final class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, Back
         let layout = self.calculateTextBubbleLayout(maximumWidth: self.preferredMaxLayoutWidth)
         self.progressIndicatorView.center = layout.visualCenter
         self.placeholderIconView.center = layout.visualCenter
-        self.placeholderIconView.bounds = CGRect(origin: CGPointZero, size: self.placeholderIconView.image?.size ?? CGSizeZero)
+        self.placeholderIconView.bounds = CGRect(origin: CGPoint.zero, size: self.placeholderIconView.image?.size ?? CGSize.zero)
         self.imageView.bma_rect = layout.photoFrame
         self.imageView.layer.mask?.frame = self.imageView.layer.bounds
         self.overlayView.bma_rect = self.imageView.bounds
@@ -215,9 +215,9 @@ public final class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, Back
 
 
 private class PhotoBubbleLayoutModel {
-    var photoFrame: CGRect = CGRectZero
-    var visualCenter: CGPoint = CGPointZero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
-    var size: CGSize = CGSizeZero
+    var photoFrame: CGRect = CGRect.zero
+    var visualCenter: CGPoint = CGPoint.zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
+    var size: CGSize = CGSize.zero
 
     struct LayoutContext {
         let photoSize: CGSize
@@ -244,7 +244,7 @@ private class PhotoBubbleLayoutModel {
 
     func calculateLayout() {
         let photoSize = self.layoutContext.photoSize
-        self.photoFrame = CGRect(origin: CGPointZero, size: photoSize)
+        self.photoFrame = CGRect(origin: CGPoint.zero, size: photoSize)
         let offsetX: CGFloat = 0.5 * self.layoutContext.tailWidth * (self.layoutContext.isIncoming ? 1.0 : -1.0)
         self.visualCenter = self.photoFrame.bma_center.bma_offsetBy(dx: offsetX, dy: 0)
         self.size = photoSize

@@ -33,7 +33,8 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         XCTAssertEqual(expectedArray, dataSource.itemsInWindow)
@@ -47,7 +48,8 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10, pageSize: 50) { () -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         XCTAssertEqual(expectedArray, dataSource.itemsInWindow)
@@ -58,7 +60,8 @@ class SlidingDataSourceTests: XCTestCase {
     func testThat_WhenCountIsZero_ThenInitializesCorrectly() {
         var uid = 0
         let dataSource = SlidingDataSource(count: 0, pageSize: 50) { () -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
         XCTAssertEqual([], dataSource.itemsInWindow)
         XCTAssertFalse(dataSource.hasPrevious())
@@ -72,7 +75,8 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (id) -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         dataSource.loadPrevious()
@@ -89,7 +93,8 @@ class SlidingDataSourceTests: XCTestCase {
         }
 
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (id) -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         for _ in 0..<10 {
@@ -108,7 +113,8 @@ class SlidingDataSourceTests: XCTestCase {
         }
 
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (id) -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
         dataSource.loadPrevious()
         dataSource.loadPrevious()
@@ -128,7 +134,8 @@ class SlidingDataSourceTests: XCTestCase {
         expectedArray.append("test")
 
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (id) -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         for _ in 0..<10 {
@@ -154,7 +161,8 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 52, pageSize: 50) { (id) -> String in
-            return "\(uid++)"
+            defer { uid += 1 }
+            return "\(uid)"
         }
 
         dataSource.loadPrevious()

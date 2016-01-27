@@ -44,21 +44,21 @@ class BaseMessagePresenterTests: XCTestCase {
     }
 
     func testThat_WhenCellIsTappedOnFailIcon_ThenInteractionHandlerHandlesEvent() {
-        let cell = PhotoMessageCollectionViewCell(frame: CGRectZero)
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         cell.failedButtonTapped()
         XCTAssertTrue(self.interactionHandler.didHandleTapOnFailIcon)
     }
 
     func testThat_WhenCellIsTappedOnBubble_ThenInteractionHandlerHandlesEvent() {
-        let cell = PhotoMessageCollectionViewCell(frame: CGRectZero)
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         cell.bubbleTapped(UITapGestureRecognizer())
         XCTAssertTrue(self.interactionHandler.didHandleTapOnBubble)
     }
 
     func testThat_WhenCellIsLongPressedOnBubble_ThenInteractionHandlerHandlesEvent() {
-        let cell = PhotoMessageCollectionViewCell(frame: CGRectZero)
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         cell.bubbleLongPressed()
         XCTAssertTrue(self.interactionHandler.didHandleLongPressOnBubble)

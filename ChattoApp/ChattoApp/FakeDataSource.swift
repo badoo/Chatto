@@ -26,13 +26,14 @@ import Foundation
 import Chatto
 
 class FakeDataSource: ChatDataSourceProtocol {
-    var lastMessageId: Int = 0
+    var nextMessageId: Int = 0
     let preferredMaxWindowSize = 500
 
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
     init(count: Int, pageSize: Int) {
         self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { () -> ChatItemProtocol in
-            return FakeMessageFactory.createChatItem("\(self.lastMessageId++)")
+            defer { self.nextMessageId += 1 }
+            return FakeMessageFactory.createChatItem("\(self.nextMessageId)")
         }
     }
 
@@ -76,7 +77,8 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
 
     func addTextMessage(text: String) {
-        let uid = "\(self.lastMessageId++)"
+        let uid = "\(self.nextMessageId)"
+        self.nextMessageId += 1
         let message = createTextMessageModel(uid, text: text, isIncoming: false)
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .Bottom)
@@ -84,7 +86,8 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
 
     func addPhotoMessage(image: UIImage) {
-        let uid = "\(self.lastMessageId++)"
+        let uid = "\(self.nextMessageId)"
+        self.nextMessageId += 1
         let message = createPhotoMessageModel(uid, image: image, size: image.size, isIncoming: false)
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .Bottom)
@@ -92,7 +95,8 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
 
     func addRandomIncomingMessage() {
-        let message = FakeMessageFactory.createChatItem("\(self.lastMessageId++)", isIncoming: true)
+        let message = FakeMessageFactory.createChatItem("\(self.nextMessageId)", isIncoming: true)
+        self.nextMessageId += 1
         self.slidingWindow.insertItem(message, position: .Bottom)
         self.delegate?.chatDataSourceDidUpdate(self)
     }

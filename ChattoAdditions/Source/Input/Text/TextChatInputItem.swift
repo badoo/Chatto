@@ -38,7 +38,7 @@ import Foundation
 
     public var selected = false {
         didSet {
-            self.internalTabView.selected = self.selected;
+            self.internalTabView.selected = self.selected
         }
     }
 }

@@ -139,7 +139,7 @@ class ChatInputManagerTests: XCTestCase {
         self.presenter.inputBarSendButtonPressed(self.bar)
         XCTAssertEqual(itemThatHandledInput, 1)
     }
-    
+
     // MARK: - Bar editing tests
     func testThat_GivenPresenterHasFocusedItem_WhenBarDidEndEditing_FocusedItemLostFocus() {
         let item = MockInputItem()

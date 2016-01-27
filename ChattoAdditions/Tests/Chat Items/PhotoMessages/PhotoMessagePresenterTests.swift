@@ -46,7 +46,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_CellIsConfigured() {
-        let cell = PhotoMessageCollectionViewCell(frame: CGRectZero)
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         XCTAssertEqual(self.testImage, cell.bubbleView.photoMessageViewModel.image.value)
     }
@@ -56,7 +56,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_RegistersAndDequeuesCells() {
-        let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
         PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder, PhotoMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()

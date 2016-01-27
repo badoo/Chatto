@@ -72,15 +72,15 @@ public class SlidingDataSource<Element> {
         if position == .Top {
             self.items.insert(item, atIndex: 0)
             let shouldExpandWindow = self.itemsOffset == self.windowOffset
-            self.itemsOffset--
+            self.itemsOffset -= 1
             if shouldExpandWindow {
-                self.windowOffset--
-                self.windowCount++
+                self.windowOffset -= 1
+                self.windowCount += 1
             }
         } else {
             let shouldExpandWindow = self.itemsOffset + self.items.count == self.windowOffset + self.windowCount
             if shouldExpandWindow {
-                self.windowCount++
+                self.windowCount += 1
             }
             self.items.append(item)
         }

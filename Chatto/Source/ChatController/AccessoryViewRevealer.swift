@@ -52,7 +52,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         case .Ended, .Cancelled, .Failed:
             self.revealAccessoryView(atOffset: 0)
         default:
-            break;
+            break
         }
     }
 
