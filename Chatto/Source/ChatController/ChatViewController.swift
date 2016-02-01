@@ -159,9 +159,10 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
         let newInsetBottom = self.constants.defaultContentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
 
-        let allContentFits = self.collectionView.bounds.height - newInsetBottom - (self.collectionView.contentSize.height + self.collectionView.contentInset.top) >= 0
+        let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize()
+        let allContentFits = self.collectionView.bounds.height - newInsetBottom - (contentSize.height + self.collectionView.contentInset.top) >= 0
 
-        let currentDistanceToBottomInset = max(0, self.collectionView.bounds.height - self.collectionView.contentInset.bottom - (self.collectionView.contentSize.height - self.collectionView.contentOffset.y))
+        let currentDistanceToBottomInset = max(0, self.collectionView.bounds.height - self.collectionView.contentInset.bottom - (contentSize.height - self.collectionView.contentOffset.y))
         let newContentOffsetY = self.collectionView.contentOffset.y + insetBottomDiff - currentDistanceToBottomInset
 
         self.collectionView.contentInset.bottom = newInsetBottom
