@@ -29,6 +29,10 @@ public enum CellVerticalEdge {
     case Bottom
 }
 
+extension CGFloat {
+    static let bma_epsilon: CGFloat = 0.001
+}
+
 extension ChatViewController {
 
     public func isScrolledAtBottom() -> Bool {
@@ -56,13 +60,13 @@ extension ChatViewController {
     }
 
     public func isIndexPathVisible(indexPath: NSIndexPath, atEdge edge: CellVerticalEdge) -> Bool {
-        if let attributes = self.collectionView.layoutAttributesForItemAtIndexPath(indexPath) {
+        if let attributes = self.collectionView.collectionViewLayout.layoutAttributesForItemAtIndexPath(indexPath) {
             let visibleRect = self.visibleRect()
             let intersection = visibleRect.intersect(attributes.frame)
             if edge == .Top {
-                return intersection.minY == attributes.frame.minY
+                return CGFloat.abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
             } else {
-                return intersection.maxY == attributes.frame.maxY
+                return CGFloat.abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
             }
         }
         return false
@@ -71,14 +75,24 @@ extension ChatViewController {
     public func visibleRect() -> CGRect {
         let contentInset = self.collectionView.contentInset
         let collectionViewBounds = self.collectionView.bounds
-        return CGRect(x: CGFloat(0), y: self.collectionView.contentOffset.y + contentInset.top, width: collectionViewBounds.width, height: min(self.collectionView.contentSize.height, collectionViewBounds.height - contentInset.top - contentInset.bottom))
+        let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize()
+        return CGRect(x: CGFloat(0), y: self.collectionView.contentOffset.y + contentInset.top, width: collectionViewBounds.width, height: min(contentSize.height, collectionViewBounds.height - contentInset.top - contentInset.bottom))
     }
 
     public func scrollToBottom(animated animated: Bool) {
         // Note that we don't rely on collectionView's contentSize. This is because it won't be valid after performBatchUpdates or reloadData
         // After reload data, collectionViewLayout.collectionViewContentSize won't be even valid, so you may want to refresh the layout manually
         let offsetY = max(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize().height - self.collectionView.bounds.height + self.collectionView.contentInset.bottom)
-        self.collectionView.setContentOffset(CGPoint(x: 0, y: offsetY), animated: animated)
+
+        // Don't use setContentOffset(:animated). If animated, contentOffset property will be updated along with the animation for each frame update
+        // If a message is inserted while scrolling is happening (as in very fast typing), we want to take the "final" content offset (not the "real time" one) to check if we should scroll to bottom again
+        if animated {
+            UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
+                self.collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
+            })
+        } else {
+            self.collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
+        }
     }
 
     public func scrollToPreservePosition(oldRefRect oldRefRect: CGRect?, newRefRect: CGRect?) {
