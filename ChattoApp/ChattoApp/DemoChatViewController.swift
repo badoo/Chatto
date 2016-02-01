@@ -26,7 +26,7 @@ import UIKit
 import Chatto
 import ChattoAdditions
 
-class DemoChatViewController: ChatViewController {
+class DemoChatViewController: BaseChatViewController {
 
     var messageSender: FakeMessageSender!
     var dataSource: FakeDataSource! {

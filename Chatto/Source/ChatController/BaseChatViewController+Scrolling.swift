@@ -33,7 +33,7 @@ extension CGFloat {
     static let bma_epsilon: CGFloat = 0.001
 }
 
-extension ChatViewController {
+extension BaseChatViewController {
 
     public func isScrolledAtBottom() -> Bool {
         guard self.collectionView.numberOfSections() > 0 && self.collectionView.numberOfItemsInSection(0) > 0 else { return true }

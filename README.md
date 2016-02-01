@@ -21,7 +21,7 @@
 
 ## How to use
 
-1. Subclass ChatViewController
+1. Subclass BaseChatViewController
 2. Override `createChatInputView()` to use `ChattoAdditions.ChatInputBar` or provide your own component
 3. Provide a data source with your messages
 4. Override `createPresenterBuilders()`. There will be a presenter for each message that will be responsible for the UI of that message.

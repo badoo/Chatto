@@ -32,7 +32,7 @@ func createFakeChatItems(count count: Int) -> [ChatItemProtocol] {
     return items
 }
 
-class TesteableChatViewController: ChatViewController {
+class TesteableChatViewController: BaseChatViewController {
     let presenterBuilders: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
     let chatInputView = UIView()
     init(presenterBuilders: [ChatItemType: [ChatItemPresenterBuilderProtocol]] = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()) {

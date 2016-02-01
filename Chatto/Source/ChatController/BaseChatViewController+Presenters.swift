@@ -24,7 +24,7 @@
 
 import Foundation
 
-extension ChatViewController: ChatCollectionViewLayoutDelegate {
+extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.decoratedChatItems.count
