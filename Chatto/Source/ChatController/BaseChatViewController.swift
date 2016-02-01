@@ -37,7 +37,7 @@ public struct DecoratedChatItem {
     }
 }
 
-public class ChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+public class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     public struct Constants {
         var updatesAnimationDuration: NSTimeInterval = 0.33
@@ -227,7 +227,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
     var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
 }
 
-extension ChatViewController { // Rotation
+extension BaseChatViewController { // Rotation
 
     public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)

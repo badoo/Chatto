@@ -24,7 +24,7 @@
 
 import Foundation
 
-extension ChatViewController: ChatDataSourceDelegateProtocol {
+extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
     public enum UpdateContext {
         case Normal
