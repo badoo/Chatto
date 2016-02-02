@@ -78,8 +78,8 @@ public final class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, Back
 
 
 
-    private var progressIndicatorView: BMACircleProgressIndicatorView = {
-        let progressView = BMACircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
+    private var progressIndicatorView: CircleProgressIndicatorView = {
+        let progressView = CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
         return progressView
     }()
 

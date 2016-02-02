@@ -24,10 +24,23 @@
 
 @import UIKit;
 
-@interface BMACircleProgressView : UIView
-- (void)prepareForLoading;
-- (void)finishPrepareForLoading;
-- (void)setProgress:(CGFloat)progress;
+typedef NS_ENUM(NSUInteger, CircleIconType) {
+  CircleIconTypeUndefined,
+
+  CircleIconTypeInfinity,
+  CircleIconTypeExclamation,
+  CircleIconTypeCheck,
+
+  CircleIconTypeArrowDown,
+  CircleIconTypeArrowUp,
+  CircleIconTypeStop,
+
+  CircleIconTypeText
+};
+
+@interface CircleIconView : UIView
+- (void)setType:(CircleIconType)type;
+- (void)setTitle:(NSAttributedString *)title;
 
 - (void)setLineWidth:(CGFloat)lineWidth;
 - (void)setLineColor:(UIColor *)lineColor;
