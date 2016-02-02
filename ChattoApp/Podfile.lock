@@ -1,6 +1,7 @@
 PODS:
   - Chatto (1.0.0)
-  - ChattoAdditions (1.0.0)
+  - ChattoAdditions (1.0.0):
+    - Chatto
 
 DEPENDENCIES:
   - Chatto (from `..`)
@@ -13,7 +14,7 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  Chatto: 8fc659c895e22c20d3d180f71f589b196d1fa840
-  ChattoAdditions: f65ba0cf7b8812320e59b5d72349182e8acabbde
+  Chatto: 531b14bbb7d21dfc50a86fc4ff70a90367171403
+  ChattoAdditions: 27c7b59f4c1b1d51d5f37c7199164982fcc59edf
 
 COCOAPODS: 0.39.0
