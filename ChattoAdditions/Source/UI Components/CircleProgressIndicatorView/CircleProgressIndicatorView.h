@@ -23,30 +23,30 @@
 */
 
 #import <UIKit/UIKit.h>
-#import "BMACircleIconView.h"
+#import "CircleIconView.h"
 
-typedef NS_ENUM(NSUInteger, BMACircleProgressType) {
-    BMACircleProgressTypeUndefined,
-    BMACircleProgressTypeIcon,
-    BMACircleProgressTypeTimer,
-    BMACircleProgressTypeUpload,
-    BMACircleProgressTypeDownload,
+typedef NS_ENUM(NSUInteger, CircleProgressType) {
+  CircleProgressTypeUndefined,
+  CircleProgressTypeIcon,
+  CircleProgressTypeTimer,
+  CircleProgressTypeUpload,
+  CircleProgressTypeDownload,
 };
 
-typedef NS_ENUM(NSUInteger, BMACircleProgressStatus) {
-    BMACircleProgressStatusUndefined,
-    BMACircleProgressStatusStarting,
-    BMACircleProgressStatusInProgress,
-    BMACircleProgressStatusCompleted,
-    BMACircleProgressStatusFailed,
+typedef NS_ENUM(NSUInteger, CircleProgressStatus) {
+  CircleProgressStatusUndefined,
+  CircleProgressStatusStarting,
+  CircleProgressStatusInProgress,
+  CircleProgressStatusCompleted,
+  CircleProgressStatusFailed,
 };
 
-@interface BMACircleProgressIndicatorView : UIView
+@interface CircleProgressIndicatorView : UIView
 
-@property (nonatomic) BMACircleProgressType progressType;
-@property (nonatomic) BMACircleProgressStatus progressStatus;
-@property (nonatomic, strong) UIColor *progressLineColor;
-@property (nonatomic, assign) CGFloat progressLineWidth;
+@property(nonatomic) CircleProgressType progressType;
+@property(nonatomic) CircleProgressStatus progressStatus;
+@property(nonatomic, strong) UIColor *progressLineColor;
+@property(nonatomic, assign) CGFloat progressLineWidth;
 
 + (instancetype)defaultProgressIndicatorView;
 + (instancetype)progressIndicatorViewWithSize:(CGSize)size;
@@ -54,8 +54,7 @@ typedef NS_ENUM(NSUInteger, BMACircleProgressStatus) {
 - (void)setProgress:(CGFloat)progress;
 - (void)setTimerTitle:(NSAttributedString *)title;
 - (void)setTextTitle:(NSAttributedString *)title;
-- (void)setIconType:(BMACircleIconType)type;
+- (void)setIconType:(CircleIconType)type;
 - (void)setSupportsCancel:(BOOL)supportsCancel;
-
 
 @end
