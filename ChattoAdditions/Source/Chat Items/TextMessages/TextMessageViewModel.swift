@@ -49,4 +49,8 @@ public class TextMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
         return textMessageViewModel
 
     }
+
+    public func canCreateViewModel(fromModel model: Any) -> Bool {
+        return model is TextMessageModel
+    }
 }

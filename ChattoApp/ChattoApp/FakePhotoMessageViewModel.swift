@@ -74,4 +74,8 @@ public class FakePhotoMessageViewModelBuilder: ViewModelBuilderProtocol {
         let photoMessageViewModel = FakePhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         return photoMessageViewModel
     }
+
+    public func canCreateViewModel(fromModel model: Any) -> Bool {
+        return model is PhotoMessageModel
+    }
 }

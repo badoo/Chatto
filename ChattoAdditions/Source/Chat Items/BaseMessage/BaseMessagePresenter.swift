@@ -28,6 +28,7 @@ import Chatto
 public protocol ViewModelBuilderProtocol {
     typealias ModelT: MessageModelProtocol
     typealias ViewModelT: MessageViewModelProtocol
+    func canCreateViewModel(fromModel model: Any) -> Bool
     func createViewModel(model: ModelT) -> ViewModelT
 }
 
@@ -40,7 +41,6 @@ public protocol BaseMessageInteractionHandlerProtocol {
 
 public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: MessageModelProtocol,
     ViewModelBuilderT.ViewModelT: MessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT,
