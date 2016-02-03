@@ -31,7 +31,7 @@ override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuil
     return [
         TextMessageModel.chatItemType: [
             TextMessagePresenterBuilder(
-                viewModelBuilder: TextMessageViewModelDefaultBuilder(),
+                viewModelBuilder: TextMessageViewModelDefaultBuilder<TextMessageModel>(),
                 interactionHandler: TextMessageHandler(baseHandler: self.baseMessageHandler)
             )
         ]
