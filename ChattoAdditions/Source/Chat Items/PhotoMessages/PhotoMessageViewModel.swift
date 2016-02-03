@@ -80,18 +80,18 @@ public class PhotoMessageViewModel: PhotoMessageViewModelProtocol {
     }
 }
 
-public class PhotoMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
+public class PhotoMessageViewModelDefaultBuilder<ModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(model: PhotoMessageModel) -> PhotoMessageViewModel {
+    public func createViewModel(model: ModelT) -> PhotoMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
         let photoMessageViewModel = PhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         return photoMessageViewModel
     }
 
     public func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is PhotoMessageModel
+        return model is ModelT
     }
 }

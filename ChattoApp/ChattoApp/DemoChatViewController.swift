@@ -71,7 +71,7 @@ class DemoChatViewController: BaseChatViewController {
         return [
             TextMessageModel.chatItemType: [
                 TextMessagePresenterBuilder(
-                    viewModelBuilder: TextMessageViewModelDefaultBuilder(),
+                    viewModelBuilder: TextMessageViewModelDefaultBuilder<TextMessageModel>(),
                     interactionHandler: TextMessageHandler(baseHandler: self.baseMessageHandler)
                 )
             ],
