@@ -38,12 +38,12 @@ public class TextMessageViewModel: TextMessageViewModelProtocol {
     }
 }
 
-public class TextMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
+public class TextMessageViewModelDefaultBuilder<ModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(model: TextMessageModel) -> TextMessageViewModel {
+    public func createViewModel(model: ModelT) -> TextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
         let textMessageViewModel = TextMessageViewModel(text: model.text, messageViewModel: messageViewModel)
         return textMessageViewModel
@@ -51,6 +51,6 @@ public class TextMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
     }
 
     public func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is TextMessageModel
+        return model is ModelT
     }
 }

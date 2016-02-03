@@ -28,10 +28,10 @@ import Chatto
 
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
-    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>!
+    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel>, TextMessageTestHandler>!
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
     override func setUp() {
-        let viewModelBuilder = TextMessageViewModelDefaultBuilder()
+        let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel>()
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
@@ -43,7 +43,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     func testThat_RegistersAndDequeuesCells() {
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>.registerCells(collectionView)
+        TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel>, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
         XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
