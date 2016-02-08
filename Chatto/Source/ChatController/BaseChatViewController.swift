@@ -24,20 +24,9 @@
 
 import UIKit
 
-public protocol ChatItemsDecoratorProtocol {
-    func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
-}
-
-public struct DecoratedChatItem {
-    public let chatItem: ChatItemProtocol
-    public let decorationAttributes: ChatItemDecorationAttributesProtocol?
-    public init(chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
-        self.chatItem = chatItem
-        self.decorationAttributes = decorationAttributes
-    }
-}
-
 public class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+
+    typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
     public struct Constants {
         var updatesAnimationDuration: NSTimeInterval = 0.33
@@ -51,7 +40,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public var constants = Constants()
 
     public private(set) var collectionView: UICollectionView!
-    var decoratedChatItems = [DecoratedChatItem]()
+    var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
     public var chatDataSource: ChatDataSourceProtocol? {
         didSet {
             self.chatDataSource?.delegate = self
@@ -195,8 +184,6 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     var accessoryViewRevealer: AccessoryViewRevealer!
     var inputContainer: UIView!
     var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
-    var presenters = [ChatItemPresenterProtocol]()
-    let presentersByChatItem = NSMapTable(keyOptions: .WeakMemory, valueOptions: .StrongMemory)
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 

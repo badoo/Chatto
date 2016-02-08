@@ -27,7 +27,7 @@ import Foundation
 extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.decoratedChatItems.count
+        return self.chatItemCompanionCollection.count
     }
 
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -66,23 +66,16 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
         self.presenterForIndexPath(indexPath).performMenuControllerAction(action)
     }
 
-    public func presenterForIndexPath(indexPath: NSIndexPath) -> ChatItemPresenterProtocol {
-        return self.presenterForIndex(indexPath.item, decoratedChatItems: self.decoratedChatItems)
+    func presenterForIndexPath(indexPath: NSIndexPath) -> ChatItemPresenterProtocol {
+        return self.presenterForIndex(indexPath.item, chatItemCompanionCollection: self.chatItemCompanionCollection)
     }
 
-    public func presenterForIndex(index: Int, decoratedChatItems: [DecoratedChatItem]) -> ChatItemPresenterProtocol {
-        guard index < decoratedChatItems.count else {
+    func presenterForIndex(index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
+        guard index < items.count else {
             // This can happen from didEndDisplayingCell if we reloaded with less messages
             return DummyChatItemPresenter()
         }
-
-        let chatItem = decoratedChatItems[index].chatItem
-        if let presenter = self.presentersByChatItem.objectForKey(chatItem) as? ChatItemPresenterProtocol {
-            return presenter
-        }
-        let presenter = self.createPresenterForChatItem(chatItem)
-        self.presentersByChatItem.setObject(presenter, forKey: chatItem)
-        return presenter
+        return items[index].presenter
     }
 
     public func createPresenterForChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
@@ -95,6 +88,6 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     public func decorationAttributesForIndexPath(indexPath: NSIndexPath) -> ChatItemDecorationAttributesProtocol? {
-        return self.decoratedChatItems[indexPath.item].decorationAttributes
+        return self.chatItemCompanionCollection[indexPath.item].decorationAttributes
     }
 }
