@@ -26,12 +26,8 @@ import Foundation
 
 extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
-    public enum UpdateContext {
-        case Normal
-        case FirstLoad
-        case Pagination
-        case Reload
-        case MessageCountReduction
+    public func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, context: UpdateContext) {
+        self.enqueueModelUpdate(context: context)
     }
 
     public func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol) {
