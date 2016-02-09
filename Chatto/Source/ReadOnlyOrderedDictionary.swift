@@ -23,32 +23,36 @@ THE SOFTWARE.
 */
 import Foundation
 
-struct ReadOnlyOrderedDictionary<T where T: UniqueIdentificable> : CollectionType {
+public struct ReadOnlyOrderedDictionary<T where T: UniqueIdentificable>: CollectionType {
 
     private let items: [T]
-    private let itemsById: [String: Int] // Maping to the position in the array instead the item itself for better performance
+    private let itemIndexesById: [String: Int] // Maping to the position in the array instead the item itself for better performance
 
-    init(items: [T]) {
+    public init(items: [T]) {
         var dictionary = [String: Int](minimumCapacity: items.count)
         for (index, item) in items.enumerate() {
             dictionary[item.uid] = index
         }
         self.items = items
-        self.itemsById = dictionary
+        self.itemIndexesById = dictionary
     }
 
-    subscript(index: Int) -> T {
+    public func indexOf(uid: String) -> Int? {
+        return self.itemIndexesById[uid]
+    }
+
+    public subscript(index: Int) -> T {
         return self.items[index]
     }
 
-    subscript(uid: String) -> T? {
-        if let index = self.itemsById[uid] {
+    public subscript(uid: String) -> T? {
+        if let index = self.indexOf(uid) {
             return self.items[index]
         }
         return nil
     }
 
-    func generate() -> AnyGenerator<T> {
+    public func generate() -> AnyGenerator<T> {
         var index = 0
 
         return anyGenerator({
@@ -61,11 +65,11 @@ struct ReadOnlyOrderedDictionary<T where T: UniqueIdentificable> : CollectionTyp
         })
     }
 
-    var startIndex: Int {
+    public var startIndex: Int {
         return 0
     }
 
-    var endIndex: Int {
+    public var endIndex: Int {
         return self.items.count
     }
 }

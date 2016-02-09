@@ -37,11 +37,11 @@ public struct DecoratedChatItem {
     }
 }
 
-struct ChatItemCompanion: UniqueIdentificable {
-    let chatItem: ChatItemProtocol
-    let presenter: ChatItemPresenterProtocol
-    var decorationAttributes: ChatItemDecorationAttributesProtocol?
-    var uid: String {
+public struct ChatItemCompanion: UniqueIdentificable {
+    public let chatItem: ChatItemProtocol
+    public let presenter: ChatItemPresenterProtocol
+    public var decorationAttributes: ChatItemDecorationAttributesProtocol?
+    public var uid: String {
         return self.chatItem.uid
     }
 }
