@@ -24,8 +24,17 @@
 
 import Foundation
 
+public enum UpdateContext {
+    case Normal
+    case FirstLoad
+    case Pagination
+    case Reload
+    case MessageCountReduction
+}
+
 public protocol ChatDataSourceDelegateProtocol: class {
     func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol)
+    func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, context: UpdateContext)
 }
 
 public protocol ChatDataSourceProtocol: class {

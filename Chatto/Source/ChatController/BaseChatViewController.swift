@@ -26,7 +26,7 @@ import UIKit
 
 public class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
+    public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
     public struct Constants {
         var updatesAnimationDuration: NSTimeInterval = 0.33
@@ -40,7 +40,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public var constants = Constants()
 
     public private(set) var collectionView: UICollectionView!
-    var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
+    public internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
     public var chatDataSource: ChatDataSourceProtocol? {
         didSet {
             self.chatDataSource?.delegate = self
