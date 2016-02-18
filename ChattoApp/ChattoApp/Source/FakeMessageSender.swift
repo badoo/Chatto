@@ -26,21 +26,25 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
+public protocol DemoMessageModelProtocol: MessageModelProtocol {
+    var status: MessageStatus { get set }
+}
+
 public class FakeMessageSender {
 
-    public var onMessageChanged: ((message: MessageModelProtocol) -> Void)?
+    public var onMessageChanged: ((message: DemoMessageModelProtocol) -> Void)?
 
-    public func sendMessages(messages: [MessageModelProtocol]) {
+    public func sendMessages(messages: [DemoMessageModelProtocol]) {
         for message in messages {
             self.fakeMessageStatus(message)
         }
     }
 
-    public func sendMessage(message: MessageModelProtocol) {
+    public func sendMessage(message: DemoMessageModelProtocol) {
         self.fakeMessageStatus(message)
     }
 
-    private func fakeMessageStatus(message: MessageModelProtocol) {
+    private func fakeMessageStatus(message: DemoMessageModelProtocol) {
         switch message.status {
         case .Success:
             break
@@ -65,14 +69,14 @@ public class FakeMessageSender {
         }
     }
 
-    private func updateMessage(message: MessageModelProtocol, status: MessageStatus) {
+    private func updateMessage(message: DemoMessageModelProtocol, status: MessageStatus) {
         if message.status != status {
             message.status = status
             self.notifyMessageChanged(message)
         }
     }
 
-    private func notifyMessageChanged(message: MessageModelProtocol) {
+    private func notifyMessageChanged(message: DemoMessageModelProtocol) {
         self.onMessageChanged?(message: message)
     }
 }

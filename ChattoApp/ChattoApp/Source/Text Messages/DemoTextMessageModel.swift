@@ -23,22 +23,19 @@
 */
 
 import Foundation
+import ChattoAdditions
 
-public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
-    var text: String { get }
-}
-
-public class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
-    public var messageModel: MessageModelProtocol {
-        return self._messageModel
+public class DemoTextMessageModel: TextMessageModel<MessageModel>, DemoMessageModelProtocol {
+    public override init(messageModel: MessageModel, text: String) {
+        super.init(messageModel: messageModel, text: text)
     }
-    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let text: String
-    public init(messageModel: MessageModelT, text: String) {
-        self._messageModel = messageModel
-        self.text = text
-    }
-    // This should be covered by DecoratedMessageModelProtocol, but compiler crashes without this (Xcode 7.1)
-    public var uid: String { return self.messageModel.uid }
 
+    public var status: MessageStatus {
+        get {
+            return self._messageModel.status
+        }
+        set {
+            self._messageModel.status = newValue
+        }
+    }
 }

@@ -27,11 +27,11 @@ import XCTest
 
 class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
-    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel>, PhotoMessageTestHandler>!
+    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
     let testImage = UIImage()
     override func setUp() {
-        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel>()
+        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
@@ -57,7 +57,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     func testThat_RegistersAndDequeuesCells() {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel>, PhotoMessageTestHandler>.registerCells(collectionView)
+        PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
         XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
@@ -76,7 +76,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 }
 
 class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = PhotoMessageViewModel
+    typealias ViewModelT = PhotoMessageViewModel<PhotoMessageModel<MessageModel>>
 
     var didHandleTapOnFailIcon = false
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {

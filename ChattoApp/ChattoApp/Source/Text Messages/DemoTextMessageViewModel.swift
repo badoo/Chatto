@@ -23,22 +23,31 @@
 */
 
 import Foundation
+import ChattoAdditions
 
-public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
-    var text: String { get }
+public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel>, DemoMessageViewModelProtocol {
+
+    public override init(textMessage: DemoTextMessageModel, messageViewModel: MessageViewModelProtocol) {
+        super.init(textMessage: textMessage, messageViewModel: messageViewModel)
+    }
+
+    public var messageModel: DemoMessageModelProtocol {
+        return self.textMessage
+    }
 }
 
-public class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
-    public var messageModel: MessageModelProtocol {
-        return self._messageModel
-    }
-    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let text: String
-    public init(messageModel: MessageModelT, text: String) {
-        self._messageModel = messageModel
-        self.text = text
-    }
-    // This should be covered by DecoratedMessageModelProtocol, but compiler crashes without this (Xcode 7.1)
-    public var uid: String { return self.messageModel.uid }
+public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
+    public init() { }
 
+    let messageViewModelBuilder = MessageViewModelDefaultBuilder()
+
+    public func createViewModel(textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
+        let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
+        let textMessageViewModel = DemoTextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
+        return textMessageViewModel
+    }
+
+    public func canCreateViewModel(fromModel model: Any) -> Bool {
+        return model is DemoTextMessageModel
+    }
 }

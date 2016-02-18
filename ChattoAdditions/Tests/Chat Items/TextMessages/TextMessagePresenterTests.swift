@@ -28,10 +28,10 @@ import Chatto
 
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
-    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel>, TextMessageTestHandler>!
+    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
     override func setUp() {
-        let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel>()
+        let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
@@ -43,7 +43,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     func testThat_RegistersAndDequeuesCells() {
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel>, TextMessageTestHandler>.registerCells(collectionView)
+        TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
         XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
@@ -87,7 +87,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 }
 
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = TextMessageViewModel
+    typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {
 

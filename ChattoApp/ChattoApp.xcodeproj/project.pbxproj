@@ -8,24 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		1CB21D193EF017E5E1C63755 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 623390018DA74FF277EE2626 /* Pods.framework */; };
-		C30C6EBB1BDE9BDC00D4C879 /* FakeMessageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C6EBA1BDE9BDC00D4C879 /* FakeMessageFactory.swift */; };
-		C31E291A1BF38F8A00EF5B2F /* FakeMessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31E29191BF38F8A00EF5B2F /* FakeMessageSender.swift */; };
-		C31E291C1BF39DE600EF5B2F /* FakePhotoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31E291B1BF39DE600EF5B2F /* FakePhotoMessageViewModel.swift */; };
-		C326C9AE1BF6424900EC4607 /* UserActionHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C326C9AD1BF6424900EC4607 /* UserActionHandlers.swift */; };
-		C33FBFA91BDE441C008E3545 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33FBFA81BDE441C008E3545 /* AppDelegate.swift */; };
-		C33FBFAB1BDE441C008E3545 /* DemoChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33FBFAA1BDE441C008E3545 /* DemoChatViewController.swift */; };
 		C33FBFAE1BDE441C008E3545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAC1BDE441C008E3545 /* Main.storyboard */; };
 		C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAF1BDE441C008E3545 /* Assets.xcassets */; };
 		C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */; };
 		C33FBFC91BDE441C008E3545 /* ChattoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */; };
-		C35A6F4D1BF807C10085CA19 /* SlidingDatasSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A6F4C1BF807C10085CA19 /* SlidingDatasSource.swift */; };
 		C35A6F4F1BF807EC0085CA19 /* SlidingDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A6F4E1BF807EC0085CA19 /* SlidingDataSourceTests.swift */; };
-		C35A6F511BF8089C0085CA19 /* FakeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A6F501BF8089C0085CA19 /* FakeDataSource.swift */; };
-		C396D98F1BF8C64900F10439 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C396D98E1BF8C64900F10439 /* ConversationsViewController.swift */; };
-		C3B0D35B1BF3C55E006CF725 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B0D35A1BF3C55E006CF725 /* SendingStatusPresenter.swift */; };
-		C3B0D35D1BF3C627006CF725 /* SendingStatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B0D35C1BF3C627006CF725 /* SendingStatusCollectionViewCell.swift */; };
-		C3B0D35F1BF3C63C006CF725 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3B0D35E1BF3C63C006CF725 /* SendingStatusCollectionViewCell.xib */; };
-		C3B0D3611BF3C928006CF725 /* ChatItemsDemoDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B0D3601BF3C928006CF725 /* ChatItemsDemoDecorator.swift */; };
+		C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */; };
+		C3F91DB71C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */; };
+		C3F91DB81C75EF9E00D461D2 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA21C75EF9E00D461D2 /* ConversationsViewController.swift */; };
+		C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */; };
+		C3F91DBD1C75EF9E00D461D2 /* FakeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA91C75EF9E00D461D2 /* FakeDataSource.swift */; };
+		C3F91DBE1C75EF9E00D461D2 /* FakeMessageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DAA1C75EF9E00D461D2 /* FakeMessageFactory.swift */; };
+		C3F91DBF1C75EF9E00D461D2 /* FakeMessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DAB1C75EF9E00D461D2 /* FakeMessageSender.swift */; };
+		C3F91DC01C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DAD1C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift */; };
+		C3F91DC11C75EF9E00D461D2 /* DemoPhotoMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DAE1C75EF9E00D461D2 /* DemoPhotoMessageModel.swift */; };
+		C3F91DC21C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DAF1C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift */; };
+		C3F91DC31C75EF9E00D461D2 /* SlidingDatasSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DB01C75EF9E00D461D2 /* SlidingDatasSource.swift */; };
+		C3F91DC41C75EF9E00D461D2 /* DemoTextMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DB21C75EF9E00D461D2 /* DemoTextMessageHandler.swift */; };
+		C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DB31C75EF9E00D461D2 /* DemoTextMessageModel.swift */; };
+		C3F91DC61C75EF9E00D461D2 /* DemoTextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DB41C75EF9E00D461D2 /* DemoTextMessageViewModel.swift */; };
+		C3F91DC71C75EF9E00D461D2 /* BaseMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DB51C75EF9E00D461D2 /* BaseMessageHandler.swift */; };
+		C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */; };
+		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
+		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,13 +67,7 @@
 		623390018DA74FF277EE2626 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC1B7FD95E9FA5D84A5E756D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C103E6161174A5DF650D22E6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		C30C6EBA1BDE9BDC00D4C879 /* FakeMessageFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FakeMessageFactory.swift; path = Source/FakeMessageFactory.swift; sourceTree = "<group>"; };
-		C31E29191BF38F8A00EF5B2F /* FakeMessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeMessageSender.swift; sourceTree = "<group>"; };
-		C31E291B1BF39DE600EF5B2F /* FakePhotoMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakePhotoMessageViewModel.swift; sourceTree = "<group>"; };
-		C326C9AD1BF6424900EC4607 /* UserActionHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserActionHandlers.swift; sourceTree = "<group>"; };
 		C33FBFA51BDE441C008E3545 /* ChattoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChattoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C33FBFA81BDE441C008E3545 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C33FBFAA1BDE441C008E3545 /* DemoChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoChatViewController.swift; sourceTree = "<group>"; };
 		C33FBFAD1BDE441C008E3545 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C33FBFAF1BDE441C008E3545 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C33FBFB21BDE441C008E3545 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -78,14 +77,25 @@
 		C33FBFC41BDE441C008E3545 /* ChattoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattoAppUITests.swift; sourceTree = "<group>"; };
 		C33FBFCA1BDE441C008E3545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C35A6F4C1BF807C10085CA19 /* SlidingDatasSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingDatasSource.swift; sourceTree = "<group>"; };
 		C35A6F4E1BF807EC0085CA19 /* SlidingDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingDataSourceTests.swift; sourceTree = "<group>"; };
-		C35A6F501BF8089C0085CA19 /* FakeDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeDataSource.swift; sourceTree = "<group>"; };
-		C396D98E1BF8C64900F10439 /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
-		C3B0D35A1BF3C55E006CF725 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
-		C3B0D35C1BF3C627006CF725 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
-		C3B0D35E1BF3C63C006CF725 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
-		C3B0D3601BF3C928006CF725 /* ChatItemsDemoDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemsDemoDecorator.swift; sourceTree = "<group>"; };
+		C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemsDemoDecorator.swift; sourceTree = "<group>"; };
+		C3F91DA21C75EF9E00D461D2 /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
+		C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoChatViewController.swift; sourceTree = "<group>"; };
+		C3F91DA91C75EF9E00D461D2 /* FakeDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeDataSource.swift; sourceTree = "<group>"; };
+		C3F91DAA1C75EF9E00D461D2 /* FakeMessageFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeMessageFactory.swift; sourceTree = "<group>"; };
+		C3F91DAB1C75EF9E00D461D2 /* FakeMessageSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeMessageSender.swift; sourceTree = "<group>"; };
+		C3F91DAD1C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoPhotoMessageHandler.swift; sourceTree = "<group>"; };
+		C3F91DAE1C75EF9E00D461D2 /* DemoPhotoMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoPhotoMessageModel.swift; sourceTree = "<group>"; };
+		C3F91DAF1C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoPhotoMessageViewModel.swift; sourceTree = "<group>"; };
+		C3F91DB01C75EF9E00D461D2 /* SlidingDatasSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingDatasSource.swift; sourceTree = "<group>"; };
+		C3F91DB21C75EF9E00D461D2 /* DemoTextMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTextMessageHandler.swift; sourceTree = "<group>"; };
+		C3F91DB31C75EF9E00D461D2 /* DemoTextMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTextMessageModel.swift; sourceTree = "<group>"; };
+		C3F91DB41C75EF9E00D461D2 /* DemoTextMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTextMessageViewModel.swift; sourceTree = "<group>"; };
+		C3F91DB51C75EF9E00D461D2 /* BaseMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageHandler.swift; sourceTree = "<group>"; };
+		C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
+		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,23 +141,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		C30C6EBD1BDE9BE200D4C879 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				C3B0D3601BF3C928006CF725 /* ChatItemsDemoDecorator.swift */,
-				C396D98E1BF8C64900F10439 /* ConversationsViewController.swift */,
-				C33FBFAA1BDE441C008E3545 /* DemoChatViewController.swift */,
-				C30C6EBA1BDE9BDC00D4C879 /* FakeMessageFactory.swift */,
-				C35A6F501BF8089C0085CA19 /* FakeDataSource.swift */,
-				C31E29191BF38F8A00EF5B2F /* FakeMessageSender.swift */,
-				C31E291B1BF39DE600EF5B2F /* FakePhotoMessageViewModel.swift */,
-				C35A6F4C1BF807C10085CA19 /* SlidingDatasSource.swift */,
-				C326C9AD1BF6424900EC4607 /* UserActionHandlers.swift */,
-				C3B0D3581BF3C54F006CF725 /* Custom items */,
-			);
-			name = Source;
-			sourceTree = "<group>";
-		};
 		C33FBF9C1BDE441C008E3545 = {
 			isa = PBXGroup;
 			children = (
@@ -173,8 +166,7 @@
 		C33FBFA71BDE441C008E3545 /* ChattoApp */ = {
 			isa = PBXGroup;
 			children = (
-				C30C6EBD1BDE9BE200D4C879 /* Source */,
-				C33FBFA81BDE441C008E3545 /* AppDelegate.swift */,
+				C3F91D9F1C75EF9E00D461D2 /* Source */,
 				C33FBFAC1BDE441C008E3545 /* Main.storyboard */,
 				C33FBFAF1BDE441C008E3545 /* Assets.xcassets */,
 				C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */,
@@ -201,21 +193,51 @@
 			path = ChattoAppUITests;
 			sourceTree = "<group>";
 		};
-		C3B0D3581BF3C54F006CF725 /* Custom items */ = {
+		C3F91D9F1C75EF9E00D461D2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				C3B0D3591BF3C54F006CF725 /* Sending status */,
+				C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */,
+				C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */,
+				C3F91DA21C75EF9E00D461D2 /* ConversationsViewController.swift */,
+				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
+				C3F91DA91C75EF9E00D461D2 /* FakeDataSource.swift */,
+				C3F91DAA1C75EF9E00D461D2 /* FakeMessageFactory.swift */,
+				C3F91DAB1C75EF9E00D461D2 /* FakeMessageSender.swift */,
+				C3F91DB01C75EF9E00D461D2 /* SlidingDatasSource.swift */,
+				C3F91DB51C75EF9E00D461D2 /* BaseMessageHandler.swift */,
+				C3F91DAC1C75EF9E00D461D2 /* Photo Messages */,
+				C3F91DC81C75EFE300D461D2 /* Sending status */,
+				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
 			);
-			name = "Custom items";
-			path = "Source/Custom items";
+			path = Source;
 			sourceTree = "<group>";
 		};
-		C3B0D3591BF3C54F006CF725 /* Sending status */ = {
+		C3F91DAC1C75EF9E00D461D2 /* Photo Messages */ = {
 			isa = PBXGroup;
 			children = (
-				C3B0D35A1BF3C55E006CF725 /* SendingStatusPresenter.swift */,
-				C3B0D35C1BF3C627006CF725 /* SendingStatusCollectionViewCell.swift */,
-				C3B0D35E1BF3C63C006CF725 /* SendingStatusCollectionViewCell.xib */,
+				C3F91DAD1C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift */,
+				C3F91DAE1C75EF9E00D461D2 /* DemoPhotoMessageModel.swift */,
+				C3F91DAF1C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift */,
+			);
+			path = "Photo Messages";
+			sourceTree = "<group>";
+		};
+		C3F91DB11C75EF9E00D461D2 /* Text Messages */ = {
+			isa = PBXGroup;
+			children = (
+				C3F91DB21C75EF9E00D461D2 /* DemoTextMessageHandler.swift */,
+				C3F91DB31C75EF9E00D461D2 /* DemoTextMessageModel.swift */,
+				C3F91DB41C75EF9E00D461D2 /* DemoTextMessageViewModel.swift */,
+			);
+			path = "Text Messages";
+			sourceTree = "<group>";
+		};
+		C3F91DC81C75EFE300D461D2 /* Sending status */ = {
+			isa = PBXGroup;
+			children = (
+				C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */,
+				C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */,
+				C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */,
 			);
 			path = "Sending status";
 			sourceTree = "<group>";
@@ -329,8 +351,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3B0D35F1BF3C63C006CF725 /* SendingStatusCollectionViewCell.xib in Resources */,
 				C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */,
+				C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */,
 				C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */,
 				C33FBFAE1BDE441C008E3545 /* Main.storyboard in Resources */,
 			);
@@ -418,18 +440,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C31E291C1BF39DE600EF5B2F /* FakePhotoMessageViewModel.swift in Sources */,
-				C3B0D3611BF3C928006CF725 /* ChatItemsDemoDecorator.swift in Sources */,
-				C33FBFAB1BDE441C008E3545 /* DemoChatViewController.swift in Sources */,
-				C396D98F1BF8C64900F10439 /* ConversationsViewController.swift in Sources */,
-				C3B0D35B1BF3C55E006CF725 /* SendingStatusPresenter.swift in Sources */,
-				C3B0D35D1BF3C627006CF725 /* SendingStatusCollectionViewCell.swift in Sources */,
-				C30C6EBB1BDE9BDC00D4C879 /* FakeMessageFactory.swift in Sources */,
-				C31E291A1BF38F8A00EF5B2F /* FakeMessageSender.swift in Sources */,
-				C35A6F511BF8089C0085CA19 /* FakeDataSource.swift in Sources */,
-				C35A6F4D1BF807C10085CA19 /* SlidingDatasSource.swift in Sources */,
-				C33FBFA91BDE441C008E3545 /* AppDelegate.swift in Sources */,
-				C326C9AE1BF6424900EC4607 /* UserActionHandlers.swift in Sources */,
+				C3F91DBF1C75EF9E00D461D2 /* FakeMessageSender.swift in Sources */,
+				C3F91DB81C75EF9E00D461D2 /* ConversationsViewController.swift in Sources */,
+				C3F91DC41C75EF9E00D461D2 /* DemoTextMessageHandler.swift in Sources */,
+				C3F91DC31C75EF9E00D461D2 /* SlidingDatasSource.swift in Sources */,
+				C3F91DC71C75EF9E00D461D2 /* BaseMessageHandler.swift in Sources */,
+				C3F91DC61C75EF9E00D461D2 /* DemoTextMessageViewModel.swift in Sources */,
+				C3F91DC01C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift in Sources */,
+				C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */,
+				C3F91DBD1C75EF9E00D461D2 /* FakeDataSource.swift in Sources */,
+				C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */,
+				C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */,
+				C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */,
+				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
+				C3F91DB71C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift in Sources */,
+				C3F91DC11C75EF9E00D461D2 /* DemoPhotoMessageModel.swift in Sources */,
+				C3F91DC21C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift in Sources */,
+				C3F91DBE1C75EF9E00D461D2 /* FakeMessageFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
