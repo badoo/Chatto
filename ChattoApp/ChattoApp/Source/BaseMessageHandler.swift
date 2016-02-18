@@ -23,22 +23,30 @@
 */
 
 import Foundation
+import Chatto
+import ChattoAdditions
 
-public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
-    var text: String { get }
+public protocol DemoMessageViewModelProtocol {
+    var messageModel: DemoMessageModelProtocol { get }
 }
 
-public class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
-    public var messageModel: MessageModelProtocol {
-        return self._messageModel
-    }
-    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let text: String
-    public init(messageModel: MessageModelT, text: String) {
-        self._messageModel = messageModel
-        self.text = text
-    }
-    // This should be covered by DecoratedMessageModelProtocol, but compiler crashes without this (Xcode 7.1)
-    public var uid: String { return self.messageModel.uid }
+class BaseMessageHandler {
 
+    private let messageSender: FakeMessageSender
+    init (messageSender: FakeMessageSender) {
+        self.messageSender = messageSender
+    }
+    func userDidTapOnFailIcon(viewModel viewModel: DemoMessageViewModelProtocol) {
+        print("userDidTapOnFailIcon")
+        self.messageSender.sendMessage(viewModel.messageModel)
+    }
+
+    func userDidTapOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+        print("userDidTapOnBubble")
+
+    }
+
+    func userDidLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+        print("userDidLongPressOnBubble")
+    }
 }

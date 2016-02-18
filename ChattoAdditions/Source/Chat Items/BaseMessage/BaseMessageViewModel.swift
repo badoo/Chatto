@@ -49,7 +49,6 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsFailedIcon: Bool { get }
     var date: String { get }
     var status: MessageViewModelStatus { get }
-    var messageModel: MessageModelProtocol { get }
 }
 
 public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
@@ -78,10 +77,6 @@ extension DecoratedMessageViewModelProtocol {
 
     public var showsFailedIcon: Bool {
         return self.messageViewModel.showsFailedIcon
-    }
-
-    public var messageModel: MessageModelProtocol {
-        return self.messageViewModel.messageModel
     }
 }
 

@@ -25,10 +25,10 @@
 import Foundation
 import ChattoAdditions
 
-class FakePhotoMessageViewModel: PhotoMessageViewModel {
+class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
 
     let fakeImage: UIImage
-    override init(photoMessage: PhotoMessageModelProtocol, messageViewModel: MessageViewModelProtocol) {
+    override init(photoMessage: DemoPhotoMessageModel, messageViewModel: MessageViewModelProtocol) {
         self.fakeImage = photoMessage.image
         super.init(photoMessage: photoMessage, messageViewModel: messageViewModel)
         if photoMessage.isIncoming {
@@ -65,17 +65,23 @@ class FakePhotoMessageViewModel: PhotoMessageViewModel {
     }
 }
 
-public class FakePhotoMessageViewModelBuilder: ViewModelBuilderProtocol {
+extension DemoPhotoMessageViewModel: DemoMessageViewModelProtocol {
+    var messageModel: DemoMessageModelProtocol {
+        return self._photoMessage
+    }
+}
+
+class DemoPhotoMessageViewModelBuilder: ViewModelBuilderProtocol {
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(model: PhotoMessageModel) -> PhotoMessageViewModel {
+    func createViewModel(model: DemoPhotoMessageModel) -> DemoPhotoMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
-        let photoMessageViewModel = FakePhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
+        let photoMessageViewModel = DemoPhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         return photoMessageViewModel
     }
 
-    public func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is PhotoMessageModel
+    func canCreateViewModel(fromModel model: Any) -> Bool {
+        return model is DemoPhotoMessageModel
     }
 }

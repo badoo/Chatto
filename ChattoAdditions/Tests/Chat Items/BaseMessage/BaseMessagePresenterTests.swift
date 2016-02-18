@@ -29,11 +29,11 @@ import Chatto
 class BaseMessagePresenterTests: XCTestCase {
 
     // BaseMessagePresenter is generic, let's use the photo one for instance
-    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel>, PhotoMessageTestHandler>!
+    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
     var interactionHandler: PhotoMessageTestHandler!
     override func setUp() {
-        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel>()
+        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
