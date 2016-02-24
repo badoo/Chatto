@@ -62,16 +62,16 @@ class FakeDataSource: ChatDataSourceProtocol {
     var chatItems = [ChatItemProtocol]()
     weak var delegate: ChatDataSourceDelegateProtocol?
 
-    func loadNext(completion: () -> Void) {
+    func loadNext() {
         if let chatItemsForLoadNext = self.chatItemsForLoadNext {
             self.chatItems = chatItemsForLoadNext
         }
-        completion()
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
     }
 
-    func loadPrevious(completion: () -> Void) {
+    func loadPrevious() {
         self.wasRequestedForPrevious = true
-        completion()
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
     }
 
     func adjustNumberOfMessages(preferredMaxCount preferredMaxCount: Int?, focusPosition: Double, completion:(didAdjust: Bool) -> Void) {
