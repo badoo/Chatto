@@ -24,7 +24,7 @@
 
 import Foundation
 
-public enum UpdateContext {
+public enum UpdateType {
     case Normal
     case FirstLoad
     case Pagination
@@ -34,7 +34,7 @@ public enum UpdateContext {
 
 public protocol ChatDataSourceDelegateProtocol: class {
     func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol)
-    func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, context: UpdateContext)
+    func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, updateType: UpdateType)
 }
 
 public protocol ChatDataSourceProtocol: class {
@@ -43,7 +43,7 @@ public protocol ChatDataSourceProtocol: class {
     var chatItems: [ChatItemProtocol] { get }
     weak var delegate: ChatDataSourceDelegateProtocol? { get set }
 
-    func loadNext(completion: () -> Void)
-    func loadPrevious(completion: () -> Void)
+    func loadNext() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
+    func loadPrevious() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
     func adjustNumberOfMessages(preferredMaxCount preferredMaxCount: Int?, focusPosition: Double, completion:(didAdjust: Bool) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
 }

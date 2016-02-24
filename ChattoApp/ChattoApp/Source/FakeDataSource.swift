@@ -64,16 +64,16 @@ class FakeDataSource: ChatDataSourceProtocol {
 
     weak var delegate: ChatDataSourceDelegateProtocol?
 
-    func loadNext(completion: () -> Void) {
+    func loadNext() {
         self.slidingWindow.loadNext()
         self.slidingWindow.adjustWindow(focusPosition: 1, maxWindowSize: self.preferredMaxWindowSize)
-        completion()
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
     }
 
-    func loadPrevious(completion: () -> Void) {
+    func loadPrevious() {
         self.slidingWindow.loadPrevious()
         self.slidingWindow.adjustWindow(focusPosition: 0, maxWindowSize: self.preferredMaxWindowSize)
-        completion()
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
     }
 
     func addTextMessage(text: String) {

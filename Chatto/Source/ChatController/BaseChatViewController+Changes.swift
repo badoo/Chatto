@@ -26,21 +26,21 @@ import Foundation
 
 extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
-    public func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, context: UpdateContext) {
-        self.enqueueModelUpdate(context: context)
+    public func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
+        self.enqueueModelUpdate(updateType: updateType)
     }
 
     public func chatDataSourceDidUpdate(chatDataSource: ChatDataSourceProtocol) {
-        self.enqueueModelUpdate(context: .Normal)
+        self.enqueueModelUpdate(updateType: .Normal)
     }
 
-    public func enqueueModelUpdate(context context: UpdateContext) {
+    public func enqueueModelUpdate(updateType updateType: UpdateType) {
         let newItems = self.chatDataSource?.chatItems ?? []
         self.updateQueue.addTask({ [weak self] (completion) -> () in
             guard let sSelf = self else { return }
 
             let oldItems = sSelf.chatItemCompanionCollection
-            sSelf.updateModels(newItems: newItems, oldItems: oldItems, context: context, completion: {
+            sSelf.updateModels(newItems: newItems, oldItems: oldItems, updateType: updateType, completion: {
                 if sSelf.updateQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
@@ -60,7 +60,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                 }
                 let newItems = sSelf.chatDataSource?.chatItems ?? []
                 let oldItems = sSelf.chatItemCompanionCollection
-                sSelf.updateModels(newItems: newItems, oldItems: oldItems, context: .MessageCountReduction, completion: completion )
+                sSelf.updateModels(newItems: newItems, oldItems: oldItems, updateType: .MessageCountReduction, completion: completion )
             })
         }
     }
@@ -114,9 +114,9 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     func performBatchUpdates(
         updateModelClosure updateModelClosure: () -> Void,
         changes: CollectionChanges,
-        context: UpdateContext,
+        updateType: UpdateType,
         completion: () -> Void) {
-            let shouldScrollToBottom = context != .Pagination && self.isScrolledAtBottom()
+            let shouldScrollToBottom = updateType != .Pagination && self.isScrolledAtBottom()
             let oldRect = self.rectAtIndexPath(changes.movedIndexPaths.first?.indexPathOld)
             let myCompletion = {
                 // Found that cells may not match correct index paths here yet! (see comment below)
@@ -126,7 +126,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                 })
             }
 
-            if context == .Normal {
+            if updateType == .Normal {
 
                 UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
                     // We want to update visible cells to support easy removal of bubble tail or any other updates that may be needed after a data update
@@ -154,24 +154,24 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             }
 
             if shouldScrollToBottom {
-                self.scrollToBottom(animated: context == .Normal)
+                self.scrollToBottom(animated: updateType == .Normal)
             } else {
                 let newRect = self.rectAtIndexPath(changes.movedIndexPaths.first?.indexPathNew)
                 self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
             }
     }
 
-    private func updateModels(newItems newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, var context: UpdateContext, completion: () -> Void) {
+    private func updateModels(newItems newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, updateType: UpdateType, completion: () -> Void) {
         let collectionViewWidth = self.collectionView.bounds.width
-        context = self.isFirstLayout ? .FirstLoad : context
-        let performInBackground = context != .FirstLoad
+        let updateType = self.isFirstLayout ? .FirstLoad : updateType
+        let performInBackground = updateType != .FirstLoad
 
         self.autoLoadingEnabled = false
         let perfomBatchUpdates: (changes: CollectionChanges, updateModelClosure: () -> Void) -> ()  = { [weak self] modelUpdate in
             self?.performBatchUpdates(
                 updateModelClosure: modelUpdate.updateModelClosure,
                 changes: modelUpdate.changes,
-                context: context,
+                updateType: updateType,
                 completion: { () -> Void in
                     self?.autoLoadingEnabled = true
                     completion()

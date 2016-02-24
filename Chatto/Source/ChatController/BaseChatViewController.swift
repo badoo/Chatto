@@ -44,7 +44,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public var chatDataSource: ChatDataSourceProtocol? {
         didSet {
             self.chatDataSource?.delegate = self
-            self.enqueueModelUpdate(context: .Reload)
+            self.enqueueModelUpdate(updateType: .Reload)
         }
     }
 
