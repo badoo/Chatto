@@ -153,11 +153,10 @@ class ChatViewControllerTests: XCTestCase {
         }
     }
 
-    func testThat_ControllerDoesNotLeak() {
+    func testThat_WhenUpdatesFinish_ControllerIsNotRetained() {
         let asyncExpectation = expectationWithDescription("update")
         let updateQueue = SerialTaskQueueTestHelper()
-        let presenterBuilder = FakePresenterBuilder()
-        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
         weak var weakController = controller
         controller.updateQueue = updateQueue
         let fakeDataSource = FakeDataSource()
@@ -173,6 +172,14 @@ class ChatViewControllerTests: XCTestCase {
         }
     }
 
+    func testThat_WhenLayoutFinishes_ControllerIsNotRetained() {
+        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
+        weak var weakController = controller
+        controller.chatDataSource = FakeDataSource()
+        self.fakeDidAppearAndLayout(controller: controller)
+        controller = nil
+        XCTAssertNil(weakController)
+    }
 
     func testThat_LayoutAdaptsWhenKeyboardIsShown() {
         let controller = TesteableChatViewController()

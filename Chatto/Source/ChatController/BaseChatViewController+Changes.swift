@@ -41,6 +41,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
             let oldItems = sSelf.chatItemCompanionCollection
             sSelf.updateModels(newItems: newItems, oldItems: oldItems, updateType: updateType, completion: {
+                guard let sSelf = self else { return }
                 if sSelf.updateQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
