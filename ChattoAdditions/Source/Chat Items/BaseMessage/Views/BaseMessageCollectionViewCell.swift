@@ -77,7 +77,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         }
     }
 
-    var messageViewModel: MessageViewModelProtocol! {
+    public var messageViewModel: MessageViewModelProtocol! {
         didSet {
             updateViews()
         }
@@ -112,12 +112,12 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
     }
 
     public private(set) var bubbleView: BubbleViewType!
-    func createBubbleView() -> BubbleViewType! {
+    public func createBubbleView() -> BubbleViewType! {
         assert(false, "Override in subclass")
         return nil
     }
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
     }
