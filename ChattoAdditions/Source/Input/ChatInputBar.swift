@@ -24,7 +24,7 @@
 
 import UIKit
 
-protocol ChatInputBarDelegate: class {
+public protocol ChatInputBarDelegate: class {
     func inputBarDidBeginEditing(inputBar: ChatInputBar)
     func inputBarDidEndEditing(inputBar: ChatInputBar)
     func inputBarDidChangeText(inputBar: ChatInputBar)
@@ -35,7 +35,7 @@ protocol ChatInputBarDelegate: class {
 @objc
 public class ChatInputBar: ReusableXibView {
 
-    weak var delegate: ChatInputBarDelegate?
+    public weak var delegate: ChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
