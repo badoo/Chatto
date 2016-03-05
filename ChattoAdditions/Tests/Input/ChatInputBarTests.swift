@@ -28,6 +28,7 @@ import XCTest
 class ChatInputBarTests: XCTestCase {
     private var bar: ChatInputBar!
     private var presenter: FakeChatInputBarPresenter!
+    private var delegate: FakeChatInputBarDelegate!
     override func setUp() {
         super.setUp()
         self.bar = ChatInputBar.loadNib()
@@ -35,6 +36,11 @@ class ChatInputBarTests: XCTestCase {
 
     private func setupPresenter() {
         self.presenter = FakeChatInputBarPresenter(chatInputBar: self.bar)
+    }
+
+    private func setupDelegate() {
+        self.delegate = FakeChatInputBarDelegate()
+        self.bar.delegate = self.delegate
     }
 
     private func createItemView(inputItem: ChatInputItemProtocol) -> ChatInputItemView {
@@ -100,6 +106,41 @@ class ChatInputBarTests: XCTestCase {
         self.bar.buttonTapped(self.bar)
         XCTAssertTrue(self.presenter.onSendButtonPressedCalled)
     }
+
+    // MARK: Delegation Tests
+    func testThat_WhenItemViewTapped_ItNotifiesDelegateThatNewItemReceivedFocus() {
+        self.setupDelegate()
+        let item = MockInputItem()
+        self.bar.inputItemViewTapped(createItemView(item))
+
+        XCTAssertTrue(self.delegate.inputBarDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.delegate.focusedItem === item)
+    }
+
+    func testThat_WhenTextViewDidBeginEditing_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.textViewDidBeginEditing(self.bar.textView)
+        XCTAssertTrue(self.delegate.inputBarDidBeginEditingCalled)
+    }
+
+    func testThat_WhenTextViewDidEndEditing_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.textViewDidEndEditing(self.bar.textView)
+        XCTAssertTrue(self.delegate.inputBarDidEndEditingCalled)
+    }
+
+    func testThat_WhenTextViewDidChangeText_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.inputText = "text"
+        self.bar.textViewDidChange(self.bar.textView)
+        XCTAssertTrue(self.delegate.inputBarDidChangeTextCalled)
+    }
+
+    func testThat_WhenSendButtonTapped_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.buttonTapped(self.bar)
+        XCTAssertTrue(self.delegate.inputBarSendButtonPressedCalled)
+    }
 }
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
@@ -129,5 +170,34 @@ class FakeChatInputBarPresenter: ChatInputBarPresenter {
     func onDidReceiveFocusOnItem(item: ChatInputItemProtocol) {
         self.onDidReceiveFocusOnItemCalled = true
         self.itemThatReceivedFocus = item
+    }
+}
+
+class FakeChatInputBarDelegate: ChatInputBarDelegate {
+    var inputBarDidBeginEditingCalled = false
+    func inputBarDidBeginEditing(inputBar: ChatInputBar) {
+        self.inputBarDidBeginEditingCalled = true
+    }
+
+    var inputBarDidEndEditingCalled = false
+    func inputBarDidEndEditing(inputBar: ChatInputBar) {
+        self.inputBarDidEndEditingCalled = true
+    }
+
+    var inputBarDidChangeTextCalled = false
+    func inputBarDidChangeText(inputBar: ChatInputBar) {
+        self.inputBarDidChangeTextCalled = true
+    }
+
+    var inputBarSendButtonPressedCalled = false
+    func inputBarSendButtonPressed(inputBar: ChatInputBar) {
+        self.inputBarSendButtonPressedCalled = true
+    }
+
+    var inputBarDidReceiveFocusOnItemCalled = false
+    var focusedItem: ChatInputItemProtocol?
+    func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol) {
+        self.inputBarDidReceiveFocusOnItemCalled = true
+        self.focusedItem = item
     }
 }

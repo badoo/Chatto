@@ -27,6 +27,7 @@ import UIKit
 protocol ChatInputBarDelegate: class {
     func inputBarDidBeginEditing(inputBar: ChatInputBar)
     func inputBarDidEndEditing(inputBar: ChatInputBar)
+    func inputBarDidChangeText(inputBar: ChatInputBar)
     func inputBarSendButtonPressed(inputBar: ChatInputBar)
     func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
@@ -150,6 +151,7 @@ public class ChatInputBar: ReusableXibView {
 
     @IBAction func buttonTapped(sender: AnyObject) {
         self.presenter?.onSendButtonPressed()
+        self.delegate?.inputBarSendButtonPressed(self)
     }
 }
 
@@ -157,6 +159,7 @@ public class ChatInputBar: ReusableXibView {
 extension ChatInputBar: ChatInputItemViewDelegate {
     func inputItemViewTapped(view: ChatInputItemView) {
         self.presenter?.onDidReceiveFocusOnItem(view.inputItem)
+        self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
     }
 }
 
@@ -196,14 +199,17 @@ extension ChatInputBar { // Tabar
 extension ChatInputBar: UITextViewDelegate {
     public func textViewDidEndEditing(textView: UITextView) {
         self.presenter?.onDidEndEditing()
+        self.delegate?.inputBarDidEndEditing(self)
     }
 
     public func textViewDidBeginEditing(textView: UITextView) {
         self.presenter?.onDidBeginEditing()
+        self.delegate?.inputBarDidBeginEditing(self)
     }
 
     public func textViewDidChange(textView: UITextView) {
         self.sendButton.enabled = !textView.text.isEmpty
+        self.delegate?.inputBarDidChangeText(self)
     }
 }
 
