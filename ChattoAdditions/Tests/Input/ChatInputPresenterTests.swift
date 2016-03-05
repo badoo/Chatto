@@ -25,7 +25,7 @@
 import XCTest
 @testable import ChattoAdditions
 
-class ChatInputManagerTests: XCTestCase {
+class ChatInputPresenterTests: XCTestCase {
     private var bar: ChatInputBar!
     private var presenter: BasicChatInputBarPresenter!
     override func setUp() {
