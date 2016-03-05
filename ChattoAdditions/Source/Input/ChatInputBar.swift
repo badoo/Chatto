@@ -35,6 +35,7 @@ protocol ChatInputBarDelegate: class {
 public class ChatInputBar: ReusableXibView {
 
     weak var delegate: ChatInputBarDelegate?
+    weak var presenter: ChatInputBarPresenter?
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
@@ -148,15 +149,14 @@ public class ChatInputBar: ReusableXibView {
     }
 
     @IBAction func buttonTapped(sender: AnyObject) {
-        self.delegate?.inputBarSendButtonPressed(self)
-        self.inputText = ""
+        self.presenter?.onSendButtonPressed()
     }
 }
 
 // MARK: - ChatInputItemViewDelegate
 extension ChatInputBar: ChatInputItemViewDelegate {
     func inputItemViewTapped(view: ChatInputItemView) {
-        self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
+        self.presenter?.onDidReceiveFocusOnItem(view.inputItem)
     }
 }
 
@@ -195,11 +195,11 @@ extension ChatInputBar { // Tabar
 // MARK: UITextViewDelegate
 extension ChatInputBar: UITextViewDelegate {
     public func textViewDidEndEditing(textView: UITextView) {
-        self.delegate?.inputBarDidEndEditing(self)
+        self.presenter?.onDidEndEditing()
     }
 
     public func textViewDidBeginEditing(textView: UITextView) {
-        self.delegate?.inputBarDidBeginEditing(self)
+        self.presenter?.onDidBeginEditing()
     }
 
     public func textViewDidChange(textView: UITextView) {
@@ -215,5 +215,4 @@ class SingleViewContainerView: UIView {
             return CGSize.zero
         }
     }
-
 }

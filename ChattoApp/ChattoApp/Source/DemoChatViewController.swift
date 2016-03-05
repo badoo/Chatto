@@ -52,11 +52,11 @@ class DemoChatViewController: BaseChatViewController {
         self.dataSource.addRandomIncomingMessage()
     }
 
-    var chatInputPresenter: ChatInputBarPresenter!
+    var chatInputPresenter: BasicChatInputBarPresenter!
     override func createChatInputView() -> UIView {
         let chatInputView = ChatInputBar.loadNib()
         self.configureChatInputBar(chatInputView)
-        self.chatInputPresenter = ChatInputBarPresenter(chatInputView: chatInputView, chatInputItems: self.createChatInputItems())
+        self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems())
         return chatInputView
     }
 
