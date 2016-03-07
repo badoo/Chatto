@@ -24,9 +24,10 @@
 
 import UIKit
 
-protocol ChatInputBarDelegate: class {
+public protocol ChatInputBarDelegate: class {
     func inputBarDidBeginEditing(inputBar: ChatInputBar)
     func inputBarDidEndEditing(inputBar: ChatInputBar)
+    func inputBarDidChangeText(inputBar: ChatInputBar)
     func inputBarSendButtonPressed(inputBar: ChatInputBar)
     func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
@@ -34,7 +35,8 @@ protocol ChatInputBarDelegate: class {
 @objc
 public class ChatInputBar: ReusableXibView {
 
-    weak var delegate: ChatInputBarDelegate?
+    public weak var delegate: ChatInputBarDelegate?
+    weak var presenter: ChatInputBarPresenter?
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
@@ -148,14 +150,15 @@ public class ChatInputBar: ReusableXibView {
     }
 
     @IBAction func buttonTapped(sender: AnyObject) {
+        self.presenter?.onSendButtonPressed()
         self.delegate?.inputBarSendButtonPressed(self)
-        self.inputText = ""
     }
 }
 
 // MARK: - ChatInputItemViewDelegate
 extension ChatInputBar: ChatInputItemViewDelegate {
     func inputItemViewTapped(view: ChatInputItemView) {
+        self.presenter?.onDidReceiveFocusOnItem(view.inputItem)
         self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
     }
 }
@@ -195,15 +198,18 @@ extension ChatInputBar { // Tabar
 // MARK: UITextViewDelegate
 extension ChatInputBar: UITextViewDelegate {
     public func textViewDidEndEditing(textView: UITextView) {
+        self.presenter?.onDidEndEditing()
         self.delegate?.inputBarDidEndEditing(self)
     }
 
     public func textViewDidBeginEditing(textView: UITextView) {
+        self.presenter?.onDidBeginEditing()
         self.delegate?.inputBarDidBeginEditing(self)
     }
 
     public func textViewDidChange(textView: UITextView) {
         self.sendButton.enabled = !textView.text.isEmpty
+        self.delegate?.inputBarDidChangeText(self)
     }
 }
 
@@ -215,5 +221,4 @@ class SingleViewContainerView: UIView {
             return CGSize.zero
         }
     }
-
 }

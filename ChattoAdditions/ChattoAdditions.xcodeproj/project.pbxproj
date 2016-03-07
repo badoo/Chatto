@@ -70,7 +70,7 @@
 		C3C0CC851BFE49700052747C /* ChatInputBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */; };
 		C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */; };
 		C3C0CC871BFE49700052747C /* ChatInputItemViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */; };
-		C3C0CC881BFE49700052747C /* ChatInputManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7A1BFE49700052747C /* ChatInputManagerTests.swift */; };
+		C3C0CC881BFE49700052747C /* ChatInputPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */; };
 		C3C0CC891BFE49700052747C /* LiveCameraCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7B1BFE49700052747C /* LiveCameraCellTests.swift */; };
 		C3C0CC8A1BFE49700052747C /* PhotosChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */; };
 		C3C0CC8B1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */; };
@@ -156,7 +156,7 @@
 		C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputBarTests.swift; sourceTree = "<group>"; };
 		C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputItemTests.swift; sourceTree = "<group>"; };
 		C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputItemViewTests.swift; sourceTree = "<group>"; };
-		C3C0CC7A1BFE49700052747C /* ChatInputManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputManagerTests.swift; sourceTree = "<group>"; };
+		C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputPresenterTests.swift; sourceTree = "<group>"; };
 		C3C0CC7B1BFE49700052747C /* LiveCameraCellTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCellTests.swift; sourceTree = "<group>"; };
 		C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosChatInputItemTests.swift; sourceTree = "<group>"; };
 		C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputViewItemSizeCalculatorTests.swift; sourceTree = "<group>"; };
@@ -410,7 +410,7 @@
 				C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */,
 				C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */,
 				C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */,
-				C3C0CC7A1BFE49700052747C /* ChatInputManagerTests.swift */,
+				C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */,
 				C3C0CC7B1BFE49700052747C /* LiveCameraCellTests.swift */,
 				C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */,
 				C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */,
@@ -614,7 +614,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */,
-				C3C0CC881BFE49700052747C /* ChatInputManagerTests.swift in Sources */,
+				C3C0CC881BFE49700052747C /* ChatInputPresenterTests.swift in Sources */,
 				C3815D001C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift in Sources */,
 				C3C0CC891BFE49700052747C /* LiveCameraCellTests.swift in Sources */,
 				C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */,

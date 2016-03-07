@@ -25,64 +25,70 @@
 import XCTest
 @testable import ChattoAdditions
 
-class ChatInputManagerTests: XCTestCase {
+class ChatInputPresenterTests: XCTestCase {
     private var bar: ChatInputBar!
-    private var presenter: ChatInputBarPresenter!
+    private var presenter: BasicChatInputBarPresenter!
     override func setUp() {
         super.setUp()
         self.bar = ChatInputBar.loadNib()
-        self.presenter = ChatInputBarPresenter(chatInputView: self.bar, chatInputItems: [])
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: [])
+    }
+
+    func testThat_WhenSendButtonPressed_InputTextBecomesEmpty() {
+        self.bar.inputText = "text"
+        self.presenter.onSendButtonPressed()
+        XCTAssertEqual(self.bar.inputText.characters.count, 0)
     }
 
     // MARK: - Focused item tests
     func testThat_WhenItemDidReceiveFocus_ItemBecomesFocused() {
         let item = MockInputItem() as ChatInputItemProtocol
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertTrue(self.presenter.focusedItem! === item)
     }
 
     func testThat_WhenAnotherItemDidReceiveFocus_AnotherItemBecomesFocused() {
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
 
         let anotherItem = MockInputItem() as ChatInputItemProtocol
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: anotherItem)
+        self.presenter.onDidReceiveFocusOnItem(anotherItem)
         XCTAssertTrue(self.presenter.focusedItem! === anotherItem)
     }
 
     func testThat_GivenItemHasNonePresentationMode_WhenItemReceivesFocus_ItDoesntBecomeFocused() {
         let item = MockInputItem()
         item.presentationMode = .None
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertNil(self.presenter.focusedItem)
     }
 
     func testThat_WhenItemReceivesFocus_ItBecomesSelected() {
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertTrue(item.selected)
     }
 
     func testThat_WhenAnotherItemReceivesFocus_PreviousItemBecomesDeselected() {
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
 
         let anotherItem = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: anotherItem)
+        self.presenter.onDidReceiveFocusOnItem(anotherItem)
         XCTAssertFalse(item.selected)
     }
 
     func testThat_GivenItemShowsSendButton_WhenItemReceivesFocus_PresenterShowsSendButton() {
         let item = MockInputItem()
         item.showsSendButton = true
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertTrue(self.bar.showsSendButton)
     }
 
     func testThat_GivenItemDoesntShowSendButton_WhenItemReceivesFocus_PresenterHidesSendButton() {
         self.bar.showsSendButton = true
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertFalse(self.bar.showsSendButton)
     }
 
@@ -90,7 +96,7 @@ class ChatInputManagerTests: XCTestCase {
         self.bar.showsTextView = false
         let item = MockInputItem()
         item.presentationMode = .Keyboard
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertTrue(self.bar.showsTextView)
     }
 
@@ -98,7 +104,7 @@ class ChatInputManagerTests: XCTestCase {
         self.bar.showsTextView = true
         let item = MockInputItem()
         item.presentationMode = .CustomView
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertFalse(self.bar.showsTextView)
     }
 
@@ -106,18 +112,18 @@ class ChatInputManagerTests: XCTestCase {
         self.bar.showsTextView = true
         let item = MockInputItem()
         item.presentationMode = .None
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
         XCTAssertTrue(self.bar.showsTextView)
 
     }
 
     func testThat_GivenPresenterHasFocusedItem_WhenSendButtonPressed_FocusedItemHandlesInputFromInputBar() {
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
+        self.presenter.onDidReceiveFocusOnItem(item)
 
         let inputText = "inputText"
         self.bar.inputText = inputText
-        self.presenter.inputBarSendButtonPressed(self.bar)
+        self.presenter.onSendButtonPressed()
 
         XCTAssertTrue(item.handledInput as! String == inputText)
     }
@@ -135,35 +141,35 @@ class ChatInputManagerTests: XCTestCase {
         }
 
         let inputItems: Array<ChatInputItemProtocol> = [firstInputItem, secondInputItem]
-        self.presenter = ChatInputBarPresenter(chatInputView: self.bar, chatInputItems: inputItems)
-        self.presenter.inputBarSendButtonPressed(self.bar)
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems)
+        self.presenter.onSendButtonPressed()
         XCTAssertEqual(itemThatHandledInput, 1)
     }
 
     // MARK: - Bar editing tests
     func testThat_GivenPresenterHasFocusedItem_WhenBarDidEndEditing_FocusedItemLostFocus() {
         let item = MockInputItem()
-        self.presenter.inputBar(self.bar, didReceiveFocusOnItem: item)
-        self.presenter.inputBarDidEndEditing(self.bar)
+        self.presenter.onDidReceiveFocusOnItem(item)
+        self.presenter.onDidEndEditing()
         XCTAssertNil(self.presenter.focusedItem)
     }
 
     func testThat_WhenBarDidEndEditing_PresenterShowsSendButton() {
         self.bar.showsSendButton = false
-        self.presenter.inputBarDidEndEditing(self.bar)
+        self.presenter.onDidEndEditing()
         XCTAssertTrue(self.bar.showsSendButton)
     }
 
     func testThat_WhenBarDidEndEditing_PresenterShowsTextView() {
         self.bar.showsTextView = false
-        self.presenter.inputBarDidEndEditing(self.bar)
+        self.presenter.onDidEndEditing()
         XCTAssertTrue(self.bar.showsTextView)
     }
 
     func testThat_GivenPresenterHasNoFocusedItem_WhenBarDidBeginEditing_FirstKeyboardItemBecomesFocused() {
         let inputItems: Array<ChatInputItemProtocol> = [TextChatInputItem(), TextChatInputItem()]
-        self.presenter = ChatInputBarPresenter(chatInputView: self.bar, chatInputItems: inputItems)
-        self.presenter.inputBarDidBeginEditing(self.bar)
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems)
+        self.presenter.onDidBeginEditing()
         XCTAssertTrue(self.presenter.focusedItem! === inputItems[0])
     }
 }
