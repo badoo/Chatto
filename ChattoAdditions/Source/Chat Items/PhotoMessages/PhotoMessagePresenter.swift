@@ -72,7 +72,7 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         return viewModel
     }
 
-    var photoCell: PhotoMessageCollectionViewCell? {
+    public var photoCell: PhotoMessageCollectionViewCell? {
         if let cell = self.cell {
             if let photoCell = cell as? PhotoMessageCollectionViewCell {
                 return photoCell
