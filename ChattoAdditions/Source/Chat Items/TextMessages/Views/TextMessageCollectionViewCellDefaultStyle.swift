@@ -28,7 +28,7 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
 
     public init () {}
 
-    lazy var baseStyle = BaseMessageCollectionViewCellDefaultSyle()
+    lazy var baseStyle = BaseMessageCollectionViewCellDefaultStyle()
     lazy var images: [String: UIImage] = {
         return [
             "incoming_tail" : UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: TextMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!,
