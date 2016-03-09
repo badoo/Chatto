@@ -40,7 +40,7 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     }
 
     lazy private var styleConstants = Constants()
-    lazy private var baseStyle = BaseMessageCollectionViewCellDefaultSyle()
+    lazy private var baseStyle = BaseMessageCollectionViewCellDefaultStyle()
 
     lazy private var maskImageIncomingTail: UIImage = {
         return UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!

@@ -46,7 +46,7 @@
 		71A04AA0639B0DAFD053BFDBFB478512 /* BaseChatItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A14766A8E0032BB78606EC453D0E319 /* BaseChatItemPresenter.swift */; };
 		71BF373B1A5E11AC51A7D5BA39FAE8C0 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = 737E2CF45205A77F92C3BB577EC402AC /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		732F36EE305570AB4434DD55E8909691 /* ChatItemCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6BD0B70E57045A2F80FE71D185225EC /* ChatItemCompanion.swift */; };
-		74A62FD17620A7F212C97BAF348CC48C /* BaseMessageCollectionViewCellDefaultSyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultSyle.swift */; };
+		74A62FD17620A7F212C97BAF348CC48C /* BaseMessageCollectionViewCellDefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultStyle.swift */; };
 		75DE942B1F0BCC571FC94D3450CFEACD /* AccessoryViewRevealer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F06F0E819E1A4B623D5D5CB005332F5 /* AccessoryViewRevealer.swift */; };
 		774ED369A498A948F1CB47492C70C331 /* CircleIconView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1450F7E23B95E33D58368BB36C594CCF /* CircleIconView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79E04E9DBEF95CEA8BC5189A4817999E /* ChatCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1B14121609E9FEF78CC5A1F5D33C87 /* ChatCollectionViewLayout.swift */; };
@@ -211,7 +211,7 @@
 		F16CAF022D5603843128A2381A0B6887 /* ChatInputBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
 		F4549EAD309CDA9A0C8B82AC7F9381D1 /* HorizontalStackScrollView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalStackScrollView.swift; sourceTree = "<group>"; };
 		F6269251CBD6458BEEDBEDA08B64C442 /* ViewDefinitions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewDefinitions.swift; sourceTree = "<group>"; };
-		F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultSyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellDefaultSyle.swift; sourceTree = "<group>"; };
+		F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellDefaultStyle.swift; sourceTree = "<group>"; };
 		FB5030FB81D772482E145FF745310021 /* ChattoAdditions-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ChattoAdditions-dummy.m"; sourceTree = "<group>"; };
 		FC4E873D2874D2207B97F63437C9827E /* ChattoAdditions.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ChattoAdditions.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -677,7 +677,7 @@
 			isa = PBXGroup;
 			children = (
 				D1B9575301EAF330DF2C9F01CFC35126 /* BaseMessageCollectionViewCell.swift */,
-				F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultSyle.swift */,
+				F9295E06CBFBBA5200243C4EE50AFA67 /* BaseMessageCollectionViewCellDefaultStyle.swift */,
 				F6269251CBD6458BEEDBEDA08B64C442 /* ViewDefinitions.swift */,
 			);
 			path = Views;
@@ -832,7 +832,7 @@
 			files = (
 				21E7AEFC96DF3C318E59AFC99A5F2F87 /* AnimationUtils.swift in Sources */,
 				D7FCB154DF24B64737D8482138192E34 /* BaseMessageCollectionViewCell.swift in Sources */,
-				74A62FD17620A7F212C97BAF348CC48C /* BaseMessageCollectionViewCellDefaultSyle.swift in Sources */,
+				74A62FD17620A7F212C97BAF348CC48C /* BaseMessageCollectionViewCellDefaultStyle.swift in Sources */,
 				6C673786B8D417D72D1A4FD07403D332 /* BaseMessageModel.swift in Sources */,
 				4CB5A1C529335B0491D9932407898317 /* BaseMessagePresenter.swift in Sources */,
 				FD65B50F2C2C231254D616FBE64BCE93 /* BaseMessageViewModel.swift in Sources */,

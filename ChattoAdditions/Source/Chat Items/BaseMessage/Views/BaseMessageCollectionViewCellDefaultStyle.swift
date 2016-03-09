@@ -24,7 +24,7 @@
 
 import UIKit
 
-public class BaseMessageCollectionViewCellDefaultSyle: BaseMessageCollectionViewCellStyleProtocol {
+public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewCellStyleProtocol {
 
     public init () {}
 

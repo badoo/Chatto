@@ -34,7 +34,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
-        let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
+        let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
         let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate(), status: .Success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
         self.presenter = TextMessagePresenter(messageModel: textMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: TextMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, textCellStyle: textStyle, layoutCache: NSCache())
