@@ -77,6 +77,8 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         }
     }
 
+    // Override this method to provide a size of avatarImage, so avatar image will be displayed if there is any in the viewModel
+    // if no image, then no avatar will be displayed, and a blank space will placehold at the position
     public func getAvatarImageSize(messageViewModel: MessageViewModelProtocol) -> CGSize {
         return CGSize.zero
     }
