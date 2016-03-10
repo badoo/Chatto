@@ -26,6 +26,8 @@ import UIKit
 
 public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionViewCellStyleProtocol {
 
+    public init() { }
+    
     private struct Constants {
         let tailWidth: CGFloat = 6.0
         let aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat> = 0.90...1.10
