@@ -44,11 +44,9 @@ public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
     public func createViewModel(textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = DemoTextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
-        if textMessage.isIncoming {
-            // Best place to decide whether user having avart might be in the presenter. Here just for demo purpose
-            // Because we might only want to display avatar when showTail in the nessage bubble
-            textMessageViewModel.avatarImage = UIImage(named: "userAvatar")
-        }
+        // Best place to decide whether user having avart might be in the presenter. Here just for demo purpose
+        // Because we might only want to display avatar when showTail in the nessage bubble
+        textMessageViewModel.avatarImage = UIImage(named: "userAvatar")
         return textMessageViewModel
     }
 

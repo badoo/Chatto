@@ -11,11 +11,11 @@ import ChattoAdditions
 
 class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDefaultStyle {
     override func getAvatarImageSize(messageViewModel: MessageViewModelProtocol) -> CGSize {
+        // Display avatar for both incoming and outgoing messages for demo purpose
         if messageViewModel.isIncoming {
-            // Only display avatar for incoming message
             return CGSize(width: 35, height: 35)
         } else {
-            return CGSize.zero
+            return CGSize(width: 35, height: 35)
         }
     }
 }
