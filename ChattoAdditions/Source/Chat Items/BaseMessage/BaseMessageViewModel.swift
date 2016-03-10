@@ -49,6 +49,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsFailedIcon: Bool { get }
     var date: String { get }
     var status: MessageViewModelStatus { get }
+    var avatarImage: UIImage? { set get }
 }
 
 public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
@@ -78,6 +79,15 @@ extension DecoratedMessageViewModelProtocol {
     public var showsFailedIcon: Bool {
         return self.messageViewModel.showsFailedIcon
     }
+
+    public var avatarImage: UIImage? {
+        get {
+            return self.messageViewModel.avatarImage
+        }
+        set {
+            self.messageViewModel.avatarImage = newValue
+        }
+    }
 }
 
 public class MessageViewModel: MessageViewModelProtocol {
@@ -106,6 +116,8 @@ public class MessageViewModel: MessageViewModelProtocol {
     public var showsFailedIcon: Bool {
         return self.status == .Failed
     }
+
+    public var avatarImage: UIImage?
 }
 
 public class MessageViewModelDefaultBuilder {

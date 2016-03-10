@@ -32,23 +32,23 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
     lazy var baseColorOutgoing = UIColor.bma_color(rgb: 0x3D68F5)
 
     lazy var borderIncomingTail: UIImage = {
-        return UIImage(named: "bubble-incoming-border-tail", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-incoming-border-tail", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy var borderIncomingNoTail: UIImage = {
-        return UIImage(named: "bubble-incoming-border", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-incoming-border", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy var borderOutgoingTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-border-tail", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-outgoing-border-tail", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy var borderOutgoingNoTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-border", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-outgoing-border", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     public lazy var failedIcon: UIImage = {
-        return UIImage(named: "base-message-failed-icon", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "base-message-failed-icon", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     public lazy var failedIconHighlighted: UIImage = {
@@ -75,5 +75,9 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         case (false, false):
             return self.borderOutgoingNoTail
         }
+    }
+
+    public func getAvatarImageSize(messageViewModel: MessageViewModelProtocol) -> CGSize {
+        return CGSize.zero
     }
 }
