@@ -79,7 +79,16 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
 
     // Override this method to provide a size of avatarImage, so avatar image will be displayed if there is any in the viewModel
     // if no image, then no avatar will be displayed, and a blank space will placehold at the position
-    public func getAvatarImageSize(messageViewModel: MessageViewModelProtocol) -> CGSize {
+    public func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize {
         return CGSize.zero
+    }
+
+    // Specify the vertical alignment of the avatar image in the cell. By Default it is Botton, can go Top or Center
+    public func avatarVerticalAlignment(viewModel viewModel: MessageViewModelProtocol) -> VerticalAlignment {
+        return VerticalAlignment.Bottom
+    }
+
+    public func layoutConstants(viewModel viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
+        return BaseMessageCollectionViewCellLayoutConstants(horizontalMargin: 11, horizontalInterspacing: 4, maxContainerWidthPercentageForBubbleView: 0.68)
     }
 }
