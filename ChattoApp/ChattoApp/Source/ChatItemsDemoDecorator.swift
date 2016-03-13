@@ -38,16 +38,24 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
 
         for (index, chatItem) in chatItems.enumerate() {
             let next: ChatItemProtocol? = (index + 1 < chatItems.count) ? chatItems[index + 1] : nil
+            let prev: ChatItemProtocol? = (index > 0) ? chatItems[index - 1] : nil
 
             let bottomMargin = self.separationAfterItem(chatItem, next: next)
             var showsTail = false
             var additionalItems =  [DecoratedChatItem]()
 
+            var showWeekDayDateStamp = false
             if let currentMessage = chatItem as? MessageModelProtocol {
                 if let nextMessage = next as? MessageModelProtocol {
                     showsTail = currentMessage.senderId != nextMessage.senderId
                 } else {
                     showsTail = true
+                }
+
+                if let prevMsg = prev as? MessageModelProtocol {
+                    showWeekDayDateStamp = NSCalendar.currentCalendar().compareDate(currentMessage.date, toDate: prevMsg.date, toUnitGranularity: NSCalendarUnit.Day) != NSComparisonResult.OrderedSame
+                } else {
+                    showWeekDayDateStamp = true
                 }
 
                 if self.showsStatusForMessage(currentMessage) {
@@ -57,7 +65,14 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                             decorationAttributes: nil)
                     )
                 }
+
+                if showWeekDayDateStamp {
+                    let dateTimeStamp = DecoratedChatItem(chatItem: WeekDayDatestamp(date: currentMessage.date), decorationAttributes: ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false))
+                    decoratedChatItems.append(dateTimeStamp)
+                }
             }
+
+
 
             decoratedChatItems.append(DecoratedChatItem(
                 chatItem: chatItem,

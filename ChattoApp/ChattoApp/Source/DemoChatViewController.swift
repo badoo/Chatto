@@ -83,7 +83,8 @@ class DemoChatViewController: BaseChatViewController {
                     interactionHandler: DemoPhotoMessageHandler(baseHandler: self.baseMessageHandler)
                 )
             ],
-            SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()]
+            SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
+            WeekDayDatestamp.chatItemType: [WeekDayDatestampPresenterBuilder()]
         ]
     }
 

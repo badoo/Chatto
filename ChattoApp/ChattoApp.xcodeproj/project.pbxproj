@@ -31,6 +31,7 @@
 		C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */; };
 		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
 		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
+		FE1A697B1C93FF10004DF45A /* TimestampSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */; };
 		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,7 @@
 		C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
 		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
+		FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimestampSeparatorView.swift; sourceTree = "<group>"; };
 		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellAvatarStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -211,6 +213,7 @@
 				C3F91DC81C75EFE300D461D2 /* Sending status */,
 				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
 				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
+				FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				C3F91DC61C75EF9E00D461D2 /* DemoTextMessageViewModel.swift in Sources */,
 				C3F91DC01C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift in Sources */,
 				C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */,
+				FE1A697B1C93FF10004DF45A /* TimestampSeparatorView.swift in Sources */,
 				C3F91DBD1C75EF9E00D461D2 /* FakeDataSource.swift in Sources */,
 				C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */,
 				C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */,
