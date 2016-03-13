@@ -88,9 +88,9 @@ class LiveCameraCell: UICollectionViewCell {
     private func updateIcon() {
         switch self.authorizationStatus {
         case .NotDetermined, .Authorized:
-            self.iconImageView.image = UIImage(named: Constants.cameraImageName, inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)
+            self.iconImageView.image = UIImage(named: Constants.cameraImageName, inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
         case .Restricted, .Denied:
-            self.iconImageView.image = UIImage(named: Constants.lockedCameraImageName, inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)
+            self.iconImageView.image = UIImage(named: Constants.lockedCameraImageName, inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
         }
         self.setNeedsLayout()
     }

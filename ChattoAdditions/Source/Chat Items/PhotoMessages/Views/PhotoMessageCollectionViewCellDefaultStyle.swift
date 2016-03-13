@@ -45,19 +45,19 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     lazy private var baseStyle = BaseMessageCollectionViewCellDefaultStyle()
 
     lazy private var maskImageIncomingTail: UIImage = {
-        return UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy private var maskImageIncomingNoTail: UIImage = {
-        return UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy private var maskImageOutgoingTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy private var maskImageOutgoingNoTail: UIImage = {
-        return UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     lazy private var placeholderBackgroundIncoming: UIImage = {
@@ -69,7 +69,7 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     }()
 
     lazy private var placeholderIcon: UIImage = {
-        return UIImage(named: "photo-bubble-placeholder-icon", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "photo-bubble-placeholder-icon", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
     }()
 
     public func maskingImage(viewModel viewModel: PhotoMessageViewModelProtocol) -> UIImage {
