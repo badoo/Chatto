@@ -133,6 +133,6 @@ public class MessageViewModelDefaultBuilder {
 
     public func createMessageViewModel(message: MessageModelProtocol) -> MessageViewModelProtocol {
         // Override to use default avatarImage
-        return MessageViewModel(dateFormatter: self.dynamicType.dateFormatter, showsTail: false, messageModel: message, avatarImage: nil)
+        return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImage: nil)
     }
 }

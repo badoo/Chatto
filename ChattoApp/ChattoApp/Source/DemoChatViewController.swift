@@ -41,7 +41,7 @@ class DemoChatViewController: BaseChatViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let image = UIImage(named: "bubble-incoming-tail-border", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)?.bma_tintWithColor(UIColor.blueColor())
+        let image = UIImage(named: "bubble-incoming-tail-border", inBundle: NSBundle(forClass: DemoChatViewController.self), compatibleWithTraitCollection: nil)?.bma_tintWithColor(UIColor.blueColor())
         super.chatItemsDecorator = ChatItemsDemoDecorator()
         let addIncomingMessageButton = UIBarButtonItem(image: image, style: .Plain, target: self, action: "addRandomIncomingMessage")
         self.navigationItem.rightBarButtonItem = addIncomingMessageButton
@@ -83,7 +83,8 @@ class DemoChatViewController: BaseChatViewController {
                     interactionHandler: DemoPhotoMessageHandler(baseHandler: self.baseMessageHandler)
                 )
             ],
-            SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()]
+            SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
+            WeekDayDatestamp.chatItemType: [WeekDayDatestampPresenterBuilder()]
         ]
     }
 

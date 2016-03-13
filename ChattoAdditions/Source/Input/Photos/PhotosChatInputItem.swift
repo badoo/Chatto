@@ -34,9 +34,9 @@ import Foundation
     lazy private var internalTabView: UIButton = {
         var button = UIButton(type: .Custom)
         button.exclusiveTouch = true
-        button.setImage(UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Selected)
+        button.setImage(UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Normal)
+        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Highlighted)
+        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Selected)
         return button
     }()
 
