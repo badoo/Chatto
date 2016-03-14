@@ -84,7 +84,7 @@ class DemoChatViewController: BaseChatViewController {
                 )
             ],
             SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
-            WeekDayDatestamp.chatItemType: [WeekDayDatestampPresenterBuilder()]
+            TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
         ]
     }
 

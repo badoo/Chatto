@@ -23,11 +23,34 @@
 */
 
 import Foundation
-import ChattoAdditions
+import UIKit
+import Chatto
 
-class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDefaultStyle {
-    override func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize {
-        // Display avatar for both incoming and outgoing messages for demo purpose
-        return CGSize(width: 35, height: 35)
+class TimeSeparatorModel: ChatItemProtocol {
+    let uid: String
+    let type: String = TimeSeparatorModel.chatItemType
+    let date: String
+
+    static var chatItemType: ChatItemType {
+        return "TimeSeparatorModel"
+    }
+
+    init(uid: String, date: String) {
+        self.date = date
+        self.uid = uid
+    }
+}
+
+extension NSDate {
+    // Have a time stamp formatter to avoid keep creating new ones. This improves performance
+    private static let weekdayAndDateStampDateFormatter: NSDateFormatter = {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.dateFormat = "EEEE, MMM dd yyyy" // "Monday, Mar 7 2016"
+        return dateFormatter
+    }()
+
+    func toWeekDayAndDateString() -> String {
+        return NSDate.weekdayAndDateStampDateFormatter.stringFromDate(self)
     }
 }

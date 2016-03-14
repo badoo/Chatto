@@ -12,6 +12,9 @@
 		C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAF1BDE441C008E3545 /* Assets.xcassets */; };
 		C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */; };
 		C33FBFC91BDE441C008E3545 /* ChattoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */; };
+		C341D42E1C9635DF00FD3463 /* TimeSeparatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42B1C9635DF00FD3463 /* TimeSeparatorModel.swift */; };
+		C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42C1C9635DF00FD3463 /* TimeSeparatorPresenter.swift */; };
+		C341D4301C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */; };
 		C35A6F4F1BF807EC0085CA19 /* SlidingDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35A6F4E1BF807EC0085CA19 /* SlidingDataSourceTests.swift */; };
 		C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */; };
 		C3F91DB71C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */; };
@@ -31,7 +34,6 @@
 		C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */; };
 		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
 		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
-		FE1A697B1C93FF10004DF45A /* TimestampSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */; };
 		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +81,9 @@
 		C33FBFC41BDE441C008E3545 /* ChattoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattoAppUITests.swift; sourceTree = "<group>"; };
 		C33FBFCA1BDE441C008E3545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C341D42B1C9635DF00FD3463 /* TimeSeparatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorModel.swift; path = "Time Separator/TimeSeparatorModel.swift"; sourceTree = "<group>"; };
+		C341D42C1C9635DF00FD3463 /* TimeSeparatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorPresenter.swift; path = "Time Separator/TimeSeparatorPresenter.swift"; sourceTree = "<group>"; };
+		C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorCollectionViewCell.swift; path = "Time Separator/TimeSeparatorCollectionViewCell.swift"; sourceTree = "<group>"; };
 		C35A6F4E1BF807EC0085CA19 /* SlidingDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlidingDataSourceTests.swift; sourceTree = "<group>"; };
 		C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemsDemoDecorator.swift; sourceTree = "<group>"; };
@@ -98,7 +103,6 @@
 		C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
 		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
-		FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimestampSeparatorView.swift; sourceTree = "<group>"; };
 		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellAvatarStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +201,16 @@
 			path = ChattoAppUITests;
 			sourceTree = "<group>";
 		};
+		C341D42A1C96359000FD3463 /* Time Separator */ = {
+			isa = PBXGroup;
+			children = (
+				C341D42B1C9635DF00FD3463 /* TimeSeparatorModel.swift */,
+				C341D42C1C9635DF00FD3463 /* TimeSeparatorPresenter.swift */,
+				C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */,
+			);
+			name = "Time Separator";
+			sourceTree = "<group>";
+		};
 		C3F91D9F1C75EF9E00D461D2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,8 +226,8 @@
 				C3F91DAC1C75EF9E00D461D2 /* Photo Messages */,
 				C3F91DC81C75EFE300D461D2 /* Sending status */,
 				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
+				C341D42A1C96359000FD3463 /* Time Separator */,
 				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
-				FE1A697A1C93FF10004DF45A /* TimestampSeparatorView.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -453,11 +467,12 @@
 				C3F91DC31C75EF9E00D461D2 /* SlidingDatasSource.swift in Sources */,
 				C3F91DC71C75EF9E00D461D2 /* BaseMessageHandler.swift in Sources */,
 				C3F91DC61C75EF9E00D461D2 /* DemoTextMessageViewModel.swift in Sources */,
+				C341D42E1C9635DF00FD3463 /* TimeSeparatorModel.swift in Sources */,
 				C3F91DC01C75EF9E00D461D2 /* DemoPhotoMessageHandler.swift in Sources */,
 				C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */,
-				FE1A697B1C93FF10004DF45A /* TimestampSeparatorView.swift in Sources */,
 				C3F91DBD1C75EF9E00D461D2 /* FakeDataSource.swift in Sources */,
 				C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */,
+				C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */,
 				C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */,
 				C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
@@ -465,6 +480,7 @@
 				C3F91DC11C75EF9E00D461D2 /* DemoPhotoMessageModel.swift in Sources */,
 				C3F91DC21C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift in Sources */,
 				C3F91DBE1C75EF9E00D461D2 /* FakeMessageFactory.swift in Sources */,
+				C341D4301C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
