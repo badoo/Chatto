@@ -23,11 +23,46 @@
 */
 
 import Foundation
-import ChattoAdditions
+import UIKit
+import Chatto
 
-class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDefaultStyle {
-    override func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize {
-        // Display avatar for both incoming and outgoing messages for demo purpose
-        return CGSize(width: 35, height: 35)
+class TimeSeparatorCollectionViewCell: UICollectionViewCell {
+
+    private let label: UILabel = UILabel()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.commonInit()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.commonInit()
+    }
+
+    private func commonInit() {
+        self.label.font = UIFont.systemFontOfSize(12)
+        self.label.textAlignment = .Center
+        self.label.textColor = UIColor.grayColor()
+        self.contentView.addSubview(label)
+    }
+
+    var text: String = "" {
+        didSet {
+            if oldValue != text {
+                self.setTextOnLabel(text)
+            }
+        }
+    }
+
+    private func setTextOnLabel(text: String) {
+        self.label.text = text
+        self.setNeedsLayout()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.label.bounds.size = self.label.sizeThatFits(self.contentView.bounds.size)
+        self.label.center = self.contentView.center
     }
 }

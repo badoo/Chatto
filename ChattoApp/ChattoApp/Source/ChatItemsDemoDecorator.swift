@@ -35,6 +35,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
 
     func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
         var decoratedChatItems = [DecoratedChatItem]()
+        let calendar = NSCalendar.currentCalendar()
 
         for (index, chatItem) in chatItems.enumerate() {
             let next: ChatItemProtocol? = (index + 1 < chatItems.count) ? chatItems[index + 1] : nil
@@ -44,7 +45,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
             var showsTail = false
             var additionalItems =  [DecoratedChatItem]()
 
-            var showWeekDayDateStamp = false
+            var addTimeSeparator = false
             if let currentMessage = chatItem as? MessageModelProtocol {
                 if let nextMessage = next as? MessageModelProtocol {
                     showsTail = currentMessage.senderId != nextMessage.senderId
@@ -52,10 +53,10 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                     showsTail = true
                 }
 
-                if let prevMsg = prev as? MessageModelProtocol {
-                    showWeekDayDateStamp = NSCalendar.currentCalendar().compareDate(currentMessage.date, toDate: prevMsg.date, toUnitGranularity: NSCalendarUnit.Day) != NSComparisonResult.OrderedSame
+                if let previousMessage = prev as? MessageModelProtocol {
+                    addTimeSeparator = calendar.compareDate(currentMessage.date, toDate: previousMessage.date, toUnitGranularity: NSCalendarUnit.Day) != NSComparisonResult.OrderedSame
                 } else {
-                    showWeekDayDateStamp = true
+                    addTimeSeparator = true
                 }
 
                 if self.showsStatusForMessage(currentMessage) {
@@ -66,13 +67,11 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                     )
                 }
 
-                if showWeekDayDateStamp {
-                    let dateTimeStamp = DecoratedChatItem(chatItem: WeekDayDatestamp(date: currentMessage.date), decorationAttributes: ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false))
+                if addTimeSeparator {
+                    let dateTimeStamp = DecoratedChatItem(chatItem: TimeSeparatorModel(uid: "\(currentMessage.uid)-time-separator", date: currentMessage.date.toWeekDayAndDateString()), decorationAttributes: nil)
                     decoratedChatItems.append(dateTimeStamp)
                 }
             }
-
-
 
             decoratedChatItems.append(DecoratedChatItem(
                 chatItem: chatItem,
