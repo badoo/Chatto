@@ -100,21 +100,21 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
             cell.messageViewModel = self.messageViewModel
             cell.onBubbleTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.interactionHandler?.userDidTapOnBubble(viewModel: sSelf.messageViewModel)
+                sSelf.onCellBubbleTapped()
             }
             cell.onBubbleLongPressed = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.interactionHandler?.userDidLongPressOnBubble(viewModel: sSelf.messageViewModel)
+                sSelf.onCellBubbleLongPressed()
             }
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.interactionHandler?.userDidTapOnFailIcon(viewModel: sSelf.messageViewModel)
+                sSelf.onCellFailedButtonTapped()
             }
             additionalConfiguration?()
         }, animated: animated, completion: nil)
     }
 
-  public override func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
+    public override func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         guard let decorationAttributes = decorationAttributes as? ChatItemDecorationAttributes else {
             assert(false, "Expecting decoration attributes")
             return 0
@@ -154,5 +154,17 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
     public func canShowMenu() -> Bool {
         // Override in subclass
         return false
+    }
+
+    public func onCellBubbleTapped() {
+        self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel)
+    }
+
+    public func onCellBubbleLongPressed() {
+        self.interactionHandler?.userDidLongPressOnBubble(viewModel: self.messageViewModel)
+    }
+
+    public func onCellFailedButtonTapped() {
+        self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel)
     }
 }
