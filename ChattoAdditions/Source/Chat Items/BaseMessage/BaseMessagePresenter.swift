@@ -62,11 +62,11 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
             self.interactionHandler = interactionHandler
     }
 
-    let messageModel: ModelT
-    let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
-    let viewModelBuilder: ViewModelBuilderT
-    let interactionHandler: InteractionHandlerT?
-    let cellStyle: BaseMessageCollectionViewCellStyleProtocol
+    public let messageModel: ModelT
+    public let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
+    public let viewModelBuilder: ViewModelBuilderT
+    public let interactionHandler: InteractionHandlerT?
+    public let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
     public private(set) final lazy var messageViewModel: ViewModelT = {
         return self.createViewModel()
