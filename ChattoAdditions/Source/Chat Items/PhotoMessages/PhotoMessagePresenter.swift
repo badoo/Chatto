@@ -33,6 +33,8 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
+    public let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
+    
     public init (
         messageModel: ModelT,
         viewModelBuilder: ViewModelBuilderT,
@@ -49,8 +51,6 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
                 cellStyle: baseCellStyle
             )
     }
-
-    let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
 
     public override class func registerCells(collectionView: UICollectionView) {
         collectionView.registerClass(PhotoMessageCollectionViewCell.self, forCellWithReuseIdentifier: "photo-message")
