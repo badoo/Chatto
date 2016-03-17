@@ -26,6 +26,8 @@ import Foundation
 
 @objc public class PhotosChatInputItem: NSObject {
     public var photoInputHandler: ((UIImage) -> Void)?
+    public var cameraPermissionHandler: (() -> Void)?
+    public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
     public init(presentingController: UIViewController?) {
         self.presentingController = presentingController
@@ -87,7 +89,11 @@ extension PhotosChatInputItem: PhotosInputViewDelegate {
         self.photoInputHandler?(image)
     }
     
-    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) { }
+    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) {
+        self.cameraPermissionHandler?()
+    }
     
-    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) { }
+    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) {
+        self.photosPermissionHandler?()
+    }
 }
