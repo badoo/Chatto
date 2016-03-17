@@ -33,6 +33,8 @@ protocol PhotosInputViewProtocol {
 
 protocol PhotosInputViewDelegate: class {
     func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
+    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol)
+    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol)
 }
 
 class PhotosInputView: UIView, PhotosInputViewProtocol {
@@ -46,6 +48,14 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     private var dataProvider: PhotosInputDataProviderProtocol!
     private var cellProvider: PhotosInputCellProviderProtocol!
     private var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
+    
+    public var cameraAuthorizationStatus: AVAuthorizationStatus {
+        return AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+    }
+
+    public var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
+        return PHPhotoLibrary.authorizationStatus()
+    }
 
     weak var delegate: PhotosInputViewDelegate?
     override init(frame: CGRect) {
@@ -156,7 +166,7 @@ extension PhotosInputView: UICollectionViewDataSource {
         var cell: UICollectionViewCell
         if indexPath.item == Constants.liveCameraItemIndex {
             let liveCameraCell = collectionView.dequeueReusableCellWithReuseIdentifier("bar", forIndexPath: indexPath) as! LiveCameraCell
-            liveCameraCell.updateWithAuthorizationStatus(AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo))
+            liveCameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
             cell = liveCameraCell
         } else {
             cell = self.cellProvider.cellForItemAtIndexPath(indexPath)
@@ -168,14 +178,22 @@ extension PhotosInputView: UICollectionViewDataSource {
 extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
-            self.cameraPicker.requestImage { image in
-                if let image = image {
-                    self.delegate?.inputView(self, didSelectImage: image)
+            if self.cameraAuthorizationStatus != .Authorized {
+                self.delegate?.inputViewDidRequestCameraPermission(self)
+            } else {
+                self.cameraPicker.requestImage { image in
+                    if let image = image {
+                        self.delegate?.inputView(self, didSelectImage: image)
+                    }
                 }
             }
         } else {
-            self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
-                self.delegate?.inputView(self, didSelectImage: image)
+            if self.photoLibraryAuthorizationStatus != .Authorized {
+                self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
+            } else {
+                self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
+                    self.delegate?.inputView(self, didSelectImage: image)
+                }
             }
         }
     }
