@@ -25,7 +25,8 @@
 import Foundation
 
 public protocol AccessoryViewRevealable {
-    func revealAccessoryView(maximumOffset offset: CGFloat, animated: Bool)
+    func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)
+    func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
 }
 
 class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
@@ -73,9 +74,15 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
     }
 
     private func revealAccessoryView(atOffset offset: CGFloat) {
+        // Find max offset (cells can have slighlty different timestamp size ( 3.00 am vs 11.37 pm )
+        let cells: [AccessoryViewRevealable] = self.collectionView.visibleCells().filter({$0 is AccessoryViewRevealable}).map({$0 as! AccessoryViewRevealable})
+        let offset = min(offset, cells.reduce(0) { (current, cell) -> CGFloat in
+            return max(current, cell.preferredOffsetToRevealAccessoryView() ?? 0)
+        })
+
         for cell in self.collectionView.visibleCells() {
             if let cell = cell as? AccessoryViewRevealable {
-                cell.revealAccessoryView(maximumOffset: offset, animated: offset == 0)
+                cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }
     }
