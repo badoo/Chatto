@@ -36,7 +36,7 @@ protocol ChatInputBarPresenter: class {
     let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
 
-    public init(chatInputBar: ChatInputBar, chatInputItems: [ChatInputItemProtocol], chatInputBarAppearance: ChatInputBarAppearance = ChatInputBarAppearance()) {
+    public init(chatInputBar: ChatInputBar, chatInputItems: [ChatInputItemProtocol], chatInputBarAppearance: ChatInputBarAppearance) {
         self.chatInputBar = chatInputBar
         self.chatInputItems = chatInputItems
         self.chatInputBar.setAppearance(chatInputBarAppearance)
