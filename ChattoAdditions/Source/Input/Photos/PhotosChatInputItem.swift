@@ -24,21 +24,48 @@
 
 import Foundation
 
-@objc public class PhotosChatInputItem: NSObject {
+public struct ButtonImages {
+    public let normal: () -> UIImage
+    public let selected: () -> UIImage
+    public let highlighted: () -> UIImage
+    public init(
+        @autoclosure(escaping) normal: () -> UIImage,
+        @autoclosure(escaping) selected: () -> UIImage,
+        @autoclosure(escaping) highlighted: () -> UIImage) {
+            self.normal = normal
+            self.selected = selected
+            self.highlighted = highlighted
+    }
+}
+
+public class PhotosChatInputItem {
+    typealias Class = PhotosChatInputItem
+
     public var photoInputHandler: ((UIImage) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
-    public init(presentingController: UIViewController?) {
+
+    let buttonImages: ButtonImages
+    public init(presentingController: UIViewController?, buttonImages: ButtonImages = Class.createDefaultButtonStyle()) {
         self.presentingController = presentingController
+        self.buttonImages = buttonImages
+    }
+
+    public class func createDefaultButtonStyle() -> ButtonImages {
+        return ButtonImages(
+            normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        )
     }
 
     lazy private var internalTabView: UIButton = {
         var button = UIButton(type: .Custom)
         button.exclusiveTouch = true
-        button.setImage(UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: PhotosChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Selected)
+        button.setImage(self.buttonImages.normal(), forState: .Normal)
+        button.setImage(self.buttonImages.highlighted(), forState: .Highlighted)
+        button.setImage(self.buttonImages.selected(), forState: .Selected)
         return button
     }()
 

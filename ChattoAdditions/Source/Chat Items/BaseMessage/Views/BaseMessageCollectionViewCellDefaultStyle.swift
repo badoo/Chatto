@@ -26,45 +26,110 @@ import UIKit
 
 public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewCellStyleProtocol {
 
-    public init () {}
+    typealias Class = BaseMessageCollectionViewCellDefaultStyle
 
-    lazy var baseColorIncoming = UIColor.bma_color(rgb: 0xE6ECF2)
-    lazy var baseColorOutgoing = UIColor.bma_color(rgb: 0x3D68F5)
+    public struct Colors {
+        let incoming: () -> UIColor
+        let outgoing: () -> UIColor
+        public init(
+            @autoclosure(escaping) incoming: () -> UIColor,
+            @autoclosure(escaping) outgoing: () -> UIColor) {
+                self.incoming = incoming
+                self.outgoing = outgoing
+        }
+    }
 
-    lazy var borderIncomingTail: UIImage = {
-        return UIImage(named: "bubble-incoming-border-tail", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    public struct BubbleBorderImages {
+        let borderIncomingTail: () -> UIImage
+        let borderIncomingNoTail: () -> UIImage
+        let borderOutgoingTail: () -> UIImage
+        let borderOutgoingNoTail: () -> UIImage
+        public init(
+            @autoclosure(escaping) borderIncomingTail: () -> UIImage,
+            @autoclosure(escaping) borderIncomingNoTail: () -> UIImage,
+            @autoclosure(escaping) borderOutgoingTail: () -> UIImage,
+            @autoclosure(escaping) borderOutgoingNoTail: () -> UIImage) {
+                self.borderIncomingTail = borderIncomingTail
+                self.borderIncomingNoTail = borderIncomingNoTail
+                self.borderOutgoingTail = borderOutgoingTail
+                self.borderOutgoingNoTail = borderOutgoingNoTail
+        }
+    }
 
-    lazy var borderIncomingNoTail: UIImage = {
-        return UIImage(named: "bubble-incoming-border", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    public struct FailedIconImages {
+        let normal: () -> UIImage
+        let highlighted: () -> UIImage
+        public init(
+            @autoclosure(escaping) normal: () -> UIImage,
+            @autoclosure(escaping) highlighted: () -> UIImage) {
+                self.normal = normal
+                self.highlighted = highlighted
+        }
+    }
 
-    lazy var borderOutgoingTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-border-tail", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    public struct DateTextStyle {
+        let font: () -> UIFont
+        let color: () -> UIColor
+        public init(
+            @autoclosure(escaping) font: () -> UIFont,
+            @autoclosure(escaping) color: () -> UIColor) {
+                self.font = font
+                self.color = color
+        }
+    }
 
-    lazy var borderOutgoingNoTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-border", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    public struct AvatarStyle {
+        let size: CGSize
+        let alignment: VerticalAlignment
+        public init(size: CGSize = .zero, alignment: VerticalAlignment = .Bottom) {
+            self.size = size
+            self.alignment = alignment
+        }
+    }
 
-    public lazy var failedIcon: UIImage = {
-        return UIImage(named: "base-message-failed-icon", inBundle: NSBundle(forClass: BaseMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    let colors: Colors
+    let bubbleBorderImages: BubbleBorderImages
+    let failedIconImages: FailedIconImages
+    let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
+    let dateTextStyle: DateTextStyle
+    let avatarStyle: AvatarStyle
+    public init (
+        colors: Colors = Class.createDefaultColors(),
+        bubbleBorderImages: BubbleBorderImages = Class.createDefaultBubbleBorderImages(),
+        failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
+        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
+        dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
+        avatarStyle: AvatarStyle = AvatarStyle()) {
+            self.colors = colors
+            self.bubbleBorderImages = bubbleBorderImages
+            self.failedIconImages = failedIconImages
+            self.layoutConstants = layoutConstants
+            self.dateTextStyle = dateTextStyle
+            self.avatarStyle = avatarStyle
+    }
 
-    public lazy var failedIconHighlighted: UIImage = {
-        return self.failedIcon.bma_blendWithColor(UIColor.blackColor().colorWithAlphaComponent(0.10))
-    }()
+    public lazy var baseColorIncoming: UIColor = self.colors.incoming()
+    public lazy var baseColorOutgoing: UIColor = self.colors.outgoing()
 
-    private lazy var dateFont = {
-        return UIFont.systemFontOfSize(12.0)
-    }()
+    public lazy var borderIncomingTail: UIImage = self.bubbleBorderImages.borderIncomingTail()
+    public lazy var borderIncomingNoTail: UIImage = self.bubbleBorderImages.borderIncomingNoTail()
+    public lazy var borderOutgoingTail: UIImage = self.bubbleBorderImages.borderOutgoingTail()
+    public lazy var borderOutgoingNoTail: UIImage = self.bubbleBorderImages.borderOutgoingNoTail()
+
+    public lazy var failedIcon: UIImage = self.failedIconImages.normal()
+    public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
+    private lazy var dateFont: UIFont = self.dateTextStyle.font()
+    private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 
     public func attributedStringForDate(date: String) -> NSAttributedString {
-        let attributes = [NSFontAttributeName : self.dateFont]
+        let attributes = [
+            NSFontAttributeName : self.dateFont,
+            NSForegroundColorAttributeName: self.dateFontColor
+        ]
         return NSAttributedString(string: date, attributes: attributes)
     }
 
-    func borderImage(viewModel viewModel: MessageViewModelProtocol) -> UIImage? {
+    public func borderImage(viewModel viewModel: MessageViewModelProtocol) -> UIImage? {
         switch (viewModel.isIncoming, viewModel.showsTail) {
         case (true, true):
             return self.borderIncomingTail
@@ -77,18 +142,48 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         }
     }
 
-    // Override this method to provide a size of avatarImage, so avatar image will be displayed if there is any in the viewModel
-    // if no image, then no avatar will be displayed, and a blank space will placehold at the position
     public func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize {
-        return CGSize.zero
+        return self.avatarStyle.size
     }
 
-    // Specify the vertical alignment of the avatar image in the cell. By Default it is Botton, can go Top or Center
     public func avatarVerticalAlignment(viewModel viewModel: MessageViewModelProtocol) -> VerticalAlignment {
-        return VerticalAlignment.Bottom
+        return self.avatarStyle.alignment
     }
 
     public func layoutConstants(viewModel viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
+        return self.layoutConstants
+    }
+}
+
+public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
+    static public func createDefaultColors() -> Colors {
+        return Colors(incoming: UIColor.bma_color(rgb: 0xE6ECF2), outgoing: UIColor.bma_color(rgb: 0x3D68F5))
+    }
+
+    static public func createDefaultBubbleBorderImages() -> BubbleBorderImages {
+        return BubbleBorderImages(
+            borderIncomingTail: UIImage(named: "bubble-incoming-border-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            borderIncomingNoTail: UIImage(named: "bubble-incoming-border", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            borderOutgoingTail: UIImage(named: "bubble-outgoing-border-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            borderOutgoingNoTail: UIImage(named: "bubble-outgoing-border", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        )
+    }
+
+    static public func createDefaultFailedIconImages() -> FailedIconImages {
+        let normal = {
+            return UIImage(named: "base-message-failed-icon", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        }
+        return FailedIconImages(
+            normal: normal(),
+            highlighted: normal().bma_blendWithColor(UIColor.blackColor().colorWithAlphaComponent(0.10))
+        )
+    }
+
+    static public func createDefaultDateTextStyle() -> DateTextStyle {
+        return DateTextStyle(font: UIFont.systemFontOfSize(12), color: UIColor.bma_color(rgb: 0x9aa3ab))
+    }
+
+    static public func createDefaultLayoutConstants() -> BaseMessageCollectionViewCellLayoutConstants {
         return BaseMessageCollectionViewCellLayoutConstants(horizontalMargin: 11, horizontalInterspacing: 4, maxContainerWidthPercentageForBubbleView: 0.68)
     }
 }

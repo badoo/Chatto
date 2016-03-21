@@ -26,7 +26,7 @@ import UIKit
 import Chatto
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {
-    func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize
+    func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
     func avatarVerticalAlignment(viewModel viewModel: MessageViewModelProtocol) -> VerticalAlignment
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }

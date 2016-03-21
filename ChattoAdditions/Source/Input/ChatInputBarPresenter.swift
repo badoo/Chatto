@@ -36,11 +36,10 @@ protocol ChatInputBarPresenter: class {
     let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
 
-    public init(chatInputBar: ChatInputBar, chatInputItems: [ChatInputItemProtocol]) {
+    public init(chatInputBar: ChatInputBar, chatInputItems: [ChatInputItemProtocol], chatInputBarAppearance: ChatInputBarAppearance = ChatInputBarAppearance()) {
         self.chatInputBar = chatInputBar
         self.chatInputItems = chatInputItems
-        self.chatInputBar.tabBarInterItemSpacing = 10
-        self.chatInputBar.tabBarContentInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        self.chatInputBar.setAppearance(chatInputBarAppearance)
         super.init()
 
         self.chatInputBar.presenter = self

@@ -25,40 +25,53 @@
 import UIKit
 
 public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionViewCellStyleProtocol {
+    typealias Class = PhotoMessageCollectionViewCellDefaultStyle
 
-    public init() { }
-    
+    public struct BubbleMasks {
+        let incomingTail: () -> UIImage
+        let incomingNoTail: () -> UIImage
+        let outgoingTail: () -> UIImage
+        let outgoingNoTail: () -> UIImage
+        let tailWidth: CGFloat
+        public init(
+            @autoclosure(escaping) incomingTail: () -> UIImage,
+            @autoclosure(escaping) incomingNoTail: () -> UIImage,
+            @autoclosure(escaping) outgoingTail: () -> UIImage,
+            @autoclosure(escaping) outgoingNoTail: () -> UIImage,
+            tailWidth: CGFloat) {
+                self.incomingTail = incomingTail
+                self.incomingNoTail = incomingNoTail
+                self.outgoingTail = outgoingTail
+                self.outgoingNoTail = outgoingNoTail
+                self.tailWidth = tailWidth
+        }
+    }
+
+    let bubbleMasks: BubbleMasks
+    let baseStyle: BaseMessageCollectionViewCellDefaultStyle
+    public init(bubbleMasks: BubbleMasks = Class.createDefaultBubbleMasks(), baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
+        self.bubbleMasks = bubbleMasks
+        self.baseStyle = baseStyle
+    }
+
     private struct Constants {
-        let tailWidth: CGFloat = 6.0
         let aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat> = 0.90...1.10
         let photoSizeLandscape = CGSize(width: 210, height: 136)
         let photoSizePortratit = CGSize(width: 136, height: 210)
         let photoSizeSquare = CGSize(width: 210, height: 210)
         let placeholderIconTintIncoming = UIColor.bma_color(rgb: 0xced6dc)
-        let placeholderIconTintOugoing = UIColor.bma_color(rgb: 0x508dfc)
+        let placeholderIconTintOutgoing = UIColor.bma_color(rgb: 0x508dfc)
         let progressIndicatorColorIncoming = UIColor.bma_color(rgb: 0x98a3ab)
         let progressIndicatorColorOutgoing = UIColor.whiteColor()
         let overlayColor = UIColor.blackColor().colorWithAlphaComponent(0.70)
     }
 
     lazy private var styleConstants = Constants()
-    lazy private var baseStyle = BaseMessageCollectionViewCellDefaultStyle()
 
-    lazy private var maskImageIncomingTail: UIImage = {
-        return UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
-
-    lazy private var maskImageIncomingNoTail: UIImage = {
-        return UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
-
-    lazy private var maskImageOutgoingTail: UIImage = {
-        return UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
-
-    lazy private var maskImageOutgoingNoTail: UIImage = {
-        return UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
-    }()
+    lazy private var maskImageIncomingTail: UIImage = self.bubbleMasks.incomingTail()
+    lazy private var maskImageIncomingNoTail: UIImage = self.bubbleMasks.incomingNoTail()
+    lazy private var maskImageOutgoingTail: UIImage = self.bubbleMasks.outgoingTail()
+    lazy private var maskImageOutgoingNoTail: UIImage = self.bubbleMasks.outgoingNoTail()
 
     lazy private var placeholderBackgroundIncoming: UIImage = {
         return UIImage.bma_imageWithColor(self.baseStyle.baseColorIncoming, size: CGSize(width: 1, height: 1))
@@ -69,7 +82,7 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     }()
 
     lazy private var placeholderIcon: UIImage = {
-        return UIImage(named: "photo-bubble-placeholder-icon", inBundle: NSBundle(forClass: PhotoMessageCollectionViewCellDefaultStyle.self), compatibleWithTraitCollection: nil)!
+        return UIImage(named: "photo-bubble-placeholder-icon", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
     }()
 
     public func maskingImage(viewModel viewModel: PhotoMessageViewModelProtocol) -> UIImage {
@@ -95,14 +108,14 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
 
     public func placeholderIconImage(viewModel viewModel: PhotoMessageViewModelProtocol) -> (icon: UIImage?, tintColor: UIColor?) {
         if viewModel.image.value == nil && viewModel.transferStatus.value == .Failed {
-            let tintColor = viewModel.isIncoming ? self.styleConstants.placeholderIconTintIncoming : self.styleConstants.placeholderIconTintOugoing
+            let tintColor = viewModel.isIncoming ? self.styleConstants.placeholderIconTintIncoming : self.styleConstants.placeholderIconTintOutgoing
             return (self.placeholderIcon, tintColor)
         }
         return (nil, nil)
     }
 
     public func tailWidth(viewModel viewModel: PhotoMessageViewModelProtocol) -> CGFloat {
-        return self.styleConstants.tailWidth
+        return self.bubbleMasks.tailWidth
     }
 
     public func bubbleSize(viewModel viewModel: PhotoMessageViewModelProtocol) -> CGSize {
@@ -126,4 +139,17 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
         return showsOverlay ? self.styleConstants.overlayColor : nil
     }
 
+}
+
+public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
+
+    static public func createDefaultBubbleMasks() -> BubbleMasks {
+        return BubbleMasks(
+            incomingTail: UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            incomingNoTail: UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            outgoingTail: UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            outgoingNoTail: UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            tailWidth: 6
+        )
+    }
 }
