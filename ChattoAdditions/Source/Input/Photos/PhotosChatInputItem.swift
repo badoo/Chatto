@@ -115,11 +115,11 @@ extension PhotosChatInputItem: PhotosInputViewDelegate {
     func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)
     }
-    
+
     func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) {
         self.cameraPermissionHandler?()
     }
-    
+
     func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) {
         self.photosPermissionHandler?()
     }
