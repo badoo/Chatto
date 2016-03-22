@@ -38,7 +38,7 @@ public struct ButtonImages {
     }
 }
 
-public class PhotosChatInputItem {
+public class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
     public var photoInputHandler: ((UIImage) -> Void)?
@@ -83,10 +83,9 @@ public class PhotosChatInputItem {
             }
         }
     }
-}
 
-// MARK: - ChatInputItemProtocol
-extension PhotosChatInputItem : ChatInputItemProtocol {
+    // MARK: - ChatInputItemProtocol
+
     public var presentationMode: ChatInputItemPresentationMode {
         return .CustomView
     }
