@@ -47,26 +47,35 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
         }
     }
 
+    public struct Sizes {
+        public let aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat>
+        public let photoSizeLandscape: CGSize
+        public let photoSizePortratit: CGSize
+        public let photoSizeSquare: CGSize
+    }
+
+    public struct Colors {
+        public let placeholderIconTintIncoming: UIColor
+        public let placeholderIconTintOutgoing: UIColor
+        public let progressIndicatorColorIncoming: UIColor
+        public let progressIndicatorColorOutgoing: UIColor
+        public let overlayColor: UIColor
+    }
+
     let bubbleMasks: BubbleMasks
+    let sizes: Sizes
+    let colors: Colors
     let baseStyle: BaseMessageCollectionViewCellDefaultStyle
-    public init(bubbleMasks: BubbleMasks = Class.createDefaultBubbleMasks(), baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
-        self.bubbleMasks = bubbleMasks
-        self.baseStyle = baseStyle
+    public init(
+        bubbleMasks: BubbleMasks = Class.createDefaultBubbleMasks(),
+        sizes: Sizes = Class.createDefaultSizes(),
+        colors: Colors = Class.createDefaultColors(),
+        baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
+            self.bubbleMasks = bubbleMasks
+            self.sizes = sizes
+            self.colors = colors
+            self.baseStyle = baseStyle
     }
-
-    private struct Constants {
-        let aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat> = 0.90...1.10
-        let photoSizeLandscape = CGSize(width: 210, height: 136)
-        let photoSizePortratit = CGSize(width: 136, height: 210)
-        let photoSizeSquare = CGSize(width: 210, height: 210)
-        let placeholderIconTintIncoming = UIColor.bma_color(rgb: 0xced6dc)
-        let placeholderIconTintOutgoing = UIColor.bma_color(rgb: 0x508dfc)
-        let progressIndicatorColorIncoming = UIColor.bma_color(rgb: 0x98a3ab)
-        let progressIndicatorColorOutgoing = UIColor.whiteColor()
-        let overlayColor = UIColor.blackColor().colorWithAlphaComponent(0.70)
-    }
-
-    lazy private var styleConstants = Constants()
 
     lazy private var maskImageIncomingTail: UIImage = self.bubbleMasks.incomingTail()
     lazy private var maskImageIncomingNoTail: UIImage = self.bubbleMasks.incomingNoTail()
@@ -108,7 +117,7 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
 
     public func placeholderIconImage(viewModel viewModel: PhotoMessageViewModelProtocol) -> (icon: UIImage?, tintColor: UIColor?) {
         if viewModel.image.value == nil && viewModel.transferStatus.value == .Failed {
-            let tintColor = viewModel.isIncoming ? self.styleConstants.placeholderIconTintIncoming : self.styleConstants.placeholderIconTintOutgoing
+            let tintColor = viewModel.isIncoming ? self.colors.placeholderIconTintIncoming : self.colors.placeholderIconTintOutgoing
             return (self.placeholderIcon, tintColor)
         }
         return (nil, nil)
@@ -121,22 +130,22 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     public func bubbleSize(viewModel viewModel: PhotoMessageViewModelProtocol) -> CGSize {
         let aspectRatio = viewModel.imageSize.height > 0 ? viewModel.imageSize.width / viewModel.imageSize.height : 0
 
-        if aspectRatio == 0 || self.styleConstants.aspectRatioIntervalForSquaredSize.contains(aspectRatio) {
-            return self.styleConstants.photoSizeSquare
-        } else if aspectRatio < self.styleConstants.aspectRatioIntervalForSquaredSize.start {
-            return self.styleConstants.photoSizePortratit
+        if aspectRatio == 0 || self.sizes.aspectRatioIntervalForSquaredSize.contains(aspectRatio) {
+            return self.sizes.photoSizeSquare
+        } else if aspectRatio < self.sizes.aspectRatioIntervalForSquaredSize.start {
+            return self.sizes.photoSizePortratit
         } else {
-            return self.styleConstants.photoSizeLandscape
+            return self.sizes.photoSizeLandscape
         }
     }
 
     public func progressIndicatorColor(viewModel viewModel: PhotoMessageViewModelProtocol) -> UIColor {
-        return viewModel.isIncoming ? self.styleConstants.progressIndicatorColorIncoming : self.styleConstants.progressIndicatorColorOutgoing
+        return viewModel.isIncoming ? self.colors.progressIndicatorColorIncoming : self.colors.progressIndicatorColorOutgoing
     }
 
     public func overlayColor(viewModel viewModel: PhotoMessageViewModelProtocol) -> UIColor? {
         let showsOverlay = viewModel.image.value != nil && (viewModel.transferStatus.value == .Transfering || viewModel.status != MessageViewModelStatus.Success)
-        return showsOverlay ? self.styleConstants.overlayColor : nil
+        return showsOverlay ? self.colors.overlayColor : nil
     }
 
 }
@@ -150,6 +159,25 @@ public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
             outgoingTail: UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
             outgoingNoTail: UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
             tailWidth: 6
+        )
+    }
+
+    static public func createDefaultSizes() -> Sizes {
+        return Sizes(
+            aspectRatioIntervalForSquaredSize: 0.90...1.10,
+            photoSizeLandscape: CGSize(width: 210, height: 136),
+            photoSizePortratit: CGSize(width: 136, height: 210),
+            photoSizeSquare: CGSize(width: 210, height: 210)
+        )
+    }
+
+    static public func createDefaultColors() -> Colors {
+        return Colors(
+            placeholderIconTintIncoming: UIColor.bma_color(rgb: 0xced6dc),
+            placeholderIconTintOutgoing: UIColor.bma_color(rgb: 0x508dfc),
+            progressIndicatorColorIncoming: UIColor.bma_color(rgb: 0x98a3ab),
+            progressIndicatorColorOutgoing: UIColor.whiteColor(),
+            overlayColor: UIColor.blackColor().colorWithAlphaComponent(0.70)
         )
     }
 }
