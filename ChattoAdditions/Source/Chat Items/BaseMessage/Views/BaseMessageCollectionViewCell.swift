@@ -26,7 +26,7 @@ import UIKit
 import Chatto
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {
-    func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize
+    func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
     func avatarVerticalAlignment(viewModel viewModel: MessageViewModelProtocol) -> VerticalAlignment
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }
@@ -191,7 +191,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         } else {
             self.failedButton.alpha = 0
         }
-        self.accessoryTimestamp?.attributedText = style.attributedStringForDate(viewModel.date)
+        self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         let avatarImageSize = baseStyle.avatarSize(viewModel: messageViewModel)
         if avatarImageSize != CGSize.zero {
             self.avatarView.image = self.messageViewModel.avatarImage.value
@@ -211,21 +211,20 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
 
         self.avatarView.bma_rect = layoutModel.avatarViewFrame
 
-        // TODO: refactor accessorView?
-
-        if let accessoryView = self.accessoryTimestamp {
-            accessoryView.bounds = CGRect(origin: CGPoint.zero, size: accessoryView.intrinsicContentSize())
-            let accessoryViewWidth = CGRectGetWidth(accessoryView.bounds)
-            let accessoryViewMargin: CGFloat = 10
-            let leftDisplacement = max(0, min(self.timestampMaxVisibleOffset, accessoryViewWidth + accessoryViewMargin))
+        if self.accessoryTimestampView.superview != nil {
+            let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
+            self.accessoryTimestampView.bounds = CGRect(origin: CGPoint.zero, size: self.accessoryTimestampView.intrinsicContentSize())
+            let accessoryViewWidth = CGRectGetWidth(self.accessoryTimestampView.bounds)
+            let leftOffsetForContentView = max(0, offsetToRevealAccessoryView)
+            let leftOffsetForAccessoryView = min(leftOffsetForContentView, accessoryViewWidth + layoutConstants.horizontalMargin)
             var contentViewframe = self.contentView.frame
             if self.messageViewModel.isIncoming {
                 contentViewframe.origin = CGPoint.zero
             } else {
-                contentViewframe.origin.x = -leftDisplacement
+                contentViewframe.origin.x = -leftOffsetForContentView
             }
             self.contentView.frame = contentViewframe
-            accessoryView.center = CGPoint(x: CGRectGetWidth(self.bounds) - leftDisplacement + accessoryViewWidth / 2, y: self.contentView.center.y)
+            self.accessoryTimestampView.center = CGPoint(x: CGRectGetWidth(self.bounds) - leftOffsetForAccessoryView + accessoryViewWidth / 2, y: self.contentView.center.y)
         }
     }
 
@@ -254,52 +253,51 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
 
 
     // MARK: timestamp revealing
-    var timestampMaxVisibleOffset: CGFloat = 0 {
+
+    lazy var accessoryTimestampView = UILabel()
+
+    var offsetToRevealAccessoryView: CGFloat = 0 {
         didSet {
             self.setNeedsLayout()
         }
     }
-    var accessoryTimestamp: UILabel?
-    public func revealAccessoryView(maximumOffset offset: CGFloat, animated: Bool) {
-        if self.accessoryTimestamp == nil {
+
+
+    public func preferredOffsetToRevealAccessoryView() -> CGFloat? {
+        let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
+        return self.accessoryTimestampView.intrinsicContentSize().width + layoutConstants.horizontalMargin
+    }
+
+
+    public func revealAccessoryView(withOffset offset: CGFloat, animated: Bool) {
+        self.offsetToRevealAccessoryView = offset
+        if self.accessoryTimestampView.superview == nil {
             if offset > 0 {
-                let accessoryTimestamp = UILabel()
-                accessoryTimestamp.attributedText = self.baseStyle?.attributedStringForDate(self.messageViewModel.date)
-                self.addSubview(accessoryTimestamp)
-                self.accessoryTimestamp = accessoryTimestamp
+                self.addSubview(self.accessoryTimestampView)
                 self.layoutIfNeeded()
             }
 
             if animated {
                 UIView.animateWithDuration(self.animationDuration, animations: { () -> Void in
-                    self.timestampMaxVisibleOffset = offset
                     self.layoutIfNeeded()
                 })
-            } else {
-                self.timestampMaxVisibleOffset = offset
             }
         } else {
             if animated {
                 UIView.animateWithDuration(self.animationDuration, animations: { () -> Void in
-                    self.timestampMaxVisibleOffset = offset
                     self.layoutIfNeeded()
                     }, completion: { (finished) -> Void in
                         if offset == 0 {
                             self.removeAccessoryView()
                         }
                 })
-
-            } else {
-                self.timestampMaxVisibleOffset = offset
             }
         }
     }
 
     func removeAccessoryView() {
-        self.accessoryTimestamp?.removeFromSuperview()
-        self.accessoryTimestamp = nil
+        self.accessoryTimestampView.removeFromSuperview()
     }
-
 
     // MARK: User interaction
     public var onFailedButtonTapped: ((cell: BaseMessageCollectionViewCell) -> Void)?

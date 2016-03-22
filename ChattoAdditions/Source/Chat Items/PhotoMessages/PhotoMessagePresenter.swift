@@ -34,7 +34,7 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
     public let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
-    
+
     public init (
         messageModel: ModelT,
         viewModelBuilder: ViewModelBuilderT,
