@@ -130,14 +130,13 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             if updateType == .Normal {
 
                 UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
-                    // We want to update visible cells to support easy removal of bubble tail or any other updates that may be needed after a data update
-                    // Collection view state is not constistent after performBatchUpdates. It can happen that we ask a cell for an index path and we still get the old one.
-                    // Visible cells can be either updated in completion block (easier but with delay) or before, taking into account if some cell is gonna be moved
-
-                    updateModelClosure()
-                    self.updateVisibleCells(changes)
-
                     self.collectionView.performBatchUpdates({ () -> Void in
+                        // We want to update visible cells to support easy removal of bubble tail or any other updates that may be needed after a data update
+                        // Collection view state is not constistent after performBatchUpdates. It can happen that we ask a cell for an index path and we still get the old one.
+                        // Visible cells can be either updated in completion block (easier but with delay) or before, taking into account if some cell is gonna be moved
+                        updateModelClosure()
+                        self.updateVisibleCells(changes)
+
                         self.collectionView.deleteItemsAtIndexPaths(Array(changes.deletedIndexPaths))
                         self.collectionView.insertItemsAtIndexPaths(Array(changes.insertedIndexPaths))
                         for move in changes.movedIndexPaths {
@@ -269,7 +268,6 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
         if self.layoutModel.calculatedForWidth != self.collectionView.bounds.width {
             self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: self.collectionView.bounds.width)
-
         }
         return self.layoutModel
     }
