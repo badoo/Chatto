@@ -118,7 +118,8 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         updateType: UpdateType,
         completion: () -> Void) {
             let shouldScrollToBottom = updateType != .Pagination && self.isScrolledAtBottom()
-            let oldRect = self.rectAtIndexPath(changes.movedIndexPaths.first?.indexPathOld)
+            let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
+            let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
             let myCompletion = {
                 // Found that cells may not match correct index paths here yet! (see comment below)
                 // Waiting for next loop seems to fix the issue
@@ -156,7 +157,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             if shouldScrollToBottom {
                 self.scrollToBottom(animated: updateType == .Normal)
             } else {
-                let newRect = self.rectAtIndexPath(changes.movedIndexPaths.first?.indexPathNew)
+                let newRect = self.rectAtIndexPath(newReferenceIndexPath)
                 self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
             }
     }
