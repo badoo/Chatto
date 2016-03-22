@@ -125,8 +125,8 @@ public class ExpandableTextView: UITextView {
         self.placeholder.editable = false
         self.placeholder.selectable = false
         self.placeholder.userInteractionEnabled = false
-        self.placeholder.textAlignment = textAlignment
-        self.placeholder.textContainerInset = textContainerInset
+        self.placeholder.textAlignment = self.textAlignment
+        self.placeholder.textContainerInset = self.textContainerInset
         self.placeholder.backgroundColor = UIColor.clearColor()
     }
 }

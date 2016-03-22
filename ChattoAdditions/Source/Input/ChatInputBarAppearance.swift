@@ -28,7 +28,11 @@ public struct ChatInputBarAppearance {
     public var textPlaceholderFont = UIFont.systemFontOfSize(12)
     public var textPlaceholderColor = UIColor.grayColor()
     public var textPlaceholder = ""
+    public var textInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+    public var sendButtonFont = UIFont.systemFontOfSize(16)
+    public var sendButtonInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     public var sendButtonTitle = ""
-
+    public var tabBarInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    public var tabBarInterItemSpacing: CGFloat = 10
     public init() {}
 }

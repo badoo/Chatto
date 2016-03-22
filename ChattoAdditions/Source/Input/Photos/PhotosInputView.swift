@@ -48,7 +48,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     private var dataProvider: PhotosInputDataProviderProtocol!
     private var cellProvider: PhotosInputCellProviderProtocol!
     private var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
-    
+
     var cameraAuthorizationStatus: AVAuthorizationStatus {
         return AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
     }

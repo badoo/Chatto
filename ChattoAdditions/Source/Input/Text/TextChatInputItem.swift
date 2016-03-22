@@ -24,17 +24,31 @@
 
 import Foundation
 
-@objc public class TextChatInputItem: NSObject {
+public class TextChatInputItem {
+    typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?
+
+    let buttonImages: ButtonImages
+    public init(buttonImages: ButtonImages = Class.createDefaultButtonStyle()) {
+        self.buttonImages = buttonImages
+    }
+
+    public class func createDefaultButtonStyle() -> ButtonImages {
+        return ButtonImages(
+            normal: UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            selected: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            highlighted: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
+        )
+    }
 
     lazy private var internalTabView: UIButton = {
         var button = UIButton(type: .Custom)
         button.exclusiveTouch = true
-        button.setImage(UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil), forState: .Selected)
+        button.setImage(self.buttonImages.normal(), forState: .Normal)
+        button.setImage(self.buttonImages.highlighted(), forState: .Highlighted)
+        button.setImage(self.buttonImages.selected(), forState: .Selected)
         return button
-        }()
+    }()
 
     public var selected = false {
         didSet {

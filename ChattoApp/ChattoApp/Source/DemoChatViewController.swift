@@ -55,16 +55,11 @@ class DemoChatViewController: BaseChatViewController {
     var chatInputPresenter: BasicChatInputBarPresenter!
     override func createChatInputView() -> UIView {
         let chatInputView = ChatInputBar.loadNib()
-        self.configureChatInputBar(chatInputView)
-        self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems())
-        return chatInputView
-    }
-
-    func configureChatInputBar(chatInputBar: ChatInputBar) {
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonTitle = NSLocalizedString("Send", comment: "")
         appearance.textPlaceholder = NSLocalizedString("Type a message", comment: "")
-        chatInputBar.setAppearance(appearance)
+        self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
+        return chatInputView
     }
 
     override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
