@@ -50,8 +50,18 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     public struct Sizes {
         public let aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat>
         public let photoSizeLandscape: CGSize
-        public let photoSizePortratit: CGSize
+        public let photoSizePortrait: CGSize
         public let photoSizeSquare: CGSize
+        public init(
+            aspectRatioIntervalForSquaredSize: ClosedInterval<CGFloat>,
+            photoSizeLandscape: CGSize,
+            photoSizePortrait: CGSize,
+            photoSizeSquare: CGSize) {
+                self.aspectRatioIntervalForSquaredSize = aspectRatioIntervalForSquaredSize
+                self.photoSizeLandscape = photoSizeLandscape
+                self.photoSizePortrait = photoSizePortrait
+                self.photoSizeSquare = photoSizeSquare
+        }
     }
 
     public struct Colors {
@@ -133,7 +143,7 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
         if aspectRatio == 0 || self.sizes.aspectRatioIntervalForSquaredSize.contains(aspectRatio) {
             return self.sizes.photoSizeSquare
         } else if aspectRatio < self.sizes.aspectRatioIntervalForSquaredSize.start {
-            return self.sizes.photoSizePortratit
+            return self.sizes.photoSizePortrait
         } else {
             return self.sizes.photoSizeLandscape
         }
@@ -166,7 +176,7 @@ public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
         return Sizes(
             aspectRatioIntervalForSquaredSize: 0.90...1.10,
             photoSizeLandscape: CGSize(width: 210, height: 136),
-            photoSizePortratit: CGSize(width: 136, height: 210),
+            photoSizePortrait: CGSize(width: 136, height: 210),
             photoSizeSquare: CGSize(width: 210, height: 210)
         )
     }
