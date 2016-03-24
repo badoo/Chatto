@@ -28,25 +28,25 @@ public protocol UniqueIdentificable {
     var uid: String { get }
 }
 
-struct CollectionChangeMove: Equatable, Hashable {
-    let indexPathOld: NSIndexPath
-    let indexPathNew: NSIndexPath
-    init(indexPathOld: NSIndexPath, indexPathNew: NSIndexPath) {
+public struct CollectionChangeMove: Equatable, Hashable {
+    public let indexPathOld: NSIndexPath
+    public let indexPathNew: NSIndexPath
+    public init(indexPathOld: NSIndexPath, indexPathNew: NSIndexPath) {
         self.indexPathOld = indexPathOld
         self.indexPathNew = indexPathNew
     }
 
-    var hashValue: Int { return indexPathOld.hash ^ indexPathNew.hash }
+    public var hashValue: Int { return indexPathOld.hash ^ indexPathNew.hash }
 }
 
-func == (lhs: CollectionChangeMove, rhs: CollectionChangeMove) -> Bool {
+public func == (lhs: CollectionChangeMove, rhs: CollectionChangeMove) -> Bool {
     return lhs.indexPathOld == rhs.indexPathOld && lhs.indexPathNew == rhs.indexPathNew
 }
 
-struct CollectionChanges {
-    let insertedIndexPaths: Set<NSIndexPath>
-    let deletedIndexPaths: Set<NSIndexPath>
-    let movedIndexPaths: [CollectionChangeMove]
+public struct CollectionChanges {
+    public let insertedIndexPaths: Set<NSIndexPath>
+    public let deletedIndexPaths: Set<NSIndexPath>
+    public let movedIndexPaths: [CollectionChangeMove]
 
     init(insertedIndexPaths: Set<NSIndexPath>, deletedIndexPaths: Set<NSIndexPath>, movedIndexPaths: [CollectionChangeMove]) {
         self.insertedIndexPaths = insertedIndexPaths

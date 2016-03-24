@@ -187,16 +187,6 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
-    public func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
-        assert(false, "Override in subclass")
-        return [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
-    }
-
-    public func createChatInputView() -> UIView {
-        assert(false, "Override in subclass")
-        return UIView()
-    }
-
     /**
      - You can use a decorator to:
         - Provide the ChatCollectionViewLayout with margins between messages
@@ -212,6 +202,28 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     }
 
     var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
+
+
+    // MARK: Subclass overrides
+
+    public func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+        assert(false, "Override in subclass")
+        return [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
+    }
+
+    public func createChatInputView() -> UIView {
+        assert(false, "Override in subclass")
+        return UIView()
+    }
+
+    /**
+        When paginating up we need to change the scroll position as the content is pushed down.
+        We take distance to top from beforeUpdate indexPath and then we make afterUpdate indexPath to appear at the same distance
+    */
+    public func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: NSIndexPath?, afterUpdate: NSIndexPath?) {
+        let firstItemMoved = changes.movedIndexPaths.first
+        return (firstItemMoved?.indexPathOld, firstItemMoved?.indexPathNew)
+    }
 }
 
 extension BaseChatViewController { // Rotation

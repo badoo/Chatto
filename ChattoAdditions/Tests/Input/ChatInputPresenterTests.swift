@@ -31,7 +31,7 @@ class ChatInputPresenterTests: XCTestCase {
     override func setUp() {
         super.setUp()
         self.bar = ChatInputBar.loadNib()
-        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: [])
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: [], chatInputBarAppearance: ChatInputBarAppearance())
     }
 
     func testThat_WhenSendButtonPressed_InputTextBecomesEmpty() {
@@ -141,7 +141,7 @@ class ChatInputPresenterTests: XCTestCase {
         }
 
         let inputItems: Array<ChatInputItemProtocol> = [firstInputItem, secondInputItem]
-        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems)
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems, chatInputBarAppearance: ChatInputBarAppearance())
         self.presenter.onSendButtonPressed()
         XCTAssertEqual(itemThatHandledInput, 1)
     }
@@ -168,7 +168,7 @@ class ChatInputPresenterTests: XCTestCase {
 
     func testThat_GivenPresenterHasNoFocusedItem_WhenBarDidBeginEditing_FirstKeyboardItemBecomesFocused() {
         let inputItems: Array<ChatInputItemProtocol> = [TextChatInputItem(), TextChatInputItem()]
-        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems)
+        self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems, chatInputBarAppearance: ChatInputBarAppearance())
         self.presenter.onDidBeginEditing()
         XCTAssertTrue(self.presenter.focusedItem! === inputItems[0])
     }
