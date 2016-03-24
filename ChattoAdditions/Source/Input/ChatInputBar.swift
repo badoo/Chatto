@@ -78,8 +78,8 @@ public class ChatInputBar: ReusableXibView {
             NSLayoutConstraint.activateConstraints(self.constraintsForHiddenTextView)
         }
         if self.showsSendButton {
-            NSLayoutConstraint.activateConstraints(self.constraintsForVisibleSendButton)
             NSLayoutConstraint.deactivateConstraints(self.constraintsForHiddenSendButton)
+            NSLayoutConstraint.activateConstraints(self.constraintsForVisibleSendButton)
         } else {
             NSLayoutConstraint.deactivateConstraints(self.constraintsForVisibleSendButton)
             NSLayoutConstraint.activateConstraints(self.constraintsForHiddenSendButton)
