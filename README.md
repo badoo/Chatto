@@ -155,6 +155,5 @@ github "badoo/Chatto"
 ## License
 Source code is distributed under MIT license.
 
-<h2></h2>
-
-Discover other [open source projects](https://github.com/badoo) and [ideas](https://techblog.badoo.com)
+##Blog
+Read more on our [tech blog](http://techblog.badoo.com/) or explore our other [open source projects](https://github.com/badoo)
