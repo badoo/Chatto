@@ -41,7 +41,4 @@ public class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessag
         self.imageSize = imageSize
         self.image = image
     }
-
-    // This should be covered by DecoratedMessageModelProtocol, but compiler crashes without this (Xcode 7.1)
-    public var uid: String { return self.messageModel.uid }
 }

@@ -55,7 +55,7 @@ public struct ReadOnlyOrderedDictionary<T where T: UniqueIdentificable>: Collect
     public func generate() -> AnyGenerator<T> {
         var index = 0
 
-        return anyGenerator({
+        return AnyGenerator(body: {
             guard index < self.items.count else {
                 return nil
             }

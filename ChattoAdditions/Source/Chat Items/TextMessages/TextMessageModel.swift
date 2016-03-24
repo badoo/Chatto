@@ -38,7 +38,4 @@ public class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageM
         self._messageModel = messageModel
         self.text = text
     }
-    // This should be covered by DecoratedMessageModelProtocol, but compiler crashes without this (Xcode 7.1)
-    public var uid: String { return self.messageModel.uid }
-
 }
