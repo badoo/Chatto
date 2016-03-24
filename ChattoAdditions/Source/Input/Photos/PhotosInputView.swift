@@ -124,7 +124,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func replacePlaceholderItemsWithPhotoItems() {
-        let newDataProvider = PhotosInputDataProvider()
+        let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: PhotosInputDataProvider(), placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
         self.dataProvider = newDataProvider
         self.cellProvider = PhotosInputCellProvider(collectionView: self.collectionView, dataProvider: newDataProvider)
         self.collectionView.reloadSections(NSIndexSet(index: 0))

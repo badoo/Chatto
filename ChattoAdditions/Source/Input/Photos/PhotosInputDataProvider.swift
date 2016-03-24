@@ -32,8 +32,15 @@ protocol PhotosInputDataProviderProtocol {
 }
 
 class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
+
+    let numberOfPlaceholders: Int
+
+    init(numberOfPlaceholders: Int = 5) {
+        self.numberOfPlaceholders = numberOfPlaceholders
+    }
+
     var count: Int {
-        return 5
+        return self.numberOfPlaceholders
     }
 
     func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
@@ -84,5 +91,40 @@ class PhotosInputDataProvider: PhotosInputDataProviderProtocol {
                 completion(image)
             }
         }
+    }
+}
+
+class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol {
+
+    private let photosDataProvider: PhotosInputDataProviderProtocol
+    private let placeholdersDataProvider: PhotosInputDataProviderProtocol
+
+    init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
+        self.photosDataProvider = photosDataProvider
+        self.placeholdersDataProvider = placeholdersDataProvider
+    }
+
+    var count: Int {
+        return max(self.photosDataProvider.count, self.placeholdersDataProvider.count)
+    }
+
+    func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+        if index < self.photosDataProvider.count {
+            return self.photosDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
+        } else {
+            return self.placeholdersDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
+        }
+    }
+
+    func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void) {
+        if index < self.photosDataProvider.count {
+            return self.photosDataProvider.requestFullImageAtIndex(index, completion: completion)
+        } else {
+            return self.placeholdersDataProvider.requestFullImageAtIndex(index, completion: completion)
+        }
+    }
+
+    func cancelPreviewImageRequest(requestID: Int32) {
+        return self.photosDataProvider.cancelPreviewImageRequest(requestID)
     }
 }

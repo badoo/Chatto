@@ -44,8 +44,8 @@ class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
 class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
     private var reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
-    private let dataProvider: PhotosInputDataProvider
-    init(collectionView: UICollectionView, dataProvider: PhotosInputDataProvider) {
+    private let dataProvider: PhotosInputDataProviderProtocol
+    init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {
         self.dataProvider = dataProvider
         self.collectionView = collectionView
         self.collectionView.registerClass(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
