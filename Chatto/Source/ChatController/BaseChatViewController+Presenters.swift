@@ -73,18 +73,13 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     func presenterForIndex(index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
         guard index < items.count else {
             // This can happen from didEndDisplayingCell if we reloaded with less messages
-            return DummyChatItemPresenter()
+            return self.presenterFactory.createChatItemPresenter(nil)
         }
         return items[index].presenter
     }
 
     public func createPresenterForChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
-            if builder.canHandleChatItem(chatItem) {
-                return builder.createPresenterWithChatItem(chatItem)
-            }
-        }
-        return DummyChatItemPresenter()
+        return self.presenterFactory.createChatItemPresenter(chatItem)
     }
 
     public func decorationAttributesForIndexPath(indexPath: NSIndexPath) -> ChatItemDecorationAttributesProtocol? {

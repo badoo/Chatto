@@ -24,6 +24,34 @@
 
 import UIKit
 
+public protocol ChatItemPresenterFactoryProtocol {
+    func createChatItemPresenter(chatItem: ChatItemProtocol?) -> ChatItemPresenterProtocol
+    func configure(withCollectionView collectionView: UICollectionView)
+}
+
+public class BaseChatItemPresenterFactory : ChatItemPresenterFactoryProtocol {
+    var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
+    init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]){
+        self.presenterBuildersByType = presenterBuildersByType
+    }
+    public func createChatItemPresenter(chatItem: ChatItemProtocol?) -> ChatItemPresenterProtocol {
+        if let chatItem = chatItem {
+            for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
+                if builder.canHandleChatItem(chatItem) {
+                    return builder.createPresenterWithChatItem(chatItem)
+                }
+            }
+        }
+        return DummyChatItemPresenter()
+    }
+    public func configure(withCollectionView collectionView: UICollectionView) {
+        for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
+            presenterBuilder.presenterType.registerCells(collectionView)
+        }
+        DummyChatItemPresenter.registerCells(collectionView)
+    }
+}
+
 public class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
@@ -90,12 +118,8 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         self.collectionView.delegate = self
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
 
-        self.presenterBuildersByType = self.createPresenterBuilders()
-
-        for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
-            presenterBuilder.presenterType.registerCells(self.collectionView)
-        }
-        DummyChatItemPresenter.registerCells(self.collectionView)
+        self.presenterFactory = self.createPresenterFactory()
+        self.presenterFactory.configure(withCollectionView: self.collectionView)
     }
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
@@ -183,7 +207,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
     var inputContainer: UIView!
-    var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
+    var presenterFactory : ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
@@ -205,6 +229,11 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
 
     // MARK: Subclass overrides
+    
+    public func createPresenterFactory() -> ChatItemPresenterFactoryProtocol {
+        // Default implementation
+        return BaseChatItemPresenterFactory(presenterBuildersByType: self.createPresenterBuilders())
+    }
 
     public func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
         assert(false, "Override in subclass")
