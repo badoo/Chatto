@@ -79,12 +79,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     public func createPresenterForChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
-            if builder.canHandleChatItem(chatItem) {
-                return builder.createPresenterWithChatItem(chatItem)
-            }
-        }
-        return DummyChatItemPresenter()
+        return self.presenterFactory.createChatItemPresenter(chatItem)
     }
 
     public func decorationAttributesForIndexPath(indexPath: NSIndexPath) -> ChatItemDecorationAttributesProtocol? {
