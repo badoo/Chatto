@@ -25,7 +25,7 @@
 import UIKit
 
 public protocol ChatItemPresenterFactoryProtocol {
-    func createChatItemPresenter(chatItem: ChatItemProtocol?) -> ChatItemPresenterProtocol
+    func createChatItemPresenter(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
     func configure(withCollectionView collectionView: UICollectionView)
 }
 
@@ -34,12 +34,10 @@ public class BaseChatItemPresenterFactory : ChatItemPresenterFactoryProtocol {
     init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]){
         self.presenterBuildersByType = presenterBuildersByType
     }
-    public func createChatItemPresenter(chatItem: ChatItemProtocol?) -> ChatItemPresenterProtocol {
-        if let chatItem = chatItem {
-            for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
-                if builder.canHandleChatItem(chatItem) {
-                    return builder.createPresenterWithChatItem(chatItem)
-                }
+    public func createChatItemPresenter(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
+            if builder.canHandleChatItem(chatItem) {
+                return builder.createPresenterWithChatItem(chatItem)
             }
         }
         return DummyChatItemPresenter()
