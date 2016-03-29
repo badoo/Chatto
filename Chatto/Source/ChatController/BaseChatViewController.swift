@@ -204,7 +204,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
-    var inputContainer: UIView!
+    public private(set) var inputContainer: UIView!
     var presenterFactory : ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
