@@ -24,32 +24,6 @@
 
 import UIKit
 
-public protocol ChatItemPresenterFactoryProtocol {
-    func createChatItemPresenter(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
-    func configure(withCollectionView collectionView: UICollectionView)
-}
-
-public class BaseChatItemPresenterFactory : ChatItemPresenterFactoryProtocol {
-    var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
-    init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]){
-        self.presenterBuildersByType = presenterBuildersByType
-    }
-    public func createChatItemPresenter(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
-            if builder.canHandleChatItem(chatItem) {
-                return builder.createPresenterWithChatItem(chatItem)
-            }
-        }
-        return DummyChatItemPresenter()
-    }
-    public func configure(withCollectionView collectionView: UICollectionView) {
-        for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
-            presenterBuilder.presenterType.registerCells(collectionView)
-        }
-        DummyChatItemPresenter.registerCells(collectionView)
-    }
-}
-
 public class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
@@ -77,6 +51,11 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     deinit {
         self.collectionView.delegate = nil
         self.collectionView.dataSource = nil
+    }
+
+    public override func loadView() {
+        self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
+        self.view.backgroundColor = UIColor.whiteColor()
     }
 
     override public func viewDidLoad() {
@@ -142,13 +121,11 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Trailing, relatedBy: .Equal, toItem: inputView, attribute: .Trailing, multiplier: 1, constant: 0))
 
         self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, inputContainerBottomContraint: self.inputContainerBottomConstraint, notificationCenter: self.notificationCenter)
+        (self.view as? BaseChatViewControllerView)?.bmaInputAccessoryView = self.keyboardTracker.trackingView
     }
+
     var notificationCenter = NSNotificationCenter.defaultCenter()
     var keyboardTracker: KeyboardTracker!
-
-    public override var inputAccessoryView: UIView {
-        return self.keyboardTracker.trackingView
-    }
 
     public var isFirstLayout: Bool = true
     override public func viewDidLayoutSubviews() {
@@ -212,7 +189,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
-    var presenterFactory : ChatItemPresenterFactoryProtocol!
+    var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
@@ -234,10 +211,10 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
 
     // MARK: Subclass overrides
-    
+
     public func createPresenterFactory() -> ChatItemPresenterFactoryProtocol {
         // Default implementation
-        return BaseChatItemPresenterFactory(presenterBuildersByType: self.createPresenterBuilders())
+        return ChatItemPresenterFactory(presenterBuildersByType: self.createPresenterBuilders())
     }
 
     public func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
