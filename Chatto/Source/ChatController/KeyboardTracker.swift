@@ -122,7 +122,7 @@ class KeyboardTracker {
 
     private func bottomConstraintFromTrackingView() -> CGFloat {
         let trackingViewRect = self.view.convertRect(self.keyboardTrackerView.bounds, fromView: self.keyboardTrackerView)
-        return  self.view.bounds.height - trackingViewRect.maxY
+        return max(0, self.view.bounds.height - trackingViewRect.maxY)
     }
 
     func layoutTrackingViewIfNeeded() {
