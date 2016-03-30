@@ -118,6 +118,8 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
+
+        self.automaticallyAdjustsScrollViewInsets = false
     }
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
@@ -169,15 +171,28 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
         let newInsetBottom = self.constants.defaultContentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
+        let newInsetTop = self.topLayoutGuide.length + self.constants.defaultContentInsets.top
+        let insetTopDiff = newInsetTop - self.collectionView.contentInset.top
 
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize()
         let allContentFits = self.collectionView.bounds.height - newInsetBottom - (contentSize.height + self.collectionView.contentInset.top) >= 0
 
-        let currentDistanceToBottomInset = max(0, self.collectionView.bounds.height - self.collectionView.contentInset.bottom - (contentSize.height - self.collectionView.contentOffset.y))
-        let newContentOffsetY = self.collectionView.contentOffset.y + insetBottomDiff - currentDistanceToBottomInset
+        let newContentOffsetY = max(-newInsetTop, self.collectionView.contentOffset.y + insetBottomDiff - insetTopDiff)
 
-        self.collectionView.contentInset.bottom = newInsetBottom
-        self.collectionView.scrollIndicatorInsets.bottom = self.constants.defaultScrollIndicatorInsets.bottom + inputHeightWithKeyboard
+        self.collectionView.contentInset = {
+            var currentInsets = self.collectionView.contentInset
+            currentInsets.bottom = newInsetBottom
+            currentInsets.top = newInsetTop
+            return currentInsets
+        }()
+
+        self.collectionView.scrollIndicatorInsets = {
+            var currentInsets = self.collectionView.scrollIndicatorInsets
+            currentInsets.bottom = self.constants.defaultScrollIndicatorInsets.bottom + inputHeightWithKeyboard
+            currentInsets.top = self.topLayoutGuide.length + self.constants.defaultScrollIndicatorInsets.top
+            return currentInsets
+        }()
+
         let inputIsAtBottom = self.view.bounds.maxY - self.inputContainer.frame.maxY <= 0
 
         if allContentFits {
@@ -185,14 +200,6 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         } else if !isInteracting || inputIsAtBottom {
             self.collectionView.contentOffset.y = newContentOffsetY
         }
-
-        self.workaroundContentInsetBugiOS_9_0_x()
-    }
-
-    func workaroundContentInsetBugiOS_9_0_x() {
-        // Fix for http://www.openradar.me/22106545
-        self.collectionView.contentInset.top = self.topLayoutGuide.length + self.constants.defaultContentInsets.top
-        self.collectionView.scrollIndicatorInsets.top = self.topLayoutGuide.length + self.constants.defaultScrollIndicatorInsets.top
     }
 
     func rectAtIndexPath(indexPath: NSIndexPath?) -> CGRect? {
