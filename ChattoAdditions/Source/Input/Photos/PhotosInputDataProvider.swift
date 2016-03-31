@@ -24,7 +24,12 @@
 
 import PhotosUI
 
+protocol PhotosInputDataProviderDelegate: class {
+    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol)
+}
+
 protocol PhotosInputDataProviderProtocol {
+    weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
     func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32
     func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void)
@@ -32,6 +37,7 @@ protocol PhotosInputDataProviderProtocol {
 }
 
 class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
+    weak var delegate: PhotosInputDataProviderDelegate?
 
     let numberOfPlaceholders: Int
 
@@ -54,13 +60,21 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
     }
 }
 
-class PhotosInputDataProvider: PhotosInputDataProviderProtocol {
+@objc
+class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
+    weak var delegate: PhotosInputDataProviderDelegate?
     private var imageManager = PHCachingImageManager()
     private var fetchResult: PHFetchResult!
-    init() {
+    override init() {
         let options = PHFetchOptions()
         options.sortDescriptors = [ NSSortDescriptor(key: "modificationDate", ascending: false) ]
         self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: options)
+        super.init()
+        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+    }
+
+    deinit {
+        PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self)
     }
 
     var count: Int {
@@ -92,16 +106,29 @@ class PhotosInputDataProvider: PhotosInputDataProviderProtocol {
             }
         }
     }
+
+    // MARK: PHPhotoLibraryChangeObserver
+
+    func photoLibraryDidChange(changeInstance: PHChange) {
+        // Photos may call this method on a background queue; switch to the main queue to update the UI.
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            if let changeDetails = changeInstance.changeDetailsForFetchResult(self.fetchResult) {
+                self.fetchResult = changeDetails.fetchResultAfterChanges
+                self.delegate?.photosInpudDataProviderDidUpdate(self)
+            }
+        }
+    }
 }
 
-class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol {
-
+class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
+    weak var delegate: PhotosInputDataProviderDelegate?
     private let photosDataProvider: PhotosInputDataProviderProtocol
     private let placeholdersDataProvider: PhotosInputDataProviderProtocol
 
     init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
         self.photosDataProvider = photosDataProvider
         self.placeholdersDataProvider = placeholdersDataProvider
+        self.photosDataProvider.delegate = self
     }
 
     var count: Int {
@@ -126,5 +153,11 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol {
 
     func cancelPreviewImageRequest(requestID: Int32) {
         return self.photosDataProvider.cancelPreviewImageRequest(requestID)
+    }
+
+    // MARK: PhotosInputDataProviderDelegate
+
+    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol) {
+        self.delegate?.photosInpudDataProviderDidUpdate(self)
     }
 }

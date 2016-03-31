@@ -125,6 +125,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     private func replacePlaceholderItemsWithPhotoItems() {
         let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: PhotosInputDataProvider(), placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
+        newDataProvider.delegate = self
         self.dataProvider = newDataProvider
         self.cellProvider = PhotosInputCellProvider(collectionView: self.collectionView, dataProvider: newDataProvider)
         self.collectionView.reloadSections(NSIndexSet(index: 0))
@@ -220,5 +221,11 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
         if indexPath.item == Constants.liveCameraItemIndex {
             (cell as! LiveCameraCell).stopCapturing()
         }
+    }
+}
+
+extension PhotosInputView: PhotosInputDataProviderDelegate {
+    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol) {
+        self.collectionView.reloadData()
     }
 }
