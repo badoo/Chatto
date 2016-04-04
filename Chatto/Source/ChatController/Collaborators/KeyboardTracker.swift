@@ -128,18 +128,25 @@ class KeyboardTracker {
     func layoutTrackingViewIfNeeded() {
         guard self.isTracking && self.keyboardStatus == .Shown else { return }
         self.adjustTrackingViewSizeIfNeeded()
+        if #available(iOS 9, *) {
+            // Working fine on iOS 9
+        } else {
+            // Workaround for iOS 8
+            self.trackingView.window?.setNeedsLayout()
+            self.trackingView.window?.layoutIfNeeded()
+        }
     }
 
     private func adjustTrackingViewSizeIfNeeded() {
         let inputContainerHeight = self.inputContainer.bounds.height
         let trackerViewHeight = self.trackingView.bounds.height
         if trackerViewHeight != inputContainerHeight {
-            self.keyboardTrackerView.bounds = CGRect(origin: CGPoint.zero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: inputContainerHeight))
+            self.keyboardTrackerView.bounds.size.height = inputContainerHeight
         }
     }
 
     private func layoutInputAtBottom() {
-        self.keyboardTrackerView.bounds = CGRect(origin: CGPoint.zero, size: CGSize(width: self.keyboardTrackerView.bounds.width, height: 0))
+        self.keyboardTrackerView.bounds.size.height = 0
         self.inputContainerBottomConstraint.constant = 0
         self.view.layoutIfNeeded()
     }
