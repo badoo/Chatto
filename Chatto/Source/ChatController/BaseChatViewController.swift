@@ -40,11 +40,23 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public var constants = Constants()
 
     public private(set) var collectionView: UICollectionView!
-    public internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
-    public var chatDataSource: ChatDataSourceProtocol? {
-        didSet {
-            self.chatDataSource?.delegate = self
-            self.enqueueModelUpdate(updateType: .Reload)
+    public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
+    private var _chatDataSource: ChatDataSourceProtocol?
+    public final var chatDataSource: ChatDataSourceProtocol? {
+        get {
+            return _chatDataSource
+        }
+        set {
+            self.setChatDataSource(newValue, triggeringUpdateType: .Normal)
+        }
+    }
+
+    // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
+    public final func setChatDataSource(dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
+        self._chatDataSource = dataSource
+        self._chatDataSource?.delegate = self
+        if let updateType = updateType {
+            self.enqueueModelUpdate(updateType: updateType)
         }
     }
 
