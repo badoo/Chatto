@@ -32,6 +32,12 @@ public protocol ChatInputBarDelegate: class {
     func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
 
+public extension ChatInputBarDelegate {
+    func inputBarSendButtonUpdateEnabled(inputBar: ChatInputBar) -> Bool {
+        return !inputBar.textView.text.isEmpty
+    }
+}
+
 @objc
 public class ChatInputBar: ReusableXibView {
 
@@ -213,7 +219,11 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textViewDidChange(textView: UITextView) {
-        self.sendButton.enabled = !textView.text.isEmpty
+        if let sendButtonEnabled = self.delegate?.inputBarSendButtonUpdateEnabled(self) {
+            self.sendButton.enabled = sendButtonEnabled
+        } else {
+            self.sendButton.enabled = !textView.text.isEmpty
+        }
         self.delegate?.inputBarDidChangeText(self)
     }
 }
