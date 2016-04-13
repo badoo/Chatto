@@ -29,10 +29,6 @@ final class BaseChatViewControllerView: UIView {
 
     var bmaInputAccessoryView: UIView?
 
-    override func canBecomeFirstResponder() -> Bool {
-        return true
-    }
-
     override var inputAccessoryView: UIView? {
         return self.bmaInputAccessoryView
     }
