@@ -144,7 +144,7 @@ class ChatInputBarTests: XCTestCase {
 
     func testThat_WhenInputTextChangedAndCustomStateUpdateClosureProvided_BarUpdatesSendButtonStateAccordingly() {
         var closureCalled = false
-        self.bar.isSendButtonEnabledForInputBar = { (_) in
+        self.bar.shouldEnableSendButton = { (_) in
             closureCalled = true
             return false
         }
