@@ -141,6 +141,18 @@ class ChatInputBarTests: XCTestCase {
         self.bar.buttonTapped(self.bar)
         XCTAssertTrue(self.delegate.inputBarSendButtonPressedCalled)
     }
+
+    func testThat_WhenInputTextChangedAndCustomStateUpdateClosureProvided_BarUpdatesSendButtonStateAccordingly() {
+        var closureCalled = false
+        self.bar.updateSendButtonEnabledState = { (_) in
+            closureCalled = true
+            return false
+        }
+        self.bar.inputText = "    "
+        self.bar.textViewDidChange(self.bar.textView)
+        XCTAssertTrue(closureCalled)
+        XCTAssertFalse(self.bar.sendButton.enabled)
+    }
 }
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
