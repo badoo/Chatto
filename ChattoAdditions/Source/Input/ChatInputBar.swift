@@ -25,6 +25,7 @@
 import UIKit
 
 public protocol ChatInputBarDelegate: class {
+    func inputBarShouldBeginTextEditing(inputBar: ChatInputBar) -> Bool
     func inputBarDidBeginEditing(inputBar: ChatInputBar)
     func inputBarDidEndEditing(inputBar: ChatInputBar)
     func inputBarDidChangeText(inputBar: ChatInputBar)
@@ -210,6 +211,11 @@ extension ChatInputBar { // Tabar
 
 // MARK: UITextViewDelegate
 extension ChatInputBar: UITextViewDelegate {
+    public func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        guard let sDelegate = self.delegate else { return true }
+        return sDelegate.inputBarShouldBeginTextEditing(self)
+    }
+
     public func textViewDidEndEditing(textView: UITextView) {
         self.presenter?.onDidEndEditing()
         self.delegate?.inputBarDidEndEditing(self)

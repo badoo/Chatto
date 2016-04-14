@@ -49,6 +49,15 @@ class ChatInputBarTests: XCTestCase {
         return itemView
     }
 
+    private func simulateTapOnTextViewForDelegate(textViewDelegate: UITextViewDelegate) {
+        let dummyTextView = UITextView()
+        if let shouldBeginEditing = textViewDelegate.textViewShouldBeginEditing
+            where !shouldBeginEditing(dummyTextView) {
+            return
+        }
+        textViewDelegate.textViewDidBeginEditing?(dummyTextView)
+    }
+
     func testThat_WhenInputTextChanged_BarEnablesSendButton() {
         self.bar.sendButton.enabled = false
         self.bar.inputText = "!"
@@ -153,6 +162,28 @@ class ChatInputBarTests: XCTestCase {
         XCTAssertTrue(closureCalled)
         XCTAssertFalse(self.bar.sendButton.enabled)
     }
+
+    func testThat_WhenTextViewGoingToBecomeEditable_ItBecomesEditableByDefault() {
+        self.setupPresenter()
+        self.simulateTapOnTextViewForDelegate(self.bar)
+        XCTAssertTrue(self.presenter.onDidBeginEditingCalled)
+    }
+
+    func testThat_WhenTextViewGoingToBecomeEditableAndDelegateAllowsIt_ItWillBeEditable() {
+        self.setupDelegate()
+        self.delegate.inputBarShouldBeginTextEditingResult = true
+        self.simulateTapOnTextViewForDelegate(self.bar)
+        XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
+        XCTAssertTrue(self.delegate.inputBarDidBeginEditingCalled)
+    }
+
+    func testThat_WhenTextViewGoingToBecomeEditableAndDelegateDisallowsIt_ItWontBeEditable() {
+        self.setupDelegate()
+        self.delegate.inputBarShouldBeginTextEditingResult = false
+        self.simulateTapOnTextViewForDelegate(self.bar)
+        XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
+        XCTAssertFalse(self.delegate.inputBarDidBeginEditingCalled)
+    }
 }
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
@@ -186,6 +217,13 @@ class FakeChatInputBarPresenter: ChatInputBarPresenter {
 }
 
 class FakeChatInputBarDelegate: ChatInputBarDelegate {
+    var inputBarShouldBeginTextEditingCalled = false
+    var inputBarShouldBeginTextEditingResult = true
+    func inputBarShouldBeginTextEditing(inputBar: ChatInputBar) -> Bool {
+        self.inputBarShouldBeginTextEditingCalled = true
+        return self.inputBarShouldBeginTextEditingResult
+    }
+
     var inputBarDidBeginEditingCalled = false
     func inputBarDidBeginEditing(inputBar: ChatInputBar) {
         self.inputBarDidBeginEditingCalled = true
