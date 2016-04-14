@@ -51,10 +51,8 @@ class ChatInputBarTests: XCTestCase {
 
     private func simulateTapOnTextViewForDelegate(textViewDelegate: UITextViewDelegate) {
         let dummyTextView = UITextView()
-        if let shouldBeginEditing = textViewDelegate.textViewShouldBeginEditing
-            where !shouldBeginEditing(dummyTextView) {
-            return
-        }
+        let shouldBeginEditing = textViewDelegate.textViewShouldBeginEditing?(dummyTextView) ?? true
+        guard shouldBeginEditing else { return }
         textViewDelegate.textViewDidBeginEditing?(dummyTextView)
     }
 
