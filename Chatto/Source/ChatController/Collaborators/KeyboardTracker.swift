@@ -155,7 +155,7 @@ class KeyboardTracker {
         guard self.isTracking && self.keyboardStatus == .Shown else { return }
         let newBottomConstraint = self.bottomConstraintFromTrackingView()
         self.inputContainerBottomConstraint.constant = newBottomConstraint
-        self.view.layoutIfNeeded()
+        self.view.setNeedsLayout()
     }
 }
 
