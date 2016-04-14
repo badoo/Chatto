@@ -163,6 +163,39 @@ class ChatInputBarTests: XCTestCase {
         XCTAssertFalse(self.bar.sendButton.enabled)
     }
 
+    func testThat_WhenItemViewTapped_ItReceivesFocuesByDefault() {
+        self.setupPresenter()
+
+        let item = MockInputItem()
+        self.bar.inputItemViewTapped(createItemView(item))
+
+        XCTAssertTrue(self.presenter.onDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.presenter.itemThatReceivedFocus === item)
+    }
+
+    func testThat_WhenItemViewTappedAndDelegateAllowsFocusing_ItWillFocusTheItem() {
+        self.setupDelegate()
+        self.delegate.inputBarShouldFocusOnItemResult = true
+
+        let item = MockInputItem()
+        self.bar.inputItemViewTapped(createItemView(item))
+
+        XCTAssertTrue(self.delegate.inputBarShouldFocusOnItemCalled)
+        XCTAssertTrue(self.delegate.inputBarDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.delegate.focusedItem === item)
+    }
+
+    func testThat_WhenItemViewTappedAndDelegateDisallowsFocusing_ItWontFocusTheItem() {
+        self.setupDelegate()
+        self.delegate.inputBarShouldFocusOnItemResult = false
+
+        let item = MockInputItem()
+        self.bar.inputItemViewTapped(createItemView(item))
+
+        XCTAssertTrue(self.delegate.inputBarShouldFocusOnItemCalled)
+        XCTAssertFalse(self.delegate.inputBarDidReceiveFocusOnItemCalled)
+    }
+
     func testThat_WhenTextViewGoingToBecomeEditable_ItBecomesEditableByDefault() {
         self.setupPresenter()
         self.simulateTapOnTextViewForDelegate(self.bar)
@@ -242,6 +275,13 @@ class FakeChatInputBarDelegate: ChatInputBarDelegate {
     var inputBarSendButtonPressedCalled = false
     func inputBarSendButtonPressed(inputBar: ChatInputBar) {
         self.inputBarSendButtonPressedCalled = true
+    }
+
+    var inputBarShouldFocusOnItemCalled = false
+    var inputBarShouldFocusOnItemResult = true
+    func inputBar(inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool {
+        self.inputBarShouldFocusOnItemCalled = true
+        return self.inputBarShouldFocusOnItemResult
     }
 
     var inputBarDidReceiveFocusOnItemCalled = false

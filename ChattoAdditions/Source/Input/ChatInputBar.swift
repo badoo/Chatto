@@ -30,6 +30,7 @@ public protocol ChatInputBarDelegate: class {
     func inputBarDidEndEditing(inputBar: ChatInputBar)
     func inputBarDidChangeText(inputBar: ChatInputBar)
     func inputBarSendButtonPressed(inputBar: ChatInputBar)
+    func inputBar(inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
 
@@ -167,6 +168,11 @@ public class ChatInputBar: ReusableXibView {
 // MARK: - ChatInputItemViewDelegate
 extension ChatInputBar: ChatInputItemViewDelegate {
     func inputItemViewTapped(view: ChatInputItemView) {
+        if let sDelegate = self.delegate
+            where !sDelegate.inputBar(self, shouldFocusOnItem: view.inputItem) {
+            return
+        }
+
         self.presenter?.onDidReceiveFocusOnItem(view.inputItem)
         self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
     }
