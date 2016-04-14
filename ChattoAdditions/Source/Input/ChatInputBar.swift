@@ -216,8 +216,7 @@ extension ChatInputBar { // Tabar
 // MARK: UITextViewDelegate
 extension ChatInputBar: UITextViewDelegate {
     public func textViewShouldBeginEditing(textView: UITextView) -> Bool {
-        guard let sDelegate = self.delegate else { return true }
-        return sDelegate.inputBarShouldBeginTextEditing(self)
+        return self.delegate?.inputBarShouldBeginTextEditing(self) ?? true
     }
 
     public func textViewDidEndEditing(textView: UITextView) {
