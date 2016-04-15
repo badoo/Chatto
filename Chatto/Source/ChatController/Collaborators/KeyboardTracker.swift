@@ -125,6 +125,7 @@ class KeyboardTracker {
         return max(0, self.view.bounds.height - trackingViewRect.maxY)
     }
 
+    var ios8WorkaroundIsInProgress = false
     func layoutTrackingViewIfNeeded() {
         guard self.isTracking && self.keyboardStatus == .Shown else { return }
         self.adjustTrackingViewSizeIfNeeded()
@@ -132,8 +133,11 @@ class KeyboardTracker {
             // Working fine on iOS 9
         } else {
             // Workaround for iOS 8
+            guard !self.ios8WorkaroundIsInProgress else { return }
+            self.ios8WorkaroundIsInProgress = true
             self.trackingView.window?.setNeedsLayout()
             self.trackingView.window?.layoutIfNeeded()
+            self.ios8WorkaroundIsInProgress = false
         }
     }
 
