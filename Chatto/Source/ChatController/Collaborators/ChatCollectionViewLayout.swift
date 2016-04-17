@@ -93,10 +93,7 @@ public class ChatCollectionViewLayout: UICollectionViewLayout {
     }
 
     public override func collectionViewContentSize() -> CGSize {
-        if self.layoutNeedsUpdate {
-            self.prepareLayout()
-        }
-        return self.layoutModel.contentSize
+        return self.layoutModel?.contentSize ?? .zero
     }
 
     override public func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
