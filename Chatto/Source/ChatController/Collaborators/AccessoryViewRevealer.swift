@@ -29,6 +29,24 @@ public protocol AccessoryViewRevealable {
     func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
 }
 
+public struct AccessoryViewRevealerConfig {
+    public let angleThresholdInRads: CGFloat
+    public let translationTransform: (rawTranslation: CGFloat) -> CGFloat
+    public init(angleThresholdInRads: CGFloat, translationTransform: (rawTranslation: CGFloat) -> CGFloat) {
+        self.angleThresholdInRads = angleThresholdInRads
+        self.translationTransform = translationTransform
+    }
+
+    public static func defaultConfig() -> AccessoryViewRevealerConfig {
+        return self.init(
+            angleThresholdInRads: 0.0872665, // ~5 degrees
+            translationTransform: { (rawTranslation) -> CGFloat in
+                let threshold: CGFloat = 30
+                return max(0, rawTranslation - threshold) / 2
+        })
+    }
+}
+
 class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
 
     private let panRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer()
@@ -42,6 +60,19 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         self.panRecognizer.delegate = self
     }
 
+    deinit {
+        self.panRecognizer.delegate = nil
+        self.collectionView.removeGestureRecognizer(self.panRecognizer)
+    }
+
+    var isEnabled: Bool = true {
+        didSet {
+            self.panRecognizer.enabled = self.isEnabled
+        }
+    }
+
+    var config = AccessoryViewRevealerConfig.defaultConfig()
+
     @objc
     private func handlePan(panRecognizer: UIPanGestureRecognizer) {
         switch panRecognizer.state {
@@ -49,7 +80,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
             break
         case .Changed:
             let translation = panRecognizer.translationInView(self.collectionView)
-            self.revealAccessoryView(atOffset: -translation.x)
+            self.revealAccessoryView(atOffset: self.config.translationTransform(rawTranslation: -translation.x))
         case .Ended, .Cancelled, .Failed:
             self.revealAccessoryView(atOffset: 0)
         default:
@@ -69,8 +100,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         let translation = self.panRecognizer.translationInView(self.collectionView)
         let x = CGFloat.abs(translation.x), y = CGFloat.abs(translation.y)
         let angleRads = atan2(y, x)
-        let threshold: CGFloat = 0.0872665 // ~5 degrees
-        return angleRads < threshold
+        return angleRads <= self.config.angleThresholdInRads
     }
 
     private func revealAccessoryView(atOffset offset: CGFloat) {
