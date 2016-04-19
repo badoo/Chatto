@@ -29,12 +29,12 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
     public struct Constants {
-        var updatesAnimationDuration: NSTimeInterval = 0.33
-        var defaultContentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-        var defaultScrollIndicatorInsets = UIEdgeInsetsZero
-        var preferredMaxMessageCount: Int? = 500 // It not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
-        var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
-        var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
+        public var updatesAnimationDuration: NSTimeInterval = 0.33
+        public var defaultContentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        public var defaultScrollIndicatorInsets = UIEdgeInsetsZero
+        public var preferredMaxMessageCount: Int? = 500 // It not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
+        public var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
+        public var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
     }
 
     public var constants = Constants()
@@ -227,7 +227,6 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     }
 
     var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
-
 
     // MARK: Subclass overrides
 
