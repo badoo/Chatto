@@ -93,11 +93,21 @@ public class ExpandableTextView: UITextView {
     func textDidChange() {
         self.updatePlaceholderVisibility()
         self.scrollToCaret()
+
+        if #available(iOS 9, *) {
+            // Bugfix:
+            // 1. Open keyboard
+            // 2. Paste very long text (so it snaps to nav bar and shows scroll indicators)
+            // 3. Select all and cut
+            // 4. Paste again: Texview it's smaller than it should be
+            self.scrollEnabled = false
+            self.scrollEnabled = true
+        }
     }
 
     private func scrollToCaret() {
-        if selectedTextRange != nil {
-            var rect = caretRectForPosition(self.selectedTextRange!.end)
+        if let textRange = self.selectedTextRange {
+            var rect = caretRectForPosition(textRange.end)
             rect = CGRect(origin: rect.origin, size: CGSize(width: rect.width, height: rect.height + textContainerInset.bottom))
 
             self.scrollRectToVisible(rect, animated: false)
@@ -105,7 +115,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func updatePlaceholderVisibility() {
-        if text == "" {
+        if self.text == "" {
             self.showPlaceholder()
         } else {
             self.hidePlaceholder()
@@ -113,7 +123,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func showPlaceholder() {
-        self.addSubview(placeholder)
+        self.addSubview(self.placeholder)
     }
 
     private func hidePlaceholder() {

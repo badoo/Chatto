@@ -144,7 +144,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets()
-        self.keyboardTracker.layoutTrackingViewIfNeeded()
+        self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
 
         if self.isFirstLayout {
             self.updateQueue.start()

@@ -41,7 +41,10 @@ class KeyboardTracker {
     private lazy var keyboardTrackerView: KeyboardTrackingView = {
         let trackingView = KeyboardTrackingView()
         trackingView.positionChangedCallback = { [weak self] in
-            self?.layoutInputAtTrackingViewIfNeeded()
+            guard let sSelf = self else { return }
+            if !sSelf.isPerformingForcedLayout {
+                sSelf.layoutInputAtTrackingViewIfNeeded()
+            }
         }
         return trackingView
     }()
@@ -76,23 +79,23 @@ class KeyboardTracker {
     @objc
     private func keyboardWillShow(notification: NSNotification) {
         guard self.isTracking else { return }
+        guard !self.isPerformingForcedLayout else { return}
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
         self.keyboardStatus = .Showing
-        self.inputContainerBottomConstraint.constant = bottomConstraint
-        self.view.layoutIfNeeded()
-        self.adjustTrackingViewSizeIfNeeded()
+        self.layoutInputContainer(withBottomConstraint: bottomConstraint)
     }
 
     @objc
     private func keyboardDidShow(notification: NSNotification) {
         guard self.isTracking else { return }
+        guard !self.isPerformingForcedLayout else { return}
+
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
         self.keyboardStatus = .Shown
-        self.inputContainerBottomConstraint.constant = bottomConstraint
-        self.view.layoutIfNeeded()
-        self.layoutTrackingViewIfNeeded()
+        self.layoutInputContainer(withBottomConstraint: bottomConstraint)
+        self.adjustTrackingViewSizeIfNeeded()
     }
 
     @objc
@@ -117,49 +120,46 @@ class KeyboardTracker {
         guard rect.height > 0 else { return 0 }
         let rectInView = self.view.convertRect(rect, fromView: nil)
         guard rectInView.maxY >= self.view.bounds.height else { return 0 } // Undocked keyboard
-        return max(0, self.view.bounds.height - rectInView.minY - self.trackingView.bounds.height)
+        return max(0, self.view.bounds.height - rectInView.minY - self.keyboardTrackerView.intrinsicContentSize().height)
     }
 
     private func bottomConstraintFromTrackingView() -> CGFloat {
+        guard self.keyboardTrackerView.superview != nil else { return 0 }
         let trackingViewRect = self.view.convertRect(self.keyboardTrackerView.bounds, fromView: self.keyboardTrackerView)
         return max(0, self.view.bounds.height - trackingViewRect.maxY)
     }
 
-    var ios8WorkaroundIsInProgress = false
-    func layoutTrackingViewIfNeeded() {
+    func adjustTrackingViewSizeIfNeeded() {
         guard self.isTracking && self.keyboardStatus == .Shown else { return }
-        self.adjustTrackingViewSizeIfNeeded()
-        if #available(iOS 9, *) {
-            // Working fine on iOS 9
-        } else {
-            // Workaround for iOS 8
-            guard !self.ios8WorkaroundIsInProgress else { return }
-            self.ios8WorkaroundIsInProgress = true
-            self.trackingView.window?.setNeedsLayout()
-            self.trackingView.window?.layoutIfNeeded()
-            self.ios8WorkaroundIsInProgress = false
-        }
+        self.adjustTrackingViewSize()
     }
 
-    private func adjustTrackingViewSizeIfNeeded() {
+    private func adjustTrackingViewSize() {
         let inputContainerHeight = self.inputContainer.bounds.height
-        let trackerViewHeight = self.trackingView.bounds.height
-        if trackerViewHeight != inputContainerHeight {
-            self.keyboardTrackerView.bounds.size.height = inputContainerHeight
+        if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
+            self.keyboardTrackerView.preferredSize.height = inputContainerHeight
+            self.isPerformingForcedLayout = true
+            self.keyboardTrackerView.window?.layoutIfNeeded()
+            self.isPerformingForcedLayout = false
         }
     }
 
     private func layoutInputAtBottom() {
         self.keyboardTrackerView.bounds.size.height = 0
-        self.inputContainerBottomConstraint.constant = 0
-        self.view.layoutIfNeeded()
+        self.layoutInputContainer(withBottomConstraint: 0)
     }
 
+    var isPerformingForcedLayout: Bool = false
     func layoutInputAtTrackingViewIfNeeded() {
         guard self.isTracking && self.keyboardStatus == .Shown else { return }
-        let newBottomConstraint = self.bottomConstraintFromTrackingView()
-        self.inputContainerBottomConstraint.constant = newBottomConstraint
+        self.layoutInputContainer(withBottomConstraint: self.bottomConstraintFromTrackingView())
+    }
+
+    private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
+        self.isPerformingForcedLayout = true
+        self.inputContainerBottomConstraint.constant = constraint
         self.view.layoutIfNeeded()
+        self.isPerformingForcedLayout = false
     }
 }
 
@@ -170,7 +170,7 @@ private class KeyboardTrackingView: UIView {
 
     deinit {
         if let observedView = self.observedView {
-            observedView.removeObserver(self, forKeyPath: "center")
+            observedView.removeObserver(self, forKeyPath: "frame")
         }
     }
 
@@ -191,16 +191,17 @@ private class KeyboardTrackingView: UIView {
         self.hidden = true
     }
 
-    override var bounds: CGRect {
+    private var preferredSize: CGSize = .zero {
         didSet {
-            if oldValue.size != self.bounds.size {
+            if oldValue != self.preferredSize {
                 self.invalidateIntrinsicContentSize()
+                self.window?.setNeedsLayout()
             }
         }
     }
 
     private override func intrinsicContentSize() -> CGSize {
-        return self.bounds.size
+        return self.preferredSize
     }
 
     override func willMoveToSuperview(newSuperview: UIView?) {
