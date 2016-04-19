@@ -161,12 +161,19 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         let newInsetBottom = self.constants.defaultContentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
         let newInsetTop = self.topLayoutGuide.length + self.constants.defaultContentInsets.top
-        let insetTopDiff = newInsetTop - self.collectionView.contentInset.top
 
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize()
-        let allContentFits = self.collectionView.bounds.height - newInsetBottom - (contentSize.height + self.collectionView.contentInset.top) >= 0
+        let allContentFits: Bool = {
+            let availableHeight = self.collectionView.bounds.height - (newInsetTop + newInsetBottom)
+            return availableHeight >= contentSize.height
+        }()
 
-        let newContentOffsetY = max(-newInsetTop, self.collectionView.contentOffset.y + insetBottomDiff - insetTopDiff)
+        let newContentOffsetY: CGFloat = {
+            let minOffset = -newInsetTop
+            let maxOffset = contentSize.height - (self.collectionView.bounds.height - newInsetBottom)
+            let targetOffset = self.collectionView.contentOffset.y + insetBottomDiff
+            return max(min(maxOffset, targetOffset), minOffset)
+        }()
 
         self.collectionView.contentInset = {
             var currentInsets = self.collectionView.contentInset
