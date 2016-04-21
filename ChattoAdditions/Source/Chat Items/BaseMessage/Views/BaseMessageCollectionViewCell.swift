@@ -112,7 +112,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
     }
 
     public private(set) var bubbleView: BubbleViewType!
-    func createBubbleView() -> BubbleViewType! {
+    public func createBubbleView() -> BubbleViewType! {
         assert(false, "Override in subclass")
         return nil
     }
