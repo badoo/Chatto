@@ -2,6 +2,7 @@ language: objective-c
 osx_image: xcode7.2
 
 script:
+- set -o pipefail
 - xcodebuild clean build test -workspace ./ChattoApp/ChattoApp.xcworkspace -scheme ChattoApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.2' -configuration Debug | xcpretty
 - rm -rf ~/Library/Developer/Xcode/DerivedData
 - xcodebuild clean build test -workspace ./Chatto.xcworkspace -scheme Chatto -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.2' -configuration Debug | xcpretty
