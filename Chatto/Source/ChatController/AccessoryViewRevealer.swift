@@ -37,7 +37,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         self.collectionView = collectionView
         super.init()
         self.collectionView.addGestureRecognizer(self.panRecognizer)
-        self.panRecognizer.addTarget(self, action: "handlePan:")
+        self.panRecognizer.addTarget(self, action: #selector(AccessoryViewRevealer.handlePan(_:)))
         self.panRecognizer.delegate = self
     }
 
