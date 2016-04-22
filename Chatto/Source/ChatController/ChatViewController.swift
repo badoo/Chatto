@@ -60,8 +60,8 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     deinit {
-        self.collectionView.delegate = nil
-        self.collectionView.dataSource = nil
+        self.collectionView?.delegate = nil
+        self.collectionView?.dataSource = nil
     }
 
     override public func viewDidLoad() {
