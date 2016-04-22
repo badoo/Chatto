@@ -45,7 +45,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func commonInit() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textDidChange", name: UITextViewTextDidChangeNotification, object: self)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextViewTextDidChangeNotification, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
     }

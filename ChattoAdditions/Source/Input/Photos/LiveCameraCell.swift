@@ -154,8 +154,8 @@ class LiveCameraCell: UICollectionViewCell {
     }()
 
     private func subscribeToAppNotifications() {
-        self.notificationCenter.addObserver(self, selector: "handleWillResignActiveNotification", name: UIApplicationWillResignActiveNotification, object: nil)
-        self.notificationCenter.addObserver(self, selector: "handleDidBecomeActiveNotification", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(LiveCameraCell.handleWillResignActiveNotification), name: UIApplicationWillResignActiveNotification, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(LiveCameraCell.handleDidBecomeActiveNotification), name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
 
     private func unsubscribeFromAppNotifications() {

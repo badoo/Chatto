@@ -26,13 +26,13 @@ import Foundation
 import Chatto
 
 public protocol ViewModelBuilderProtocol {
-    typealias ModelT: MessageModelProtocol
-    typealias ViewModelT: MessageViewModelProtocol
+    associatedtype ModelT: MessageModelProtocol
+    associatedtype ViewModelT: MessageViewModelProtocol
     func createViewModel(model: ModelT) -> ViewModelT
 }
 
 public protocol BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT
+    associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT)
     func userDidTapOnBubble(viewModel viewModel: ViewModelT)
     func userDidLongPressOnBubble(viewModel viewModel: ViewModelT)
@@ -134,7 +134,7 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
             return false
         }
         cell.bubbleView.userInteractionEnabled = false // This is a hack for UITextView, shouldn't harm to all bubbles
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willShowMenu:", name: UIMenuControllerWillShowMenuNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(BaseMessagePresenter.willShowMenu(_:)), name: UIMenuControllerWillShowMenuNotification, object: nil)
         return true
     }
 
