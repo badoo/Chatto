@@ -234,11 +234,13 @@ private final class TextBubbleLayoutModel {
     }
 
     private func textSizeThatFitsWidth(width: CGFloat) -> CGSize {
-        return self.layoutContext.text.boundingRectWithSize(
-            CGSize(width: width, height: CGFloat.max),
-            options: [.UsesLineFragmentOrigin, .UsesFontLeading],
-            attributes: [NSFontAttributeName: self.layoutContext.font], context:  nil
-        ).size.bma_round()
+        let maxSize = CGSize(width: width, height: CGFloat.max)
+        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
+        let attributes = [
+            NSFontAttributeName: self.layoutContext.font,
+            NSKernAttributeName: 0
+        ]
+        return self.layoutContext.text.boundingRectWithSize(maxSize, options: options, attributes: attributes, context: nil).size.bma_round()
     }
 }
 
