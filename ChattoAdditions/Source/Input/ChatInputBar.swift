@@ -171,8 +171,12 @@ extension ChatInputBar: ChatInputItemViewDelegate {
         let shouldFocus = self.delegate?.inputBar(self, shouldFocusOnItem: view.inputItem) ?? true
         guard shouldFocus else { return }
 
-        self.presenter?.onDidReceiveFocusOnItem(view.inputItem)
-        self.delegate?.inputBar(self, didReceiveFocusOnItem: view.inputItem)
+        self.focusOnInputItem(view.inputItem, animated: true)
+    }
+
+    public func focusOnInputItem(inputItem: ChatInputItemProtocol, animated: Bool) {
+        self.presenter?.onDidReceiveFocusOnItem(inputItem)
+        self.delegate?.inputBar(self, didReceiveFocusOnItem: inputItem)
     }
 }
 
