@@ -46,7 +46,11 @@ class BaseMessageHandler {
 
     }
 
-    func userDidLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
-        print("userDidLongPressOnBubble")
+    func userDidBeginLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+        print("userDidBeginLongPressOnBubble")
+    }
+
+    func userDidEndLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+        print("userDidEndLongPressOnBubble")
     }
 }

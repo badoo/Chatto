@@ -57,10 +57,17 @@ class BaseMessagePresenterTests: XCTestCase {
         XCTAssertTrue(self.interactionHandler.didHandleTapOnBubble)
     }
 
-    func testThat_WhenCellIsLongPressedOnBubble_ThenInteractionHandlerHandlesEvent() {
+    func testThat_WhenCellIsBeginLongPressOnBubble_ThenInteractionHandlerHandlesEvent() {
         let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
-        cell.bubbleLongPressed()
-        XCTAssertTrue(self.interactionHandler.didHandleLongPressOnBubble)
+        cell.onBubbleLongPressBegan?(cell: cell)
+        XCTAssertTrue(self.interactionHandler.didHandleBeginLongPressOnBubble)
+    }
+
+    func testThat_WhenCellIsEndLongPressOnBubble_ThenInteractionHandlerHandlesEvent() {
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
+        self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
+        cell.onBubbleLongPressEnded?(cell: cell)
+        XCTAssertTrue(self.interactionHandler.didHandleEndLongPressOnBubble)
     }
 }

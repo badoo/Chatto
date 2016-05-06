@@ -312,16 +312,18 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         self.onBubbleTapped?(cell: self)
     }
 
-    public var onBubbleLongPressed: ((cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onBubbleLongPressBegan: ((cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onBubbleLongPressEnded: ((cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     private func bubbleLongPressed(longPressGestureRecognizer: UILongPressGestureRecognizer) {
-        if longPressGestureRecognizer.state == .Began {
-            self.bubbleLongPressed()
+        switch longPressGestureRecognizer.state {
+        case .Began:
+            self.onBubbleLongPressBegan?(cell: self)
+        case .Ended, .Cancelled:
+            self.onBubbleLongPressEnded?(cell: self)
+        default:
+            break
         }
-    }
-
-    func bubbleLongPressed() {
-        self.onBubbleLongPressed?(cell: self)
     }
 }
 

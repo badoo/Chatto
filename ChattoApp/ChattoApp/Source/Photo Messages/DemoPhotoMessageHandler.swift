@@ -39,7 +39,11 @@ class DemoPhotoMessageHandler: BaseMessageInteractionHandlerProtocol {
         self.baseHandler.userDidTapOnBubble(viewModel: viewModel)
     }
 
-    func userDidLongPressOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
-        self.baseHandler.userDidLongPressOnBubble(viewModel: viewModel)
+    func userDidBeginLongPressOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
+        self.baseHandler.userDidBeginLongPressOnBubble(viewModel: viewModel)
+    }
+
+    func userDidEndLongPressOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
+        self.baseHandler.userDidEndLongPressOnBubble(viewModel: viewModel)
     }
 }
