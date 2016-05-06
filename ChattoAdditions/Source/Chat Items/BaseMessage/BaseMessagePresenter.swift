@@ -36,7 +36,8 @@ public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT)
     func userDidTapOnBubble(viewModel viewModel: ViewModelT)
-    func userDidLongPressOnBubble(viewModel viewModel: ViewModelT)
+    func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT)
+    func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT)
 }
 
 public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT where
@@ -102,9 +103,13 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleTapped()
             }
-            cell.onBubbleLongPressed = { [weak self] (cell) in
+            cell.onBubbleLongPressBegan = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellBubbleLongPressed()
+                sSelf.onCellBubbleLongPressBegan()
+            }
+            cell.onBubbleLongPressEnded = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellBubbleLongPressEnded()
             }
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
@@ -160,8 +165,12 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
         self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel)
     }
 
-    public func onCellBubbleLongPressed() {
-        self.interactionHandler?.userDidLongPressOnBubble(viewModel: self.messageViewModel)
+    public func onCellBubbleLongPressBegan() {
+        self.interactionHandler?.userDidBeginLongPressOnBubble(viewModel: self.messageViewModel)
+    }
+
+    public func onCellBubbleLongPressEnded() {
+        self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
     }
 
     public func onCellFailedButtonTapped() {

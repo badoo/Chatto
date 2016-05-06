@@ -97,7 +97,11 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
 
     }
 
-    func userDidLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT) {
+
+    }
+
+    func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT) {
 
     }
 }
