@@ -345,8 +345,8 @@ struct BaseMessageLayoutModel {
         let horizontalInterspacing = parameters.horizontalInterspacing
         let avatarSize = parameters.avatarSize
 
-        let preferredWidthForBubble = containerWidth * parameters.maxContainerWidthPercentageForBubbleView
-        let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: CGFloat.max))
+        let preferredWidthForBubble = (containerWidth * parameters.maxContainerWidthPercentageForBubbleView).bma_round()
+        let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .max))
         let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
 
 

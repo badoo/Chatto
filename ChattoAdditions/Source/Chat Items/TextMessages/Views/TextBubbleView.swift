@@ -235,13 +235,31 @@ private final class TextBubbleLayoutModel {
     }
 
     private func textSizeThatFitsWidth(width: CGFloat) -> CGSize {
-        let maxSize = CGSize(width: width, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
-        let attributes = [
+        let textContainer: NSTextContainer = {
+            let size = CGSize(width: width, height: .max)
+            let container = NSTextContainer(size: size)
+            container.lineFragmentPadding = 0
+            return container
+        }()
+
+        let textStorage = self.replicateUITextViewNSTextStorage()
+        let layoutManager: NSLayoutManager = {
+            let layoutManager = NSLayoutManager()
+            layoutManager.addTextContainer(textContainer)
+            textStorage.addLayoutManager(layoutManager)
+            return layoutManager
+        }()
+
+        let rect = layoutManager.usedRectForTextContainer(textContainer)
+        return rect.size.bma_round()
+    }
+
+    private func replicateUITextViewNSTextStorage() -> NSTextStorage {
+        // See https://github.com/badoo/Chatto/issues/129
+        return NSTextStorage(string: self.layoutContext.text, attributes: [
             NSFontAttributeName: self.layoutContext.font,
-            NSKernAttributeName: 0
-        ]
-        return self.layoutContext.text.boundingRectWithSize(maxSize, options: options, attributes: attributes, context: nil).size.bma_round()
+            "NSOriginalFont": self.layoutContext.font,
+        ])
     }
 }
 
