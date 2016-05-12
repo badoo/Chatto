@@ -44,7 +44,18 @@ class ConversationsViewController: UITableViewController {
             assert(false, "segue not handled!")
         }
 
-        let chatController = segue.destinationViewController as! DemoChatViewController
+
+        let chatController = { () -> DemoChatViewController? in
+            if let controller = segue.destinationViewController as? DemoChatViewController {
+                return controller
+            }
+            if let tabController = segue.destinationViewController as? UITabBarController,
+                controller = tabController.viewControllers?.first as? DemoChatViewController {
+                return controller
+            }
+            return nil
+        }()!
+
         if dataSource == nil {
             dataSource = FakeDataSource(count: initialCount, pageSize: pageSize)
         }
