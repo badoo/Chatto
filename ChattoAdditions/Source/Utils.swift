@@ -51,7 +51,7 @@ public extension CGSize {
 
 public extension CGSize {
     func bma_round() -> CGSize {
-        return CGSize(width: ceil(self.width * scale) * (1.0 / scale), height: ceil(self.height * scale) * (1.0 / scale) )
+        return CGSize(width: self.width.bma_round(), height: self.height.bma_round())
     }
 
     func bma_rect(inContainer containerRect: CGRect, xAlignament: HorizontalAlignment, yAlignment: VerticalAlignment, dx: CGFloat, dy: CGFloat) -> CGRect {
@@ -100,7 +100,7 @@ public extension CGRect {
     }
 
     func bma_round() -> CGRect {
-        let origin = CGPoint(x: ceil(self.origin.x * scale) * (1.0 / scale), y: ceil(self.origin.y * scale) * (1.0 / scale))
+        let origin = CGPoint(x: self.origin.x.bma_round(), y: self.origin.y.bma_round())
         return CGRect(origin: origin, size: self.size.bma_round())
     }
 }
@@ -109,6 +109,12 @@ public extension CGRect {
 public extension CGPoint {
     func bma_offsetBy(dx dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
+    }
+}
+
+public extension CGFloat {
+    func bma_round() -> CGFloat {
+        return ceil(self * scale) * (1.0 / scale)
     }
 }
 

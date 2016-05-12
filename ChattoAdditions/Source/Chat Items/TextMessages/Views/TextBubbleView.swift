@@ -104,7 +104,6 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.showsVerticalScrollIndicator = false
         textView.layoutManager.allowsNonContiguousLayout = true
         textView.exclusiveTouch = true
-        textView.textContainerInset = UIEdgeInsetsZero
         textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
@@ -135,11 +134,13 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         guard let style = self.style, viewModel = self.textMessageViewModel else { return }
         let font = style.textFont(viewModel: viewModel, isSelected: self.selected)
         let textColor = style.textColor(viewModel: viewModel, isSelected: self.selected)
+        let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         let bubbleImage = self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
         let borderImage = self.style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
 
         if self.textView.font != font { self.textView.font = font}
         if self.textView.text != viewModel.text {self.textView.text = viewModel.text}
+        if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
@@ -229,18 +230,36 @@ private final class TextBubbleLayoutModel {
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
         let bubbleSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
-        self.textFrame = UIEdgeInsetsInsetRect(self.bubbleFrame, self.layoutContext.textInsets)
+        self.textFrame = self.bubbleFrame
         self.size = bubbleSize
     }
 
     private func textSizeThatFitsWidth(width: CGFloat) -> CGSize {
-        let maxSize = CGSize(width: width, height: CGFloat.max)
-        let options: NSStringDrawingOptions = [.UsesLineFragmentOrigin, .UsesFontLeading]
-        let attributes = [
+        let textContainer: NSTextContainer = {
+            let size = CGSize(width: width, height: .max)
+            let container = NSTextContainer(size: size)
+            container.lineFragmentPadding = 0
+            return container
+        }()
+
+        let textStorage = self.replicateUITextViewNSTextStorage()
+        let layoutManager: NSLayoutManager = {
+            let layoutManager = NSLayoutManager()
+            layoutManager.addTextContainer(textContainer)
+            textStorage.addLayoutManager(layoutManager)
+            return layoutManager
+        }()
+
+        let rect = layoutManager.usedRectForTextContainer(textContainer)
+        return rect.size.bma_round()
+    }
+
+    private func replicateUITextViewNSTextStorage() -> NSTextStorage {
+        // See https://github.com/badoo/Chatto/issues/129
+        return NSTextStorage(string: self.layoutContext.text, attributes: [
             NSFontAttributeName: self.layoutContext.font,
-            NSKernAttributeName: 0
-        ]
-        return self.layoutContext.text.boundingRectWithSize(maxSize, options: options, attributes: attributes, context: nil).size.bma_round()
+            "NSOriginalFont": self.layoutContext.font,
+        ])
     }
 }
 
