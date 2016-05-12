@@ -61,8 +61,8 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     }
 
     deinit {
-        self.collectionView.delegate = nil
-        self.collectionView.dataSource = nil
+        self.collectionView?.delegate = nil
+        self.collectionView?.dataSource = nil
     }
 
     public override func loadView() {
