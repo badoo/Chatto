@@ -139,7 +139,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         let layoutBlock = { [weak self] (bottomMargin: CGFloat) in
             guard let sSelf = self else { return }
             sSelf.isAdjustingInputContainer = true
-            sSelf.inputContainerBottomConstraint.constant = bottomMargin
+            sSelf.inputContainerBottomConstraint.constant = max(bottomMargin, sSelf.bottomLayoutGuide.length)
             sSelf.view.layoutIfNeeded()
             sSelf.isAdjustingInputContainer = false
         }
@@ -160,6 +160,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
+            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
         }
     }
 
