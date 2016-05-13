@@ -49,15 +49,19 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
     public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         // Here indexPath should always referer to updated data source.
+
+        let presenter = self.presenterForIndexPath(indexPath)
+        self.presentersByCell.setObject(presenter, forKey: cell)
+
         if self.isAdjustingInputContainer {
             UIView.performWithoutAnimation({
                 // See https://github.com/badoo/Chatto/issues/133
+                presenter.cellWillBeShown(cell)
                 cell.layoutIfNeeded()
             })
+        } else {
+            presenter.cellWillBeShown(cell)
         }
-        let presenter = self.presenterForIndexPath(indexPath)
-        self.presentersByCell.setObject(presenter, forKey: cell)
-        presenter.cellWillBeShown(cell)
     }
 
     public func collectionView(collectionView: UICollectionView, shouldShowMenuForItemAtIndexPath indexPath: NSIndexPath) -> Bool {
