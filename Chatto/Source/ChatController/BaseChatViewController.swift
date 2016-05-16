@@ -74,6 +74,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         super.viewDidLoad()
         self.addCollectionView()
         self.addInputViews()
+        self.setupKeyboardTracker()
     }
 
     public override func viewWillAppear(animated: Bool) {
@@ -131,9 +132,19 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Leading, relatedBy: .Equal, toItem: inputView, attribute: .Leading, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Bottom, relatedBy: .Equal, toItem: inputView, attribute: .Bottom, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Trailing, relatedBy: .Equal, toItem: inputView, attribute: .Trailing, multiplier: 1, constant: 0))
+    }
 
-        self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, inputContainerBottomContraint: self.inputContainerBottomConstraint, notificationCenter: self.notificationCenter)
-        (self.view as? BaseChatViewControllerView)?.bmaInputAccessoryView = self.keyboardTracker.trackingView
+    var isAdjustingInputContainer: Bool = false
+    public func setupKeyboardTracker() {
+        let layoutBlock = { [weak self] (bottomMargin: CGFloat) in
+            guard let sSelf = self else { return }
+            sSelf.isAdjustingInputContainer = true
+            sSelf.inputContainerBottomConstraint.constant = bottomMargin
+            sSelf.view.layoutIfNeeded()
+            sSelf.isAdjustingInputContainer = false
+        }
+        self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
+        (self.view as? BaseChatViewControllerView)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
     }
 
     var notificationCenter = NSNotificationCenter.defaultCenter()
