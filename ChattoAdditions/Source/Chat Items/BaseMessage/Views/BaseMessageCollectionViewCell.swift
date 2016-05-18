@@ -37,15 +37,19 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
 public struct BaseMessageCollectionViewCellLayoutConstants {
     public let horizontalMargin: CGFloat
     public let horizontalInterspacing: CGFloat
+    public let horizontalTimestampMargin: CGFloat
     public let maxContainerWidthPercentageForBubbleView: CGFloat
 
-    public init(horizontalMargin: CGFloat, horizontalInterspacing: CGFloat, maxContainerWidthPercentageForBubbleView: CGFloat) {
+    public init(horizontalMargin: CGFloat,
+                horizontalInterspacing: CGFloat,
+                horizontalTimestampMargin: CGFloat,
+                maxContainerWidthPercentageForBubbleView: CGFloat) {
         self.horizontalMargin = horizontalMargin
         self.horizontalInterspacing = horizontalInterspacing
+        self.horizontalTimestampMargin = horizontalTimestampMargin
         self.maxContainerWidthPercentageForBubbleView = maxContainerWidthPercentageForBubbleView
     }
 }
-
 
 /**
     Base class for message cells
@@ -216,7 +220,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
             self.accessoryTimestampView.bounds = CGRect(origin: CGPoint.zero, size: self.accessoryTimestampView.intrinsicContentSize())
             let accessoryViewWidth = CGRectGetWidth(self.accessoryTimestampView.bounds)
             let leftOffsetForContentView = max(0, offsetToRevealAccessoryView)
-            let leftOffsetForAccessoryView = min(leftOffsetForContentView, accessoryViewWidth + layoutConstants.horizontalMargin)
+            let leftOffsetForAccessoryView = min(leftOffsetForContentView, accessoryViewWidth + layoutConstants.horizontalTimestampMargin)
             var contentViewframe = self.contentView.frame
             if self.messageViewModel.isIncoming {
                 contentViewframe.origin = CGPoint.zero
@@ -265,7 +269,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
 
     public func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
-        return self.accessoryTimestampView.intrinsicContentSize().width + layoutConstants.horizontalMargin
+        return self.accessoryTimestampView.intrinsicContentSize().width + layoutConstants.horizontalTimestampMargin
     }
 
 
