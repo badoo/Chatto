@@ -66,10 +66,19 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
 
         let index = indexPath.item - 1
         let targetSize = cell.bounds.size
-        let requestID = self.dataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize) { image in
-            self.previewRequests.removeObjectForKey(cell)
-            cell.image = image
+        var imageProvidedSynchronously = true
+        var requestID: Int32 = -1
+        requestID = self.dataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize) { [weak self, weak cell] image in
+            guard let sSelf = self, sCell = cell else { return }
+            // We can get here even afer calling cancelPreviewImageRequest (looks liek a race condition in PHImageManager)
+            // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
+            // This can also be called before returning from requestPreviewImageAtIndex (synchronously) if the image is cached by PHImageManager
+            let imageIsForThisCell = imageProvidedSynchronously || (sSelf.previewRequests.objectForKey(sCell) as? NSNumber)?.intValue == requestID
+            if imageIsForThisCell {
+                sCell.image = image
+            }
         }
+        imageProvidedSynchronously = false
 
         self.previewRequests.setObject(NSNumber(int: requestID), forKey:cell)
     }
