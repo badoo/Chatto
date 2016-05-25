@@ -40,10 +40,10 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
     }
 
     public struct BubbleBorderImages {
-        let borderIncomingTail: () -> UIImage
-        let borderIncomingNoTail: () -> UIImage
-        let borderOutgoingTail: () -> UIImage
-        let borderOutgoingNoTail: () -> UIImage
+        public let borderIncomingTail: () -> UIImage
+        public let borderIncomingNoTail: () -> UIImage
+        public let borderOutgoingTail: () -> UIImage
+        public let borderOutgoingNoTail: () -> UIImage
         public init(
             @autoclosure(escaping) borderIncomingTail: () -> UIImage,
             @autoclosure(escaping) borderIncomingNoTail: () -> UIImage,
