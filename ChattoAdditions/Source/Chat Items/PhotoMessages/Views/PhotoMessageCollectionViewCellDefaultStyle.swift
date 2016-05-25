@@ -28,11 +28,11 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
     typealias Class = PhotoMessageCollectionViewCellDefaultStyle
 
     public struct BubbleMasks {
-        let incomingTail: () -> UIImage
-        let incomingNoTail: () -> UIImage
-        let outgoingTail: () -> UIImage
-        let outgoingNoTail: () -> UIImage
-        let tailWidth: CGFloat
+        public let incomingTail: () -> UIImage
+        public let incomingNoTail: () -> UIImage
+        public let outgoingTail: () -> UIImage
+        public let outgoingNoTail: () -> UIImage
+        public let tailWidth: CGFloat
         public init(
             @autoclosure(escaping) incomingTail: () -> UIImage,
             @autoclosure(escaping) incomingNoTail: () -> UIImage,
