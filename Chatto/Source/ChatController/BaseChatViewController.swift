@@ -75,6 +75,19 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         self.addCollectionView()
         self.addInputViews()
         self.setupKeyboardTracker()
+        self.setupTapGestureRecognizer()
+    }
+
+    private func setupTapGestureRecognizer() {
+        self.collectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
+    }
+
+    public var endsEditingWhenTappingOnChatBackground = true
+    @objc
+    public func userDidTapOnCollectionView() {
+        if self.endsEditingWhenTappingOnChatBackground {
+            self.view.endEditing(true)
+        }
     }
 
     public override func viewWillAppear(animated: Bool) {
