@@ -88,14 +88,14 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
     }
 
     let colors: Colors
-    let bubbleBorderImages: BubbleBorderImages
+    let bubbleBorderImages: BubbleBorderImages?
     let failedIconImages: FailedIconImages
     let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
     let dateTextStyle: DateTextStyle
     let avatarStyle: AvatarStyle
     public init (
         colors: Colors = Class.createDefaultColors(),
-        bubbleBorderImages: BubbleBorderImages = Class.createDefaultBubbleBorderImages(),
+        bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
         failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
         layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
         dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
@@ -111,10 +111,10 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
     public lazy var baseColorIncoming: UIColor = self.colors.incoming()
     public lazy var baseColorOutgoing: UIColor = self.colors.outgoing()
 
-    public lazy var borderIncomingTail: UIImage = self.bubbleBorderImages.borderIncomingTail()
-    public lazy var borderIncomingNoTail: UIImage = self.bubbleBorderImages.borderIncomingNoTail()
-    public lazy var borderOutgoingTail: UIImage = self.bubbleBorderImages.borderOutgoingTail()
-    public lazy var borderOutgoingNoTail: UIImage = self.bubbleBorderImages.borderOutgoingNoTail()
+    public lazy var borderIncomingTail: UIImage? = self.bubbleBorderImages?.borderIncomingTail()
+    public lazy var borderIncomingNoTail: UIImage? = self.bubbleBorderImages?.borderIncomingNoTail()
+    public lazy var borderOutgoingTail: UIImage? = self.bubbleBorderImages?.borderOutgoingTail()
+    public lazy var borderOutgoingNoTail: UIImage? = self.bubbleBorderImages?.borderOutgoingNoTail()
 
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
