@@ -30,6 +30,7 @@ protocol SerialTaskQueueProtocol {
     func addTask(task: TaskClosure)
     func start()
     func stop()
+    func flushQueue()
     var isEmpty: Bool { get }
 }
 
@@ -50,6 +51,10 @@ final class SerialTaskQueue: SerialTaskQueueProtocol {
 
     func stop() {
         self.isStopped = true
+    }
+
+    func flushQueue() {
+        self.tasksQueue.removeAll()
     }
 
     var isEmpty: Bool {

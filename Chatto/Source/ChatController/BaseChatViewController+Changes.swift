@@ -36,6 +36,11 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
     public func enqueueModelUpdate(updateType updateType: UpdateType) {
         let newItems = self.chatDataSource?.chatItems ?? []
+
+        if self.updatesConfig.coalesceUpdates {
+            self.updateQueue.flushQueue()
+        }
+
         self.updateQueue.addTask({ [weak self] (completion) -> () in
             guard let sSelf = self else { return }
 
@@ -87,79 +92,94 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     func updateVisibleCells(changes: CollectionChanges) {
         // Datasource should be already updated!
 
-        func updateCellIfVisible(atIndexPath cellIndexPath: NSIndexPath, newDataIndexPath: NSIndexPath) {
-            if let cell = self.collectionView.cellForItemAtIndexPath(cellIndexPath) {
-                let presenter = self.presenterForIndexPath(newDataIndexPath)
-                presenter.configureCell(cell, decorationAttributes: self.decorationAttributesForIndexPath(newDataIndexPath))
-                presenter.cellWillBeShown(cell) // `createModelUpdates` may have created a new presenter instance for existing visible cell so we need to tell it that its cell is visible
-            }
+        // Afer performBatchUpdates, indexPathForCell may return a cell refering to the state before the update
+        // When doing very fast updates this can lead to giving a presenter the wrong cell below in presenter.configureCell(_:, decorationAttributes:)
+        // For that reason when self.updatesConfig.fastUpdates is enabled, it's also recomended to enable self.updatesConfig.trackVisibleCells
+        // See more: https://github.com/diegosanchezr/UICollectionViewStressing
+
+        // When self.updatesConfig.fastUpdates is disabled we haven't seen this inconsistency so it's recomended to disable `trackVisibleCells`
+
+        let cellsToUpdate: [NSIndexPath: UICollectionViewCell]
+
+        if self.updatesConfig.trackVisibleCells {
+            var updatedVisibleCells = updated(collection: self.visibleCells, withChanges: changes)
+
+            updatedVisibleCells.forEach({ (indexPath, cell) in
+                if cell.hidden || cell.superview == nil {
+                    updatedVisibleCells[indexPath] = nil
+                }
+            })
+            self.visibleCells = updatedVisibleCells
+            cellsToUpdate = updatedVisibleCells
+        } else {
+            var visibleCells: [NSIndexPath: UICollectionViewCell] = [:]
+            self.collectionView.indexPathsForVisibleItems().forEach({ (indexPath) in
+                if let cell = self.collectionView.cellForItemAtIndexPath(indexPath) {
+                    visibleCells[indexPath] = cell
+                }
+            })
+            cellsToUpdate = updated(collection: visibleCells, withChanges: changes)
         }
 
-        let visibleIndexPaths = Set(self.collectionView.indexPathsForVisibleItems().filter { (indexPath) -> Bool in
-            return !changes.insertedIndexPaths.contains(indexPath) && !changes.deletedIndexPaths.contains(indexPath)
-        })
-
-        var updatedIndexPaths = Set<NSIndexPath>()
-        for move in changes.movedIndexPaths {
-            updatedIndexPaths.insert(move.indexPathOld)
-            updateCellIfVisible(atIndexPath: move.indexPathOld, newDataIndexPath: move.indexPathNew)
-        }
-
-        // Update remaining visible cells
-        let remaining = visibleIndexPaths.subtract(updatedIndexPaths)
-        for indexPath in remaining {
-            updateCellIfVisible(atIndexPath: indexPath, newDataIndexPath: indexPath)
+        cellsToUpdate.forEach { (indexPath, cell) in
+            let presenter = self.presenterForIndexPath(indexPath)
+            presenter.configureCell(cell, decorationAttributes: self.decorationAttributesForIndexPath(indexPath))
+            presenter.cellWillBeShown(cell) // `createModelUpdates` may have created a new presenter instance for existing visible cell so we need to tell it that its cell is visible
         }
     }
 
-    func performBatchUpdates(
-        updateModelClosure updateModelClosure: () -> Void,
-        changes: CollectionChanges,
-        updateType: UpdateType,
-        completion: () -> Void) {
-            let shouldScrollToBottom = updateType != .Pagination && self.isScrolledAtBottom()
-            let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
-            let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
-            let myCompletion = {
-                // Found that cells may not match correct index paths here yet! (see comment below)
-                // Waiting for next loop seems to fix the issue
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completion()
-                })
-            }
+    func performBatchUpdates(updateModelClosure updateModelClosure: () -> Void,
+                                                changes: CollectionChanges,
+                                                updateType: UpdateType,
+                                                completion: () -> Void) {
+        let shouldScrollToBottom = updateType != .Pagination && self.isScrolledAtBottom()
+        let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
+        let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
+        let fastUpdates = self.updatesConfig.fastUpdates
+        var myCompletionExecuted = false
+        let myCompletion = {
+            if myCompletionExecuted { return }
+            myCompletionExecuted = true
 
-            if updateType == .Normal {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
+                completion()
+            })
+        }
 
-                UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
-                    self.collectionView.performBatchUpdates({ () -> Void in
-                        // We want to update visible cells to support easy removal of bubble tail or any other updates that may be needed after a data update
-                        // Collection view state is not constistent after performBatchUpdates. It can happen that we ask a cell for an index path and we still get the old one.
-                        // Visible cells can be either updated in completion block (easier but with delay) or before, taking into account if some cell is gonna be moved
-                        updateModelClosure()
-                        self.updateVisibleCells(changes)
+        if updateType == .Normal {
 
-                        self.collectionView.deleteItemsAtIndexPaths(Array(changes.deletedIndexPaths))
-                        self.collectionView.insertItemsAtIndexPaths(Array(changes.insertedIndexPaths))
-                        for move in changes.movedIndexPaths {
-                            self.collectionView.moveItemAtIndexPath(move.indexPathOld, toIndexPath: move.indexPathNew)
-                        }
-                    }) { (finished) -> Void in
-                        myCompletion()
+            UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
+                self.collectionView.performBatchUpdates({ () -> Void in
+                    updateModelClosure()
+                    self.updateVisibleCells(changes) // For instace, to support removal of tails
+
+                    self.collectionView.deleteItemsAtIndexPaths(Array(changes.deletedIndexPaths))
+                    self.collectionView.insertItemsAtIndexPaths(Array(changes.insertedIndexPaths))
+                    for move in changes.movedIndexPaths {
+                        self.collectionView.moveItemAtIndexPath(move.indexPathOld, toIndexPath: move.indexPathNew)
                     }
-                })
-            } else {
-                updateModelClosure()
-                self.collectionView.reloadData()
-                self.collectionView.collectionViewLayout.prepareLayout()
-                myCompletion()
-            }
+                }) { (finished) -> Void in
+                    myCompletion()
+                }
+            })
+        } else {
+            self.visibleCells = [:]
+            updateModelClosure()
+            self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.prepareLayout()
+        }
 
-            if shouldScrollToBottom {
-                self.scrollToBottom(animated: updateType == .Normal)
-            } else {
-                let newRect = self.rectAtIndexPath(newReferenceIndexPath)
-                self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
-            }
+        if shouldScrollToBottom {
+            self.scrollToBottom(animated: updateType == .Normal)
+        } else {
+            let newRect = self.rectAtIndexPath(newReferenceIndexPath)
+            self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+        }
+
+        if updateType != .Normal || fastUpdates {
+            myCompletion()
+        }
     }
 
     private func updateModels(newItems newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, updateType: UpdateType, completion: () -> Void) {
