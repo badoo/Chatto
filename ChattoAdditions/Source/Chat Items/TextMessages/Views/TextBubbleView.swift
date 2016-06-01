@@ -287,4 +287,24 @@ private final class ChatMessageTextView: UITextView {
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         return false
     }
+
+    override var selectedRange: NSRange {
+        get {
+            return NSRange(location: 0, length: 0)
+        }
+        set {
+            // Part of the heaviest stack trace when scrolling (when updating text)
+            // See https://github.com/badoo/Chatto/pull/144
+        }
+    }
+
+    override var contentOffset: CGPoint {
+        get {
+            return .zero
+        }
+        set {
+            // Part of the heaviest stack trace when scrolling (when bounds are set)
+            // See https://github.com/badoo/Chatto/pull/144
+        }
+    }
 }

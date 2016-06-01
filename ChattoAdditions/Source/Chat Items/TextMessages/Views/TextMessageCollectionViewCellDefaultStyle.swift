@@ -146,17 +146,17 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         let tailKey = showsTail ? "tail" : "notail"
         let statusKey = self.statusKey(status)
         let highlightedKey = isSelected ? "highlighted" : "normal"
-        let key = "\(directionKey)_\(tailKey)_\(statusKey)_\(highlightedKey)"
+        let key = directionKey + "_" + tailKey + "_" + statusKey + "_" + highlightedKey
         return key
     }
 
     private func templateKey(isIncoming isIncoming: Bool, showsTail: Bool) -> String {
         let directionKey = isIncoming ? "incoming" : "outgoing"
         let tailKey = showsTail ? "tail" : "notail"
-        return "\(directionKey)_\(tailKey)"
+        return directionKey + "_" + tailKey
     }
 
-    private func statusKey(status: MessageViewModelStatus) -> NSString {
+    private func statusKey(status: MessageViewModelStatus) -> String {
         switch status {
         case .Success:
             return "ok"
