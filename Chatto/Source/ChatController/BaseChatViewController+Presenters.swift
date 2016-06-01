@@ -45,6 +45,19 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
             self.presentersByCell.removeObjectForKey(cell)
             oldPresenterForCell.cellWasHidden(cell)
         }
+
+        if self.updatesConfig.trackVisibleCells {
+            if let visibleCell = self.visibleCells[indexPath] where visibleCell === cell {
+                self.visibleCells[indexPath] = nil
+            } else {
+                self.visibleCells.forEach({ (indexPath, storedCell) in
+                    if cell === storedCell {
+                        // Inconsistency found, likely due to very fast updates
+                        self.visibleCells[indexPath] = nil
+                    }
+                })
+            }
+        }
     }
 
     public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
@@ -52,6 +65,9 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
         let presenter = self.presenterForIndexPath(indexPath)
         self.presentersByCell.setObject(presenter, forKey: cell)
+        if self.updatesConfig.trackVisibleCells {
+            self.visibleCells[indexPath] = cell
+        }
 
         if self.isAdjustingInputContainer {
             UIView.performWithoutAnimation({

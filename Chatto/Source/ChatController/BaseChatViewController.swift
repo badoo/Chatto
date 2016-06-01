@@ -39,6 +39,14 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
     public var constants = Constants()
 
+    public struct UpdatesConfig {
+        public var trackVisibleCells = false // When updating very fast, UICollectionView.cellForItemAtIndexPath is not reliable, may return cell from the previous state (*)
+        public var fastUpdates = false // Allows another performBatchUpdates to be called before completion of a previous one (not recommended). When enabling this it's also recommended to enable `trackVisibleCells` as (*) may happen.
+        public var coalesceUpdates = false // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
+    }
+
+    public var updatesConfig =  UpdatesConfig()
+
     public private(set) var collectionView: UICollectionView!
     public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
     private var _chatDataSource: ChatDataSourceProtocol?
@@ -236,6 +244,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
     var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
+    var visibleCells: [NSIndexPath: UICollectionViewCell] = [:] // @see UpdatesConfig.trackVisibleCells
 
     /**
      - You can use a decorator to:

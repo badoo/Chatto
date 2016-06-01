@@ -207,6 +207,39 @@ class ChatViewControllerTests: XCTestCase {
         XCTAssertEqual(900, controller.view.convertRect(controller.chatInputView.bounds, fromView: controller.chatInputView).maxY)
     }
 
+    func testThat_GivenCoalescingIsEnabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreCoalesced() {
+        let controller = TesteableChatViewController()
+        controller.updatesConfig.coalesceUpdates = true
+        self.fakeDidAppearAndLayout(controller: controller)
+        let fakeDataSource = FakeDataSource()
+        let updateQueue = SerialTaskQueueTestHelper()
+        controller.updateQueue = updateQueue
+
+        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .None)
+        controller.chatDataSourceDidUpdate(fakeDataSource) // running
+        controller.chatDataSourceDidUpdate(fakeDataSource) // discarded
+        controller.chatDataSourceDidUpdate(fakeDataSource) // discarded
+        controller.chatDataSourceDidUpdate(fakeDataSource) // queued
+
+        XCTAssertEqual(1, updateQueue.tasksQueue.count)
+    }
+
+    func testThat_GivenCoalescingIsDisabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreQueued() {
+        let controller = TesteableChatViewController()
+        self.fakeDidAppearAndLayout(controller: controller)
+        let fakeDataSource = FakeDataSource()
+        let updateQueue = SerialTaskQueueTestHelper()
+        controller.updateQueue = updateQueue
+
+        updateQueue.start()
+        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .None)
+        controller.chatDataSourceDidUpdate(fakeDataSource) // running
+        controller.chatDataSourceDidUpdate(fakeDataSource) // queued
+        controller.chatDataSourceDidUpdate(fakeDataSource) // queued
+        controller.chatDataSourceDidUpdate(fakeDataSource) // queued
+
+        XCTAssertEqual(3, updateQueue.tasksQueue.count)
+    }
 
     // MARK: helpers
 

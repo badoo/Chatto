@@ -129,9 +129,9 @@ class FakeChatItem: ChatItemProtocol {
 final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {
     var onAllTasksFinished: (() -> Void)?
 
-    private var isBusy = false
-    private var isStopped = true
-    private var tasksQueue = [TaskClosure]()
+    var isBusy = false
+    var isStopped = true
+    var tasksQueue = [TaskClosure]()
 
     func addTask(task: TaskClosure) {
         self.tasksQueue.append(task)
@@ -149,6 +149,10 @@ final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {
 
     var isEmpty: Bool {
         return self.tasksQueue.isEmpty
+    }
+
+    func flushQueue() {
+        self.tasksQueue.removeAll()
     }
 
     private func maybeExecuteNextTask() {

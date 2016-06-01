@@ -96,3 +96,26 @@ func generateChanges(oldCollection oldCollection: [UniqueIdentificable], newColl
 
     return CollectionChanges(insertedIndexPaths: insertedIndexPaths, deletedIndexPaths: deletedIndexPaths, movedIndexPaths: movedIndexPaths)
 }
+
+func updated<T: Any>(collection collection: [NSIndexPath: T], withChanges changes: CollectionChanges) -> [NSIndexPath: T] {
+    var result = collection
+
+    changes.deletedIndexPaths.forEach { (indexPath) in
+        result[indexPath] = nil
+    }
+
+    var movedDestinations = Set<NSIndexPath>()
+    changes.movedIndexPaths.forEach { (move) in
+        result[move.indexPathNew] = collection[move.indexPathOld]
+        movedDestinations.insert(move.indexPathNew)
+        if !movedDestinations.contains(move.indexPathOld) {
+            result[move.indexPathOld] = nil
+        }
+    }
+
+    changes.insertedIndexPaths.forEach { (indexPath) in
+        result[indexPath] = nil
+    }
+
+    return result
+}
