@@ -28,20 +28,25 @@ public protocol ChatItemsDecoratorProtocol {
     func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }
 
-public struct DecoratedChatItem {
+public struct DecoratedChatItem: UniqueIdentificable {
+    public let uid: String
     public let chatItem: ChatItemProtocol
     public let decorationAttributes: ChatItemDecorationAttributesProtocol?
+
     public init(chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+        self.init(uid: chatItem.uid, chatItem: chatItem, decorationAttributes: decorationAttributes)
+    }
+
+    public init(uid: String, chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+        self.uid = uid
         self.chatItem = chatItem
         self.decorationAttributes = decorationAttributes
     }
 }
 
 public struct ChatItemCompanion: UniqueIdentificable {
+    public let uid: String
     public let chatItem: ChatItemProtocol
     public let presenter: ChatItemPresenterProtocol
     public var decorationAttributes: ChatItemDecorationAttributesProtocol?
-    public var uid: String {
-        return self.chatItem.uid
-    }
 }
