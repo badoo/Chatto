@@ -32,7 +32,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         public var updatesAnimationDuration: NSTimeInterval = 0.33
         public var defaultContentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         public var defaultScrollIndicatorInsets = UIEdgeInsetsZero
-        public var preferredMaxMessageCount: Int? = 500 // It not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
+        public var preferredMaxMessageCount: Int? = 500 // If not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
         public var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
         public var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
     }
@@ -40,8 +40,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public var constants = Constants()
 
     public struct UpdatesConfig {
-        public var trackVisibleCells = false // When updating very fast, UICollectionView.cellForItemAtIndexPath is not reliable, may return cell from the previous state (*)
-        public var fastUpdates = false // Allows another performBatchUpdates to be called before completion of a previous one (not recommended). When enabling this it's also recommended to enable `trackVisibleCells` as (*) may happen.
+        public var fastUpdates = false // Allows another performBatchUpdates to be called before completion of a previous one (not recommended). Changing this value after viewDidLoad is not supported
         public var coalesceUpdates = false // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
     }
 
@@ -134,6 +133,9 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
 
         self.automaticallyAdjustsScrollViewInsets = false
     }
+
+    var unfinishedBatchUpdatesCount: Int = 0
+    var onAllBatchUpdatesFinished: (() -> Void)?
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
     private func addInputViews() {
@@ -243,7 +245,7 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public private(set) var inputContainer: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
-    var visibleCells: [NSIndexPath: UICollectionViewCell] = [:] // @see UpdatesConfig.trackVisibleCells
+    var visibleCells: [NSIndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
     public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
