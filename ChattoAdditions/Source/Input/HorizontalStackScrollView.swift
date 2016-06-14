@@ -43,7 +43,7 @@ public class HorizontalStackScrollView: UIScrollView {
         self.setNeedsUpdateConstraints()
     }
 
-    override func updateConstraints() {
+    override public func updateConstraints() {
         super.updateConstraints()
         self.removeConstraintsForArrangedViews()
         self.addConstraintsForArrengedViews()
