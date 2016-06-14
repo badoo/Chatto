@@ -80,6 +80,9 @@ extension BaseChatViewController {
     }
 
     public func scrollToBottom(animated animated: Bool) {
+        // Cancel current scrolling
+        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
+
         // Note that we don't rely on collectionView's contentSize. This is because it won't be valid after performBatchUpdates or reloadData
         // After reload data, collectionViewLayout.collectionViewContentSize won't be even valid, so you may want to refresh the layout manually
         let offsetY = max(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize().height - self.collectionView.bounds.height + self.collectionView.contentInset.bottom)
