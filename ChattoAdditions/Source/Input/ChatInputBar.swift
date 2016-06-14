@@ -109,6 +109,8 @@ public class ChatInputBar: ReusableXibView {
         }
     }
 
+    public var maxCharactersCount: UInt? // nil -> unlimited
+
     private func updateIntrinsicContentSizeAnimated() {
         let options: UIViewAnimationOptions = [.BeginFromCurrentState, .AllowUserInteraction, .CurveEaseInOut]
         UIView.animateWithDuration(0.25, delay: 0, options: options, animations: { () -> Void in
@@ -236,6 +238,15 @@ extension ChatInputBar: UITextViewDelegate {
     public func textViewDidChange(textView: UITextView) {
         self.updateSendButton()
         self.delegate?.inputBarDidChangeText(self)
+    }
+
+    public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if let maxCharactersCount = self.maxCharactersCount {
+            let currentCount = textView.text.characters.count
+            let nextCount = currentCount - range.length + text.characters.count
+            return UInt(nextCount) <= maxCharactersCount
+        }
+        return true
     }
 }
 
