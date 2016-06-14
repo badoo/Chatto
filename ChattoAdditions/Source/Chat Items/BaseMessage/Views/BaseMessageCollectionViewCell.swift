@@ -218,7 +218,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
             self.accessoryTimestampView.bounds = CGRect(origin: CGPoint.zero, size: self.accessoryTimestampView.intrinsicContentSize())
-            let accessoryViewWidth = CGRectGetWidth(self.accessoryTimestampView.bounds)
+            let accessoryViewWidth = self.accessoryTimestampView.bounds.width
             let leftOffsetForContentView = max(0, offsetToRevealAccessoryView)
             let leftOffsetForAccessoryView = min(leftOffsetForContentView, accessoryViewWidth + layoutConstants.horizontalTimestampMargin)
             var contentViewframe = self.contentView.frame
@@ -228,7 +228,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
                 contentViewframe.origin.x = -leftOffsetForContentView
             }
             self.contentView.frame = contentViewframe
-            self.accessoryTimestampView.center = CGPoint(x: CGRectGetWidth(self.bounds) - leftOffsetForAccessoryView + accessoryViewWidth / 2, y: self.contentView.center.y)
+            self.accessoryTimestampView.center = CGPoint(x: self.bounds.width - leftOffsetForAccessoryView + accessoryViewWidth / 2, y: self.contentView.center.y)
         }
     }
 
