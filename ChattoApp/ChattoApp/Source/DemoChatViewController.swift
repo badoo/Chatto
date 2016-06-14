@@ -60,6 +60,7 @@ class DemoChatViewController: BaseChatViewController {
         appearance.sendButtonTitle = NSLocalizedString("Send", comment: "")
         appearance.textPlaceholder = NSLocalizedString("Type a message", comment: "")
         self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
+        chatInputView.maxCharactersCount = 1000
         return chatInputView
     }
 
