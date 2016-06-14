@@ -24,7 +24,7 @@
 
 import UIKit
 
-class HorizontalStackScrollView: UIScrollView {
+public class HorizontalStackScrollView: UIScrollView {
 
     private var arrangedViews: [UIView] = []
     private var arrangedViewContraints: [NSLayoutConstraint] = []
