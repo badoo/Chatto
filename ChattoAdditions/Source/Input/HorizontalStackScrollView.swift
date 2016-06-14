@@ -24,7 +24,7 @@
 
 import UIKit
 
-class HorizontalStackScrollView: UIScrollView {
+public class HorizontalStackScrollView: UIScrollView {
 
     private var arrangedViews: [UIView] = []
     private var arrangedViewContraints: [NSLayoutConstraint] = []
@@ -43,7 +43,7 @@ class HorizontalStackScrollView: UIScrollView {
         self.setNeedsUpdateConstraints()
     }
 
-    override func updateConstraints() {
+    override public func updateConstraints() {
         super.updateConstraints()
         self.removeConstraintsForArrangedViews()
         self.addConstraintsForArrengedViews()
