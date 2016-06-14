@@ -243,8 +243,9 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
     public private(set) var inputContainer: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable(keyOptions: .WeakMemory, valueOptions: .WeakMemory)
-    var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
     var visibleCells: [NSIndexPath: UICollectionViewCell] = [:] // @see UpdatesConfig.trackVisibleCells
+
+    public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
     /**
      - You can use a decorator to:
