@@ -28,26 +28,22 @@ public class TextChatInputItem {
     typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?
 
-    let buttonImages: ButtonImages
-    public init(buttonImages: ButtonImages = Class.createDefaultButtonStyle()) {
-        self.buttonImages = buttonImages
+    let buttonAppearance: TabInputButtonAppearance
+    public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+        self.buttonAppearance = tabInputButtonAppearance
     }
 
-    public class func createDefaultButtonStyle() -> ButtonImages {
-        return ButtonImages(
-            normal: UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
-            selected: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
-            highlighted: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
-        )
+    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+        let images: [UIControlState: UIImage] = [
+            .Normal: UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            .Selected: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            .Highlighted: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
+        ]
+        return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    lazy private var internalTabView: UIButton = {
-        var button = UIButton(type: .Custom)
-        button.exclusiveTouch = true
-        button.setImage(self.buttonImages.normal(), forState: .Normal)
-        button.setImage(self.buttonImages.highlighted(), forState: .Highlighted)
-        button.setImage(self.buttonImages.selected(), forState: .Selected)
-        return button
+    lazy private var internalTabView: TabInputButton = {
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     public var selected = false {

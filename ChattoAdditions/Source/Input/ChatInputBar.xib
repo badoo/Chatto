@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10115" systemVersion="15E64a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G12a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -21,11 +21,11 @@
                     <rect key="frame" x="0.0" y="79" width="600" height="44"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WNX-pj-5AB" customClass="HorizontalStackScrollView" customModule="ChattoAdditions" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="514" height="44"/>
+                            <rect key="frame" x="0.0" y="0.0" width="506" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </scrollView>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hE9-hU-Ci1">
-                            <rect key="frame" x="514" y="0.0" width="86" height="44"/>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hE9-hU-Ci1">
+                            <rect key="frame" x="506" y="0.0" width="94" height="44"/>
                             <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                             <state key="normal" title="Button"/>
                             <connections>
@@ -84,6 +84,7 @@
             <connections>
                 <outlet property="scrollView" destination="WNX-pj-5AB" id="Qqy-Ny-mng"/>
                 <outlet property="sendButton" destination="hE9-hU-Ci1" id="VFQ-Pb-J37"/>
+                <outlet property="tabBarContainerHeightConstraint" destination="vwa-F7-EIB" id="d3G-fs-hEH"/>
                 <outlet property="textView" destination="fsh-hH-hKG" id="QMH-G9-ADs"/>
                 <outlet property="topBorderHeightConstraint" destination="IIv-qg-Tlp" id="qiB-dH-AHS"/>
                 <outletCollection property="constraintsForVisibleTextView" destination="4Vl-vV-gaa" collectionClass="NSMutableArray" id="rBg-0B-c4B"/>

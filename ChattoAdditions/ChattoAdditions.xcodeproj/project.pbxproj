@@ -76,6 +76,7 @@
 		C3C0CC8B1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */; };
 		C3C0CC8C1BFE49700052747C /* TextChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7E1BFE49700052747C /* TextChatInputItemTests.swift */; };
 		C3C0CC8D1BFE49700052747C /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC7F1BFE49700052747C /* ObservableTests.swift */; };
+		C3C9BC8F1D11540D00F3A54E /* TabInputButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C9BC8E1D11540D00F3A54E /* TabInputButton.swift */; };
 		C3EFA6B01C03607A0063CE22 /* BaseMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */; };
 		CA073E791C47F5B9009D5EBF /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA073E781C47F5B9009D5EBF /* Chatto.framework */; };
 		F6D04BA71CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */; };
@@ -165,6 +166,7 @@
 		C3C0CC7E1BFE49700052747C /* TextChatInputItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChatInputItemTests.swift; sourceTree = "<group>"; };
 		C3C0CC7F1BFE49700052747C /* ObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		C3C0CC961BFE4A2A0052747C /* ChattoAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChattoAdditions.h; sourceTree = "<group>"; };
+		C3C9BC8E1D11540D00F3A54E /* TabInputButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabInputButton.swift; sourceTree = "<group>"; };
 		C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessagePresenterTests.swift; sourceTree = "<group>"; };
 		CA073E781C47F5B9009D5EBF /* Chatto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Chatto.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Chatto-gyrilfusfbpmohajjvmmctphuabr/Build/Products/Debug-iphoneos/Chatto.framework"; sourceTree = "<group>"; };
 		F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderDataProviderTests.swift; sourceTree = "<group>"; };
@@ -326,15 +328,16 @@
 			isa = PBXGroup;
 			children = (
 				C3C0CC041BFE496A0052747C /* ChatInputBar.swift */,
+				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
 				C3C0CC061BFE496A0052747C /* ChatInputBarAppearance.swift */,
 				C3C0CC071BFE496A0052747C /* ChatInputBarPresenter.swift */,
 				C3C0CC081BFE496A0052747C /* ChatInputItem.swift */,
 				C3C0CC091BFE496A0052747C /* ChatInputItemView.swift */,
 				C3C0CC0A1BFE496A0052747C /* ExpandableTextView.swift */,
 				C3C0CC0B1BFE496A0052747C /* HorizontalStackScrollView.swift */,
-				C3C0CC161BFE496A0052747C /* ReusableXibView.swift */,
-				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
 				C3C0CC0C1BFE496A0052747C /* Photos */,
+				C3C0CC161BFE496A0052747C /* ReusableXibView.swift */,
+				C3C9BC8E1D11540D00F3A54E /* TabInputButton.swift */,
 				C3C0CC171BFE496A0052747C /* Text */,
 			);
 			path = Input;
@@ -567,6 +570,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3C9BC8F1D11540D00F3A54E /* TabInputButton.swift in Sources */,
 				C3C0CC311BFE496A0052747C /* ChatItemDecorationAttributes.swift in Sources */,
 				C3C0CC3B1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift in Sources */,
 				C38658B21BFE55620012F181 /* AnimationUtils.swift in Sources */,
