@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1CB21D193EF017E5E1C63755 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 623390018DA74FF277EE2626 /* Pods.framework */; };
 		C33FBFAE1BDE441C008E3545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAC1BDE441C008E3545 /* Main.storyboard */; };
 		C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAF1BDE441C008E3545 /* Assets.xcassets */; };
 		C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */; };
@@ -34,6 +33,7 @@
 		C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */; };
 		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
 		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
+		DD49AA1095C478DD42524839 /* Pods_ChattoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */; };
 		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,9 +68,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChattoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		623390018DA74FF277EE2626 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC1B7FD95E9FA5D84A5E756D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		C103E6161174A5DF650D22E6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		6DABD92E2BA40464C1727DA2 /* Pods-ChattoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.release.xcconfig"; sourceTree = "<group>"; };
 		C33FBFA51BDE441C008E3545 /* ChattoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChattoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C33FBFAD1BDE441C008E3545 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C33FBFAF1BDE441C008E3545 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -111,7 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CB21D193EF017E5E1C63755 /* Pods.framework in Frameworks */,
+				DD49AA1095C478DD42524839 /* Pods_ChattoApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,15 +137,16 @@
 			isa = PBXGroup;
 			children = (
 				623390018DA74FF277EE2626 /* Pods.framework */,
+				13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		85F4EC3BBFE4992D53A91325 /* Pods */ = {
+		B616EDF620454A787C7E7D84 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BC1B7FD95E9FA5D84A5E756D /* Pods.debug.xcconfig */,
-				C103E6161174A5DF650D22E6 /* Pods.release.xcconfig */,
+				2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */,
+				6DABD92E2BA40464C1727DA2 /* Pods-ChattoApp.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -156,8 +158,8 @@
 				C33FBFBC1BDE441C008E3545 /* ChattoAppTests */,
 				C33FBFC71BDE441C008E3545 /* ChattoAppUITests */,
 				C33FBFA61BDE441C008E3545 /* Products */,
-				85F4EC3BBFE4992D53A91325 /* Pods */,
 				0852C8B139C7CFA0A1C22090 /* Frameworks */,
+				B616EDF620454A787C7E7D84 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -269,14 +271,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C33FBFCD1BDE441C008E3545 /* Build configuration list for PBXNativeTarget "ChattoApp" */;
 			buildPhases = (
+				5BF0DC46EA4D63FE5A83101A /* [CP] Check Pods Manifest.lock */,
 				556B211A1BDFFAE600F53032 /* ShellScript */,
-				6BB16B63BEEEE4FB7E4D317B /* Check Pods Manifest.lock */,
 				C33FBFA11BDE441C008E3545 /* Sources */,
 				C33FBFA21BDE441C008E3545 /* Frameworks */,
 				C33FBFA31BDE441C008E3545 /* Resources */,
 				C33FBFF61BDE6BA8008E3545 /* Embed Frameworks */,
-				F1E630E5E82C99EC4155023D /* Embed Pods Frameworks */,
-				CA29DE57C5A69B8D5A304060 /* Copy Pods Resources */,
+				568F85DCA97ED23EAB1EF2DA /* [CP] Embed Pods Frameworks */,
+				F8D7533B1E7B2E137B143EBD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -408,14 +410,29 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
-		6BB16B63BEEEE4FB7E4D317B /* Check Pods Manifest.lock */ = {
+		568F85DCA97ED23EAB1EF2DA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5BF0DC46EA4D63FE5A83101A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,34 +440,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		CA29DE57C5A69B8D5A304060 /* Copy Pods Resources */ = {
+		F8D7533B1E7B2E137B143EBD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F1E630E5E82C99EC4155023D /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -621,7 +623,7 @@
 		};
 		C33FBFCE1BDE441C008E3545 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BC1B7FD95E9FA5D84A5E756D /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -634,7 +636,7 @@
 		};
 		C33FBFCF1BDE441C008E3545 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C103E6161174A5DF650D22E6 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 6DABD92E2BA40464C1727DA2 /* Pods-ChattoApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
