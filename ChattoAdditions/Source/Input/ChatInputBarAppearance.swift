@@ -28,9 +28,9 @@ public struct ChatInputBarAppearance {
         public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         public var title = ""
         public var titleColors: [UIControlState: UIColor] = [
-            [.Disabled]: UIColor.bma_color(rgb: 0x9AA3AB),
-            [.Normal]: UIColor.bma_color(rgb: 0x007AFF),
-            [.Highlighted]: UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
+            .Disabled: UIColor.bma_color(rgb: 0x9AA3AB),
+            .Normal: UIColor.bma_color(rgb: 0x007AFF),
+            .Highlighted: UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
         ]
     }
 
