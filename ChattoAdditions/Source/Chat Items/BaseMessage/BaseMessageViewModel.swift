@@ -127,7 +127,9 @@ public class MessageViewModelDefaultBuilder {
 
     static let dateFormatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.locale = NSLocale.currentLocale()
+        formatter.dateStyle = .NoStyle
+        formatter.timeStyle = .ShortStyle
         return formatter
     }()
 
