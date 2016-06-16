@@ -54,6 +54,7 @@ public class ChatInputBar: ReusableXibView {
 
     @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
     @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
+    @IBOutlet var tabBarContainerHeightConstraint: NSLayoutConstraint!
 
     class public func loadNib() -> ChatInputBar {
         let view = NSBundle(forClass: self).loadNibNamed(self.nibName(), owner: nil, options: nil).first as! ChatInputBar
@@ -185,17 +186,21 @@ extension ChatInputBar: ChatInputItemViewDelegate {
 // MARK: - ChatInputBarAppearance
 extension ChatInputBar {
     public func setAppearance(appearance: ChatInputBarAppearance) {
-        self.textView.font = appearance.textFont
-        self.textView.textColor = appearance.textColor
-        self.textView.textContainerInset = appearance.textInsets
-        self.textView.setTextPlaceholderFont(appearance.textPlaceholderFont)
-        self.textView.setTextPlaceholderColor(appearance.textPlaceholderColor)
-        self.textView.setTextPlaceholder(appearance.textPlaceholder)
-        self.tabBarInterItemSpacing = appearance.tabBarInterItemSpacing
-        self.tabBarContentInsets = appearance.tabBarInsets
-        self.sendButton.contentEdgeInsets = appearance.sendButtonInsets
-        self.sendButton.setTitle(appearance.sendButtonTitle, forState: .Normal)
-        self.sendButton.titleLabel?.font = appearance.sendButtonFont
+        self.textView.font = appearance.textInputAppearance.font
+        self.textView.textColor = appearance.textInputAppearance.textColor
+        self.textView.textContainerInset = appearance.textInputAppearance.textInsets
+        self.textView.setTextPlaceholderFont(appearance.textInputAppearance.placeholderFont)
+        self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
+        self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
+        self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
+        self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
+        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
+        self.sendButton.setTitle(appearance.sendButtonAppearance.title, forState: .Normal)
+        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+            self.sendButton.setTitleColor(color, forState: state)
+        }
+        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+        self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
 
@@ -247,15 +252,5 @@ extension ChatInputBar: UITextViewDelegate {
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
-    }
-}
-
-class SingleViewContainerView: UIView {
-    override func intrinsicContentSize() -> CGSize {
-        if let subview = self.subviews.first {
-            return subview.intrinsicContentSize()
-        } else {
-            return CGSize.zero
-        }
     }
 }

@@ -57,8 +57,8 @@ class DemoChatViewController: BaseChatViewController {
     override func createChatInputView() -> UIView {
         let chatInputView = ChatInputBar.loadNib()
         var appearance = ChatInputBarAppearance()
-        appearance.sendButtonTitle = NSLocalizedString("Send", comment: "")
-        appearance.textPlaceholder = NSLocalizedString("Type a message", comment: "")
+        appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
+        appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
         self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
         chatInputView.maxCharactersCount = 1000
         return chatInputView

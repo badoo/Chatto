@@ -24,20 +24,6 @@
 
 import Foundation
 
-public struct ButtonImages {
-    public let normal: () -> UIImage
-    public let selected: () -> UIImage
-    public let highlighted: () -> UIImage
-    public init(
-        @autoclosure(escaping) normal: () -> UIImage,
-        @autoclosure(escaping) selected: () -> UIImage,
-        @autoclosure(escaping) highlighted: () -> UIImage) {
-            self.normal = normal
-            self.selected = selected
-            self.highlighted = highlighted
-    }
-}
-
 public class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
@@ -46,27 +32,23 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
 
-    let buttonImages: ButtonImages
-    public init(presentingController: UIViewController?, buttonImages: ButtonImages = Class.createDefaultButtonStyle()) {
+    let buttonAppearance: TabInputButtonAppearance
+    public init(presentingController: UIViewController?, tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
         self.presentingController = presentingController
-        self.buttonImages = buttonImages
+        self.buttonAppearance = tabInputButtonAppearance
     }
 
-    public class func createDefaultButtonStyle() -> ButtonImages {
-        return ButtonImages(
-            normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
-        )
+    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+        let images: [UIControlState: UIImage] = [
+            .Normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            .Selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            .Highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        ]
+        return TabInputButtonAppearance(images: images, size: nil)
     }
 
     lazy private var internalTabView: UIButton = {
-        var button = UIButton(type: .Custom)
-        button.exclusiveTouch = true
-        button.setImage(self.buttonImages.normal(), forState: .Normal)
-        button.setImage(self.buttonImages.highlighted(), forState: .Highlighted)
-        button.setImage(self.buttonImages.selected(), forState: .Selected)
-        return button
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
