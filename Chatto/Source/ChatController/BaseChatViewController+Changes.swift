@@ -92,34 +92,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     func updateVisibleCells(changes: CollectionChanges) {
         // Datasource should be already updated!
 
-        // Afer performBatchUpdates, indexPathForCell may return a cell refering to the state before the update
-        // When doing very fast updates this can lead to giving a presenter the wrong cell below in presenter.configureCell(_:, decorationAttributes:)
-        // For that reason when self.updatesConfig.fastUpdates is enabled, it's also recomended to enable self.updatesConfig.trackVisibleCells
-        // See more: https://github.com/diegosanchezr/UICollectionViewStressing
+        assert(self.visibleCellsAreValid(changes: changes), "Invalid visible cells. Don't call me")
 
-        // When self.updatesConfig.fastUpdates is disabled we haven't seen this inconsistency so it's recomended to disable `trackVisibleCells`
-
-        let cellsToUpdate: [NSIndexPath: UICollectionViewCell]
-
-        if self.updatesConfig.trackVisibleCells {
-            var updatedVisibleCells = updated(collection: self.visibleCells, withChanges: changes)
-
-            updatedVisibleCells.forEach({ (indexPath, cell) in
-                if cell.hidden || cell.superview == nil {
-                    updatedVisibleCells[indexPath] = nil
-                }
-            })
-            self.visibleCells = updatedVisibleCells
-            cellsToUpdate = updatedVisibleCells
-        } else {
-            var visibleCells: [NSIndexPath: UICollectionViewCell] = [:]
-            self.collectionView.indexPathsForVisibleItems().forEach({ (indexPath) in
-                if let cell = self.collectionView.cellForItemAtIndexPath(indexPath) {
-                    visibleCells[indexPath] = cell
-                }
-            })
-            cellsToUpdate = updated(collection: visibleCells, withChanges: changes)
-        }
+        let cellsToUpdate = updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
+        self.visibleCells = cellsToUpdate
 
         cellsToUpdate.forEach { (indexPath, cell) in
             let presenter = self.presenterForIndexPath(indexPath)
@@ -128,28 +104,90 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
     }
 
+    private func visibleCellsFromCollectionViewApi() -> [NSIndexPath: UICollectionViewCell] {
+        var visibleCells: [NSIndexPath: UICollectionViewCell] = [:]
+        self.collectionView.indexPathsForVisibleItems().forEach({ (indexPath) in
+            if let cell = self.collectionView.cellForItemAtIndexPath(indexPath) {
+                visibleCells[indexPath] = cell
+            }
+        })
+        return visibleCells
+    }
+
+    private func visibleCellsAreValid(changes changes: CollectionChanges) -> Bool {
+        // Afer performBatchUpdates, indexPathForCell may return a cell refering to the state before the update
+        // if self.updatesConfig.fastUpdates is enabled, very fast updates could result in `updateVisibleCells` updating wrong cells.
+        // See more: https://github.com/diegosanchezr/UICollectionViewStressing
+
+        if self.updatesConfig.fastUpdates {
+            return updated(collection: self.visibleCells, withChanges: changes) == updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
+        } else {
+            return true // never seen inconsistency without fastUpdates
+        }
+    }
+
+    private enum ScrollAction {
+        case scrollToBottom
+        case preservePosition(rectForReferenceIndexPathBeforeUpdate: CGRect?, referenceIndexPathAfterUpdate: NSIndexPath?)
+    }
+
     func performBatchUpdates(updateModelClosure updateModelClosure: () -> Void,
                                                 changes: CollectionChanges,
                                                 updateType: UpdateType,
                                                 completion: () -> Void) {
-        let shouldScrollToBottom = updateType != .Pagination && self.isScrolledAtBottom()
-        let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
-        let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
-        let fastUpdates = self.updatesConfig.fastUpdates
-        var myCompletionExecuted = false
-        let myCompletion = {
-            if myCompletionExecuted { return }
-            myCompletionExecuted = true
 
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
-                completion()
-            })
+        let usesBatchUpdates: Bool
+        do { // Recover from too fast updates...
+            let visibleCellsAreValid = self.visibleCellsAreValid(changes: changes)
+            let wantsReloadData = updateType != .Normal
+            let hasUnfinishedBatchUpdates = self.unfinishedBatchUpdatesCount > 0 // This can only happen when enabling self.updatesConfig.fastUpdates
+
+            // a) It's unsafe to perform reloadData while there's a performBatchUpdates animating: https://github.com/diegosanchezr/UICollectionViewStressing/tree/master/GhostCells
+            // Note: using reloadSections instead reloadData is safe and might not need a delay. However, using always reloadSections causes flickering on pagination and a crash on the first layout that needs a workaround. Let's stick to reloaData for now
+            // b) If it's a performBatchUpdates but visible cells are invalid let's wait until all finish (otherwise we would give wrong cells to presenters in updateVisibleCells)
+            let mustDelayUpdate = hasUnfinishedBatchUpdates && (wantsReloadData || !visibleCellsAreValid)
+            guard !mustDelayUpdate else {
+                // For reference, it is possible to force the current performBatchUpdates to finish in the next run loop, by cancelling animations:
+                // self.collectionView.subviews.forEach { $0.layer.removeAllAnimations() }
+                self.onAllBatchUpdatesFinished = { [weak self] in
+                    self?.onAllBatchUpdatesFinished = nil
+                    self?.performBatchUpdates(updateModelClosure: updateModelClosure, changes: changes, updateType: updateType, completion: completion)
+                }
+                return
+            }
+            // ... if they are still invalid the only thing we can do is a reloadData
+            let mustDoReloadData = !visibleCellsAreValid // Only way to recover from this inconsistent state
+            usesBatchUpdates = !wantsReloadData && !mustDoReloadData
         }
 
-        if updateType == .Normal {
+        let scrollAction: ScrollAction
+        do { // Scroll action
+            if updateType != .Pagination && self.isScrolledAtBottom() {
+                scrollAction = .scrollToBottom
+            } else {
+                let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
+                let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
+                scrollAction = .preservePosition(rectForReferenceIndexPathBeforeUpdate: oldRect, referenceIndexPathAfterUpdate: newReferenceIndexPath)
+            }
+        }
 
+        let myCompletion: () -> Void
+        do { // Completion
+            var myCompletionExecuted = false
+            myCompletion = {
+                if myCompletionExecuted { return }
+                myCompletionExecuted = true
+
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
+                    completion()
+                })
+            }
+        }
+
+        if usesBatchUpdates {
             UIView.animateWithDuration(self.constants.updatesAnimationDuration, animations: { () -> Void in
+                self.unfinishedBatchUpdatesCount += 1
                 self.collectionView.performBatchUpdates({ () -> Void in
                     updateModelClosure()
                     self.updateVisibleCells(changes) // For instace, to support removal of tails
@@ -159,8 +197,13 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                     for move in changes.movedIndexPaths {
                         self.collectionView.moveItemAtIndexPath(move.indexPathOld, toIndexPath: move.indexPathNew)
                     }
-                }) { (finished) -> Void in
-                    myCompletion()
+                }) { [weak self] (finished) -> Void in
+                    defer { myCompletion() }
+                    guard let sSelf = self else { return }
+                    sSelf.unfinishedBatchUpdatesCount -= 1
+                    if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
+                        dispatch_async(dispatch_get_main_queue(), onAllBatchUpdatesFinished)
+                    }
                 }
             })
         } else {
@@ -170,14 +213,15 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             self.collectionView.collectionViewLayout.prepareLayout()
         }
 
-        if shouldScrollToBottom {
+        switch scrollAction {
+        case .scrollToBottom:
             self.scrollToBottom(animated: updateType == .Normal)
-        } else {
-            let newRect = self.rectAtIndexPath(newReferenceIndexPath)
+        case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
+            let newRect = self.rectAtIndexPath(indexPath)
             self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
         }
 
-        if updateType != .Normal || fastUpdates {
+        if !usesBatchUpdates || self.updatesConfig.fastUpdates {
             myCompletion()
         }
     }
