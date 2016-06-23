@@ -137,17 +137,17 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         let bubbleImage = self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
         let borderImage = self.style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
-
-        if self.textView.font != font { self.textView.font = font}
-        if self.textView.text != viewModel.text {self.textView.text = viewModel.text}
-        if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
-        if self.textView.textColor != textColor {
+        let needsToUpdateText = self.textView.text != viewModel.text || self.textView.textColor != textColor || self.textView.font != font
+        if needsToUpdateText {
+            self.textView.font = font
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
                 NSForegroundColorAttributeName: textColor,
                 NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
             ]
+            self.textView.text = viewModel.text
         }
+        if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
         if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage}
         if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
     }
