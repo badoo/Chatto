@@ -245,12 +245,25 @@ extension ChatInputBar: UITextViewDelegate {
         self.delegate?.inputBarDidChangeText(self)
     }
 
-    public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    public func textView(textView: UITextView, shouldChangeTextInRange nsRange: NSRange, replacementText text: String) -> Bool {
+        let range = self.textView.text.bma_rangeFromNSRange(nsRange)
         if let maxCharactersCount = self.maxCharactersCount {
             let currentCount = textView.text.characters.count
-            let nextCount = currentCount - range.length + text.characters.count
+            let rangeLength = textView.text.substringWithRange(range).characters.count
+            let nextCount = currentCount - rangeLength + text.characters.count
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
+    }
+}
+
+private extension String {
+    func bma_rangeFromNSRange(nsRange : NSRange) -> Range<String.Index> {
+        let from16 = self.utf16.startIndex.advancedBy(nsRange.location, limit: self.utf16.endIndex)
+        let to16 = from16.advancedBy(nsRange.length, limit: self.utf16.endIndex)
+        if let from = String.Index(from16, within: self), let to = String.Index(to16, within: self) {
+            return from ..< to
+        }
+        return self.startIndex...self.startIndex
     }
 }
