@@ -160,7 +160,7 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
     }
 }
 
-private func ==(lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
+private func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
     switch (lhs, rhs) {
     case let (.template(lhsValues), .template(rhsValues)):
         return lhsValues == rhsValues
