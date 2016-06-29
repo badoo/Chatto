@@ -29,7 +29,7 @@ protocol PhotosInputCellProviderProtocol {
 }
 
 class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
-    private var reuseIdentifier = "PhotosPlaceholderCellProvider"
+    private let reuseIdentifier = "PhotosPlaceholderCellProvider"
     private let collectionView: UICollectionView
     init(collectionView: UICollectionView) {
         self.collectionView = collectionView
@@ -42,7 +42,7 @@ class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
 }
 
 class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
-    private var reuseIdentifier = "PhotosCellProvider"
+    private let reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
     private let dataProvider: PhotosInputDataProviderProtocol
     init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {

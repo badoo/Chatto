@@ -25,7 +25,7 @@
 import PhotosUI
 
 protocol PhotosInputDataProviderDelegate: class {
-    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol)
+    func handlePhotosInpudDataProviderUpdate(dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void)
 }
 
 protocol PhotosInputDataProviderProtocol {
@@ -111,10 +111,14 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
     func photoLibraryDidChange(changeInstance: PHChange) {
         // Photos may call this method on a background queue; switch to the main queue to update the UI.
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            if let changeDetails = changeInstance.changeDetailsForFetchResult(self.fetchResult) {
-                self.fetchResult = changeDetails.fetchResultAfterChanges
-                self.delegate?.photosInpudDataProviderDidUpdate(self)
+        dispatch_async(dispatch_get_main_queue()) { [weak self]  in
+            guard let sSelf = self else { return }
+
+            if let changeDetails = changeInstance.changeDetailsForFetchResult(sSelf.fetchResult) {
+                let updateBlock = { () -> Void in
+                    self?.fetchResult = changeDetails.fetchResultAfterChanges
+                }
+                sSelf.delegate?.handlePhotosInpudDataProviderUpdate(sSelf, updateBlock: updateBlock)
             }
         }
     }
@@ -157,7 +161,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
 
     // MARK: PhotosInputDataProviderDelegate
 
-    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol) {
-        self.delegate?.photosInpudDataProviderDidUpdate(self)
+    func handlePhotosInpudDataProviderUpdate(dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void) {
+        self.delegate?.handlePhotosInpudDataProviderUpdate(self, updateBlock: updateBlock)
     }
 }

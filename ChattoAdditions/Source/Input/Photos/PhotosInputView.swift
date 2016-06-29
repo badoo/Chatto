@@ -24,11 +24,11 @@
 
 import UIKit
 import Photos
+import Chatto
 
 protocol PhotosInputViewProtocol {
     weak var delegate: PhotosInputViewDelegate? { get set }
     weak var presentingController: UIViewController? { get }
-    func reload()
 }
 
 protocol PhotosInputViewDelegate: class {
@@ -43,6 +43,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         static let liveCameraItemIndex = 0
     }
 
+    private lazy var collectionViewQueue = SerialTaskQueue()
     private var collectionView: UICollectionView!
     private var collectionViewLayout: UICollectionViewFlowLayout!
     private var dataProvider: PhotosInputDataProviderProtocol!
@@ -86,13 +87,9 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.configureItemSizeCalculator()
         self.dataProvider = PhotosInputPlaceholderDataProvider()
         self.cellProvider = PhotosInputPlaceholderCellProvider(collectionView: self.collectionView)
+        self.collectionViewQueue.start()
         self.requestAccessToVideo()
         self.requestAccessToPhoto()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.collectionViewLayout.invalidateLayout()
     }
 
     private func configureItemSizeCalculator() {
@@ -102,6 +99,8 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func requestAccessToVideo() {
+        guard self.cameraAuthorizationStatus != .Authorized else { return }
+
         AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { (success) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.reloadVideoItem()
@@ -110,10 +109,23 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func reloadVideoItem() {
-        self.collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: Constants.liveCameraItemIndex, inSection: 0)])
+        self.collectionViewQueue.addTask { [weak self] (completion) in
+            guard let sSelf = self else { return }
+
+            sSelf.collectionView.performBatchUpdates({
+                sSelf.collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: Constants.liveCameraItemIndex, inSection: 0)])
+            }, completion: { (finished) in
+                dispatch_async(dispatch_get_main_queue(), completion)
+            })
+        }
     }
 
     private func requestAccessToPhoto() {
+        guard self.photoLibraryAuthorizationStatus != .Authorized else {
+            self.replacePlaceholderItemsWithPhotoItems()
+            return
+        }
+
         PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
             if status == PHAuthorizationStatus.Authorized {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -124,30 +136,40 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func replacePlaceholderItemsWithPhotoItems() {
-        let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: PhotosInputDataProvider(), placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
-        newDataProvider.delegate = self
-        self.dataProvider = newDataProvider
-        self.cellProvider = PhotosInputCellProvider(collectionView: self.collectionView, dataProvider: newDataProvider)
-        self.collectionView.reloadSections(NSIndexSet(index: 0))
+        self.collectionViewQueue.addTask { [weak self] (completion) in
+            guard let sSelf = self else { return }
+
+            let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: PhotosInputDataProvider(), placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
+            newDataProvider.delegate = sSelf
+            sSelf.dataProvider = newDataProvider
+            sSelf.cellProvider = PhotosInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
+            sSelf.collectionView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), completion)
+        }
     }
 
     func reload() {
-        self.collectionView.reloadData()
+        self.collectionViewQueue.addTask { [weak self] (completion) in
+            self?.collectionView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), completion)
+        }
     }
 
     private lazy var cameraPicker: PhotosInputCameraPicker = {
         return PhotosInputCameraPicker(presentingController: self.presentingController)
     }()
+
+    private lazy var liveCameraPresenter = LiveCameraCellPresenter()
 }
 
 extension PhotosInputView: UICollectionViewDataSource {
 
     func configureCollectionView() {
-        self.collectionViewLayout = UICollectionViewFlowLayout()
+        self.collectionViewLayout = PhotosInputCollectionViewLayout()
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionViewLayout)
         self.collectionView.backgroundColor = UIColor.whiteColor()
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: "bar")
+        self.collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: "LiveCameraCell")
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -166,8 +188,8 @@ extension PhotosInputView: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell: UICollectionViewCell
         if indexPath.item == Constants.liveCameraItemIndex {
-            let liveCameraCell = collectionView.dequeueReusableCellWithReuseIdentifier("bar", forIndexPath: indexPath) as! LiveCameraCell
-            liveCameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
+            let liveCameraCell = collectionView.dequeueReusableCellWithReuseIdentifier("LiveCameraCell", forIndexPath: indexPath) as! LiveCameraCell
+            self.liveCameraPresenter.cameraAuthorizationStatus = self.cameraAuthorizationStatus
             cell = liveCameraCell
         } else {
             cell = self.cellProvider.cellForItemAtIndexPath(indexPath)
@@ -213,19 +235,32 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
-            (cell as! LiveCameraCell).startCapturing()
+            self.liveCameraPresenter.cellWillBeShown(cell as! LiveCameraCell)
         }
     }
 
     func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
-            (cell as! LiveCameraCell).stopCapturing()
+            self.liveCameraPresenter.cellWasHidden(cell as! LiveCameraCell)
         }
     }
 }
 
 extension PhotosInputView: PhotosInputDataProviderDelegate {
-    func photosInpudDataProviderDidUpdate(dataProvider: PhotosInputDataProviderProtocol) {
-        self.collectionView.reloadData()
+    func handlePhotosInpudDataProviderUpdate(dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void) {
+        self.collectionViewQueue.addTask { [weak self] (completion) in
+            guard let sSelf = self else { return }
+
+            updateBlock()
+            sSelf.collectionView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), completion)
+        }
+    }
+
+}
+
+private class PhotosInputCollectionViewLayout: UICollectionViewFlowLayout {
+    private override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+        return newBounds.width != self.collectionView?.bounds.width
     }
 }
