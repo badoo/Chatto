@@ -35,15 +35,28 @@ protocol ChatInputBarPresenter: class {
 @objc public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
+    let notificationCenter: NSNotificationCenter
 
-    public init(chatInputBar: ChatInputBar, chatInputItems: [ChatInputItemProtocol], chatInputBarAppearance: ChatInputBarAppearance) {
+    public init(chatInputBar: ChatInputBar,
+                chatInputItems: [ChatInputItemProtocol],
+                chatInputBarAppearance: ChatInputBarAppearance,
+                notificationCenter: NSNotificationCenter = NSNotificationCenter.defaultCenter()) {
         self.chatInputBar = chatInputBar
         self.chatInputItems = chatInputItems
         self.chatInputBar.setAppearance(chatInputBarAppearance)
+        self.notificationCenter = notificationCenter
         super.init()
 
         self.chatInputBar.presenter = self
         self.chatInputBar.inputItems = self.chatInputItems
+        self.notificationCenter.addObserver(self,
+                                            selector: #selector(BasicChatInputBarPresenter.keyboardDidChangeFrame),
+                                            name: UIKeyboardDidChangeFrameNotification,
+                                            object: nil)
+    }
+
+    deinit {
+        self.notificationCenter.removeObserver(self)
     }
 
     private(set) var focusedItem: ChatInputItemProtocol? {
@@ -57,7 +70,9 @@ protocol ChatInputBarPresenter: class {
 
     private func updateFirstResponderWithInputItem(inputItem: ChatInputItemProtocol) {
         let responder = self.chatInputBar.textView
-        responder.inputView = inputItem.inputView
+        let inputView = inputItem.inputView
+        self.setHeight(forInputView: inputView)
+        responder.inputView = inputView
         if responder.isFirstResponder() {
             responder.reloadInputViews()
         } else {
@@ -74,6 +89,37 @@ protocol ChatInputBarPresenter: class {
             }
         }
         return firstKeyboardInputItem
+    }
+
+    private func setHeight(forInputView inputView: UIView?) {
+        guard let inputView = inputView else { return }
+
+        var mask = inputView.autoresizingMask
+        mask.remove(.FlexibleHeight)
+        inputView.autoresizingMask = mask
+
+        if let heightConstraint = inputView.constraints.filter({ $0.firstAttribute == .Height }).first {
+            heightConstraint.constant = self.inputViewHeight
+        } else {
+            inputView.frame.size.height = self.inputViewHeight
+        }
+    }
+
+    private var lastKnownKeyboardHeight: CGFloat?
+    private let defaultKeyboardHeight: CGFloat = 216
+    private var inputViewHeight: CGFloat {
+        let accessoryViewHeight = self.chatInputBar.textView.inputAccessoryView?.bounds.height ?? 0
+        if let lastKnownKeyboardHeight = self.lastKnownKeyboardHeight {
+            return lastKnownKeyboardHeight - accessoryViewHeight
+        } else {
+            return self.defaultKeyboardHeight
+        }
+    }
+
+    @objc
+    private func keyboardDidChangeFrame(notification: NSNotification) {
+        guard let value = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        self.lastKnownKeyboardHeight = value.CGRectValue().height
     }
 }
 
