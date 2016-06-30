@@ -32,11 +32,13 @@ public protocol SerialTaskQueueProtocol {
     func stop()
     func flushQueue()
     var isEmpty: Bool { get }
+    var isStopped: Bool { get }
 }
 
 public final class SerialTaskQueue: SerialTaskQueueProtocol {
-    private var isBusy = false
-    private var isStopped = true
+    public private(set) var isBusy = false
+    public private(set) var isStopped = true
+
     private var tasksQueue = [TaskClosure]()
 
     public init() {}
