@@ -77,12 +77,12 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
             self.baseStyle = baseStyle
     }
 
-    lazy var images: [String: UIImage] = {
+    lazy private var images: [ImageKey: UIImage] = {
         return [
-            "incoming_tail" : self.bubbleImages.incomingTail(),
-            "incoming_notail" : self.bubbleImages.incomingNoTail(),
-            "outgoing_tail" : self.bubbleImages.outgoingTail(),
-            "outgoing_notail" : self.bubbleImages.outgoingNoTail()
+            .template(isIncoming: true, showsTail: true) : self.bubbleImages.incomingTail(),
+            .template(isIncoming: true, showsTail: false) : self.bubbleImages.incomingNoTail(),
+            .template(isIncoming: false, showsTail: true) : self.bubbleImages.outgoingTail(),
+            .template(isIncoming: false, showsTail: false) : self.bubbleImages.outgoingNoTail()
         ]
     }()
 
@@ -107,12 +107,12 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
     }
 
     public func bubbleImage(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage {
-        let key = self.imageKey(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
+        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
 
         if let image = self.images[key] {
             return image
         } else {
-            let templateKey = self.templateKey(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
+            let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
             if let image = self.images[templateKey] {
                 let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming, status: viewModel.status, isSelected: isSelected)
                 self.images[key] = image
@@ -141,30 +141,33 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         return image.bma_tintWithColor(color)
     }
 
-    private func imageKey(isIncoming isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool) -> String {
-        let directionKey = isIncoming ? "incoming" : "outgoing"
-        let tailKey = showsTail ? "tail" : "notail"
-        let statusKey = self.statusKey(status)
-        let highlightedKey = isSelected ? "highlighted" : "normal"
-        let key = directionKey + "_" + tailKey + "_" + statusKey + "_" + highlightedKey
-        return key
-    }
+    private enum ImageKey: Hashable {
+        case template(isIncoming: Bool, showsTail: Bool)
+        case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool)
 
-    private func templateKey(isIncoming isIncoming: Bool, showsTail: Bool) -> String {
-        let directionKey = isIncoming ? "incoming" : "outgoing"
-        let tailKey = showsTail ? "tail" : "notail"
-        return directionKey + "_" + tailKey
-    }
-
-    private func statusKey(status: MessageViewModelStatus) -> String {
-        switch status {
-        case .Success:
-            return "ok"
-        case .Sending:
-            return "sending"
-        case .Failed:
-            return "failed"
+        var hashValue: Int {
+            switch self {
+            case let .template(isIncoming: isIncoming, showsTail: showsTail):
+                return self.calculateHash(withHashValues: [isIncoming.hashValue, showsTail.hashValue])
+            case let .normal(isIncoming: isIncoming, status: status, showsTail: showsTail, isSelected: isSelected):
+                return self.calculateHash(withHashValues: [isIncoming.hashValue, status.hashValue, showsTail.hashValue, isSelected.hashValue])
+            }
         }
+
+        private func calculateHash(withHashValues hashes: [Int]) -> Int {
+            return hashes.reduce(0, combine: { 31 &* $0 &+ $1.hashValue })
+        }
+    }
+}
+
+private func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
+    switch (lhs, rhs) {
+    case let (.template(lhsValues), .template(rhsValues)):
+        return lhsValues == rhsValues
+    case let (.normal(lhsValues), .normal(rhsValues)):
+        return lhsValues == rhsValues
+    default:
+        return false
     }
 }
 

@@ -162,7 +162,12 @@ class ChatViewControllerTests: XCTestCase {
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         controller.chatDataSource = fakeDataSource
-        self.fakeDidAppearAndLayout(controller: controller)
+
+        // See https://github.com/badoo/Chatto/issues/163
+        autoreleasepool {
+            self.fakeDidAppearAndLayout(controller: controller)
+        }
+
         updateQueue.onAllTasksFinished = {
             asyncExpectation.fulfill()
         }
@@ -176,7 +181,12 @@ class ChatViewControllerTests: XCTestCase {
         var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
         weak var weakController = controller
         controller.chatDataSource = FakeDataSource()
-        self.fakeDidAppearAndLayout(controller: controller)
+
+        // See https://github.com/badoo/Chatto/issues/163
+        autoreleasepool {
+            self.fakeDidAppearAndLayout(controller: controller)
+        }
+
         controller = nil
         XCTAssertNil(weakController)
     }

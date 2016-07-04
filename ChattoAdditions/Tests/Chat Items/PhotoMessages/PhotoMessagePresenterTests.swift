@@ -79,7 +79,7 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = PhotoMessageViewModel<PhotoMessageModel<MessageModel>>
 
     var didHandleTapOnFailIcon = false
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {
+    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
         self.didHandleTapOnFailIcon = true
     }
 

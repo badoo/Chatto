@@ -52,17 +52,8 @@ public struct ReadOnlyOrderedDictionary<T where T: UniqueIdentificable>: Collect
         return nil
     }
 
-    public func generate() -> AnyGenerator<T> {
-        var index = 0
-
-        return AnyGenerator(body: {
-            guard index < self.items.count else {
-                return nil
-            }
-
-            defer { index += 1 }
-            return self.items[index]
-        })
+    public func generate() -> IndexingGenerator<[T]> {
+        return self.items.generate()
     }
 
     public var startIndex: Int {

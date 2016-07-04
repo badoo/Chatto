@@ -89,7 +89,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {
+    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
 
     }
 
