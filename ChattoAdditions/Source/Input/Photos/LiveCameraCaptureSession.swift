@@ -25,12 +25,15 @@
 import Foundation
 import Photos
 
-class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
+protocol LiveCameraCaptureSessionProtocol {
+    var captureLayer: AVCaptureVideoPreviewLayer? { get }
+    var isInitialized: Bool { get }
+    var isCapturing: Bool { get }
+    func startCapturing(completion: () -> Void)
+    func stopCapturing(completion: () -> Void)
+}
 
-    private enum OperationType: String {
-        case start
-        case stop
-    }
+class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
 
     var isInitialized: Bool = false
 
@@ -40,6 +43,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
 
     deinit {
         var layer = self.captureLayer
+        layer?.removeFromSuperlayer()
         var session: AVCaptureSession? = self.isInitialized ? self.captureSession : nil
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             // Analogously to AVCaptureSession creation, dealloc can take very long, so let's do it out of the main thread
@@ -51,33 +55,31 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     func startCapturing(completion: () -> Void) {
         let operation = NSBlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
-            guard let strongSelf = self, strongOperation = operation else { return }
-            if !strongOperation.cancelled && !strongSelf.captureSession.running {
-                strongSelf.captureSession.startRunning()
-                dispatch_async(dispatch_get_main_queue(), completion)
-            }
+            guard let sSelf = self, strongOperation = operation where !strongOperation.cancelled else { return }
+            sSelf.addInputDevicesIfNeeded()
+            sSelf.captureSession.startRunning()
+            dispatch_async(dispatch_get_main_queue(), completion)
         }
-        self.queue.cancelOperation(forKey: OperationType.stop.rawValue)
-        self.queue.addOperation(operation, forKey: OperationType.start.rawValue)
+        self.queue.cancelAllOperations()
+        self.queue.addOperation(operation)
     }
 
     func stopCapturing(completion: () -> Void) {
         let operation = NSBlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
-            guard let strongSelf = self, strongOperation = operation else { return }
-            if !strongOperation.cancelled && strongSelf.captureSession.running {
-                strongSelf.captureSession.stopRunning()
-                dispatch_async(dispatch_get_main_queue(), completion)
-            }
+            guard let sSelf = self, strongOperation = operation where !strongOperation.cancelled else { return }
+            sSelf.captureSession.stopRunning()
+            sSelf.removeInputDevices()
+            dispatch_async(dispatch_get_main_queue(), completion)
         }
-        self.queue.cancelOperation(forKey: OperationType.start.rawValue)
-        self.queue.addOperation(operation, forKey: OperationType.stop.rawValue)
+        self.queue.cancelAllOperations()
+        self.queue.addOperation(operation)
     }
 
     private (set) var captureLayer: AVCaptureVideoPreviewLayer?
 
-    private lazy var queue: KeyedOperationQueue = {
-        let queue = KeyedOperationQueue()
+    private lazy var queue: NSOperationQueue = {
+        let queue = NSOperationQueue()
         queue.qualityOfService = .UserInitiated
         queue.maxConcurrentOperationCount = 1
         return queue
@@ -87,16 +89,29 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         assert(!NSThread.isMainThread(), "This can be very slow, make sure it happens in a background thread")
 
         let session = AVCaptureSession()
-        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        do {
-            let input = try AVCaptureDeviceInput(device: device)
-            session.addInput(input)
-        } catch {
-
-        }
         self.captureLayer = AVCaptureVideoPreviewLayer(session: session)
         self.captureLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
         self.isInitialized = true
         return session
     }()
+
+    private func addInputDevicesIfNeeded() {
+        assert(!NSThread.isMainThread(), "This can be very slow, make sure it happens in a background thread")
+        if self.captureSession.inputs?.count == 0 {
+            let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+            do {
+                let input = try AVCaptureDeviceInput(device: device)
+                self.captureSession.addInput(input)
+            } catch {
+
+            }
+        }
+    }
+
+    private func removeInputDevices() {
+        assert(!NSThread.isMainThread(), "This can be very slow, make sure it happens in a background thread")
+        self.captureSession.inputs?.forEach { (input) in
+            self.captureSession.removeInput(input as! AVCaptureInput)
+        }
+    }
 }

@@ -116,6 +116,8 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.presenter.captureSession = mockCaptureSession
 
         self.presenter.cameraAuthorizationStatus = .Authorized
+        self.presenter.cellWillBeShown(self.cell)
+
         self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
         self.presenter.notificationCenter.postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
 
@@ -169,7 +171,9 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.presenter.cellWillBeShown(self.cell)
         self.cell.didMoveToWindow()
 
-        self.cell.willMoveToWindow(UIWindow())
+        let window = UIWindow()
+        window.addSubview(self.cell)
+
         XCTAssertTrue(mockCaptureSession.isCapturing)
     }
 
