@@ -28,7 +28,7 @@ import XCTest
 class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, showsAvatar: false)
     let testImage = UIImage()
     override func setUp() {
         let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
@@ -81,6 +81,11 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     var didHandleTapOnFailIcon = false
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
         self.didHandleTapOnFailIcon = true
+    }
+    
+    var didHandleTapOnAvatar = false
+    func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
+        self.didHandleTapOnAvatar = true
     }
 
     var didHandleTapOnBubble = false
