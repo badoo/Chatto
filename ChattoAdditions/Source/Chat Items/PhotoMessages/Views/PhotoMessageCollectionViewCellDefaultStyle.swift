@@ -70,6 +70,18 @@ public class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionV
         public let progressIndicatorColorIncoming: UIColor
         public let progressIndicatorColorOutgoing: UIColor
         public let overlayColor: UIColor
+        public init(
+            placeholderIconTintIncoming: UIColor,
+            placeholderIconTintOutgoing: UIColor,
+            progressIndicatorColorIncoming: UIColor,
+            progressIndicatorColorOutgoing: UIColor,
+            overlayColor: UIColor) {
+                self.placeholderIconTintIncoming = placeholderIconTintIncoming
+                self.placeholderIconTintOutgoing = placeholderIconTintOutgoing
+                self.progressIndicatorColorIncoming = progressIndicatorColorIncoming
+                self.progressIndicatorColorOutgoing = progressIndicatorColorOutgoing
+                self.overlayColor = overlayColor
+        }
     }
 
     let bubbleMasks: BubbleMasks
