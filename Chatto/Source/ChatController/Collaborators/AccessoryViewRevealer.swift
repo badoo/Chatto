@@ -27,6 +27,7 @@ import Foundation
 public protocol AccessoryViewRevealable {
     func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)
     func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
+    var allowAccessoryViewRevealing: Bool { get }
 }
 
 public struct AccessoryViewRevealerConfig {
@@ -111,7 +112,8 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         })
 
         for cell in self.collectionView.visibleCells() {
-            if let cell = cell as? AccessoryViewRevealable {
+            if let cell = cell as? AccessoryViewRevealable
+            where cell.allowAccessoryViewRevealing {
                 cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }
