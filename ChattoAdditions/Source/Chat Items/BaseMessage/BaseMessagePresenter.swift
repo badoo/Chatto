@@ -35,6 +35,7 @@ public protocol ViewModelBuilderProtocol {
 public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT)
+    func userDidTapOnAvatar(viewModel viewModel: ViewModelT)
     func userDidTapOnBubble(viewModel viewModel: ViewModelT)
     func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT)
     func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT)
@@ -114,6 +115,10 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleLongPressEnded()
             }
+            cell.onAvatarTapped = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellAvatarTapped()
+            }
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellFailedButtonTapped()
@@ -174,6 +179,10 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
 
     public func onCellBubbleLongPressEnded() {
         self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
+    }
+    
+    public func onCellAvatarTapped() {
+        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
     }
 
     public func onCellFailedButtonTapped() {

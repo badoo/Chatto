@@ -41,9 +41,12 @@ class BaseMessageHandler {
         self.messageSender.sendMessage(viewModel.messageModel)
     }
 
+    func userDidTapOnAvatar(viewModel viewModel: MessageViewModelProtocol) {
+        print("userDidTapOnAvatar")
+    }
+    
     func userDidTapOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
         print("userDidTapOnBubble")
-
     }
 
     func userDidBeginLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
