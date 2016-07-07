@@ -35,4 +35,12 @@ class KeyedOperationQueue: NSOperationQueue {
         objc_sync_exit(self)
         super.addOperation(operation)
     }
+
+    func cancelOperation(forKey key: String) {
+        objc_sync_enter(self)
+        if let existingOperation = self.keyedOperations.objectForKey(key) as? NSOperation {
+            existingOperation.cancel()
+        }
+        objc_sync_exit(self)
+    }
 }

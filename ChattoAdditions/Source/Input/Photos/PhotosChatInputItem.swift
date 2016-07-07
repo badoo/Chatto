@@ -60,9 +60,6 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     public var selected = false {
         didSet {
             self.internalTabView.selected = self.selected
-            if self.selected != oldValue {
-                self.photosInputView.reload()
-            }
         }
     }
 
@@ -91,7 +88,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     }
 }
 
-// MARK: - PhotosChatInputCollectionViewWrapperDelegate
+// MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
     func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)

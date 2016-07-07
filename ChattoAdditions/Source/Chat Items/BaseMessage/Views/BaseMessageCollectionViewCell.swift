@@ -183,7 +183,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         self.removeAccessoryView()
     }
 
-    private lazy var failedButton: UIButton = {
+    public lazy var failedButton: UIButton = {
         let button = UIButton(type: .Custom)
         button.addTarget(self, action: #selector(BaseMessageCollectionViewCell.failedButtonTapped), forControlEvents: .TouchUpInside)
         return button

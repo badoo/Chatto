@@ -62,7 +62,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
     public var selected: Bool = false {
         didSet {
-            self.updateViews()
+            if self.selected != oldValue {
+                self.updateViews()
+            }
         }
     }
 
@@ -131,25 +133,43 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private func updateViews() {
         if self.viewContext == .Sizing { return }
         if isUpdating { return }
+        guard let style = self.style else { return }
+
+        self.updateTextView()
+        let bubbleImage = style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        let borderImage = style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage}
+        if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
+    }
+
+    private func updateTextView() {
         guard let style = self.style, viewModel = self.textMessageViewModel else { return }
+
         let font = style.textFont(viewModel: viewModel, isSelected: self.selected)
         let textColor = style.textColor(viewModel: viewModel, isSelected: self.selected)
-        let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
-        let bubbleImage = self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
-        let borderImage = self.style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
-        let needsToUpdateText = self.textView.text != viewModel.text || self.textView.textColor != textColor || self.textView.font != font
-        if needsToUpdateText {
+
+        var needsToUpdateText = false
+
+        if self.textView.font != font {
             self.textView.font = font
+            needsToUpdateText = true
+        }
+
+        if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
                 NSForegroundColorAttributeName: textColor,
                 NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
             ]
+            needsToUpdateText = true
+        }
+
+        if needsToUpdateText || self.textView != viewModel.text {
             self.textView.text = viewModel.text
         }
+
+        let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
-        if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage}
-        if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
     }
 
     private func bubbleImage() -> UIImage {
@@ -205,17 +225,11 @@ private final class TextBubbleLayoutModel {
         self.layoutContext = layoutContext
     }
 
-    class LayoutContext: Equatable, Hashable {
+    struct LayoutContext: Equatable, Hashable {
         let text: String
         let font: UIFont
         let textInsets: UIEdgeInsets
         let preferredMaxLayoutWidth: CGFloat
-        init (text: String, font: UIFont, textInsets: UIEdgeInsets, preferredMaxLayoutWidth: CGFloat) {
-            self.font = font
-            self.text = text
-            self.textInsets = textInsets
-            self.preferredMaxLayoutWidth = preferredMaxLayoutWidth
-        }
 
         var hashValue: Int {
             get {
@@ -264,12 +278,10 @@ private final class TextBubbleLayoutModel {
 }
 
 private func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
-    return lhs.text == rhs.text &&
-        lhs.textInsets == rhs.textInsets &&
-        lhs.font == rhs.font &&
-        lhs.preferredMaxLayoutWidth == rhs.preferredMaxLayoutWidth
+    let lhsValues = (lhs.text, lhs.textInsets, lhs.font, lhs.preferredMaxLayoutWidth)
+    let rhsValues = (rhs.text, rhs.textInsets, rhs.font, rhs.preferredMaxLayoutWidth)
+    return lhsValues == rhsValues
 }
-
 
 /// UITextView with hacks to avoid selection, loupe, define...
 private final class ChatMessageTextView: UITextView {
