@@ -26,6 +26,13 @@ import Foundation
 
 public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var text: String { get }
+    func willBeShown() // Optional
+    func wasHidden() // Optional
+}
+
+public extension TextMessageViewModelProtocol {
+    func willBeShown() {}
+    func wasHidden() {}
 }
 
 public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
@@ -38,6 +45,14 @@ public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: 
     public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
         self.textMessage = textMessage
         self.messageViewModel = messageViewModel
+    }
+    
+    public func willBeShown() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
+    }
+    
+    public func wasHidden() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 }
 

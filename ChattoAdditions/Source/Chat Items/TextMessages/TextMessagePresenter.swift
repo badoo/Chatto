@@ -64,6 +64,28 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         let identifier = self.messageViewModel.isIncoming ? "text-message-incoming" : "text-message-outcoming"
         return collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
     }
+    
+    public override func createViewModel() -> ViewModelBuilderT.ViewModelT {
+        let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
+        let updateClosure = { [weak self] (old: Any, new: Any) -> () in
+            dispatch_async(dispatch_get_main_queue(), {
+                self?.updateCurrentCell()
+            })
+        }
+        viewModel.avatarImage.observe(self, closure: updateClosure)
+        return viewModel
+    }
+    
+    public var textCell: TextMessageCollectionViewCell? {
+        if let cell = self.cell {
+            if let textCell = cell as? TextMessageCollectionViewCell {
+                return textCell
+            } else {
+                assert(false, "Invalid cell was given to presenter!")
+            }
+        }
+        return nil
+    }
 
     public override func configureCell(cell: BaseMessageCollectionViewCell<TextBubbleView>, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         guard let cell = cell as? TextMessageCollectionViewCell else {
@@ -76,6 +98,20 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
             cell.textMessageViewModel = self.messageViewModel
             cell.textMessageStyle = self.textCellStyle
             additionalConfiguration?()
+        }
+    }
+    
+    public override func cellWillBeShown() {
+        self.messageViewModel.willBeShown()
+    }
+    
+    public override func cellWasHidden() {
+        self.messageViewModel.wasHidden()
+    }
+    
+    public func updateCurrentCell() {
+        if let cell = self.textCell, decorationAttributes = self.decorationAttributes {
+            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .Appearing, additionalConfiguration: nil)
         }
     }
 
