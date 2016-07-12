@@ -204,11 +204,16 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
             if self.cameraAuthorizationStatus != .Authorized {
                 self.delegate?.inputViewDidRequestCameraPermission(self)
             } else {
-                self.cameraPicker.requestImage { image in
+                self.liveCameraPresenter.cameraPickerWillAppear()
+                self.cameraPicker.presentCameraPicker(onImageTaken: { [weak self] (image) in
+                    guard let sSelf = self else { return }
+
                     if let image = image {
-                        self.delegate?.inputView(self, didSelectImage: image)
+                        sSelf.delegate?.inputView(sSelf, didSelectImage: image)
                     }
-                }
+                }, onCameraPickerDismissed: { [weak self] in
+                    self?.liveCameraPresenter.cameraPickerDidDisappear()
+                })
             }
         } else {
             if self.photoLibraryAuthorizationStatus != .Authorized {

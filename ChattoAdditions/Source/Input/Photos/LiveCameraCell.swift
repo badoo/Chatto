@@ -27,14 +27,6 @@ import Foundation
 import UIKit
 import Chatto
 
-protocol LiveCameraCaptureSessionProtocol {
-    var captureLayer: AVCaptureVideoPreviewLayer? { get }
-    var isInitialized: Bool { get }
-    var isCapturing: Bool { get }
-    func startCapturing(completion: () -> Void)
-    func stopCapturing(completion: () -> Void)
-}
-
 class LiveCameraCell: UICollectionViewCell {
 
     private struct Constants {
@@ -71,22 +63,19 @@ class LiveCameraCell: UICollectionViewCell {
                     captureLayer.removeAnimationForKey(animationKey)
                     captureLayer.addAnimation(animation, forKey: animationKey)
                 }
+                self.setNeedsLayout()
             }
         }
     }
 
     typealias CellCallback = (cell: LiveCameraCell) -> Void
 
-    var onWillBeAddedToWindow: CellCallback?
-    override func willMoveToWindow(newWindow: UIWindow?) {
-        if newWindow != nil {
-            self.onWillBeAddedToWindow?(cell: self)
-        }
-    }
-
+    var onWasAddedToWindow: CellCallback?
     var onWasRemovedFromWindow: CellCallback?
     override func didMoveToWindow() {
-        if self.window == nil {
+        if let _ = self.window {
+            self.onWasAddedToWindow?(cell: self)
+        } else {
             self.onWasRemovedFromWindow?(cell: self)
         }
     }
