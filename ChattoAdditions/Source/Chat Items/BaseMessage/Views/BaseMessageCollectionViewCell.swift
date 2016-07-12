@@ -266,12 +266,12 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         }
     }
 
+    public var allowAccessoryViewRevealing: Bool = true
 
     public func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
         return self.accessoryTimestampView.intrinsicContentSize().width + layoutConstants.horizontalTimestampMargin
     }
-
 
     public func revealAccessoryView(withOffset offset: CGFloat, animated: Bool) {
         self.offsetToRevealAccessoryView = offset
