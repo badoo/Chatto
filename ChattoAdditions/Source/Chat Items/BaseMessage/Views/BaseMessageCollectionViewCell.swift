@@ -266,6 +266,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         }
     }
 
+    public var allowAccessoryViewRevealing: Bool = true
 
     public func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
