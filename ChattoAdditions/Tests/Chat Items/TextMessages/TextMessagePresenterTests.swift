@@ -92,9 +92,9 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
 
     }
-    
+
     func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
-        
+
     }
 
     func userDidTapOnBubble(viewModel viewModel: ViewModelT) {

@@ -30,10 +30,11 @@ class DemoTextMessageHandler: BaseMessageInteractionHandlerProtocol {
     init (baseHandler: BaseMessageHandler) {
         self.baseHandler = baseHandler
     }
+
     func userDidTapOnFailIcon(viewModel viewModel: DemoTextMessageViewModel, failIconView: UIView) {
         self.baseHandler.userDidTapOnFailIcon(viewModel: viewModel)
     }
-    
+
     func userDidTapOnAvatar(viewModel viewModel: DemoTextMessageViewModel) {
         self.baseHandler.userDidTapOnAvatar(viewModel: viewModel)
     }

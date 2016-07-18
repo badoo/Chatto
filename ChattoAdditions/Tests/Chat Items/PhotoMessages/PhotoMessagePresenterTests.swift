@@ -82,7 +82,7 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
         self.didHandleTapOnFailIcon = true
     }
-    
+
     var didHandleTapOnAvatar = false
     func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
         self.didHandleTapOnAvatar = true
