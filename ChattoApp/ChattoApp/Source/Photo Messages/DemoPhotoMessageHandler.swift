@@ -34,7 +34,7 @@ class DemoPhotoMessageHandler: BaseMessageInteractionHandlerProtocol {
     func userDidTapOnFailIcon(viewModel viewModel: DemoPhotoMessageViewModel, failIconView: UIView) {
         self.baseHandler.userDidTapOnFailIcon(viewModel: viewModel)
     }
-    
+
     func userDidTapOnAvatar(viewModel viewModel: DemoPhotoMessageViewModel) {
         self.baseHandler.userDidTapOnAvatar(viewModel: viewModel)
     }
