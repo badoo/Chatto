@@ -75,7 +75,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
 
             decoratedChatItems.append(DecoratedChatItem(
                 chatItem: chatItem,
-                decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin, showsTail: showsTail))
+                decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin, showsTail: showsTail, canShowAvatar: showsTail))
             )
             decoratedChatItems.appendContentsOf(additionalItems)
         }
