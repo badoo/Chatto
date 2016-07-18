@@ -180,7 +180,7 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
     public func onCellBubbleLongPressEnded() {
         self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
     }
-    
+
     public func onCellAvatarTapped() {
         self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
     }

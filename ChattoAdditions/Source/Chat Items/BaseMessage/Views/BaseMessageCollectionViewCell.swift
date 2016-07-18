@@ -151,7 +151,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         longpressGestureRecognizer.delegate = self
         return longpressGestureRecognizer
     }()
-    
+
     public private(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.avatarTapped(_:)))
         return tapGestureRecognizer
@@ -323,7 +323,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
     func avatarTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         self.onAvatarTapped?(cell: self)
     }
-    
+
     public var onBubbleTapped: ((cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     func bubbleTapped(tapGestureRecognizer: UITapGestureRecognizer) {
