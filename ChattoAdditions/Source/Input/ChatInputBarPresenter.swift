@@ -25,7 +25,7 @@
 import UIKit
 
 @objc public class ChatInputBarPresenter: NSObject {
-    let chatInputView: ChatInputBar
+    public let chatInputView: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
 
     public init(chatInputView: ChatInputBar, chatInputItems: [ChatInputItemProtocol]) {
@@ -92,7 +92,7 @@ extension ChatInputBarPresenter: ChatInputBarDelegate {
         }
     }
 
-    func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol) {
+    public func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol) {
         guard item.presentationMode != .None else { return }
         guard item !== self.focusedItem else { return }
 
