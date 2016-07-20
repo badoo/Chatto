@@ -110,7 +110,6 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
-    private var topConstraint: NSLayoutConstraint!
     private var heightConstraint: NSLayoutConstraint!
     private func addInputViews() {
         self.inputContainer = UIView(frame: CGRect.zero)
@@ -127,8 +126,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
         let inputView = self.createChatInputView()
         self.inputContainer.addSubview(inputView)
         heightConstraint = NSLayoutConstraint(item: self.inputContainer, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 0)
-        topConstraint = NSLayoutConstraint(item: self.inputContainer, attribute: .Top, relatedBy: .Equal, toItem: inputView, attribute: .Top, multiplier: 1, constant: 0)
-        self.inputContainer.addConstraint(topConstraint)
+        self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Top, relatedBy: .Equal, toItem: inputView, attribute: .Top, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Leading, relatedBy: .Equal, toItem: inputView, attribute: .Leading, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Bottom, relatedBy: .Equal, toItem: inputView, attribute: .Bottom, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .Trailing, relatedBy: .Equal, toItem: inputView, attribute: .Trailing, multiplier: 1, constant: 0))
@@ -158,8 +156,7 @@ public class ChatViewController: UIViewController, UICollectionViewDataSource, U
     }
 
     public func hideInputContainer(hide: Bool) {
-        topConstraint.active = !hide
-        heightConstraint.active = hide
+        self.heightConstraint.active = hide
         self.inputContainer.setNeedsUpdateConstraints()
     }
 
