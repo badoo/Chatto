@@ -40,19 +40,21 @@ public protocol ChatInputItemProtocol: AnyObject {
 }
 
 extension ChatInputItemProtocol {
-    func selected() -> Bool {
-        return self.inputButton.selected
+    var selected: Bool {
+        get {
+            return self.inputButton.selected
+        }
+        set {
+            self.inputButton.selected = self.selected
+        }
     }
 
-    func setSelected(selected: Bool) {
-        self.inputButton.selected = selected
-    }
-
-    func enabled() -> Bool {
-        return self.inputButton.enabled
-    }
-
-    func setEnabled(enabled: Bool) {
-        self.inputButton.enabled = enabled
+    var enabled: Bool {
+        get {
+            return self.inputButton.enabled
+        }
+        set {
+            self.inputButton.enabled = self.enabled
+        }
     }
 }

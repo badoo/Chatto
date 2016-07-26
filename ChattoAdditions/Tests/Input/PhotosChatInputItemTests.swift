@@ -71,11 +71,11 @@ class PhotosChatInputItemTests: XCTestCase {
     }
 
     func testThat_GivenItemIsSelected_WhenItemIsSelected_ItDoesntReloadInputView() {
-        self.inputItem.setSelected(true)
+        self.inputItem.selected = true
         let mockPhotosInputView = MockPhotosInputView()
         self.inputItem.photosInputView = mockPhotosInputView
 
-        self.inputItem.setSelected(true)
+        self.inputItem.selected = true
 
         XCTAssertFalse(mockPhotosInputView.reloaded)
     }

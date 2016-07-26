@@ -47,7 +47,7 @@ class ChatInputItemView: UIView {
 
     weak var delegate: ChatInputItemViewDelegate?
     func handleTap() {
-        if self.inputItem.enabled() {
+        if self.inputItem.enabled {
             self.delegate?.inputItemViewTapped(self)
         }
     }

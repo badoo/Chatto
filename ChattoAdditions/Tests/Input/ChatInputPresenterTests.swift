@@ -66,7 +66,7 @@ class ChatInputPresenterTests: XCTestCase {
     func testThat_WhenItemReceivesFocus_ItBecomesSelected() {
         let item = MockInputItem()
         self.presenter.onDidReceiveFocusOnItem(item)
-        XCTAssertTrue(item.selected())
+        XCTAssertTrue(item.selected)
     }
 
     func testThat_WhenAnotherItemReceivesFocus_PreviousItemBecomesDeselected() {
@@ -75,7 +75,7 @@ class ChatInputPresenterTests: XCTestCase {
 
         let anotherItem = MockInputItem()
         self.presenter.onDidReceiveFocusOnItem(anotherItem)
-        XCTAssertFalse(item.selected())
+        XCTAssertFalse(item.selected)
     }
 
     func testThat_GivenItemShowsSendButton_WhenItemReceivesFocus_PresenterShowsSendButton() {
