@@ -42,13 +42,14 @@ public class TextChatInputItem {
         return ChatInputButtonAppearance(images: images, size: nil)
     }
 
-    lazy private var internalTabView: ChatInputButton = {
+    lazy private var internalInputButton: ChatInputButton = {
         return ChatInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
+    // Move to protocol extension
     public var selected = false {
         didSet {
-            self.internalTabView.selected = self.selected
+            self.internalInputButton.selected = self.selected
         }
     }
 }
@@ -67,8 +68,8 @@ extension TextChatInputItem : ChatInputItemProtocol {
         return nil
     }
 
-    public var tabView: UIView {
-        return self.internalTabView
+    public var inputButton: ChatInputButton {
+        return self.internalInputButton
     }
 
     public func handleInput(input: AnyObject) {

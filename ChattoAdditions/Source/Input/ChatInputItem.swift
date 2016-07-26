@@ -31,7 +31,7 @@ public enum ChatInputItemPresentationMode: UInt {
 }
 
 public protocol ChatInputItemProtocol: AnyObject {
-    var tabView: UIView { get }
+    var inputButton: ChatInputButton { get }
     var inputView: UIView? { get }
     var presentationMode: ChatInputItemPresentationMode { get }
     var showsSendButton: Bool { get }

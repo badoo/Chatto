@@ -47,7 +47,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return ChatInputButtonAppearance(images: images, size: nil)
     }
 
-    lazy private var internalTabView: UIButton = {
+    lazy private var internalInputButton: ChatInputButton = {
         return ChatInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
@@ -59,7 +59,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
 
     public var selected = false {
         didSet {
-            self.internalTabView.selected = self.selected
+            self.internalInputButton.selected = self.selected
         }
     }
 
@@ -77,8 +77,8 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return self.photosInputView as? UIView
     }
 
-    public var tabView: UIView {
-        return self.internalTabView
+    public var inputButton: ChatInputButton {
+        return self.internalInputButton
     }
 
     public func handleInput(input: AnyObject) {
