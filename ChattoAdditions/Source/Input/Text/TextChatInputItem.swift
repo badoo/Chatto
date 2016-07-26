@@ -45,13 +45,6 @@ public class TextChatInputItem {
     lazy private var internalInputButton: ChatInputButton = {
         return ChatInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
-
-    // Move to protocol extension
-    public var selected = false {
-        didSet {
-            self.internalInputButton.selected = self.selected
-        }
-    }
 }
 
 // MARK: - ChatInputItemProtocol

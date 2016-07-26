@@ -35,7 +35,24 @@ public protocol ChatInputItemProtocol: AnyObject {
     var inputView: UIView? { get }
     var presentationMode: ChatInputItemPresentationMode { get }
     var showsSendButton: Bool { get }
-    var selected: Bool { get set }
 
     func handleInput(input: AnyObject)
+}
+
+extension ChatInputItemProtocol {
+    func selected() -> Bool {
+        return self.inputButton.selected
+    }
+
+    func setSelected(selected: Bool) {
+        self.inputButton.selected = selected
+    }
+
+    func enabled() -> Bool {
+        return self.inputButton.enabled
+    }
+
+    func setEnabled(enabled: Bool) {
+        self.inputButton.enabled = enabled
+    }
 }

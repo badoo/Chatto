@@ -57,12 +57,6 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return photosInputView
     }()
 
-    public var selected = false {
-        didSet {
-            self.internalInputButton.selected = self.selected
-        }
-    }
-
     // MARK: - ChatInputItemProtocol
 
     public var presentationMode: ChatInputItemPresentationMode {

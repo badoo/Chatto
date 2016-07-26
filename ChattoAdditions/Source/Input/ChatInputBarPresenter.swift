@@ -60,10 +60,10 @@ protocol ChatInputBarPresenter: class {
 
     private(set) var focusedItem: ChatInputItemProtocol? {
         willSet {
-            self.focusedItem?.selected = false
+            self.focusedItem?.setSelected(false)
         }
         didSet {
-            self.focusedItem?.selected = true
+            self.focusedItem?.setSelected(true)
         }
     }
 
