@@ -28,22 +28,22 @@ public class TextChatInputItem {
     typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?
 
-    let buttonAppearance: TabInputButtonAppearance
-    public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
-        self.buttonAppearance = tabInputButtonAppearance
+    let buttonAppearance: ChatInputButtonAppearance
+    public init(buttonAppearance: ChatInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+        self.buttonAppearance = buttonAppearance
     }
 
-    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+    public class func createDefaultButtonAppearance() -> ChatInputButtonAppearance {
         let images: [UIControlState: UIImage] = [
             .Normal: UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
             .Selected: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
             .Highlighted: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
         ]
-        return TabInputButtonAppearance(images: images, size: nil)
+        return ChatInputButtonAppearance(images: images, size: nil)
     }
 
-    lazy private var internalTabView: TabInputButton = {
-        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
+    lazy private var internalTabView: ChatInputButton = {
+        return ChatInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     public var selected = false {
