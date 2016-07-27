@@ -24,7 +24,7 @@
 
 import Foundation
 
-public struct TabInputButtonAppearance {
+public struct ChatInputButtonAppearance {
     public var images: [UIControlState: UIImage]
     public var size: CGSize?
 
@@ -34,11 +34,11 @@ public struct TabInputButtonAppearance {
     }
 }
 
-public class TabInputButton: UIButton {
+public class ChatInputButton: UIButton {
 
-    static public func makeInputButton(withAppearance appearance: TabInputButtonAppearance) -> TabInputButton {
+    static public func makeInputButton(withAppearance appearance: ChatInputButtonAppearance) -> ChatInputButton {
         let images = appearance.images
-        let button = TabInputButton(type: .Custom)
+        let button = ChatInputButton(type: .Custom)
         button.exclusiveTouch = true
         images.forEach { (state, image) in
             button.setImage(image, forState: state)

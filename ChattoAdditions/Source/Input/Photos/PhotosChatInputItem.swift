@@ -32,23 +32,23 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
 
-    let buttonAppearance: TabInputButtonAppearance
-    public init(presentingController: UIViewController?, tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+    let buttonAppearance: ChatInputButtonAppearance
+    public init(presentingController: UIViewController?, buttonAppearance: ChatInputButtonAppearance = Class.createDefaultButtonAppearance()) {
         self.presentingController = presentingController
-        self.buttonAppearance = tabInputButtonAppearance
+        self.buttonAppearance = buttonAppearance
     }
 
-    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+    public class func createDefaultButtonAppearance() -> ChatInputButtonAppearance {
         let images: [UIControlState: UIImage] = [
             .Normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
             .Selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
             .Highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
         ]
-        return TabInputButtonAppearance(images: images, size: nil)
+        return ChatInputButtonAppearance(images: images, size: nil)
     }
 
-    lazy private var internalTabView: UIButton = {
-        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
+    lazy private var internalInputButton: ChatInputButton = {
+        return ChatInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
@@ -56,12 +56,6 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         photosInputView.delegate = self
         return photosInputView
     }()
-
-    public var selected = false {
-        didSet {
-            self.internalTabView.selected = self.selected
-        }
-    }
 
     // MARK: - ChatInputItemProtocol
 
@@ -77,8 +71,8 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return self.photosInputView as? UIView
     }
 
-    public var tabView: UIView {
-        return self.internalTabView
+    public var inputButton: ChatInputButton {
+        return self.internalInputButton
     }
 
     public func handleInput(input: AnyObject) {

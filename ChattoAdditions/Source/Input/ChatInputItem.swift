@@ -31,11 +31,30 @@ public enum ChatInputItemPresentationMode: UInt {
 }
 
 public protocol ChatInputItemProtocol: AnyObject {
-    var tabView: UIView { get }
+    var inputButton: ChatInputButton { get }
     var inputView: UIView? { get }
     var presentationMode: ChatInputItemPresentationMode { get }
     var showsSendButton: Bool { get }
-    var selected: Bool { get set }
 
     func handleInput(input: AnyObject)
+}
+
+extension ChatInputItemProtocol {
+    public var selected: Bool {
+        get {
+            return self.inputButton.selected
+        }
+        set {
+            self.inputButton.selected = self.selected
+        }
+    }
+
+    public var enabled: Bool {
+        get {
+            return self.inputButton.enabled
+        }
+        set {
+            self.inputButton.enabled = self.enabled
+        }
+    }
 }

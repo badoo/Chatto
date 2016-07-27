@@ -47,18 +47,20 @@ class ChatInputItemView: UIView {
 
     weak var delegate: ChatInputItemViewDelegate?
     func handleTap() {
-        self.delegate?.inputItemViewTapped(self)
+        if self.inputItem.enabled {
+            self.delegate?.inputItemViewTapped(self)
+        }
     }
 
     var inputItem: ChatInputItemProtocol! {
         willSet {
             if self.inputItem != nil {
-                self.inputItem.tabView.removeFromSuperview()
+                self.inputItem.inputButton.removeFromSuperview()
             }
         }
         didSet {
             if self.inputItem != nil {
-                self.addSubview(self.inputItem.tabView)
+                self.addSubview(self.inputItem.inputButton)
                 self.setNeedsLayout()
             }
         }
@@ -69,10 +71,10 @@ class ChatInputItemView: UIView {
 extension ChatInputItemView {
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.inputItem.tabView.frame = self.bounds
+        self.inputItem.inputButton.frame = self.bounds
     }
 
     override func intrinsicContentSize() -> CGSize {
-        return self.inputItem.tabView.intrinsicContentSize()
+        return self.inputItem.inputButton.intrinsicContentSize()
     }
 }
