@@ -40,7 +40,7 @@ public protocol ChatInputItemProtocol: AnyObject {
 }
 
 extension ChatInputItemProtocol {
-    var selected: Bool {
+    public var selected: Bool {
         get {
             return self.inputButton.selected
         }
@@ -49,7 +49,7 @@ extension ChatInputItemProtocol {
         }
     }
 
-    var enabled: Bool {
+    public var enabled: Bool {
         get {
             return self.inputButton.enabled
         }
