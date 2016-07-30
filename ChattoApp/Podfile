@@ -5,3 +5,16 @@ target 'ChattoApp' do
 	pod 'Chatto', :path => ".."
 	pod 'ChattoAdditions', :path => ".."
 end
+
+# workaround for https://bugs.swift.org/browse/SR-2223
+post_install do |installer_representation|
+  installer_representation.pods_project.targets.each do |target|
+    if target.name == 'ChattoAdditions'
+      target.build_configurations.each do |config|
+				if config.name == 'Release'
+					config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
+				end
+      end
+    end
+  end
+end
