@@ -29,16 +29,31 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 1. Make sure `use_frameworks!` is added to your `Podfile`.
 
 2. Include the following in your `Podfile`:
-    ```
-    pod 'Chatto', '= 2.0.0'
-    pod 'ChattoAdditions', '= 2.0.0' # if you want to use the cells or the input component
-    ```
+```
+pod 'Chatto', '= 2.0.0'
+pod 'ChattoAdditions', '= 2.0.0' # if you want to use the cells or the input component
+```
 If you like to live on the bleeding edge, you can use the `dev` branch with:
-    ```
-    pod 'Chatto', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
-	pod 'ChattoAdditions', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
-    ```
-3. Run `pod install`
+```
+pod 'Chatto', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
+pod 'ChattoAdditions', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
+```
+3. ChattoAdditions won't compile with -O optimization due to https://bugs.swift.org/browse/SR-2223. Add the following post_install phase to your Podfile
+```
+# workaround for https://bugs.swift.org/browse/SR-2223
+post_install do |installer_representation|
+  installer_representation.pods_project.targets.each do |target|
+    if target.name == 'ChattoAdditions'
+      target.build_configurations.each do |config|
+        if config.name == 'Release'
+          config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
+        end
+      end
+    end
+  end
+end
+```
+4. Run `pod install`
 
 ### Carthage
 
