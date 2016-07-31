@@ -63,9 +63,7 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
     public override func createViewModel() -> ViewModelBuilderT.ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
         let updateClosure = { [weak self] (old: Any, new: Any) -> () in
-            dispatch_async(dispatch_get_main_queue(), {
-                self?.updateCurrentCell()
-            })
+            self?.updateCurrentCell()
         }
         viewModel.avatarImage.observe(self, closure: updateClosure)
         viewModel.image.observe(self, closure: updateClosure)
