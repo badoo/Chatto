@@ -26,13 +26,6 @@ import Foundation
 
 public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var text: String { get }
-    func willBeShown() // Optional
-    func wasHidden() // Optional
-}
-
-public extension TextMessageViewModelProtocol {
-    func willBeShown() {}
-    func wasHidden() {}
 }
 
 public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
