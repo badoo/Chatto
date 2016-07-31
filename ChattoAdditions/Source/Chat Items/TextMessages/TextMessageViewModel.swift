@@ -39,6 +39,14 @@ public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: 
         self.textMessage = textMessage
         self.messageViewModel = messageViewModel
     }
+    
+    public func willBeShown() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
+    }
+    
+    public func wasHidden() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
+    }
 }
 
 public class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {

@@ -42,13 +42,6 @@ public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol
     var transferStatus: Observable<TransferStatus> { get set }
     var image: Observable<UIImage?> { get set }
     var imageSize: CGSize { get }
-    func willBeShown() // Optional
-    func wasHidden() // Optional
-}
-
-public extension PhotoMessageViewModelProtocol {
-    func willBeShown() {}
-    func wasHidden() {}
 }
 
 public class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {

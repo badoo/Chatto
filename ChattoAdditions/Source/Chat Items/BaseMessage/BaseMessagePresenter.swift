@@ -97,9 +97,7 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
     public func configureCell(cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.showsTail
-            if !decorationAttributes.canShowAvatar {
-                self.messageViewModel.avatarImage.value = nil
-            }
+            cell.avatarView.hidden = !decorationAttributes.canShowAvatar
             cell.bubbleView.userInteractionEnabled = true // just in case something went wrong while showing UIMenuController
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel

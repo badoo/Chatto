@@ -54,6 +54,8 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
 
 public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
     var messageViewModel: MessageViewModelProtocol { get }
+    func willBeShown()
+    func wasHidden()
 }
 
 extension DecoratedMessageViewModelProtocol {
