@@ -61,7 +61,6 @@
 		C3C0CC601BFE496A0052747C /* ReusableXibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC161BFE496A0052747C /* ReusableXibView.swift */; };
 		C3C0CC611BFE496A0052747C /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC181BFE496A0052747C /* Text.xcassets */; };
 		C3C0CC621BFE496A0052747C /* TextChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */; };
-		C3C0CC631BFE496A0052747C /* KeyedOperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC1A1BFE496A0052747C /* KeyedOperationQueue.swift */; };
 		C3C0CC641BFE496A0052747C /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC1B1BFE496A0052747C /* Observable.swift */; };
 		C3C0CC661BFE496A0052747C /* CircleIconView.h in Headers */ = {isa = PBXBuildFile; fileRef = C3C0CC1F1BFE496A0052747C /* CircleIconView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C3C0CC671BFE496A0052747C /* CircleIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC201BFE496A0052747C /* CircleIconView.m */; };
@@ -151,7 +150,6 @@
 		C3C0CC161BFE496A0052747C /* ReusableXibView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableXibView.swift; sourceTree = "<group>"; };
 		C3C0CC181BFE496A0052747C /* Text.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Text.xcassets; sourceTree = "<group>"; };
 		C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChatInputItem.swift; sourceTree = "<group>"; };
-		C3C0CC1A1BFE496A0052747C /* KeyedOperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedOperationQueue.swift; sourceTree = "<group>"; };
 		C3C0CC1B1BFE496A0052747C /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		C3C0CC1F1BFE496A0052747C /* CircleIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleIconView.h; sourceTree = "<group>"; };
 		C3C0CC201BFE496A0052747C /* CircleIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleIconView.m; sourceTree = "<group>"; };
@@ -241,7 +239,6 @@
 				C3C0CC021BFE496A0052747C /* Info.plist */,
 				C38658B11BFE55620012F181 /* AnimationUtils.swift */,
 				C3A646FE1BFE8D40001BC98B /* Utils.swift */,
-				C3C0CC1A1BFE496A0052747C /* KeyedOperationQueue.swift */,
 				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
 				C3C0CBD51BFE496A0052747C /* Chat Items */,
 				C3C0CC031BFE496A0052747C /* Input */,
@@ -601,7 +598,6 @@
 				C3C0CC351BFE496A0052747C /* PhotoMessagePresenter.swift in Sources */,
 				C3C0CC341BFE496A0052747C /* PhotoMessageModel.swift in Sources */,
 				C3C0CC5E1BFE496A0052747C /* PhotosInputView.swift in Sources */,
-				C3C0CC631BFE496A0052747C /* KeyedOperationQueue.swift in Sources */,
 				C3C0CC431BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift in Sources */,
 				C3C0CC521BFE496A0052747C /* ChatInputBarPresenter.swift in Sources */,
 				C3C0CC401BFE496A0052747C /* TextBubbleView.swift in Sources */,
@@ -703,6 +699,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -744,6 +741,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

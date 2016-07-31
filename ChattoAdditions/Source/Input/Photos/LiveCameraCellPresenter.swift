@@ -36,6 +36,7 @@ final class LiveCameraCellPresenter {
     func cellWillBeShown(cell: LiveCameraCell) {
         self.cell = cell
         self.configureCell()
+        self.startCapturing()
     }
 
     func cellWasHidden(cell: LiveCameraCell) {
@@ -51,23 +52,23 @@ final class LiveCameraCellPresenter {
 
         cameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
 
-        self.startCapturing()
-
         if self.captureSession.isCapturing {
             cameraCell.captureLayer = self.captureSession.captureLayer
         } else {
             cameraCell.captureLayer = nil
         }
 
-        cameraCell.onWillBeAddedToWindow = { [weak self] (cell) in
-            if self?.cell === cell {
-                self?.configureCell()
+        cameraCell.onWasAddedToWindow = { [weak self] (cell) in
+            guard let sSelf = self where sSelf.cell === cell else { return }
+            if !sSelf.cameraPickerIsVisible {
+                sSelf.startCapturing()
             }
         }
 
         cameraCell.onWasRemovedFromWindow = { [weak self] (cell) in
-            if self?.cell === cell {
-                self?.stopCapturing()
+            guard let sSelf = self where sSelf.cell === cell else { return }
+            if !sSelf.cameraPickerIsVisible {
+                sSelf.stopCapturing()
             }
         }
     }
@@ -102,11 +103,22 @@ final class LiveCameraCellPresenter {
         }
     }
 
+    var cameraPickerIsVisible = false
+    func cameraPickerWillAppear() {
+        self.cameraPickerIsVisible = true
+        self.stopCapturing()
+    }
+
+    func cameraPickerDidDisappear() {
+        self.cameraPickerIsVisible = false
+        self.startCapturing()
+    }
+
     func startCapturing() {
-        guard self.isCaptureAvailable else { return }
+        guard self.isCaptureAvailable, let _ = self.cell else { return }
 
         self.captureSession.startCapturing() { [weak self] in
-            self?.configureCell()
+            self?.cell?.captureLayer = self?.captureSession.captureLayer
         }
     }
 

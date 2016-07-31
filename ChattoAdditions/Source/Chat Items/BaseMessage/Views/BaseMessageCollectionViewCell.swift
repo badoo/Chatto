@@ -127,6 +127,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
     public private(set) var avatarView: UIImageView!
     func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
+        avatarImageView.userInteractionEnabled = true
         return avatarImageView
     }
 
@@ -151,8 +152,14 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         return longpressGestureRecognizer
     }()
 
+    public private(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.avatarTapped(_:)))
+        return tapGestureRecognizer
+    }()
+
     private func commonInit() {
         self.avatarView = self.createAvatarView()
+        self.avatarView.addGestureRecognizer(self.avatarTapGestureRecognizer)
         self.bubbleView = self.createBubbleView()
         self.bubbleView.addGestureRecognizer(self.tapGestureRecognizer)
         self.bubbleView.addGestureRecognizer(self.longPressGestureRecognizer)
@@ -266,6 +273,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         }
     }
 
+    public var allowAccessoryViewRevealing: Bool = true
 
     public func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -308,6 +316,12 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
     @objc
     func failedButtonTapped() {
         self.onFailedButtonTapped?(cell: self)
+    }
+
+    public var onAvatarTapped: ((cell: BaseMessageCollectionViewCell) -> Void)?
+    @objc
+    func avatarTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        self.onAvatarTapped?(cell: self)
     }
 
     public var onBubbleTapped: ((cell: BaseMessageCollectionViewCell) -> Void)?

@@ -35,6 +35,7 @@ public protocol ViewModelBuilderProtocol {
 public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
     func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView)
+    func userDidTapOnAvatar(viewModel viewModel: ViewModelT)
     func userDidTapOnBubble(viewModel viewModel: ViewModelT)
     func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT)
     func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT)
@@ -96,6 +97,9 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
     public func configureCell(cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.showsTail
+            if !decorationAttributes.canShowAvatar {
+                self.messageViewModel.avatarImage.value = nil
+            }
             cell.bubbleView.userInteractionEnabled = true // just in case something went wrong while showing UIMenuController
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
@@ -110,6 +114,10 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
             cell.onBubbleLongPressEnded = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleLongPressEnded()
+            }
+            cell.onAvatarTapped = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellAvatarTapped()
             }
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
@@ -171,6 +179,10 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
 
     public func onCellBubbleLongPressEnded() {
         self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
+    }
+
+    public func onCellAvatarTapped() {
+        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
     }
 
     public func onCellFailedButtonTapped(failedButtonView: UIView) {
