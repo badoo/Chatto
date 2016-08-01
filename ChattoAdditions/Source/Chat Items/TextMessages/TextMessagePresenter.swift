@@ -99,14 +99,6 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         }
     }
     
-    public override func cellWillBeShown() {
-        self.messageViewModel.willBeShown()
-    }
-    
-    public override func cellWasHidden() {
-        self.messageViewModel.wasHidden()
-    }
-    
     public func updateCurrentCell() {
         if let cell = self.textCell, decorationAttributes = self.decorationAttributes {
             self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .Appearing, additionalConfiguration: nil)

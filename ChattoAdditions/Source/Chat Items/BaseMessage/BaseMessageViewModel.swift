@@ -50,12 +50,17 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { set get }
+    func willBeShown() // Optional
+    func wasHidden() // Optional
+}
+
+extension MessageViewModelProtocol {
+    public func willBeShown() {}
+    public func wasHidden() {}
 }
 
 public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
     var messageViewModel: MessageViewModelProtocol { get }
-    func willBeShown()
-    func wasHidden()
 }
 
 extension DecoratedMessageViewModelProtocol {

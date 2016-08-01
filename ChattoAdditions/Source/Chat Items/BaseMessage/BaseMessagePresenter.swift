@@ -138,6 +138,15 @@ public class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHan
         return self.sizingCell.canCalculateSizeInBackground
     }
 
+
+    public override func cellWillBeShown() {
+        self.messageViewModel.willBeShown()
+    }
+
+    public override func cellWasHidden() {
+        self.messageViewModel.wasHidden()
+    }
+
     public override func shouldShowMenu() -> Bool {
         guard self.canShowMenu() else { return false }
         guard let cell = self.cell else {
