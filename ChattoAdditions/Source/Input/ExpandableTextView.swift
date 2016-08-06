@@ -33,7 +33,7 @@ public class ExpandableTextView: UITextView {
         self.commonInit()
     }
 
-    public init(frame: CGRect, textContainer: NSTextContainer?) {
+    override public init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.commonInit()
     }
