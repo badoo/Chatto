@@ -33,6 +33,11 @@ public class ExpandableTextView: UITextView {
         self.commonInit()
     }
 
+    override public init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        self.commonInit()
+    }
+
     override public var contentSize: CGSize {
         didSet {
             self.invalidateIntrinsicContentSize()
