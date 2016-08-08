@@ -6,15 +6,17 @@ target 'ChattoApp' do
 	pod 'ChattoAdditions', :path => ".."
 end
 
-# workaround for https://bugs.swift.org/browse/SR-2223
+
 post_install do |installer_representation|
   installer_representation.pods_project.targets.each do |target|
-    if target.name == 'ChattoAdditions'
-      target.build_configurations.each do |config|
-				if config.name == 'Release'
-					config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
-				end
+    target.build_configurations.each do |config|
+      if target.name == 'ChattoAdditions'&& config.name == 'Release'
+        # workaround for https://bugs.swift.org/browse/SR-2223
+				config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
       end
+      
+      # Set Swift 2.3 version (Xcode 8)
+      config.build_settings['SWIFT_VERSION'] = '2.3'
     end
   end
 end
