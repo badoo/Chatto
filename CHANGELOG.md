@@ -1,4 +1,4 @@
-### 2.0 (xx, 2016)
+### 2.0 (Aug 8, 2016)
 * Renames `ChatViewController` to `BaseChatViewController`. [#31](https://github.com/badoo/Chatto/pull/31) - [@diegosanchezr](https://github.com/diegosanchezr)
 * Makes presenters easier to reuse by relaxing generic constraints [#35](https://github.com/badoo/Chatto/pull/35) - [@diegosanchezr](https://github.com/diegosanchezr)
 * Fixes issues when the dataSource updates with a different instance for a previously existing chatItem. [#36](https://github.com/badoo/Chatto/pull/36) - [@diegosanchezr](https://github.com/diegosanchezr)
