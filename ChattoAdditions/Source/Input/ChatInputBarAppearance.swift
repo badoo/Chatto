@@ -27,10 +27,10 @@ public struct ChatInputBarAppearance {
         public var font = UIFont.systemFontOfSize(16)
         public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         public var title = ""
-        public var titleColors: [UIControlState: UIColor] = [
-            .Disabled: UIColor.bma_color(rgb: 0x9AA3AB),
-            .Normal: UIColor.bma_color(rgb: 0x007AFF),
-            .Highlighted: UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
+        public var titleColors: [UIControlStateWrapper: UIColor] = [
+            UIControlStateWrapper(state: .Disabled): UIColor.bma_color(rgb: 0x9AA3AB),
+            UIControlStateWrapper(state: .Normal): UIColor.bma_color(rgb: 0x007AFF),
+            UIControlStateWrapper(state: .Highlighted): UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
         ]
     }
 
@@ -57,8 +57,20 @@ public struct ChatInputBarAppearance {
 }
 
 
-extension UIControlState: Hashable {
-    public var hashValue: Int {
-        return Int(self.rawValue)
+// Workaround for SR-2223
+public struct UIControlStateWrapper: Hashable {
+
+    public let controlState: UIControlState
+
+    public init(state: UIControlState) {
+        self.controlState = state
     }
+
+    public var hashValue: Int {
+        return Int(self.controlState.rawValue)
+    }
+}
+
+public func == (lhs: UIControlStateWrapper, rhs: UIControlStateWrapper) -> Bool {
+    return lhs.controlState == rhs.controlState
 }

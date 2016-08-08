@@ -25,10 +25,10 @@
 import Foundation
 
 public struct TabInputButtonAppearance {
-    public var images: [UIControlState: UIImage]
+    public var images: [UIControlStateWrapper: UIImage]
     public var size: CGSize?
 
-    public init(images: [UIControlState: UIImage], size: CGSize?) {
+    public init(images: [UIControlStateWrapper: UIImage], size: CGSize?) {
         self.images = images
         self.size = size
     }
@@ -41,7 +41,7 @@ public class TabInputButton: UIButton {
         let button = TabInputButton(type: .Custom)
         button.exclusiveTouch = true
         images.forEach { (state, image) in
-            button.setImage(image, forState: state)
+            button.setImage(image, forState: state.controlState)
         }
         button.size = appearance.size
         return button

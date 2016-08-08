@@ -34,10 +34,10 @@ public class TextChatInputItem {
     }
 
     public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
-        let images: [UIControlState: UIImage] = [
-            .Normal: UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
-            .Selected: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
-            .Highlighted: UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
+        let images: [UIControlStateWrapper: UIImage] = [
+            UIControlStateWrapper(state: .Normal): UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Selected): UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Highlighted): UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
         ]
         return TabInputButtonAppearance(images: images, size: nil)
     }

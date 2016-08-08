@@ -39,10 +39,10 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
-        let images: [UIControlState: UIImage] = [
-            .Normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            .Selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            .Highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        let images: [UIControlStateWrapper: UIImage] = [
+            UIControlStateWrapper(state: .Normal): UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Selected): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Highlighted): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
         ]
         return TabInputButtonAppearance(images: images, size: nil)
     }
