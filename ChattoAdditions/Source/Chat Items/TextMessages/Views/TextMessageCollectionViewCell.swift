@@ -40,7 +40,7 @@ public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<
 
     // MARK: Subclassing (view creation)
 
-    override func createBubbleView() -> TextBubbleView {
+    public override func createBubbleView() -> TextBubbleView {
         return TextBubbleView()
     }
 

@@ -28,8 +28,10 @@ import Chatto
 public struct ChatItemDecorationAttributes: ChatItemDecorationAttributesProtocol {
     public let bottomMargin: CGFloat
     public let showsTail: Bool
-    public init(bottomMargin: CGFloat, showsTail: Bool) {
+    public let canShowAvatar: Bool
+    public init(bottomMargin: CGFloat, showsTail: Bool, canShowAvatar: Bool) {
         self.bottomMargin = bottomMargin
         self.showsTail = showsTail
+        self.canShowAvatar = canShowAvatar
     }
 }

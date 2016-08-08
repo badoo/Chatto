@@ -39,7 +39,7 @@ import UIKit
         }
 
         let bundle = NSBundle(forClass: self.dynamicType)
-        if let loadedView = bundle.loadNibNamed(self.dynamicType.nibName(), owner: nil, options: nil).first as! UIView? {
+        if let loadedView = bundle.loadNibNamed(self.dynamicType.nibName(), owner: nil, options: nil)?.first as? UIView {
             loadedView.frame = frame
             loadedView.autoresizingMask = autoresizingMask
             loadedView.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints

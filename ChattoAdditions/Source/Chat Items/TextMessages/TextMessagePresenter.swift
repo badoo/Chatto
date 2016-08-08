@@ -26,7 +26,6 @@ import UIKit
 
 public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: TextMessageModelProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT>
@@ -65,8 +64,28 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         let identifier = self.messageViewModel.isIncoming ? "text-message-incoming" : "text-message-outcoming"
         return collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
     }
+    
+    public override func createViewModel() -> ViewModelBuilderT.ViewModelT {
+        let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
+        let updateClosure = { [weak self] (old: Any, new: Any) -> () in
+            self?.updateCurrentCell()
+        }
+        viewModel.avatarImage.observe(self, closure: updateClosure)
+        return viewModel
+    }
+    
+    public var textCell: TextMessageCollectionViewCell? {
+        if let cell = self.cell {
+            if let textCell = cell as? TextMessageCollectionViewCell {
+                return textCell
+            } else {
+                assert(false, "Invalid cell was given to presenter!")
+            }
+        }
+        return nil
+    }
 
-    public override func configureCell(cell: BaseMessageCollectionViewCell<TextBubbleView>, decorationAttributes: ChatItemDecorationAttributes,  animated: Bool, additionalConfiguration: (() -> Void)?) {
+    public override func configureCell(cell: BaseMessageCollectionViewCell<TextBubbleView>, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         guard let cell = cell as? TextMessageCollectionViewCell else {
             assert(false, "Invalid cell received")
             return
@@ -79,17 +98,23 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
             additionalConfiguration?()
         }
     }
+    
+    public func updateCurrentCell() {
+        if let cell = self.textCell, decorationAttributes = self.decorationAttributes {
+            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .Appearing, additionalConfiguration: nil)
+        }
+    }
 
     public override func canShowMenu() -> Bool {
         return true
     }
 
     public override func canPerformMenuControllerAction(action: Selector) -> Bool {
-        return action == "copy:"
+        return action == #selector(NSObject.copy(_:))
     }
 
     public override func performMenuControllerAction(action: Selector) {
-        if action == "copy:" {
+        if action == #selector(NSObject.copy(_:)) {
             UIPasteboard.generalPasteboard().string = self.messageViewModel.text
         } else {
             assert(false, "Unexpected action")

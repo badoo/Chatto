@@ -51,7 +51,7 @@ public extension CGSize {
 
 public extension CGSize {
     func bma_round() -> CGSize {
-        return CGSize(width: ceil(self.width * scale) * (1.0 / scale), height: ceil(self.height * scale) * (1.0 / scale) )
+        return CGSize(width: self.width.bma_round(), height: self.height.bma_round())
     }
 
     func bma_rect(inContainer containerRect: CGRect, xAlignament: HorizontalAlignment, yAlignment: VerticalAlignment, dx: CGFloat, dy: CGFloat) -> CGRect {
@@ -100,7 +100,7 @@ public extension CGRect {
     }
 
     func bma_round() -> CGRect {
-        let origin = CGPoint(x: ceil(self.origin.x * scale) * (1.0 / scale), y: ceil(self.origin.y * scale) * (1.0 / scale))
+        let origin = CGPoint(x: self.origin.x.bma_round(), y: self.origin.y.bma_round())
         return CGRect(origin: origin, size: self.size.bma_round())
     }
 }
@@ -109,6 +109,12 @@ public extension CGRect {
 public extension CGPoint {
     func bma_offsetBy(dx dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
+    }
+}
+
+public extension CGFloat {
+    func bma_round() -> CGFloat {
+        return ceil(self * scale) * (1.0 / scale)
     }
 }
 
@@ -147,11 +153,11 @@ public extension UIImage {
     public func bma_tintWithColor(color: UIColor) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, self.scale)
-        let context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()!
         color.setFill()
         CGContextFillRect(context, rect)
         self.drawInRect(rect, blendMode: .DestinationIn, alpha: 1)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return image.resizableImageWithCapInsets(self.capInsets)
     }
@@ -159,16 +165,16 @@ public extension UIImage {
     public func bma_blendWithColor(color: UIColor) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.mainScreen().scale)
-        let context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()!
         CGContextTranslateCTM(context, 0, rect.height)
         CGContextScaleCTM(context, 1.0, -1.0)
         CGContextSetBlendMode(context, .Normal)
-        CGContextDrawImage(context, rect, self.CGImage)
-        CGContextClipToMask(context, rect, self.CGImage)
+        CGContextDrawImage(context, rect, self.CGImage!)
+        CGContextClipToMask(context, rect, self.CGImage!)
         color.setFill()
         CGContextAddRect(context, rect)
         CGContextDrawPath(context, .Fill)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return image.resizableImageWithCapInsets(self.capInsets)
     }
@@ -178,7 +184,7 @@ public extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()
         UIRectFill(rect)
-        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return image
     }

@@ -33,6 +33,11 @@ public class ExpandableTextView: UITextView {
         self.commonInit()
     }
 
+    override public init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        self.commonInit()
+    }
+
     override public var contentSize: CGSize {
         didSet {
             self.invalidateIntrinsicContentSize()
@@ -45,7 +50,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func commonInit() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textDidChange", name: UITextViewTextDidChangeNotification, object: self)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextViewTextDidChangeNotification, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
     }
@@ -93,11 +98,21 @@ public class ExpandableTextView: UITextView {
     func textDidChange() {
         self.updatePlaceholderVisibility()
         self.scrollToCaret()
+
+        if #available(iOS 9, *) {
+            // Bugfix:
+            // 1. Open keyboard
+            // 2. Paste very long text (so it snaps to nav bar and shows scroll indicators)
+            // 3. Select all and cut
+            // 4. Paste again: Texview it's smaller than it should be
+            self.scrollEnabled = false
+            self.scrollEnabled = true
+        }
     }
 
     private func scrollToCaret() {
-        if selectedTextRange != nil {
-            var rect = caretRectForPosition(self.selectedTextRange!.end)
+        if let textRange = self.selectedTextRange {
+            var rect = caretRectForPosition(textRange.end)
             rect = CGRect(origin: rect.origin, size: CGSize(width: rect.width, height: rect.height + textContainerInset.bottom))
 
             self.scrollRectToVisible(rect, animated: false)
@@ -105,7 +120,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func updatePlaceholderVisibility() {
-        if text == "" {
+        if self.text == "" {
             self.showPlaceholder()
         } else {
             self.hidePlaceholder()
@@ -113,7 +128,7 @@ public class ExpandableTextView: UITextView {
     }
 
     private func showPlaceholder() {
-        self.addSubview(placeholder)
+        self.addSubview(self.placeholder)
     }
 
     private func hidePlaceholder() {
@@ -125,8 +140,8 @@ public class ExpandableTextView: UITextView {
         self.placeholder.editable = false
         self.placeholder.selectable = false
         self.placeholder.userInteractionEnabled = false
-        self.placeholder.textAlignment = textAlignment
-        self.placeholder.textContainerInset = textContainerInset
+        self.placeholder.textAlignment = self.textAlignment
+        self.placeholder.textContainerInset = self.textContainerInset
         self.placeholder.backgroundColor = UIColor.clearColor()
     }
 }

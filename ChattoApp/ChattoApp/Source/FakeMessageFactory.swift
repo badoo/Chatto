@@ -33,9 +33,9 @@ extension Array {
     }
 }
 
-func createTextMessageModel(uid: String, text: String, isIncoming: Bool) -> TextMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel.chatItemType)
-    let textMessageModel = TextMessageModel(messageModel: messageModel, text: text)
+func createTextMessageModel(uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
+    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
+    let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
     return textMessageModel
 }
 
@@ -46,9 +46,9 @@ func createMessageModel(uid: String, isIncoming: Bool, type: String) -> MessageM
     return messageModel
 }
 
-func createPhotoMessageModel(uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> PhotoMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel.chatItemType)
-    let photoMessageModel = PhotoMessageModel(messageModel: messageModel, imageSize:size, image: image)
+func createPhotoMessageModel(uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
+    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
+    let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize:size, image: image)
     return photoMessageModel
 }
 
@@ -70,7 +70,7 @@ class FakeMessageFactory {
         }
     }
 
-    class func createTextMessageModel(uid: String, isIncoming: Bool) -> TextMessageModel {
+    class func createTextMessageModel(uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
@@ -78,7 +78,7 @@ class FakeMessageFactory {
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
-    class func createPhotoMessageModel(uid: String, isIncoming: Bool) -> PhotoMessageModel {
+    class func createPhotoMessageModel(uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
         var imageSize = CGSize.zero
         switch arc4random_uniform(100) % 3 {
         case 0:

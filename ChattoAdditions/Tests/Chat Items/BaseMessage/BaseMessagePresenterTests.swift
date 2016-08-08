@@ -29,14 +29,14 @@ import Chatto
 class BaseMessagePresenterTests: XCTestCase {
 
     // BaseMessagePresenter is generic, let's use the photo one for instance
-    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder, PhotoMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
+    var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, canShowAvatar: false)
     var interactionHandler: PhotoMessageTestHandler!
     override func setUp() {
-        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder()
+        let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()
-        let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
+        let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
         let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "photo-message", isIncoming: true, date: NSDate(), status: .Success)
         let photoMessageModel = PhotoMessageModel(messageModel: messageModel, imageSize: CGSize(width: 30, height: 30), image: UIImage())
         self.interactionHandler = PhotoMessageTestHandler()
@@ -57,10 +57,17 @@ class BaseMessagePresenterTests: XCTestCase {
         XCTAssertTrue(self.interactionHandler.didHandleTapOnBubble)
     }
 
-    func testThat_WhenCellIsLongPressedOnBubble_ThenInteractionHandlerHandlesEvent() {
+    func testThat_WhenCellIsBeginLongPressOnBubble_ThenInteractionHandlerHandlesEvent() {
         let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
-        cell.bubbleLongPressed()
-        XCTAssertTrue(self.interactionHandler.didHandleLongPressOnBubble)
+        cell.onBubbleLongPressBegan?(cell: cell)
+        XCTAssertTrue(self.interactionHandler.didHandleBeginLongPressOnBubble)
+    }
+
+    func testThat_WhenCellIsEndLongPressOnBubble_ThenInteractionHandlerHandlesEvent() {
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
+        self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
+        cell.onBubbleLongPressEnded?(cell: cell)
+        XCTAssertTrue(self.interactionHandler.didHandleEndLongPressOnBubble)
     }
 }

@@ -24,20 +24,31 @@
 
 import Foundation
 
-@objc public class PhotosChatInputItem: NSObject {
+public class PhotosChatInputItem: ChatInputItemProtocol {
+    typealias Class = PhotosChatInputItem
+
     public var photoInputHandler: ((UIImage) -> Void)?
+    public var cameraPermissionHandler: (() -> Void)?
+    public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
-    public init(presentingController: UIViewController?) {
+
+    let buttonAppearance: TabInputButtonAppearance
+    public init(presentingController: UIViewController?, tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
         self.presentingController = presentingController
+        self.buttonAppearance = tabInputButtonAppearance
+    }
+
+    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+        let images: [UIControlState: UIImage] = [
+            .Normal: UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            .Selected: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            .Highlighted: UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        ]
+        return TabInputButtonAppearance(images: images, size: nil)
     }
 
     lazy private var internalTabView: UIButton = {
-        var button = UIButton(type: .Custom)
-        button.exclusiveTouch = true
-        button.setImage(UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Selected)
-        return button
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
@@ -49,15 +60,11 @@ import Foundation
     public var selected = false {
         didSet {
             self.internalTabView.selected = self.selected
-            if self.selected != oldValue {
-                self.photosInputView.reload()
-            }
         }
     }
-}
 
-// MARK: - ChatInputItemProtocol
-extension PhotosChatInputItem : ChatInputItemProtocol {
+    // MARK: - ChatInputItemProtocol
+
     public var presentationMode: ChatInputItemPresentationMode {
         return .CustomView
     }
@@ -81,9 +88,17 @@ extension PhotosChatInputItem : ChatInputItemProtocol {
     }
 }
 
-// MARK: - PhotosChatInputCollectionViewWrapperDelegate
+// MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
     func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)
+    }
+
+    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) {
+        self.cameraPermissionHandler?()
+    }
+
+    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) {
+        self.photosPermissionHandler?()
     }
 }

@@ -28,25 +28,39 @@ public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol 
     var text: String { get }
 }
 
-public class TextMessageViewModel: TextMessageViewModelProtocol {
-    public let text: String
+public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
+    public var text: String {
+        return self.textMessage.text
+    }
+    public let textMessage: TextMessageModelT
     public let messageViewModel: MessageViewModelProtocol
 
-    public init(text: String, messageViewModel: MessageViewModelProtocol) {
-        self.text = text
+    public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
+        self.textMessage = textMessage
         self.messageViewModel = messageViewModel
+    }
+    
+    public func willBeShown() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
+    }
+    
+    public func wasHidden() {
+        // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 }
 
-public class TextMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
+public class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(model: TextMessageModel) -> TextMessageViewModel {
-        let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
-        let textMessageViewModel = TextMessageViewModel(text: model.text, messageViewModel: messageViewModel)
+    public func createViewModel(textMessage: TextMessageModelT) -> TextMessageViewModel<TextMessageModelT> {
+        let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
+        let textMessageViewModel = TextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
         return textMessageViewModel
+    }
 
+    public func canCreateViewModel(fromModel model: Any) -> Bool {
+        return model is TextMessageModelT
     }
 }
