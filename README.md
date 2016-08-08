@@ -38,23 +38,7 @@ If you like living on the bleeding edge, you can use the `dev` branch with:
   pod 'Chatto', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
   pod 'ChattoAdditions', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
   ```
-3. ChattoAdditions won't compile with -O optimization due to https://bugs.swift.org/browse/SR-2223. Add the following post_install phase to your Podfile:
-
-  ```
-  # workaround for https://bugs.swift.org/browse/SR-2223
-  post_install do |installer_representation|
-    installer_representation.pods_project.targets.each do |target|
-      if target.name == 'ChattoAdditions'
-        target.build_configurations.each do |config|
-          if config.name == 'Release'
-            config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Owholemodule'
-          end
-        end
-      end
-    end
-  end
-```
-4. Run `pod install`
+3. Run `pod install`
 
 ### Carthage
 
