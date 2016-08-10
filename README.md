@@ -30,8 +30,8 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 
 2. Include the following in your `Podfile`:
   ```
-  pod 'Chatto', '= 2.0.0'
-  pod 'ChattoAdditions', '= 2.0.0' # if you want to use the cells or the input component
+  pod 'Chatto', '= 2.0.1'
+  pod 'ChattoAdditions', '= 2.0.1' # if you want to use the cells or the input component
   ```
 If you like living on the bleeding edge, you can use the `dev` branch with:
   ```
