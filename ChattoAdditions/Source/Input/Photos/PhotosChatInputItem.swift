@@ -36,7 +36,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     let inputViewAppearance: PhotosInputViewAppearance
     public init(presentingController: UIViewController?,
                 tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance(),
-                inputViewAppearance: PhotosInputViewAppearance = Class.createDefaultCameraAppearance()) {
+                inputViewAppearance: PhotosInputViewAppearance = Class.createDefaultInputViewAppearance()) {
         self.presentingController = presentingController
         self.buttonAppearance = tabInputButtonAppearance
         self.inputViewAppearance = inputViewAppearance
@@ -51,7 +51,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    public class func createDefaultCameraAppearance() -> PhotosInputViewAppearance {
+    public class func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
         let defaultColor = UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1)
         return PhotosInputViewAppearance(color: defaultColor)
     }
