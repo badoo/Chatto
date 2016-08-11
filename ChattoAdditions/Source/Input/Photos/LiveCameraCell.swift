@@ -37,6 +37,12 @@ class LiveCameraCell: UICollectionViewCell {
 
     private var iconImageView: UIImageView!
 
+    override var backgroundColor: UIColor? {
+        didSet {
+            self.contentView.backgroundColor = backgroundColor
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
