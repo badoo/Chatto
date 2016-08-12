@@ -26,6 +26,10 @@ import UIKit
 import Photos
 import Chatto
 
+public struct PhotosInputViewAppearance {
+    public var liveCameraCellAppearence: LiveCameraCellAppearance
+}
+
 protocol PhotosInputViewProtocol {
     weak var delegate: PhotosInputViewDelegate? { get set }
     weak var presentingController: UIViewController? { get }
@@ -70,9 +74,11 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     weak var presentingController: UIViewController?
-    init(presentingController: UIViewController?) {
+    var appearance: PhotosInputViewAppearance?
+    init(presentingController: UIViewController?, appearance: PhotosInputViewAppearance) {
         super.init(frame: CGRect.zero)
         self.presentingController = presentingController
+        self.appearance = appearance
         self.commonInit()
     }
 
@@ -189,6 +195,9 @@ extension PhotosInputView: UICollectionViewDataSource {
         var cell: UICollectionViewCell
         if indexPath.item == Constants.liveCameraItemIndex {
             let liveCameraCell = collectionView.dequeueReusableCellWithReuseIdentifier("LiveCameraCell", forIndexPath: indexPath) as! LiveCameraCell
+            if let liveCameraCellAppearence = self.appearance?.liveCameraCellAppearence {
+                liveCameraCell.appearance = liveCameraCellAppearence
+            }
             self.liveCameraPresenter.cameraAuthorizationStatus = self.cameraAuthorizationStatus
             cell = liveCameraCell
         } else {
