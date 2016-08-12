@@ -29,6 +29,9 @@ import Chatto
 
 public struct LiveCameraCellAppearance {
     public var backgroundColor: UIColor
+    public init(backgroundColor: UIColor) {
+        self.backgroundColor = backgroundColor
+    }
 }
 
 class LiveCameraCell: UICollectionViewCell {
