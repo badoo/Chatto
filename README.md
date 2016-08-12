@@ -33,10 +33,10 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
   pod 'Chatto', '= 2.0.1'
   pod 'ChattoAdditions', '= 2.0.1' # if you want to use the cells or the input component
   ```
-If you like living on the bleeding edge, you can use the `dev` branch with:
+If you like living on the bleeding edge, you can use the `master` branch with:
   ```
-  pod 'Chatto', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
-  pod 'ChattoAdditions', :git => 'https://github.com/badoo/Chatto', :branch => 'dev'
+  pod 'Chatto', :git => 'https://github.com/badoo/Chatto', :branch => 'master'
+  pod 'ChattoAdditions', :git => 'https://github.com/badoo/Chatto', :branch => 'master'
   ```
 3. Run `pod install`
 
