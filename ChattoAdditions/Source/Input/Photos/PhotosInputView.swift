@@ -28,6 +28,9 @@ import Chatto
 
 public struct PhotosInputViewAppearance {
     public var liveCameraCellAppearence: LiveCameraCellAppearance
+    public init(liveCameraCellAppearence: LiveCameraCellAppearance) {
+        self.liveCameraCellAppearence = liveCameraCellAppearence
+    }
 }
 
 protocol PhotosInputViewProtocol {
