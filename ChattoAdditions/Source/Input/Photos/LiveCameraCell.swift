@@ -27,6 +27,10 @@ import Foundation
 import UIKit
 import Chatto
 
+public struct LiveCameraCellAppearance {
+    public var backgroundColor: UIColor
+}
+
 class LiveCameraCell: UICollectionViewCell {
 
     private struct Constants {
@@ -37,9 +41,9 @@ class LiveCameraCell: UICollectionViewCell {
 
     private var iconImageView: UIImageView!
 
-    override var backgroundColor: UIColor? {
+    var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance(backgroundColor: Constants.backgroundColor) {
         didSet {
-            self.contentView.backgroundColor = backgroundColor
+            self.contentView.backgroundColor = self.appearance.backgroundColor
         }
     }
 
@@ -55,7 +59,7 @@ class LiveCameraCell: UICollectionViewCell {
 
     private func commonInit() {
         self.configureIcon()
-        self.contentView.backgroundColor = Constants.backgroundColor
+        self.contentView.backgroundColor = self.appearance.backgroundColor
     }
 
     var captureLayer: CALayer? {
