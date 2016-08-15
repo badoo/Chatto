@@ -24,24 +24,45 @@
 
 import Foundation
 
-@objc public class PhotosChatInputItem: NSObject {
+public class PhotosChatInputItem: ChatInputItemProtocol {
+    typealias Class = PhotosChatInputItem
+
     public var photoInputHandler: ((UIImage) -> Void)?
+    public var cameraPermissionHandler: (() -> Void)?
+    public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
-    public init(presentingController: UIViewController?) {
+
+    let buttonAppearance: TabInputButtonAppearance
+    let inputViewAppearance: PhotosInputViewAppearance
+    public init(presentingController: UIViewController?,
+                tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance(),
+                inputViewAppearance: PhotosInputViewAppearance = Class.createDefaultInputViewAppearance()) {
         self.presentingController = presentingController
+        self.buttonAppearance = tabInputButtonAppearance
+        self.inputViewAppearance = inputViewAppearance
+    }
+
+    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+        let images: [UIControlStateWrapper: UIImage] = [
+            UIControlStateWrapper(state: .Normal): UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Selected): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Highlighted): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+        ]
+        return TabInputButtonAppearance(images: images, size: nil)
+    }
+
+    public class func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
+        let defaultColor = UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1)
+        let liveCameraCellAppearence = LiveCameraCellAppearance(backgroundColor: defaultColor)
+        return PhotosInputViewAppearance(liveCameraCellAppearence: liveCameraCellAppearence)
     }
 
     lazy private var internalTabView: UIButton = {
-        var button = UIButton(type: .Custom)
-        button.exclusiveTouch = true
-        button.setImage(UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Selected)
-        return button
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
-        let photosInputView = PhotosInputView(presentingController: self.presentingController)
+        let photosInputView = PhotosInputView(presentingController: self.presentingController, appearance: self.inputViewAppearance)
         photosInputView.delegate = self
         return photosInputView
     }()
@@ -49,15 +70,11 @@ import Foundation
     public var selected = false {
         didSet {
             self.internalTabView.selected = self.selected
-            if self.selected != oldValue {
-                self.photosInputView.reload()
-            }
         }
     }
-}
 
-// MARK: - ChatInputItemProtocol
-extension PhotosChatInputItem : ChatInputItemProtocol {
+    // MARK: - ChatInputItemProtocol
+
     public var presentationMode: ChatInputItemPresentationMode {
         return .CustomView
     }
@@ -81,9 +98,17 @@ extension PhotosChatInputItem : ChatInputItemProtocol {
     }
 }
 
-// MARK: - PhotosChatInputCollectionViewWrapperDelegate
+// MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
     func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)
+    }
+
+    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) {
+        self.cameraPermissionHandler?()
+    }
+
+    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) {
+        self.photosPermissionHandler?()
     }
 }

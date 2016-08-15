@@ -28,7 +28,7 @@ import XCTest
 class ObservableTests: XCTestCase {
 
     func testThatObserverClosureIsExecuted() {
-        var subject = Observable<Int>(0)
+        let subject = Observable<Int>(0)
         var executed = false
         subject.observe(self) { (old, new) -> () in
             executed = true
@@ -38,7 +38,7 @@ class ObservableTests: XCTestCase {
     }
 
     func testThatObserverClosuresAreExecuted() {
-        var subject = Observable<Int>(0)
+        let subject = Observable<Int>(0)
         var executed1 = false, executed2 = false
         subject.observe(self) { (old, new) -> () in
             executed1 = true
@@ -52,7 +52,7 @@ class ObservableTests: XCTestCase {
     }
 
     func testThatObserverClosureIsNotExecutedIfObserverWasDeallocated() {
-        var subject = Observable<Int>(0)
+        let subject = Observable<Int>(0)
         var observer: NSObject? = NSObject()
         var executed = false
         subject.observe(observer!) { (old, new) -> () in
@@ -64,7 +64,7 @@ class ObservableTests: XCTestCase {
     }
 
     func testNothingHappensIfNoObserversHaveBeenAdded() {
-        var subject = Observable<Int>(0)
+        let subject = Observable<Int>(0)
         subject.value = 1
         XCTAssertEqual(1, subject.value)
     }

@@ -28,13 +28,13 @@ import Chatto
 
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
-    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
+    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, canShowAvatar: false)
     override func setUp() {
-        let viewModelBuilder = TextMessageViewModelDefaultBuilder()
+        let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
-        let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
+        let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
         let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate(), status: .Success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
         self.presenter = TextMessagePresenter(messageModel: textMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: TextMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, textCellStyle: textStyle, layoutCache: NSCache())
@@ -43,7 +43,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     func testThat_RegistersAndDequeuesCells() {
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>.registerCells(collectionView)
+        TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
         XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
@@ -72,7 +72,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_CanPerformCopyAction() {
-        XCTAssertTrue(self.presenter.canPerformMenuControllerAction(Selector("copy:")))
+        XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(NSObject.copy(_:))))
     }
 
     // MARK: Helpers
@@ -87,9 +87,13 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 }
 
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = TextMessageViewModel
+    typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {
+    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
+
+    }
+
+    func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
 
     }
 
@@ -97,7 +101,11 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
 
     }
 
-    func userDidLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT) {
+
+    }
+
+    func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT) {
 
     }
 }

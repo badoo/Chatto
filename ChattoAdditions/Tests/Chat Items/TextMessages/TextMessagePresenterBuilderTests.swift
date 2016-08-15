@@ -30,7 +30,7 @@ class TextMessagePresenterBuilderTests: XCTestCase {
     func testThat_CreatesPresenter() {
         let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate(), status: .Success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
-        let builder = TextMessagePresenterBuilder(viewModelBuilder: TextMessageViewModelDefaultBuilder(), interactionHandler: TextMessageTestHandler())
+        let builder = TextMessagePresenterBuilder(viewModelBuilder: TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>(), interactionHandler: TextMessageTestHandler())
         XCTAssertNotNil(builder.createPresenterWithChatItem(textMessageModel))
     }
 }

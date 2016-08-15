@@ -24,7 +24,7 @@
 
 import UIKit
 
-class HorizontalStackScrollView: UIScrollView {
+public class HorizontalStackScrollView: UIScrollView {
 
     private var arrangedViews: [UIView] = []
     private var arrangedViewContraints: [NSLayoutConstraint] = []
@@ -43,14 +43,14 @@ class HorizontalStackScrollView: UIScrollView {
         self.setNeedsUpdateConstraints()
     }
 
-    override func updateConstraints() {
+    override public func updateConstraints() {
         super.updateConstraints()
         self.removeConstraintsForArrangedViews()
         self.addConstraintsForArrengedViews()
     }
 
     private func removeConstraintsForArrangedViews() {
-        for constraint in arrangedViewContraints {
+        for constraint in self.arrangedViewContraints {
             self.removeConstraint(constraint)
         }
         self.arrangedViewContraints.removeAll()
@@ -61,19 +61,19 @@ class HorizontalStackScrollView: UIScrollView {
             switch index {
             case 0:
                 let constraint = NSLayoutConstraint(item: view, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Leading, multiplier: 1, constant: 0)
-                addConstraint(constraint)
-                arrangedViewContraints.append(constraint)
+                self.addConstraint(constraint)
+                self.arrangedViewContraints.append(constraint)
             case arrangedViews.count-1:
                 let constraint = NSLayoutConstraint(item: view, attribute: .Trailing, relatedBy: .Equal, toItem: self, attribute: .Trailing, multiplier: 1, constant: 0)
-                addConstraint(constraint)
-                arrangedViewContraints.append(constraint)
+                self.addConstraint(constraint)
+                self.arrangedViewContraints.append(constraint)
                 fallthrough
             default:
                 let constraint = NSLayoutConstraint(item: view, attribute: .Leading, relatedBy: .Equal, toItem: arrangedViews[index-1], attribute: .Trailing, multiplier: 1, constant: self.interItemSpacing)
-                addConstraint(constraint)
-                arrangedViewContraints.append(constraint)
+                self.addConstraint(constraint)
+                self.arrangedViewContraints.append(constraint)
             }
-            addConstraint(NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
+            self.addConstraint(NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
         }
     }
 }

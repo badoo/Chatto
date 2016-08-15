@@ -45,7 +45,7 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
     private func commonInit() {
         self.imageView = UIImageView()
         self.imageView.contentMode = .Center
-        self.imageView.image = UIImage(named: Constants.imageName, inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil)
+        self.imageView.image = UIImage(named: Constants.imageName, inBundle: NSBundle(forClass: PhotosInputPlaceholderCell.self), compatibleWithTraitCollection: nil)
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
     }

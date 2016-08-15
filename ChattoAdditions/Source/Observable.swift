@@ -25,7 +25,8 @@
 import Foundation
 
 // Be aware this is not thread safe!
-public struct Observable<T> {
+// Why class? https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20160711/002580.html
+public class Observable<T> {
 
     public init(_ value: T) {
         self.value = value
@@ -40,12 +41,12 @@ public struct Observable<T> {
         }
     }
 
-    public mutating func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
+    public func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
 
-    private mutating func cleanDeadObservers() {
+    private func cleanDeadObservers() {
         self.observers = self.observers.filter { $0.owner != nil }
     }
 

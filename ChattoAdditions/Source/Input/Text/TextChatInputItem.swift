@@ -24,17 +24,27 @@
 
 import Foundation
 
-@objc public class TextChatInputItem: NSObject {
+public class TextChatInputItem {
+    typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?
 
-    lazy private var internalTabView: UIButton = {
-        var button = UIButton(type: .Custom)
-        button.exclusiveTouch = true
-        button.setImage(UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Normal)
-        button.setImage(UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Highlighted)
-        button.setImage(UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: self.dynamicType), compatibleWithTraitCollection: nil), forState: .Selected)
-        return button
-        }()
+    let buttonAppearance: TabInputButtonAppearance
+    public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+        self.buttonAppearance = tabInputButtonAppearance
+    }
+
+    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+        let images: [UIControlStateWrapper: UIImage] = [
+            UIControlStateWrapper(state: .Normal): UIImage(named: "text-icon-unselected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Selected): UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!,
+            UIControlStateWrapper(state: .Highlighted): UIImage(named: "text-icon-selected", inBundle: NSBundle(forClass: TextChatInputItem.self), compatibleWithTraitCollection: nil)!
+        ]
+        return TabInputButtonAppearance(images: images, size: nil)
+    }
+
+    lazy private var internalTabView: TabInputButton = {
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
+    }()
 
     public var selected = false {
         didSet {

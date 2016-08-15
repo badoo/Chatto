@@ -38,7 +38,7 @@ public final class PhotoMessageCollectionViewCell: BaseMessageCollectionViewCell
         super.init(frame: frame)
     }
 
-    override func createBubbleView() -> PhotoBubbleView {
+    public override func createBubbleView() -> PhotoBubbleView {
         return PhotoBubbleView()
     }
 

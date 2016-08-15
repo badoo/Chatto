@@ -27,7 +27,6 @@ import Chatto
 
 public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: TextMessageModelProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT>
@@ -60,10 +59,10 @@ public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT 
     }()
 
     public lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
-    public lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultSyle()
+    public lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
 
     public func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
-        return chatItem is TextMessageModelProtocol ? true : false
+        return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
     }
 
     public func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
