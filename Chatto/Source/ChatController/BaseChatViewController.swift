@@ -183,7 +183,13 @@ public class BaseChatViewController: UIViewController, UICollectionViewDataSourc
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
+            // because it has incorrect value when we actually have a bottom bar (tabbar)
+            if hidesBottomBarWhenPushed && navigationController?.viewControllers.count > 1 && navigationController?.viewControllers.last == self {
+                self.inputContainerBottomConstraint.constant = 0
+            } else {
+                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            }
         }
     }
 
