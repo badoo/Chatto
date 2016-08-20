@@ -52,9 +52,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     public class func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
-        let defaultColor = UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1)
-        let liveCameraCellAppearence = LiveCameraCellAppearance(backgroundColor: defaultColor)
-        return PhotosInputViewAppearance(liveCameraCellAppearence: liveCameraCellAppearence)
+        return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
     }
 
     lazy private var internalTabView: UIButton = {

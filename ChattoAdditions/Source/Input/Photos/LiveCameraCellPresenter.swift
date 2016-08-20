@@ -25,21 +25,53 @@
 import Foundation
 import Photos
 
-final class LiveCameraCellPresenter {
+public final class LiveCameraCellPresenter {
+
+    private typealias Class = LiveCameraCellPresenter
+
+
+    let cellAppearance: LiveCameraCellAppearance
+    public init(cellAppearance: LiveCameraCellAppearance) {
+        self.cellAppearance = cellAppearance
+    }
+
+    public convenience init (cellAppearance: LiveCameraCellAppearance?) {
+        let cellAppearance = cellAppearance ?? LiveCameraCellAppearance.createDefaultAppearance()
+        self.init(cellAppearance: cellAppearance)
+    }
 
     deinit {
         self.unsubscribeFromAppNotifications()
     }
 
+    private static let reuseIdentifier = "LiveCameraCell"
+
+    public static func registerCells(collectionView collectionView: UICollectionView) {
+        collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: Class.reuseIdentifier)
+    }
+
+    public func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCellWithReuseIdentifier(Class.reuseIdentifier, forIndexPath: indexPath)
+    }
+
     private weak var cell: LiveCameraCell?
 
-    func cellWillBeShown(cell: LiveCameraCell) {
+    public func cellWillBeShown(cell: UICollectionViewCell) {
+        guard let cell = cell as? LiveCameraCell else {
+            assertionFailure("Invalid cell given to presenter")
+            return
+        }
         self.cell = cell
         self.configureCell()
         self.startCapturing()
     }
 
-    func cellWasHidden(cell: LiveCameraCell) {
+    public func cellWasHidden(cell: UICollectionViewCell) {
+        guard let cell = cell as? LiveCameraCell else {
+            assertionFailure("Invalid cell given to presenter")
+            return
+        }
+
         if self.cell === cell {
             cell.captureLayer = nil
             self.cell = nil
@@ -50,7 +82,9 @@ final class LiveCameraCellPresenter {
     private func configureCell() {
         guard let cameraCell = self.cell else { return }
 
+        self.cameraAuthorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         cameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
+        cameraCell.appearance = self.cellAppearance
 
         if self.captureSession.isCapturing {
             cameraCell.captureLayer = self.captureSession.captureLayer
@@ -141,7 +175,7 @@ final class LiveCameraCellPresenter {
 
     lazy var captureSession: LiveCameraCaptureSessionProtocol = LiveCameraCaptureSession()
 
-    var cameraAuthorizationStatus: AVAuthorizationStatus = .NotDetermined {
+    private var cameraAuthorizationStatus: AVAuthorizationStatus = .NotDetermined {
         didSet {
             if self.isCaptureAvailable {
                 self.subscribeToAppNotifications()
