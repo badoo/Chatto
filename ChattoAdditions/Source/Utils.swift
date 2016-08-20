@@ -112,12 +112,6 @@ public extension CGPoint {
     }
 }
 
-public extension CGFloat {
-    func bma_round() -> CGFloat {
-        return ceil(self * scale) * (1.0 / scale)
-    }
-}
-
 public extension UIView {
     var bma_rect: CGRect {
         get {
