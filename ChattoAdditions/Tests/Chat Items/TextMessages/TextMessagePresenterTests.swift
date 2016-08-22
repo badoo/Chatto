@@ -72,7 +72,11 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_CanPerformCopyAction() {
-        XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(NSObject.copy(_:))))
+        #if swift(>=2.3)
+            XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(UIResponderStandardEditActions.copy(_:))))
+        #else
+            XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(NSObject.copy(_:))))
+        #endif
     }
 
     // MARK: Helpers

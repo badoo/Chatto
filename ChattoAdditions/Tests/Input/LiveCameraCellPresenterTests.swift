@@ -30,16 +30,22 @@ class LiveCameraCellPresenterTests: XCTestCase {
 
     var presenter: LiveCameraCellPresenter!
     var cell: LiveCameraCell!
+    var cameraAuthorizationStatus: AVAuthorizationStatus = .NotDetermined
+    var cameraAuthorizationStatusProvider: LiveCameraCellPresenter.AVAuthorizationStatusProvider!
 
     override func setUp() {
         super.setUp()
-        self.presenter = LiveCameraCellPresenter()
+        self.cameraAuthorizationStatusProvider = { [unowned self] in
+            return self.cameraAuthorizationStatus
+        }
+        self.presenter = LiveCameraCellPresenter(cellAppearance: nil, authorizationStatusProvider: self.cameraAuthorizationStatusProvider)
         self.cell = LiveCameraCell()
     }
 
     override func tearDown() {
         self.presenter = nil
         self.cell = nil
+        self.cameraAuthorizationStatusProvider = nil
         super.tearDown()
     }
 
@@ -47,7 +53,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsNotDetermined_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .NotDetermined
+        self.cameraAuthorizationStatus = .NotDetermined
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -57,7 +63,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsRestricted_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Restricted
+        self.cameraAuthorizationStatus = .Restricted
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -67,7 +73,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsDenied_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Denied
+        self.cameraAuthorizationStatus = .Denied
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -77,7 +83,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsAuthorized_CaptureStarts() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -88,7 +94,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         self.presenter.cellWillBeShown(self.cell)
         self.presenter.cellWasHidden(self.cell)
@@ -102,7 +108,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
 
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
         self.presenter.cellWillBeShown(self.cell)
 
         self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
@@ -115,7 +121,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
 
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
         self.presenter.cellWillBeShown(self.cell)
 
         self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
@@ -129,7 +135,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = false
         self.presenter.captureSession = mockCaptureSession
 
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
         self.presenter.cellWillBeShown(self.cell)
         self.presenter.cellWasHidden(self.cell)
 
@@ -142,7 +148,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenCellIsRemovedFromWindow_ThenCaptureIsStopped() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -153,7 +159,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenReusedCellIsRemovedFromWindow_ThenCaptureIsNotStopped() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         let firstCell = LiveCameraCell()
         self.presenter.cellWillBeShown(firstCell)
@@ -166,7 +172,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenCellIsReaddedToWindow_ThenCaputreIsRestarted() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         self.presenter.cellWillBeShown(self.cell)
         self.cell.didMoveToWindow()
@@ -180,7 +186,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenReusedCellIsReaddedToWindow_ThenCaptureIsNotRestarted() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.presenter.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .Authorized
 
         let firstCell = LiveCameraCell()
         self.presenter.cellWillBeShown(firstCell)
