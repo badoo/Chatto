@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3B1B0FF1D6B40DF00D1183D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B1B0FE1D6B40DF00D1183D /* Utils.swift */; };
 		C31E919A1BFF4CA300339585 /* BaseChatViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31E91991BFF4CA300339585 /* BaseChatViewControllerTests.swift */; };
 		C321C3961BE78835009803D1 /* CollectionChangesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C321C3951BE78835009803D1 /* CollectionChangesTests.swift */; };
 		C321DDA91BE9649F00DE88CC /* BaseChatItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C321DD941BE9649F00DE88CC /* BaseChatItemPresenter.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		55E85D821BE390BE001885AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3B1B0FE1D6B40DF00D1183D /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		C31E91991BFF4CA300339585 /* BaseChatViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewControllerTests.swift; sourceTree = "<group>"; };
 		C321C3951BE78835009803D1 /* CollectionChangesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionChangesTests.swift; sourceTree = "<group>"; };
 		C321DD941BE9649F00DE88CC /* BaseChatItemPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatItemPresenter.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				C3E905041BE0521700C662A2 /* Info.plist */,
 				C342D0C01C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift */,
 				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
+				B3B1B0FE1D6B40DF00D1183D /* Utils.swift */,
 				C321DD931BE9649F00DE88CC /* Chat Items */,
 				C3E904AE1BE0509E00C662A2 /* ChatController */,
 			);
@@ -349,6 +352,7 @@
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
 				C3C7C39B1CAC4BAC00A49929 /* KeyboardTracker.swift in Sources */,
+				B3B1B0FF1D6B40DF00D1183D /* Utils.swift in Sources */,
 				C342D0C11C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
