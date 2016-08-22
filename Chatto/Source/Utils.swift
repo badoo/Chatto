@@ -25,11 +25,8 @@
 import Foundation
 
 private let scale = UIScreen.mainScreen().scale
-private let scaleInv = 1 / scale
 
-public extension CGFloat {
-    public func bma_round() -> CGFloat {
-        let pixelCount = round(self * scale)
-        return pixelCount * scaleInv
-    }
+infix operator >=~ { }
+func >=~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
+    return round(lhs * scale) >= round(rhs * scale)
 }
