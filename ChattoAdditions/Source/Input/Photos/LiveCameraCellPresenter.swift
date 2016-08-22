@@ -26,18 +26,20 @@ import Foundation
 import Photos
 
 public final class LiveCameraCellPresenter {
-
     private typealias Class = LiveCameraCellPresenter
+    public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
 
 
-    let cellAppearance: LiveCameraCellAppearance
-    public init(cellAppearance: LiveCameraCellAppearance) {
+    private let cellAppearance: LiveCameraCellAppearance
+    private let authorizationStatusProvider: () -> AVAuthorizationStatus
+    public init(cellAppearance: LiveCameraCellAppearance, authorizationStatusProvider: AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
         self.cellAppearance = cellAppearance
+        self.authorizationStatusProvider = authorizationStatusProvider
     }
 
-    public convenience init (cellAppearance: LiveCameraCellAppearance?) {
+    public convenience init (cellAppearance: LiveCameraCellAppearance?, authorizationStatusProvider: AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
         let cellAppearance = cellAppearance ?? LiveCameraCellAppearance.createDefaultAppearance()
-        self.init(cellAppearance: cellAppearance)
+        self.init(cellAppearance: cellAppearance, authorizationStatusProvider: authorizationStatusProvider)
     }
 
     deinit {
@@ -45,6 +47,11 @@ public final class LiveCameraCellPresenter {
     }
 
     private static let reuseIdentifier = "LiveCameraCell"
+    private static func createDefaultCameraAuthorizationStatusProvider() -> AVAuthorizationStatusProvider {
+        return {
+            return AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        }
+    }
 
     public static func registerCells(collectionView collectionView: UICollectionView) {
         collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: Class.reuseIdentifier)
@@ -82,7 +89,7 @@ public final class LiveCameraCellPresenter {
     private func configureCell() {
         guard let cameraCell = self.cell else { return }
 
-        self.cameraAuthorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        self.cameraAuthorizationStatus = self.authorizationStatusProvider()
         cameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
         cameraCell.appearance = self.cellAppearance
 

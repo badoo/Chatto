@@ -117,7 +117,7 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         #endif
         return action == selector
     }
-    
+
     public override func performMenuControllerAction(action: Selector) {
         #if swift(>=2.3)
             let selector = #selector(UIResponderStandardEditActions.copy(_:))
