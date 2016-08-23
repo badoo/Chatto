@@ -43,8 +43,8 @@ public class TabInputButton: UIButton {
         images.forEach { (state, image) in
             button.setImage(image, forState: state.controlState)
         }
-        accessibility.forEach {
-            button.accessibilityIdentifier = $0
+        if let accessibilityIdentifier = accessibilityID {
+            button.accessibilityIdentifier = accessibilityIdentifier
         }
         button.size = appearance.size
         return button
