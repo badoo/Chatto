@@ -64,10 +64,10 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         }
     }
 
-    let bubbleImages: BubbleImages
-    let textStyle: TextStyle
-    let baseStyle: BaseMessageCollectionViewCellDefaultStyle
 
+    public let bubbleImages: BubbleImages
+    public let textStyle: TextStyle
+    public let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     public init (
         bubbleImages: BubbleImages = Class.createDefaultBubbleImages(),
         textStyle: TextStyle = Class.createDefaultTextStyle(),
@@ -124,7 +124,7 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         return UIImage()
     }
 
-    private func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
+    public func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
         var color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
 
         switch status {
