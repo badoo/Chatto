@@ -56,7 +56,7 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     lazy private var internalTabView: UIButton = {
-        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {

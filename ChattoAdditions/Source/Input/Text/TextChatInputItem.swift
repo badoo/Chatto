@@ -43,7 +43,7 @@ public class TextChatInputItem {
     }
 
     lazy private var internalTabView: TabInputButton = {
-        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance)
+        return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "text.chat.input.view")
     }()
 
     public var selected = false {
