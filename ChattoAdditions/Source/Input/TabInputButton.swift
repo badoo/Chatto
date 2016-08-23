@@ -36,12 +36,15 @@ public struct TabInputButtonAppearance {
 
 public class TabInputButton: UIButton {
 
-    static public func makeInputButton(withAppearance appearance: TabInputButtonAppearance) -> TabInputButton {
+    static public func makeInputButton(withAppearance appearance: TabInputButtonAppearance, accessibilityID: String? = nil) -> TabInputButton {
         let images = appearance.images
         let button = TabInputButton(type: .Custom)
         button.exclusiveTouch = true
         images.forEach { (state, image) in
             button.setImage(image, forState: state.controlState)
+        }
+        accessibility.forEach {
+            button.accessibilityIdentifier = $0
         }
         button.size = appearance.size
         return button
