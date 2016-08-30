@@ -25,26 +25,34 @@
 import AVFoundation
 import Foundation
 import UIKit
-import Chatto
 
 public struct LiveCameraCellAppearance {
     public var backgroundColor: UIColor
-    public init(backgroundColor: UIColor) {
+    public var cameraImageProvider: () -> UIImage?
+    public var cameraLockImageProvider: () -> UIImage?
+
+    public init(backgroundColor: UIColor,
+                @autoclosure(escaping) cameraImage: () -> UIImage?,
+                @autoclosure(escaping) cameraLockImage: () -> UIImage?) {
         self.backgroundColor = backgroundColor
+        self.cameraImageProvider = cameraImage
+        self.cameraLockImageProvider = cameraLockImage
+    }
+
+    public static func createDefaultAppearance() -> LiveCameraCellAppearance {
+        return LiveCameraCellAppearance(
+            backgroundColor: UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1),
+            cameraImage: UIImage(named: "camera", inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil),
+            cameraLockImage: UIImage(named: "camera_lock", inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
+        )
     }
 }
 
 class LiveCameraCell: UICollectionViewCell {
 
-    private struct Constants {
-        static let backgroundColor = UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1)
-        static let cameraImageName = "camera"
-        static let lockedCameraImageName = "camera_lock"
-    }
-
     private var iconImageView: UIImageView!
 
-    var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance(backgroundColor: Constants.backgroundColor) {
+    var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance() {
         didSet {
             self.contentView.backgroundColor = self.appearance.backgroundColor
         }
@@ -109,9 +117,9 @@ class LiveCameraCell: UICollectionViewCell {
     private func updateIcon() {
         switch self.authorizationStatus {
         case .NotDetermined, .Authorized:
-            self.iconImageView.image = UIImage(named: Constants.cameraImageName, inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
+            self.iconImageView.image = self.appearance.cameraImageProvider()
         case .Restricted, .Denied:
-            self.iconImageView.image = UIImage(named: Constants.lockedCameraImageName, inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
+            self.iconImageView.image = self.appearance.cameraLockImageProvider()
         }
         self.setNeedsLayout()
     }

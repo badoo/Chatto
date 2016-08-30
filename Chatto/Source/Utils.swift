@@ -20,42 +20,13 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
 import Foundation
 
-public struct TabInputButtonAppearance {
-    public var images: [UIControlStateWrapper: UIImage]
-    public var size: CGSize?
+private let scale = UIScreen.mainScreen().scale
 
-    public init(images: [UIControlStateWrapper: UIImage], size: CGSize?) {
-        self.images = images
-        self.size = size
-    }
-}
-
-public class TabInputButton: UIButton {
-
-    static public func makeInputButton(withAppearance appearance: TabInputButtonAppearance, accessibilityID: String? = nil) -> TabInputButton {
-        let images = appearance.images
-        let button = TabInputButton(type: .Custom)
-        button.exclusiveTouch = true
-        images.forEach { (state, image) in
-            button.setImage(image, forState: state.controlState)
-        }
-        if let accessibilityIdentifier = accessibilityID {
-            button.accessibilityIdentifier = accessibilityIdentifier
-        }
-        button.size = appearance.size
-        return button
-    }
-
-    private var size: CGSize?
-
-    public override func intrinsicContentSize() -> CGSize {
-        if let size = self.size {
-            return size
-        }
-        return super.intrinsicContentSize()
-    }
+infix operator >=~ { }
+func >=~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
+    return round(lhs * scale) >= round(rhs * scale)
 }

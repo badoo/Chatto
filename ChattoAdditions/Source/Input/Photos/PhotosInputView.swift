@@ -168,7 +168,9 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         return PhotosInputCameraPicker(presentingController: self.presentingController)
     }()
 
-    private lazy var liveCameraPresenter = LiveCameraCellPresenter()
+    private lazy var liveCameraPresenter: LiveCameraCellPresenter = {
+        return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence)
+    }()
 }
 
 extension PhotosInputView: UICollectionViewDataSource {
@@ -178,7 +180,7 @@ extension PhotosInputView: UICollectionViewDataSource {
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionViewLayout)
         self.collectionView.backgroundColor = UIColor.whiteColor()
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.registerClass(LiveCameraCell.self, forCellWithReuseIdentifier: "LiveCameraCell")
+        LiveCameraCellPresenter.registerCells(collectionView: self.collectionView)
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -197,12 +199,7 @@ extension PhotosInputView: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         var cell: UICollectionViewCell
         if indexPath.item == Constants.liveCameraItemIndex {
-            let liveCameraCell = collectionView.dequeueReusableCellWithReuseIdentifier("LiveCameraCell", forIndexPath: indexPath) as! LiveCameraCell
-            if let liveCameraCellAppearence = self.appearance?.liveCameraCellAppearence {
-                liveCameraCell.appearance = liveCameraCellAppearence
-            }
-            self.liveCameraPresenter.cameraAuthorizationStatus = self.cameraAuthorizationStatus
-            cell = liveCameraCell
+            cell = self.liveCameraPresenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         } else {
             cell = self.cellProvider.cellForItemAtIndexPath(indexPath)
         }
@@ -252,13 +249,13 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
-            self.liveCameraPresenter.cellWillBeShown(cell as! LiveCameraCell)
+            self.liveCameraPresenter.cellWillBeShown(cell)
         }
     }
 
     func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
-            self.liveCameraPresenter.cellWasHidden(cell as! LiveCameraCell)
+            self.liveCameraPresenter.cellWasHidden(cell)
         }
     }
 }

@@ -121,7 +121,7 @@ class KeyboardTracker {
         guard let rect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() else { return 0 }
         guard rect.height > 0 else { return 0 }
         let rectInView = self.view.convertRect(rect, fromView: nil)
-        guard rectInView.maxY >= self.view.bounds.height else { return 0 } // Undocked keyboard
+        guard rectInView.maxY >=~ self.view.bounds.height else { return 0 } // Undocked keyboard
         return max(0, self.view.bounds.height - rectInView.minY - self.keyboardTrackerView.intrinsicContentSize().height)
     }
 
