@@ -26,9 +26,11 @@ import Foundation
 
 public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var text: String { get }
+    var textViewDelegate: UITextViewDelegate? { get }
 }
 
 public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
+    public var textViewDelegate: UITextViewDelegate?
     public var text: String {
         return self.textMessage.text
     }

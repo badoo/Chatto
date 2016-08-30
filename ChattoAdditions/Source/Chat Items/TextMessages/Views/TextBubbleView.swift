@@ -88,7 +88,11 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         imageView.addSubview(self.borderImageView)
         return imageView
     }()
-
+    public var textViewDelegate: UITextViewDelegate? {
+        didSet {
+            self.textView.delegate = self.textViewDelegate
+        }
+    }
     private var borderImageView: UIImageView = UIImageView()
     private var textView: UITextView = {
         let textView = ChatMessageTextView()
@@ -107,6 +111,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.layoutManager.allowsNonContiguousLayout = true
         textView.exclusiveTouch = true
         textView.textContainer.lineFragmentPadding = 0
+
         return textView
     }()
 

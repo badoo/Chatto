@@ -95,6 +95,7 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
             cell.layoutCache = self.layoutCache
             cell.textMessageViewModel = self.messageViewModel
             cell.textMessageStyle = self.textCellStyle
+            cell.textViewDelegate = self.messageViewModel.textViewDelegate
             additionalConfiguration?()
         }
     }
