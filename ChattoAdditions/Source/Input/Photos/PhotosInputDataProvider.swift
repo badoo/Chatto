@@ -66,9 +66,19 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
     private var imageManager = PHCachingImageManager()
     private var fetchResult: PHFetchResult!
     override init() {
-        let options = PHFetchOptions()
-        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
-        self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: options)
+        func fetchOptions(predicate: NSPredicate?) -> PHFetchOptions {
+            let options = PHFetchOptions()
+            options.sortDescriptors = [ NSSortDescriptor(key: "modificationDate", ascending: false) ]
+            options.predicate = predicate
+            return options
+        }
+
+        if let userLibraryCollection = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
+            self.fetchResult = PHAsset.fetchAssetsInAssetCollection(userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.Image.rawValue)")))
+        }
+        else {
+            self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: fetchOptions(nil))
+        }
         super.init()
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
     }
