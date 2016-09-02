@@ -68,7 +68,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
     override init() {
         func fetchOptions(predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
-            options.sortDescriptors = [ NSSortDescriptor(key: "modificationDate", ascending: false) ]
+            options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
             options.predicate = predicate
             return options
         }
