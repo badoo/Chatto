@@ -90,9 +90,9 @@ protocol ChatInputBarPresenter: class {
         return firstKeyboardInputItem
     }
 
-    fileprivate var lastKnownKeyboardHeight: CGFloat?
+    private var lastKnownKeyboardHeight: CGFloat?
 
-    fileprivate func setHeight(forInputView inputView: UIView?) {
+    private func setHeight(forInputView inputView: UIView?) {
         guard let inputView = inputView else { return }
         guard let keyboardHeight = self.lastKnownKeyboardHeight else { return }
 
@@ -110,22 +110,22 @@ protocol ChatInputBarPresenter: class {
         }
     }
 
-    fileprivate var allowListenToChangeFrameEvents = true
+    private var allowListenToChangeFrameEvents = true
 
     @objc
-    fileprivate func keyboardDidChangeFrame(_ notification: Notification) {
+    private func keyboardDidChangeFrame(_ notification: Notification) {
         guard self.allowListenToChangeFrameEvents else { return }
         guard let value = (notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         self.lastKnownKeyboardHeight = value.cgRectValue.height
     }
 
     @objc
-    fileprivate func keyboardWillHide(_ notification: Notification) {
+    private func keyboardWillHide(_ notification: Notification) {
         self.allowListenToChangeFrameEvents = false
     }
 
     @objc
-    fileprivate func keyboardWillShow(_ notification: Notification) {
+    private func keyboardWillShow(_ notification: Notification) {
         self.allowListenToChangeFrameEvents = true
     }
 }

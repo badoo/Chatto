@@ -44,7 +44,7 @@ open class FakeMessageSender {
         self.fakeMessageStatus(message)
     }
 
-    fileprivate func fakeMessageStatus(_ message: DemoMessageModelProtocol) {
+    private func fakeMessageStatus(_ message: DemoMessageModelProtocol) {
         switch message.status {
         case .success:
             break
@@ -69,14 +69,14 @@ open class FakeMessageSender {
         }
     }
 
-    fileprivate func updateMessage(_ message: DemoMessageModelProtocol, status: MessageStatus) {
+    private func updateMessage(_ message: DemoMessageModelProtocol, status: MessageStatus) {
         if message.status != status {
             message.status = status
             self.notifyMessageChanged(message)
         }
     }
 
-    fileprivate func notifyMessageChanged(_ message: DemoMessageModelProtocol) {
+    private func notifyMessageChanged(_ message: DemoMessageModelProtocol) {
         self.onMessageChanged?(message)
     }
 }

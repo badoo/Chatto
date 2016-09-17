@@ -69,7 +69,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
 
     // Optimization: after reloadData we'll get invalidateLayout, but prepareLayout will be delayed until next run loop.
     // Client may need to force prepareLayout after reloadData, but we don't want to compute layout again in the next run loop.
-    fileprivate var layoutNeedsUpdate = true
+    private var layoutNeedsUpdate = true
     open override func invalidateLayout() {
         super.invalidateLayout()
         self.layoutNeedsUpdate = true

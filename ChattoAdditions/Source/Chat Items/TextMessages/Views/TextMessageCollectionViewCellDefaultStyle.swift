@@ -77,7 +77,7 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
             self.baseStyle = baseStyle
     }
 
-    lazy fileprivate var images: [ImageKey: UIImage] = {
+    lazy private var images: [ImageKey: UIImage] = {
         return [
             .template(isIncoming: true, showsTail: true) : self.bubbleImages.incomingTail(),
             .template(isIncoming: true, showsTail: false) : self.bubbleImages.incomingNoTail(),
@@ -141,7 +141,7 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
         return image.bma_tintWithColor(color)
     }
 
-    fileprivate enum ImageKey: Hashable {
+    private enum ImageKey: Hashable {
         case template(isIncoming: Bool, showsTail: Bool)
         case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool)
 
@@ -154,20 +154,20 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
             }
         }
 
-        fileprivate func calculateHash(withHashValues hashes: [Int]) -> Int {
+        private func calculateHash(withHashValues hashes: [Int]) -> Int {
             return hashes.reduce(0, { 31 &* $0 &+ $1.hashValue })
         }
-    }
-}
 
-private func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
-    switch (lhs, rhs) {
-    case let (.template(lhsValues), .template(rhsValues)):
-        return lhsValues == rhsValues
-    case let (.normal(lhsValues), .normal(rhsValues)):
-        return lhsValues == rhsValues
-    default:
-        return false
+        static func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
+            switch (lhs, rhs) {
+            case let (.template(lhsValues), .template(rhsValues)):
+                return lhsValues == rhsValues
+            case let (.normal(lhsValues), .normal(rhsValues)):
+                return lhsValues == rhsValues
+            default:
+                return false
+            }
+        }
     }
 }
 

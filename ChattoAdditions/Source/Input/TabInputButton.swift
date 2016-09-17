@@ -50,7 +50,7 @@ open class TabInputButton: UIButton {
         return button
     }
 
-    fileprivate var size: CGSize?
+    private var size: CGSize?
 
     open override var intrinsicContentSize: CGSize {
         if let size = self.size {

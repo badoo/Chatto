@@ -26,18 +26,18 @@ import Foundation
 
 class KeyboardTracker {
 
-    fileprivate enum KeyboardStatus {
+    private enum KeyboardStatus {
         case hidden
         case showing
         case shown
     }
 
-    fileprivate var keyboardStatus: KeyboardStatus = .hidden
-    fileprivate let view: UIView
+    private var keyboardStatus: KeyboardStatus = .hidden
+    private let view: UIView
     var trackingView: UIView {
         return self.keyboardTrackerView
     }
-    fileprivate lazy var keyboardTrackerView: KeyboardTrackingView = {
+    private lazy var keyboardTrackerView: KeyboardTrackingView = {
         let trackingView = KeyboardTrackingView()
         trackingView.positionChangedCallback = { [weak self] in
             guard let sSelf = self else { return }
@@ -50,10 +50,10 @@ class KeyboardTracker {
 
     var isTracking = false
     var inputContainer: UIView
-    fileprivate var notificationCenter: NotificationCenter
+    private var notificationCenter: NotificationCenter
 
     typealias LayoutBlock = (_ bottomMargin: CGFloat) -> Void
-    fileprivate var layoutBlock: LayoutBlock
+    private var layoutBlock: LayoutBlock
 
     init(viewController: UIViewController, inputContainer: UIView, layoutBlock: @escaping LayoutBlock, notificationCenter: NotificationCenter) {
         self.view = viewController.view
@@ -79,7 +79,7 @@ class KeyboardTracker {
     }
 
     @objc
-    fileprivate func keyboardWillShow(_ notification: Notification) {
+    private func keyboardWillShow(_ notification: Notification) {
         guard self.isTracking else { return }
         guard !self.isPerformingForcedLayout else { return}
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
@@ -89,7 +89,7 @@ class KeyboardTracker {
     }
 
     @objc
-    fileprivate func keyboardDidShow(_ notification: Notification) {
+    private func keyboardDidShow(_ notification: Notification) {
         guard self.isTracking else { return }
         guard !self.isPerformingForcedLayout else { return}
 
@@ -101,7 +101,7 @@ class KeyboardTracker {
     }
 
     @objc
-    fileprivate func keyboardWillChangeFrame(_ notification: Notification) {
+    private func keyboardWillChangeFrame(_ notification: Notification) {
         guard self.isTracking else { return }
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         if bottomConstraint == 0 {
@@ -111,13 +111,13 @@ class KeyboardTracker {
     }
 
     @objc
-    fileprivate func keyboardWillHide(_ notification: Notification) {
+    private func keyboardWillHide(_ notification: Notification) {
         guard self.isTracking else { return }
         self.keyboardStatus = .hidden
         self.layoutInputAtBottom()
     }
 
-    fileprivate func bottomConstraintFromNotification(_ notification: Notification) -> CGFloat {
+    private func bottomConstraintFromNotification(_ notification: Notification) -> CGFloat {
         guard let rect = ((notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return 0 }
         guard rect.height > 0 else { return 0 }
         let rectInView = self.view.convert(rect, from: nil)
@@ -125,7 +125,7 @@ class KeyboardTracker {
         return max(0, self.view.bounds.height - rectInView.minY - self.keyboardTrackerView.intrinsicContentSize.height)
     }
 
-    fileprivate func bottomConstraintFromTrackingView() -> CGFloat {
+    private func bottomConstraintFromTrackingView() -> CGFloat {
         guard self.keyboardTrackerView.superview != nil else { return 0 }
         let trackingViewRect = self.view.convert(self.keyboardTrackerView.bounds, from: self.keyboardTrackerView)
         return max(0, self.view.bounds.height - trackingViewRect.maxY)
@@ -136,7 +136,7 @@ class KeyboardTracker {
         self.adjustTrackingViewSize()
     }
 
-    fileprivate func adjustTrackingViewSize() {
+    private func adjustTrackingViewSize() {
         let inputContainerHeight = self.inputContainer.bounds.height
         if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
@@ -146,7 +146,7 @@ class KeyboardTracker {
         }
     }
 
-    fileprivate func layoutInputAtBottom() {
+    private func layoutInputAtBottom() {
         self.keyboardTrackerView.bounds.size.height = 0
         self.layoutInputContainer(withBottomConstraint: 0)
     }
@@ -157,7 +157,7 @@ class KeyboardTracker {
         self.layoutInputContainer(withBottomConstraint: self.bottomConstraintFromTrackingView())
     }
 
-    fileprivate func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
+    private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
         self.isPerformingForcedLayout = true
         self.layoutBlock(constraint)
         self.isPerformingForcedLayout = false
@@ -185,7 +185,7 @@ private class KeyboardTrackingView: UIView {
         self.commonInit()
     }
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         self.autoresizingMask = .flexibleHeight
         self.isUserInteractionEnabled = false
         self.backgroundColor = UIColor.clear
@@ -201,7 +201,7 @@ private class KeyboardTrackingView: UIView {
         }
     }
 
-    fileprivate override var intrinsicContentSize: CGSize {
+    private override var intrinsicContentSize: CGSize {
         return self.preferredSize
     }
 
@@ -219,7 +219,7 @@ private class KeyboardTrackingView: UIView {
         super.willMove(toSuperview: newSuperview)
     }
 
-    fileprivate override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    private override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let object = object as? UIView, let superview = self.superview else { return }
         if object === superview {
             guard let sChange = change else { return }

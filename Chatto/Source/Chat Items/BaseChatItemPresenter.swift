@@ -57,7 +57,7 @@ open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenter
         assert(false, "Implemenent in subclass")
     }
 
-    final public fileprivate(set) var itemVisibility: ChatItemVisibility = .hidden
+    final public private(set) var itemVisibility: ChatItemVisibility = .hidden
 
     // Need to override default implementatios. Otherwise subclasses's code won't be executed
     // http://stackoverflow.com/questions/31795158/swift-2-protocol-extension-not-calling-overriden-method-correctly

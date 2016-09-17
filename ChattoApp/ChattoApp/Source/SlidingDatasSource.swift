@@ -31,12 +31,12 @@ public enum InsertPosition {
 
 open class SlidingDataSource<Element> {
 
-    fileprivate var pageSize: Int
-    fileprivate var windowOffset: Int
-    fileprivate var windowCount: Int
-    fileprivate var itemGenerator: (() -> Element)?
-    fileprivate var items = [Element]()
-    fileprivate var itemsOffset: Int
+    private var pageSize: Int
+    private var windowOffset: Int
+    private var windowCount: Int
+    private var itemGenerator: (() -> Element)?
+    private var items = [Element]()
+    private var itemsOffset: Int
     open var itemsInWindow: [Element] {
         let offset = self.windowOffset - self.itemsOffset
         return Array(items[offset..<offset+self.windowCount])
@@ -58,7 +58,7 @@ open class SlidingDataSource<Element> {
         }
     }
 
-    fileprivate func generateItems(_ count: Int, position: InsertPosition) {
+    private func generateItems(_ count: Int, position: InsertPosition) {
         guard count > 0 else { return }
         guard let itemGenerator = self.itemGenerator else {
             fatalError("Can't create messages without a generator")

@@ -70,7 +70,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open var animationDuration: CFTimeInterval = 0.33
     open var viewContext: ViewContext = .normal
 
-    open fileprivate(set) var isUpdating: Bool = false
+    open private(set) var isUpdating: Bool = false
     open func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() ->())?) {
         self.isUpdating = true
         let updateAndRefreshViews = {
@@ -118,13 +118,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return self.bubbleView.canCalculateSizeInBackground
     }
 
-    open fileprivate(set) var bubbleView: BubbleViewType!
+    open private(set) var bubbleView: BubbleViewType!
     open func createBubbleView() -> BubbleViewType! {
         assert(false, "Override in subclass")
         return nil
     }
 
-    open fileprivate(set) var avatarView: UIImageView!
+    open private(set) var avatarView: UIImageView!
     func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
@@ -141,23 +141,23 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.commonInit()
     }
 
-    open fileprivate(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+    open private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleTapped(_:)))
         return tapGestureRecognizer
     }()
 
-    open fileprivate (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
+    open private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
         let longpressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleLongPressed(_:)))
         longpressGestureRecognizer.delegate = self
         return longpressGestureRecognizer
     }()
 
-    open fileprivate(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
+    open private(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.avatarTapped(_:)))
         return tapGestureRecognizer
     }()
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         self.avatarView = self.createAvatarView()
         self.avatarView.addGestureRecognizer(self.avatarTapGestureRecognizer)
         self.bubbleView = self.createBubbleView()
@@ -191,7 +191,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     // MARK: View model binding
 
-    final fileprivate func updateViews() {
+    final private func updateViews() {
         if self.viewContext == .sizing { return }
         if self.isUpdating { return }
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
@@ -243,7 +243,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return self.calculateLayout(availableWidth: size.width).size
     }
 
-    fileprivate func calculateLayout(availableWidth: CGFloat) -> BaseMessageLayoutModel {
+    private func calculateLayout(availableWidth: CGFloat) -> BaseMessageLayoutModel {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
         let parameters = BaseMessageLayoutModelParameters(
             containerWidth: availableWidth,
@@ -333,7 +333,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open var onBubbleLongPressBegan: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     open var onBubbleLongPressEnded: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
-    fileprivate func bubbleLongPressed(_ longPressGestureRecognizer: UILongPressGestureRecognizer) {
+    private func bubbleLongPressed(_ longPressGestureRecognizer: UILongPressGestureRecognizer) {
         switch longPressGestureRecognizer.state {
         case .began:
             self.onBubbleLongPressBegan?(self)
@@ -346,11 +346,11 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 }
 
 struct BaseMessageLayoutModel {
-    fileprivate (set) var size = CGSize.zero
-    fileprivate (set) var failedViewFrame = CGRect.zero
-    fileprivate (set) var bubbleViewFrame = CGRect.zero
-    fileprivate (set) var avatarViewFrame = CGRect.zero
-    fileprivate (set) var preferredMaxWidthForBubble: CGFloat = 0
+    private (set) var size = CGSize.zero
+    private (set) var failedViewFrame = CGRect.zero
+    private (set) var bubbleViewFrame = CGRect.zero
+    private (set) var avatarViewFrame = CGRect.zero
+    private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
 
     mutating func calculateLayout(parameters: BaseMessageLayoutModelParameters) {

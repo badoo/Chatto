@@ -26,7 +26,7 @@ import UIKit
 
 open class ExpandableTextView: UITextView {
 
-    fileprivate let placeholder: UITextView = UITextView()
+    private let placeholder: UITextView = UITextView()
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -49,7 +49,7 @@ open class ExpandableTextView: UITextView {
         NotificationCenter.default.removeObserver(self)
     }
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
@@ -114,7 +114,7 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    fileprivate func scrollToCaret() {
+    private func scrollToCaret() {
         if let textRange = self.selectedTextRange {
             var rect = caretRect(for: textRange.end)
             rect = CGRect(origin: rect.origin, size: CGSize(width: rect.width, height: rect.height + textContainerInset.bottom))
@@ -123,7 +123,7 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    fileprivate func updatePlaceholderVisibility() {
+    private func updatePlaceholderVisibility() {
         if self.text == "" {
             self.showPlaceholder()
         } else {
@@ -131,15 +131,15 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    fileprivate func showPlaceholder() {
+    private func showPlaceholder() {
         self.addSubview(self.placeholder)
     }
 
-    fileprivate func hidePlaceholder() {
+    private func hidePlaceholder() {
         self.placeholder.removeFromSuperview()
     }
 
-    fileprivate func configurePlaceholder() {
+    private func configurePlaceholder() {
         self.placeholder.translatesAutoresizingMaskIntoConstraints = false
         self.placeholder.isEditable = false
         self.placeholder.isSelectable = false

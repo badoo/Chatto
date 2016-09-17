@@ -70,7 +70,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     open let interactionHandler: InteractionHandlerT?
     open let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
-    public fileprivate(set) final lazy var messageViewModel: ViewModelT = {
+    public private(set) final lazy var messageViewModel: ViewModelT = {
         return self.createViewModel()
     }()
 

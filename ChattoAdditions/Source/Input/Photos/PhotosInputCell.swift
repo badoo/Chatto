@@ -26,7 +26,7 @@ import UIKit
 
 class PhotosInputPlaceholderCell: UICollectionViewCell {
 
-    fileprivate struct Constants {
+    private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
         static let imageName = "lock"
     }
@@ -41,8 +41,8 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    fileprivate var imageView: UIImageView!
-    fileprivate func commonInit() {
+    private var imageView: UIImageView!
+    private func commonInit() {
         self.imageView = UIImageView()
         self.imageView.contentMode = .center
         self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
@@ -59,7 +59,7 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
 
 class PhotosInputCell: UICollectionViewCell {
 
-    fileprivate struct Constants {
+    private struct Constants {
         static let backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
     }
 
@@ -73,8 +73,8 @@ class PhotosInputCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    fileprivate var imageView: UIImageView!
-    fileprivate func commonInit() {
+    private var imageView: UIImageView!
+    private func commonInit() {
         self.clipsToBounds = true
         self.imageView = UIImageView()
         self.imageView.contentMode = .scaleAspectFill

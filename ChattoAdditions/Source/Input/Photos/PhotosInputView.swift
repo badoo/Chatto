@@ -90,7 +90,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.collectionView.delegate = nil
     }
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.configureCollectionView()
         self.configureItemSizeCalculator()
@@ -101,13 +101,13 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.requestAccessToPhoto()
     }
 
-    fileprivate func configureItemSizeCalculator() {
+    private func configureItemSizeCalculator() {
         self.itemSizeCalculator = PhotosInputViewItemSizeCalculator()
         self.itemSizeCalculator.itemsPerRow = 3
         self.itemSizeCalculator.interitemSpace = 1
     }
 
-    fileprivate func requestAccessToVideo() {
+    private func requestAccessToVideo() {
         guard self.cameraAuthorizationStatus != .authorized else { return }
 
         AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { (success) -> Void in
@@ -117,7 +117,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate func reloadVideoItem() {
+    private func reloadVideoItem() {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 
@@ -129,7 +129,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate func requestAccessToPhoto() {
+    private func requestAccessToPhoto() {
         guard self.photoLibraryAuthorizationStatus != .authorized else {
             self.replacePlaceholderItemsWithPhotoItems()
             return
@@ -144,7 +144,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate func replacePlaceholderItemsWithPhotoItems() {
+    private func replacePlaceholderItemsWithPhotoItems() {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 
@@ -274,7 +274,7 @@ extension PhotosInputView: PhotosInputDataProviderDelegate {
 }
 
 private class PhotosInputCollectionViewLayout: UICollectionViewFlowLayout {
-    fileprivate override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    private override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return newBounds.width != self.collectionView?.bounds.width
     }
 }

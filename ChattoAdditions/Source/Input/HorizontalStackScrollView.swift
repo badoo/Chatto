@@ -26,8 +26,8 @@ import UIKit
 
 open class HorizontalStackScrollView: UIScrollView {
 
-    fileprivate var arrangedViews: [UIView] = []
-    fileprivate var arrangedViewContraints: [NSLayoutConstraint] = []
+    private var arrangedViews: [UIView] = []
+    private var arrangedViewContraints: [NSLayoutConstraint] = []
     var interItemSpacing: CGFloat = 0.0 {
         didSet {
             self.setNeedsUpdateConstraints()
@@ -49,14 +49,14 @@ open class HorizontalStackScrollView: UIScrollView {
         self.addConstraintsForArrengedViews()
     }
 
-    fileprivate func removeConstraintsForArrangedViews() {
+    private func removeConstraintsForArrangedViews() {
         for constraint in self.arrangedViewContraints {
             self.removeConstraint(constraint)
         }
         self.arrangedViewContraints.removeAll()
     }
 
-    fileprivate func addConstraintsForArrengedViews() {
+    private func addConstraintsForArrengedViews() {
         for (index, view) in arrangedViews.enumerated() {
             switch index {
             case 0:

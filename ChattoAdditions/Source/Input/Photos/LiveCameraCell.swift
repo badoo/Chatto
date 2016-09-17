@@ -50,7 +50,7 @@ public struct LiveCameraCellAppearance {
 
 class LiveCameraCell: UICollectionViewCell {
 
-    fileprivate var iconImageView: UIImageView!
+    private var iconImageView: UIImageView!
 
     var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance() {
         didSet {
@@ -68,7 +68,7 @@ class LiveCameraCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         self.configureIcon()
         self.contentView.backgroundColor = self.appearance.backgroundColor
     }
@@ -106,15 +106,15 @@ class LiveCameraCell: UICollectionViewCell {
         self.updateIcon()
     }
 
-    fileprivate var authorizationStatus: AVAuthorizationStatus = .notDetermined
+    private var authorizationStatus: AVAuthorizationStatus = .notDetermined
 
-    fileprivate func configureIcon() {
+    private func configureIcon() {
         self.iconImageView = UIImageView()
         self.iconImageView.contentMode = .center
         self.contentView.addSubview(self.iconImageView)
     }
 
-    fileprivate func updateIcon() {
+    private func updateIcon() {
         switch self.authorizationStatus {
         case .notDetermined, .authorized:
             self.iconImageView.image = self.appearance.cameraImageProvider()

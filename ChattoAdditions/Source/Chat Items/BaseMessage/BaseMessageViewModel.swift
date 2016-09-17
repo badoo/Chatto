@@ -112,7 +112,7 @@ open class MessageViewModel: MessageViewModelProtocol {
     }()
 
     open let dateFormatter: DateFormatter
-    open fileprivate(set) var messageModel: MessageModelProtocol
+    open private(set) var messageModel: MessageModelProtocol
 
     public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImage: UIImage?) {
         self.dateFormatter = dateFormatter

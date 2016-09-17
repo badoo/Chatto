@@ -29,8 +29,8 @@ protocol PhotosInputCellProviderProtocol {
 }
 
 class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
-    fileprivate let reuseIdentifier = "PhotosPlaceholderCellProvider"
-    fileprivate let collectionView: UICollectionView
+    private let reuseIdentifier = "PhotosPlaceholderCellProvider"
+    private let collectionView: UICollectionView
     init(collectionView: UICollectionView) {
         self.collectionView = collectionView
         self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
@@ -42,9 +42,9 @@ class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
 }
 
 class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
-    fileprivate let reuseIdentifier = "PhotosCellProvider"
-    fileprivate let collectionView: UICollectionView
-    fileprivate let dataProvider: PhotosInputDataProviderProtocol
+    private let reuseIdentifier = "PhotosCellProvider"
+    private let collectionView: UICollectionView
+    private let dataProvider: PhotosInputDataProviderProtocol
     init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {
         self.dataProvider = dataProvider
         self.collectionView = collectionView
@@ -57,8 +57,8 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         return cell
     }
 
-    fileprivate let previewRequests = NSMapTable<PhotosInputCell, NSNumber>.weakToStrongObjects()
-    fileprivate func configureCell(_ cell: PhotosInputCell, atIndexPath indexPath: IndexPath) {
+    private let previewRequests = NSMapTable<PhotosInputCell, NSNumber>.weakToStrongObjects()
+    private func configureCell(_ cell: PhotosInputCell, atIndexPath indexPath: IndexPath) {
         if let requestID = self.previewRequests.object(forKey: cell) {
             self.previewRequests.removeObject(forKey: cell)
             self.dataProvider.cancelPreviewImageRequest(requestID.int32Value)

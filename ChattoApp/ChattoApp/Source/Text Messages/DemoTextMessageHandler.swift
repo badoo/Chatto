@@ -26,7 +26,7 @@ import Foundation
 import ChattoAdditions
 
 class DemoTextMessageHandler: BaseMessageInteractionHandlerProtocol {
-    fileprivate let baseHandler: BaseMessageHandler
+    private let baseHandler: BaseMessageHandler
     init (baseHandler: BaseMessageHandler) {
         self.baseHandler = baseHandler
     }

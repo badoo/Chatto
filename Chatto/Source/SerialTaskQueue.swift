@@ -36,10 +36,10 @@ public protocol SerialTaskQueueProtocol {
 }
 
 public final class SerialTaskQueue: SerialTaskQueueProtocol {
-    public fileprivate(set) var isBusy = false
-    public fileprivate(set) var isStopped = true
+    public private(set) var isBusy = false
+    public private(set) var isStopped = true
 
-    fileprivate var tasksQueue = [TaskClosure]()
+    private var tasksQueue = [TaskClosure]()
 
     public init() {}
 
@@ -65,7 +65,7 @@ public final class SerialTaskQueue: SerialTaskQueueProtocol {
         return self.tasksQueue.isEmpty
     }
 
-    fileprivate func maybeExecuteNextTask() {
+    private func maybeExecuteNextTask() {
         if !self.isStopped && !self.isBusy {
             if !self.isEmpty {
                 let firstTask = self.tasksQueue.removeFirst()

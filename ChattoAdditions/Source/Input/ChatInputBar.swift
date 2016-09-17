@@ -112,7 +112,7 @@ open class ChatInputBar: ReusableXibView {
 
     open var maxCharactersCount: UInt? // nil -> unlimited
 
-    fileprivate func updateIntrinsicContentSizeAnimated() {
+    private func updateIntrinsicContentSizeAnimated() {
         let options: UIViewAnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
         UIView.animate(withDuration: 0.25, delay: 0, options: options, animations: { () -> Void in
             self.invalidateIntrinsicContentSize()

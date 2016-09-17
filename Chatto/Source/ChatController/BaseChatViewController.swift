@@ -46,9 +46,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open var updatesConfig =  UpdatesConfig()
 
-    open fileprivate(set) var collectionView: UICollectionView!
+    open private(set) var collectionView: UICollectionView!
     public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
-    fileprivate var _chatDataSource: ChatDataSourceProtocol?
+    private var _chatDataSource: ChatDataSourceProtocol?
     public final var chatDataSource: ChatDataSourceProtocol? {
         get {
             return _chatDataSource
@@ -85,7 +85,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.setupTapGestureRecognizer()
     }
 
-    fileprivate func setupTapGestureRecognizer() {
+    private func setupTapGestureRecognizer() {
         self.collectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
     }
 
@@ -107,7 +107,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.keyboardTracker.stopTracking()
     }
 
-    fileprivate func addCollectionView() {
+    private func addCollectionView() {
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout())
         self.collectionView.contentInset = self.constants.defaultContentInsets
         self.collectionView.scrollIndicatorInsets = self.constants.defaultScrollIndicatorInsets
@@ -137,8 +137,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var unfinishedBatchUpdatesCount: Int = 0
     var onAllBatchUpdatesFinished: (() -> Void)?
 
-    fileprivate var inputContainerBottomConstraint: NSLayoutConstraint!
-    fileprivate func addInputViews() {
+    private var inputContainerBottomConstraint: NSLayoutConstraint!
+    private func addInputViews() {
         self.inputContainer = UIView(frame: CGRect.zero)
         self.inputContainer.autoresizingMask = UIViewAutoresizing()
         self.inputContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -194,7 +194,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
     }
 
-    fileprivate func adjustCollectionViewInsets() {
+    private func adjustCollectionViewInsets() {
         let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
         if isBouncingAtTop { return }
@@ -249,7 +249,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
-    open fileprivate(set) var inputContainer: UIView!
+    open private(set) var inputContainer: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)

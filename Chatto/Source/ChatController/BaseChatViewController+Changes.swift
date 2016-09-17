@@ -104,7 +104,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
     }
 
-    fileprivate func visibleCellsFromCollectionViewApi() -> [IndexPath: UICollectionViewCell] {
+    private func visibleCellsFromCollectionViewApi() -> [IndexPath: UICollectionViewCell] {
         var visibleCells: [IndexPath: UICollectionViewCell] = [:]
         self.collectionView.indexPathsForVisibleItems.forEach({ (indexPath) in
             if let cell = self.collectionView.cellForItem(at: indexPath) {
@@ -114,7 +114,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         return visibleCells
     }
 
-    fileprivate func visibleCellsAreValid(changes: CollectionChanges) -> Bool {
+    private func visibleCellsAreValid(changes: CollectionChanges) -> Bool {
         // Afer performBatchUpdates, indexPathForCell may return a cell refering to the state before the update
         // if self.updatesConfig.fastUpdates is enabled, very fast updates could result in `updateVisibleCells` updating wrong cells.
         // See more: https://github.com/diegosanchezr/UICollectionViewStressing
@@ -126,7 +126,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
     }
 
-    fileprivate enum ScrollAction {
+    private enum ScrollAction {
         case scrollToBottom
         case preservePosition(rectForReferenceIndexPathBeforeUpdate: CGRect?, referenceIndexPathAfterUpdate: IndexPath?)
     }
@@ -226,7 +226,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
     }
 
-    fileprivate func updateModels(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, updateType: UpdateType, completion: @escaping () -> Void) {
+    private func updateModels(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, updateType: UpdateType, completion: @escaping () -> Void) {
         let collectionViewWidth = self.collectionView.bounds.width
         let updateType = self.isFirstLayout ? .firstLoad : updateType
         let performInBackground = updateType != .firstLoad
@@ -263,7 +263,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
     }
 
-    fileprivate func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
+    private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
         let newDecoratedItems = self.chatItemsDecorator?.decorateItems(newItems) ?? newItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
         let changes = Chatto.generateChanges(oldCollection: oldItems.lazy.map { $0 }, newCollection: newDecoratedItems.lazy.map { $0 })
         let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
@@ -275,7 +275,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         return (changes, updateModelClosure)
     }
 
-    fileprivate func createCompanionCollection(fromChatItems newItems: [DecoratedChatItem], previousCompanionCollection oldItems: ChatItemCompanionCollection) -> ChatItemCompanionCollection {
+    private func createCompanionCollection(fromChatItems newItems: [DecoratedChatItem], previousCompanionCollection oldItems: ChatItemCompanionCollection) -> ChatItemCompanionCollection {
         return ChatItemCompanionCollection(items: newItems.map { (decoratedChatItem) -> ChatItemCompanion in
             let chatItem = decoratedChatItem.chatItem
             var presenter: ChatItemPresenterProtocol!
@@ -293,7 +293,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         })
     }
 
-    fileprivate func createLayoutModel(_ items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
+    private func createLayoutModel(_ items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
         typealias IntermediateItemLayoutData = (height: CGFloat?, bottomMargin: CGFloat)
         typealias ItemLayoutData = (height: CGFloat, bottomMargin: CGFloat)
 

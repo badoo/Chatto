@@ -36,7 +36,7 @@ class DemoChatViewController: BaseChatViewController {
         }
     }
 
-    lazy fileprivate var baseMessageHandler: BaseMessageHandler = {
+    lazy private var baseMessageHandler: BaseMessageHandler = {
         return BaseMessageHandler(messageSender: self.messageSender)
     }()
 
@@ -49,7 +49,7 @@ class DemoChatViewController: BaseChatViewController {
     }
 
     @objc
-    fileprivate func addRandomIncomingMessage() {
+    private func addRandomIncomingMessage() {
         self.dataSource.addRandomIncomingMessage()
     }
 
@@ -97,7 +97,7 @@ class DemoChatViewController: BaseChatViewController {
         return items
     }
 
-    fileprivate func createTextInputItem() -> TextChatInputItem {
+    private func createTextInputItem() -> TextChatInputItem {
         let item = TextChatInputItem()
         item.textInputHandler = { [weak self] text in
             self?.dataSource.addTextMessage(text)
@@ -105,7 +105,7 @@ class DemoChatViewController: BaseChatViewController {
         return item
     }
 
-    fileprivate func createPhotoInputItem() -> PhotosChatInputItem {
+    private func createPhotoInputItem() -> PhotosChatInputItem {
         let item = PhotosChatInputItem(presentingController: self)
         item.photoInputHandler = { [weak self] image in
             self?.dataSource.addPhotoMessage(image)

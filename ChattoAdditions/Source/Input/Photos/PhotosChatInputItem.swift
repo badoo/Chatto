@@ -55,7 +55,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
     }
 
-    lazy fileprivate var internalTabView: UIButton = {
+    lazy private var internalTabView: UIButton = {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
 

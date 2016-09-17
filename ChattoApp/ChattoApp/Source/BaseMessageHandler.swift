@@ -32,7 +32,7 @@ public protocol DemoMessageViewModelProtocol {
 
 class BaseMessageHandler {
 
-    fileprivate let messageSender: FakeMessageSender
+    private let messageSender: FakeMessageSender
     init (messageSender: FakeMessageSender) {
         self.messageSender = messageSender
     }

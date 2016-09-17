@@ -49,7 +49,7 @@ class TimeSeparatorPresenter: ChatItemPresenterProtocol {
         self.timeSeparatorModel = timeSeparatorModel
     }
 
-    fileprivate static let cellReuseIdentifier = TimeSeparatorCollectionViewCell.self.description()
+    private static let cellReuseIdentifier = TimeSeparatorCollectionViewCell.self.description()
 
     static func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(TimeSeparatorCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)

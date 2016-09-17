@@ -63,8 +63,8 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
 @objc
 class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?
-    fileprivate var imageManager = PHCachingImageManager()
-    fileprivate var fetchResult: PHFetchResult<PHAsset>!
+    private var imageManager = PHCachingImageManager()
+    private var fetchResult: PHFetchResult<PHAsset>!
     override init() {
         func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
@@ -135,8 +135,8 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
 class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
     weak var delegate: PhotosInputDataProviderDelegate?
-    fileprivate let photosDataProvider: PhotosInputDataProviderProtocol
-    fileprivate let placeholdersDataProvider: PhotosInputDataProviderProtocol
+    private let photosDataProvider: PhotosInputDataProviderProtocol
+    private let placeholdersDataProvider: PhotosInputDataProviderProtocol
 
     init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
         self.photosDataProvider = photosDataProvider

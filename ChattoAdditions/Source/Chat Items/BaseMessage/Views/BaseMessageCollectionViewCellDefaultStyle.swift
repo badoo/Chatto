@@ -118,10 +118,10 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     open lazy var failedIcon: UIImage = self.failedIconImages.normal()
     open lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
-    fileprivate lazy var dateFont: UIFont = self.dateTextStyle.font()
-    fileprivate lazy var dateFontColor: UIColor = self.dateTextStyle.color()
+    private lazy var dateFont: UIFont = self.dateTextStyle.font()
+    private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 
-    fileprivate lazy var dateStringAttributes: [String : AnyObject] = {
+    private lazy var dateStringAttributes: [String : AnyObject] = {
         return [
             NSFontAttributeName : self.dateFont,
             NSForegroundColorAttributeName: self.dateFontColor

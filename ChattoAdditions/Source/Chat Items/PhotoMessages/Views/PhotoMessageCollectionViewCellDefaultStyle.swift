@@ -99,20 +99,20 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
             self.baseStyle = baseStyle
     }
 
-    lazy fileprivate var maskImageIncomingTail: UIImage = self.bubbleMasks.incomingTail()
-    lazy fileprivate var maskImageIncomingNoTail: UIImage = self.bubbleMasks.incomingNoTail()
-    lazy fileprivate var maskImageOutgoingTail: UIImage = self.bubbleMasks.outgoingTail()
-    lazy fileprivate var maskImageOutgoingNoTail: UIImage = self.bubbleMasks.outgoingNoTail()
+    lazy private var maskImageIncomingTail: UIImage = self.bubbleMasks.incomingTail()
+    lazy private var maskImageIncomingNoTail: UIImage = self.bubbleMasks.incomingNoTail()
+    lazy private var maskImageOutgoingTail: UIImage = self.bubbleMasks.outgoingTail()
+    lazy private var maskImageOutgoingNoTail: UIImage = self.bubbleMasks.outgoingNoTail()
 
-    lazy fileprivate var placeholderBackgroundIncoming: UIImage = {
+    lazy private var placeholderBackgroundIncoming: UIImage = {
         return UIImage.bma_imageWithColor(self.baseStyle.baseColorIncoming, size: CGSize(width: 1, height: 1))
     }()
 
-    lazy fileprivate var placeholderBackgroundOutgoing: UIImage = {
+    lazy private var placeholderBackgroundOutgoing: UIImage = {
         return UIImage.bma_imageWithColor(self.baseStyle.baseColorOutgoing, size: CGSize(width: 1, height: 1))
     }()
 
-    lazy fileprivate var placeholderIcon: UIImage = {
+    lazy private var placeholderIcon: UIImage = {
         return UIImage(named: "photo-bubble-placeholder-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
     }()
 

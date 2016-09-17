@@ -78,19 +78,19 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         self.commonInit()
     }
 
-    fileprivate func commonInit() {
+    private func commonInit() {
         self.addSubview(self.bubbleImageView)
         self.addSubview(self.textView)
     }
 
-    fileprivate lazy var bubbleImageView: UIImageView = {
+    private lazy var bubbleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.addSubview(self.borderImageView)
         return imageView
     }()
 
-    fileprivate var borderImageView: UIImageView = UIImageView()
-    fileprivate var textView: UITextView = {
+    private var borderImageView: UIImageView = UIImageView()
+    private var textView: UITextView = {
         let textView = ChatMessageTextView()
         UIView.performWithoutAnimation({ () -> Void in // fixes iOS 8 blinking when cell appears
             textView.backgroundColor = UIColor.clear
@@ -110,7 +110,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         return textView
     }()
 
-    public fileprivate(set) var isUpdating: Bool = false
+    public private(set) var isUpdating: Bool = false
     public func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() -> Void)?) {
         self.isUpdating = true
         let updateAndRefreshViews = {
@@ -130,7 +130,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         }
     }
 
-    fileprivate func updateViews() {
+    private func updateViews() {
         if self.viewContext == .sizing { return }
         if isUpdating { return }
         guard let style = self.style else { return }
@@ -142,7 +142,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
     }
 
-    fileprivate func updateTextView() {
+    private func updateTextView() {
         guard let style = self.style, let viewModel = self.textMessageViewModel else { return }
 
         let font = style.textFont(viewModel: viewModel, isSelected: self.selected)
@@ -172,7 +172,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
     }
 
-    fileprivate func bubbleImage() -> UIImage {
+    private func bubbleImage() -> UIImage {
         return self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
     }
 
@@ -190,7 +190,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     }
 
     public var layoutCache: NSCache<AnyObject, AnyObject>!
-    fileprivate func calculateTextBubbleLayout(preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
+    private func calculateTextBubbleLayout(preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
         let layoutContext = TextBubbleLayoutModel.LayoutContext(
             text: self.textMessageViewModel.text,
             font: self.style.textFont(viewModel: self.textMessageViewModel, isSelected: self.selected),
@@ -254,7 +254,7 @@ private final class TextBubbleLayoutModel {
         self.size = bubbleSize
     }
 
-    fileprivate func textSizeThatFitsWidth(_ width: CGFloat) -> CGSize {
+    private func textSizeThatFitsWidth(_ width: CGFloat) -> CGSize {
         let textContainer: NSTextContainer = {
             let size = CGSize(width: width, height: .greatestFiniteMagnitude)
             let container = NSTextContainer(size: size)
@@ -274,7 +274,7 @@ private final class TextBubbleLayoutModel {
         return rect.size.bma_round()
     }
 
-    fileprivate func replicateUITextViewNSTextStorage() -> NSTextStorage {
+    private func replicateUITextViewNSTextStorage() -> NSTextStorage {
         // See https://github.com/badoo/Chatto/issues/129
         return NSTextStorage(string: self.layoutContext.text, attributes: [
             NSFontAttributeName: self.layoutContext.font,
