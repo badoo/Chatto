@@ -142,7 +142,7 @@ class SlidingDataSourceTests: XCTestCase {
             dataSource.loadPrevious()
             dataSource.adjustWindow(focusPosition: 0, maxWindowSize: 200)
         }
-        dataSource.insertItem("test", position: .Bottom)
+        dataSource.insertItem("test", position: .bottom)
 
 
         while dataSource.hasMore() {
