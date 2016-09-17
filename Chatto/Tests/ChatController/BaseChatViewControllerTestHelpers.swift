@@ -74,9 +74,9 @@ class FakeDataSource: ChatDataSourceProtocol {
         self.delegate?.chatDataSourceDidUpdate(self, updateType: .pagination)
     }
 
-    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:(_ didAdjust: Bool) -> Void) {
+    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:((didAdjust: Bool)) -> Void) {
         self.wasRequestedForMessageCountContention = true
-        completion(false)
+        completion((didAdjust: false))
     }
 }
 
