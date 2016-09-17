@@ -198,7 +198,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             preferredMaxLayoutWidth: preferredMaxLayoutWidth
         )
 
-        if let layoutModel = self.layoutCache.object(forKey: layoutContext.hashValue as AnyObject) as? TextBubbleLayoutModel , layoutModel.layoutContext == layoutContext {
+        if let layoutModel = self.layoutCache.object(forKey: layoutContext.hashValue as AnyObject) as? TextBubbleLayoutModel, layoutModel.layoutContext == layoutContext {
             return layoutModel
         }
 
@@ -286,7 +286,7 @@ private final class TextBubbleLayoutModel {
 /// UITextView with hacks to avoid selection, loupe, define...
 private final class ChatMessageTextView: UITextView {
 
-    override var canBecomeFirstResponder : Bool {
+    override var canBecomeFirstResponder: Bool {
         return false
     }
 

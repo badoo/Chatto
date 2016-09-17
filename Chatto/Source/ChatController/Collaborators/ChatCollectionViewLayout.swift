@@ -92,7 +92,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
         }
     }
 
-    open override var collectionViewContentSize : CGSize {
+    open override var collectionViewContentSize: CGSize {
         return self.layoutModel?.contentSize ?? .zero
     }
 

@@ -112,7 +112,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         })
 
         for cell in self.collectionView.visibleCells {
-            if let cell = cell as? AccessoryViewRevealable , cell.allowAccessoryViewRevealing {
+            if let cell = cell as? AccessoryViewRevealable, cell.allowAccessoryViewRevealing {
                 cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }

@@ -201,7 +201,7 @@ private class KeyboardTrackingView: UIView {
         }
     }
 
-    fileprivate override var intrinsicContentSize : CGSize {
+    fileprivate override var intrinsicContentSize: CGSize {
         return self.preferredSize
     }
 

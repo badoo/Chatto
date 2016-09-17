@@ -61,7 +61,7 @@ open class ExpandableTextView: UITextView {
         self.placeholder.frame = self.bounds
     }
 
-    override open var intrinsicContentSize : CGSize {
+    override open var intrinsicContentSize: CGSize {
         return self.contentSize
     }
 

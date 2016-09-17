@@ -100,14 +100,14 @@ public final class LiveCameraCellPresenter {
         }
 
         cameraCell.onWasAddedToWindow = { [weak self] (cell) in
-            guard let sSelf = self , sSelf.cell === cell else { return }
+            guard let sSelf = self, sSelf.cell === cell else { return }
             if !sSelf.cameraPickerIsVisible {
                 sSelf.startCapturing()
             }
         }
 
         cameraCell.onWasRemovedFromWindow = { [weak self] (cell) in
-            guard let sSelf = self , sSelf.cell === cell else { return }
+            guard let sSelf = self, sSelf.cell === cell else { return }
             if !sSelf.cameraPickerIsVisible {
                 sSelf.stopCapturing()
             }

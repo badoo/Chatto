@@ -72,7 +72,7 @@ extension ChatInputItemView {
         self.inputItem.tabView.frame = self.bounds
     }
 
-    override var intrinsicContentSize : CGSize {
+    override var intrinsicContentSize: CGSize {
         return self.inputItem.tabView.intrinsicContentSize
     }
 }

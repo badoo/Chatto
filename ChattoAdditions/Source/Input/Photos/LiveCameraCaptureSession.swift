@@ -55,7 +55,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     func startCapturing(_ completion: @escaping () -> Void) {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
-            guard let sSelf = self, let strongOperation = operation , !strongOperation.isCancelled else { return }
+            guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
             sSelf.addInputDevicesIfNeeded()
             sSelf.captureSession.startRunning()
             DispatchQueue.main.async(execute: completion)
@@ -67,7 +67,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     func stopCapturing(_ completion: @escaping () -> Void) {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
-            guard let sSelf = self, let strongOperation = operation , !strongOperation.isCancelled else { return }
+            guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
             sSelf.captureSession.stopRunning()
             sSelf.removeInputDevices()
             DispatchQueue.main.async(execute: completion)

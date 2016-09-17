@@ -56,7 +56,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     }
 
     public func enqueueMessageCountReductionIfNeeded() {
-        guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount , (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
+        guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount, (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
         self.updateQueue.addTask { [weak self] (completion) -> () in
             guard let sSelf = self else { return }
             sSelf.chatDataSource?.adjustNumberOfMessages(preferredMaxCount: sSelf.constants.preferredMaxMessageCountAdjustment, focusPosition: sSelf.focusPosition, completion: { (didAdjust) -> Void in
@@ -284,7 +284,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             // Oherwise updateVisibleCells may try to update existing cell with a new presenter which is working with a different type of cell
 
             // Optimization: reuse presenter if it's the same instance.
-            if let oldChatItemCompanion = oldItems[decoratedChatItem.uid] , oldChatItemCompanion.chatItem === chatItem {
+            if let oldChatItemCompanion = oldItems[decoratedChatItem.uid], oldChatItemCompanion.chatItem === chatItem {
                 presenter = oldChatItemCompanion.presenter
             } else {
                 presenter = self.createPresenterForChatItem(decoratedChatItem.chatItem)
