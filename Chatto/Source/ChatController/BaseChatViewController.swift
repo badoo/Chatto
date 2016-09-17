@@ -23,26 +23,6 @@
 */
 
 import UIKit
-fileprivate func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-fileprivate func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
-
 
 open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
@@ -205,7 +185,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.isFirstLayout = false
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
-            if hidesBottomBarWhenPushed && navigationController?.viewControllers.count > 1 && navigationController?.viewControllers.last == self {
+
+            if self.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == self {
                 self.inputContainerBottomConstraint.constant = 0
             } else {
                 self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
