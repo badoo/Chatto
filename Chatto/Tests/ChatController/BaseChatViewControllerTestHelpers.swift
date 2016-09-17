@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 @testable import Chatto
 
-func createFakeChatItems(count count: Int) -> [ChatItemProtocol] {
+func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
     var items = [ChatItemProtocol]()
     for i in 0..<count {
         items.append(FakeChatItem(uid: "\(i)", type: "fake-type"))
@@ -66,17 +66,17 @@ class FakeDataSource: ChatDataSourceProtocol {
         if let chatItemsForLoadNext = self.chatItemsForLoadNext {
             self.chatItems = chatItemsForLoadNext
         }
-        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .pagination)
     }
 
     func loadPrevious() {
         self.wasRequestedForPrevious = true
-        self.delegate?.chatDataSourceDidUpdate(self, updateType: .Pagination)
+        self.delegate?.chatDataSourceDidUpdate(self, updateType: .pagination)
     }
 
-    func adjustNumberOfMessages(preferredMaxCount preferredMaxCount: Int?, focusPosition: Double, completion:(didAdjust: Bool) -> Void) {
+    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:(_ didAdjust: Bool) -> Void) {
         self.wasRequestedForMessageCountContention = true
-        completion(didAdjust: false)
+        completion(false)
     }
 }
 
@@ -84,11 +84,11 @@ class FakeCell: UICollectionViewCell { }
 
 class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
     var presentersCreatedCount: Int = 0
-    func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
+    func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem.type == "fake-type"
     }
 
-    func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         self.presentersCreatedCount += 1
         return FakePresenter()
     }
@@ -99,21 +99,21 @@ class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
 }
 
 class FakePresenter: BaseChatItemPresenter<FakeCell> {
-    override class func registerCells(collectionView: UICollectionView) {
-        collectionView.registerClass(FakeCell.self, forCellWithReuseIdentifier: "fake-cell")
+    override class func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(FakeCell.self, forCellWithReuseIdentifier: "fake-cell")
     }
 
     override func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         return 10
     }
 
-    override func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCellWithReuseIdentifier("fake-cell", forIndexPath: indexPath)
+    override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCell(withReuseIdentifier: "fake-cell", for: indexPath as IndexPath)
     }
 
-    override func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+    override func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         let fakeCell = cell as! FakeCell
-        fakeCell.backgroundColor = UIColor.redColor()
+        fakeCell.backgroundColor = UIColor.red
     }
 }
 
@@ -127,13 +127,14 @@ class FakeChatItem: ChatItemProtocol {
 }
 
 final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {
+
     var onAllTasksFinished: (() -> Void)?
 
     var isBusy = false
     var isStopped = true
     var tasksQueue = [TaskClosure]()
 
-    func addTask(task: TaskClosure) {
+    func addTask(_ task: @escaping TaskClosure) {
         self.tasksQueue.append(task)
         self.maybeExecuteNextTask()
     }
@@ -160,7 +161,7 @@ final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {
             if !self.isEmpty {
                 let firstTask = self.tasksQueue.removeFirst()
                 self.isBusy = true
-                firstTask(completion: { [weak self] () -> Void in
+                firstTask({ [weak self] () -> Void in
                     self?.isBusy = false
                     self?.maybeExecuteNextTask()
                     })

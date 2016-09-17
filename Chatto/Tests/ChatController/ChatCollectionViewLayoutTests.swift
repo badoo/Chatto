@@ -33,7 +33,8 @@ class ChatCollectionViewLayoutModelTests: XCTestCase {
         XCTAssertEqual(width, layoutModel.calculatedForWidth)
         XCTAssertEqual(CGSize(width: 320, height: 0), layoutModel.contentSize)
         XCTAssertEqual([], layoutModel.layoutAttributes)
-        XCTAssertEqual([[]], layoutModel.layoutAttributesBySectionAndItem)
+        XCTAssertEqual(1, layoutModel.layoutAttributesBySectionAndItem.count)
+        XCTAssertEqual([], layoutModel.layoutAttributesBySectionAndItem.first!)
     }
 
     func testThatLayoutIsCorrectlyCreated() {
@@ -49,14 +50,14 @@ class ChatCollectionViewLayoutModelTests: XCTestCase {
         XCTAssertEqual(width, layoutModel.calculatedForWidth)
         XCTAssertEqual(CGSize(width: 320, height: 28), layoutModel.contentSize)
         XCTAssertEqual(expectedLayoutAttributes, layoutModel.layoutAttributes)
-        XCTAssertEqual([expectedLayoutAttributes], layoutModel.layoutAttributesBySectionAndItem)
+        XCTAssertEqual(1, layoutModel.layoutAttributesBySectionAndItem.count)
+        XCTAssertEqual(expectedLayoutAttributes, layoutModel.layoutAttributesBySectionAndItem.first!)
     }
-
 }
 
-private func Atttributes(item item: Int, frame: CGRect) -> UICollectionViewLayoutAttributes {
-    let indexPath = NSIndexPath(forItem: item, inSection: 0)
-    let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+private func Atttributes(item: Int, frame: CGRect) -> UICollectionViewLayoutAttributes {
+    let indexPath = IndexPath(item: item, section: 0)
+    let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
     attributes.frame = frame
     return attributes
 }
