@@ -68,14 +68,14 @@ protocol ChatInputBarPresenter: class {
     }
 
     fileprivate func updateFirstResponderWithInputItem(_ inputItem: ChatInputItemProtocol) {
-        let responder = self.chatInputBar.textView
+        let responder = self.chatInputBar.textView!
         let inputView = inputItem.inputView
-        responder?.inputView = inputView
-        if (responder?.isFirstResponder)! {
+        responder.inputView = inputView
+        if responder.isFirstResponder {
             self.setHeight(forInputView: inputView)
-            responder?.reloadInputViews()
+            responder.reloadInputViews()
         } else {
-            responder?.becomeFirstResponder()
+            responder.becomeFirstResponder()
         }
     }
 
