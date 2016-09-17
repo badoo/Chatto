@@ -28,7 +28,7 @@ import XCTest
 class PhotoMessagePresenterBuilderTests: XCTestCase {
 
     func testThat_CreatesPresenter() {
-        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "photo-message", isIncoming: true, date: NSDate(), status: .Success)
+        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "photo-message", isIncoming: true, date: Date(), status: .success)
         let photoMessageModel = PhotoMessageModel(messageModel: messageModel, imageSize: CGSize(width: 30, height: 30), image: UIImage())
         let builder = PhotoMessagePresenterBuilder(viewModelBuilder: PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>(), interactionHandler: PhotoMessageTestHandler())
         XCTAssertNotNil(builder.createPresenterWithChatItem(photoMessageModel))

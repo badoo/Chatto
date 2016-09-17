@@ -169,7 +169,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenter = {
-        return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence)
+        return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence ?? LiveCameraCellAppearance.createDefaultAppearance())
     }()
 }
 

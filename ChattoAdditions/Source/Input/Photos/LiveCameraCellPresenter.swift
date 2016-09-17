@@ -32,14 +32,9 @@ public final class LiveCameraCellPresenter {
 
     fileprivate let cellAppearance: LiveCameraCellAppearance
     fileprivate let authorizationStatusProvider: () -> AVAuthorizationStatus
-    public init(cellAppearance: LiveCameraCellAppearance, authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
+    public init(cellAppearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance(), authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
         self.cellAppearance = cellAppearance
         self.authorizationStatusProvider = authorizationStatusProvider
-    }
-
-    public convenience init (cellAppearance: LiveCameraCellAppearance?, authorizationStatusProvider: AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
-        let cellAppearance = cellAppearance ?? LiveCameraCellAppearance.createDefaultAppearance()
-        self.init(cellAppearance: cellAppearance, authorizationStatusProvider: authorizationStatusProvider)
     }
 
     deinit {

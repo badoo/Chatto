@@ -30,7 +30,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
 
     var presenter: LiveCameraCellPresenter!
     var cell: LiveCameraCell!
-    var cameraAuthorizationStatus: AVAuthorizationStatus = .NotDetermined
+    var cameraAuthorizationStatus: AVAuthorizationStatus = .notDetermined
     var cameraAuthorizationStatusProvider: LiveCameraCellPresenter.AVAuthorizationStatusProvider!
 
     override func setUp() {
@@ -38,7 +38,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.cameraAuthorizationStatusProvider = { [unowned self] in
             return self.cameraAuthorizationStatus
         }
-        self.presenter = LiveCameraCellPresenter(cellAppearance: nil, authorizationStatusProvider: self.cameraAuthorizationStatusProvider)
+        self.presenter = LiveCameraCellPresenter(authorizationStatusProvider: self.cameraAuthorizationStatusProvider)
         self.cell = LiveCameraCell()
     }
 
@@ -53,7 +53,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsNotDetermined_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .NotDetermined
+        self.cameraAuthorizationStatus = .notDetermined
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -63,7 +63,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsRestricted_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Restricted
+        self.cameraAuthorizationStatus = .restricted
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -73,7 +73,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsDenied_CaptureDoesntStart() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Denied
+        self.cameraAuthorizationStatus = .denied
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -83,7 +83,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenAuthorizationStatusIsAuthorized_CaptureStarts() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -94,7 +94,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         self.presenter.cellWillBeShown(self.cell)
         self.presenter.cellWasHidden(self.cell)
@@ -108,10 +108,10 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
 
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
         self.presenter.cellWillBeShown(self.cell)
 
-        self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
+        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
 
         XCTAssertFalse(mockCaptureSession.isCapturing)
     }
@@ -121,11 +121,11 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = true
         self.presenter.captureSession = mockCaptureSession
 
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
         self.presenter.cellWillBeShown(self.cell)
 
-        self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
-        self.presenter.notificationCenter.postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
 
         XCTAssertTrue(mockCaptureSession.isCapturing)
     }
@@ -135,12 +135,12 @@ class LiveCameraCellPresenterTests: XCTestCase {
         mockCaptureSession.isCapturing = false
         self.presenter.captureSession = mockCaptureSession
 
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
         self.presenter.cellWillBeShown(self.cell)
         self.presenter.cellWasHidden(self.cell)
 
-        self.presenter.notificationCenter.postNotificationName(UIApplicationWillResignActiveNotification, object: nil)
-        self.presenter.notificationCenter.postNotificationName(UIApplicationDidBecomeActiveNotification, object: nil)
+        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
 
         XCTAssertFalse(mockCaptureSession.isCapturing)
     }
@@ -148,7 +148,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenCellIsRemovedFromWindow_ThenCaptureIsStopped() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         self.presenter.cellWillBeShown(self.cell)
 
@@ -159,7 +159,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenReusedCellIsRemovedFromWindow_ThenCaptureIsNotStopped() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         let firstCell = LiveCameraCell()
         self.presenter.cellWillBeShown(firstCell)
@@ -172,7 +172,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenCellIsReaddedToWindow_ThenCaputreIsRestarted() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         self.presenter.cellWillBeShown(self.cell)
         self.cell.didMoveToWindow()
@@ -186,14 +186,14 @@ class LiveCameraCellPresenterTests: XCTestCase {
     func testThat_WhenReusedCellIsReaddedToWindow_ThenCaptureIsNotRestarted() {
         let mockCaptureSession = MockLiveCameraCaptureSession()
         self.presenter.captureSession = mockCaptureSession
-        self.cameraAuthorizationStatus = .Authorized
+        self.cameraAuthorizationStatus = .authorized
 
         let firstCell = LiveCameraCell()
         self.presenter.cellWillBeShown(firstCell)
         self.presenter.cellWillBeShown(self.cell)
         self.cell.didMoveToWindow()
 
-        firstCell.willMoveToWindow(UIWindow())
+        firstCell.willMove(toWindow: UIWindow())
         XCTAssertFalse(mockCaptureSession.isCapturing)
     }
 }
@@ -209,7 +209,7 @@ private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     var isInitialized: Bool = false
     var isCapturing: Bool = false
 
-    func startCapturing(completion: () -> Void) {
+    func startCapturing(_ completion: @escaping () -> Void) {
         guard !self.isCapturing else { return }
 
         self.isInitialized = true
@@ -217,7 +217,7 @@ private class MockLiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         completion()
     }
 
-    func stopCapturing(completion: () -> Void) {
+    func stopCapturing(_ completion: @escaping () -> Void) {
         guard self.isCapturing else { return }
 
         self.isInitialized = true
