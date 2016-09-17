@@ -80,6 +80,6 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         }
         imageProvidedSynchronously = false
 
-        self.previewRequests.setObject(NSNumber(value: requestID as Int32), forKey:cell)
+        self.previewRequests.setObject(NSNumber(value: requestID), forKey:cell)
     }
 }
