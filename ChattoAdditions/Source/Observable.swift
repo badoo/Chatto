@@ -26,13 +26,13 @@ import Foundation
 
 // Be aware this is not thread safe!
 // Why class? https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20160711/002580.html
-open class Observable<T> {
+public class Observable<T> {
 
     public init(_ value: T) {
         self.value = value
     }
 
-    open var value: T {
+    public var value: T {
         didSet {
             self.cleanDeadObservers()
             for observer in self.observers {
@@ -41,16 +41,16 @@ open class Observable<T> {
         }
     }
 
-    open func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
+    public func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
 
-    fileprivate func cleanDeadObservers() {
+    private func cleanDeadObservers() {
         self.observers = self.observers.filter { $0.owner != nil }
     }
 
-    fileprivate lazy var observers = [Observer<T>]()
+    private lazy var observers = [Observer<T>]()
 }
 
 private struct Observer<T> {
