@@ -154,7 +154,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
 
         if aspectRatio == 0 || self.sizes.aspectRatioIntervalForSquaredSize.contains(aspectRatio) {
             return self.sizes.photoSizeSquare
-        } else if aspectRatio < self.sizes.aspectRatioIntervalForSquaredSize.start {
+        } else if aspectRatio < self.sizes.aspectRatioIntervalForSquaredSize.lowerBound {
             return self.sizes.photoSizePortrait
         } else {
             return self.sizes.photoSizeLandscape

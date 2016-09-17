@@ -25,14 +25,14 @@
 import PhotosUI
 
 protocol PhotosInputDataProviderDelegate: class {
-    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void)
+    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void)
 }
 
 protocol PhotosInputDataProviderProtocol {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32
-    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void)
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32
+    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void)
     func cancelPreviewImageRequest(_ requestID: Int32)
 }
 
@@ -49,11 +49,11 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
         return self.numberOfPlaceholders
     }
 
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
         return 0
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void) {
+    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
     }
 
     func cancelPreviewImageRequest(_ requestID: Int32) {
@@ -64,7 +64,7 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
 class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?
     fileprivate var imageManager = PHCachingImageManager()
-    fileprivate var fetchResult: PHFetchResult<AnyObject>!
+    fileprivate var fetchResult: PHFetchResult<PHAsset>!
     override init() {
         func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
@@ -73,7 +73,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
             return options
         }
 
-        if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
+        if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
             self.fetchResult = PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
         }
         else {
@@ -126,7 +126,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
             if let changeDetails = changeInstance.changeDetails(for: sSelf.fetchResult as! PHFetchResult<PHObject>) {
                 let updateBlock = { () -> Void in
-                    (self?.fetchResult = changeDetails.fetchResultAfterChanges)!
+                    self?.fetchResult = changeDetails.fetchResultAfterChanges as! PHFetchResult<PHAsset>
                 }
                 sSelf.delegate?.handlePhotosInpudDataProviderUpdate(sSelf, updateBlock: updateBlock)
             }
@@ -149,7 +149,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         return max(self.photosDataProvider.count, self.placeholdersDataProvider.count)
     }
 
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
         if index < self.photosDataProvider.count {
             return self.photosDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
         } else {
@@ -157,7 +157,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         }
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void) {
+    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
         if index < self.photosDataProvider.count {
             return self.photosDataProvider.requestFullImageAtIndex(index, completion: completion)
         } else {
@@ -171,7 +171,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
 
     // MARK: PhotosInputDataProviderDelegate
 
-    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void) {
+    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
         self.delegate?.handlePhotosInpudDataProviderUpdate(self, updateBlock: updateBlock)
     }
 }

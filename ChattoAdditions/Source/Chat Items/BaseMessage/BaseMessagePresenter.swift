@@ -131,7 +131,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             return 0
         }
         self.configureCell(self.sizingCell, decorationAttributes: decorationAttributes, animated: false, additionalConfiguration: nil)
-        return self.sizingCell.sizeThatFits(CGSize(width: width, height: CGFloat.max)).height
+        return self.sizingCell.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
     }
 
     open override var canCalculateHeightInBackground: Bool {

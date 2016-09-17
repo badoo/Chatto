@@ -29,8 +29,8 @@ protocol LiveCameraCaptureSessionProtocol {
     var captureLayer: AVCaptureVideoPreviewLayer? { get }
     var isInitialized: Bool { get }
     var isCapturing: Bool { get }
-    func startCapturing(_ completion: () -> Void)
-    func stopCapturing(_ completion: () -> Void)
+    func startCapturing(_ completion: @escaping () -> Void)
+    func stopCapturing(_ completion: @escaping () -> Void)
 }
 
 class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {

@@ -263,11 +263,12 @@ extension ChatInputBar: UITextViewDelegate {
 
 private extension String {
     func bma_rangeFromNSRange(_ nsRange: NSRange) -> Range<String.Index> {
-        let from16 = self.utf16.startIndex.advancedBy(nsRange.location, limit: self.utf16.endIndex)
-        let to16 = from16.advancedBy(nsRange.length, limit: self.utf16.endIndex)
-        if let from = String.Index(from16, within: self), let to = String.Index(to16, within: self) {
-            return from ..< to
-        }
-        return self.startIndex...self.startIndex
+        guard
+            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
+            let to16 = utf16.index(from16, offsetBy: nsRange.length, limitedBy: utf16.endIndex),
+            let from = String.Index(from16, within: self),
+            let to = String.Index(to16, within: self)
+            else { return  self.startIndex..<self.startIndex }
+        return from ..< to
     }
 }

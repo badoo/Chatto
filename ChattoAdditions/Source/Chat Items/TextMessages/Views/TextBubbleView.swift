@@ -164,7 +164,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             needsToUpdateText = true
         }
 
-        if needsToUpdateText || self.textView != viewModel.text {
+        if needsToUpdateText || self.textView.text != viewModel.text {
             self.textView.text = viewModel.text
         }
 
@@ -236,6 +236,12 @@ private final class TextBubbleLayoutModel {
                 return self.text.hashValue ^ self.textInsets.bma_hashValue ^ self.preferredMaxLayoutWidth.hashValue ^ self.font.hashValue
             }
         }
+
+        static func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
+            let lhsValues = (lhs.text, lhs.textInsets, lhs.font, lhs.preferredMaxLayoutWidth)
+            let rhsValues = (rhs.text, rhs.textInsets, rhs.font, rhs.preferredMaxLayoutWidth)
+            return lhsValues == rhsValues
+        }
     }
 
     func calculateLayout() {
@@ -275,12 +281,6 @@ private final class TextBubbleLayoutModel {
             "NSOriginalFont": self.layoutContext.font,
         ])
     }
-}
-
-internal func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
-    let lhsValues = (lhs.text, lhs.textInsets, lhs.font, lhs.preferredMaxLayoutWidth)
-    let rhsValues = (rhs.text, rhs.textInsets, rhs.font, rhs.preferredMaxLayoutWidth)
-    return lhsValues == rhsValues
 }
 
 /// UITextView with hacks to avoid selection, loupe, define...

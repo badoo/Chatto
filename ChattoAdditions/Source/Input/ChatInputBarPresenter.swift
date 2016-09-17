@@ -147,9 +147,9 @@ extension BasicChatInputBarPresenter {
 
     func onSendButtonPressed() {
         if let focusedItem = self.focusedItem {
-            focusedItem.handleInput(self.chatInputBar.inputText)
+            focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
-            keyboardItem.handleInput(self.chatInputBar.inputText)
+            keyboardItem.handleInput(self.chatInputBar.inputText as AnyObject)
         }
         self.chatInputBar.inputText = ""
     }

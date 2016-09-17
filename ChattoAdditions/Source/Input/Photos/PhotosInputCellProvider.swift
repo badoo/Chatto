@@ -57,9 +57,9 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         return cell
     }
 
-    fileprivate let previewRequests = NSMapTable.weakToStrongObjects()
+    fileprivate let previewRequests = NSMapTable<PhotosInputCell, NSNumber>.weakToStrongObjects()
     fileprivate func configureCell(_ cell: PhotosInputCell, atIndexPath indexPath: IndexPath) {
-        if let requestID = self.previewRequests.object(forKey: cell) as? NSNumber {
+        if let requestID = self.previewRequests.object(forKey: cell) {
             self.previewRequests.removeObject(forKey: cell)
             self.dataProvider.cancelPreviewImageRequest(requestID.int32Value)
         }
@@ -73,7 +73,7 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
             // We can get here even afer calling cancelPreviewImageRequest (looks liek a race condition in PHImageManager)
             // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
             // This can also be called before returning from requestPreviewImageAtIndex (synchronously) if the image is cached by PHImageManager
-            let imageIsForThisCell = imageProvidedSynchronously || (sSelf.previewRequests.object(forKey: sCell) as? NSNumber)?.int32Value == requestID
+            let imageIsForThisCell = imageProvidedSynchronously || sSelf.previewRequests.object(forKey: sCell)?.int32Value == requestID
             if imageIsForThisCell {
                 sCell.image = image
             }

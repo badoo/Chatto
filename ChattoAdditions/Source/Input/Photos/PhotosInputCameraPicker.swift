@@ -30,9 +30,9 @@ class PhotosInputCameraPicker: NSObject {
         self.presentingController = presentingController
     }
 
-    fileprivate var completionBlocks: (onImageTaken: ((UIImage?) -> Void)?, onCameraPickerDismissed: (() -> Void)?)?
+    private var completionBlocks: (onImageTaken: ((UIImage?) -> Void)?, onCameraPickerDismissed: (() -> Void)?)?
 
-    func presentCameraPicker(onImageTaken: (UIImage?) -> Void, onCameraPickerDismissed: () -> Void) {
+    func presentCameraPicker(onImageTaken: @escaping (UIImage?) -> Void, onCameraPickerDismissed: @escaping () -> Void) {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             onImageTaken(nil)
             onCameraPickerDismissed()
