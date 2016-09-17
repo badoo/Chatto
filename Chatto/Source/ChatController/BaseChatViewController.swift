@@ -108,7 +108,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     fileprivate func addCollectionView() {
-        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout)
+        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout())
         self.collectionView.contentInset = self.constants.defaultContentInsets
         self.collectionView.scrollIndicatorInsets = self.constants.defaultScrollIndicatorInsets
         self.collectionView.alwaysBounceVertical = true
@@ -264,7 +264,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     */
     open var chatItemsDecorator: ChatItemsDecoratorProtocol?
 
-    open var createCollectionViewLayout: UICollectionViewLayout {
+    open func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = ChatCollectionViewLayout()
         layout.delegate = self
         return layout
