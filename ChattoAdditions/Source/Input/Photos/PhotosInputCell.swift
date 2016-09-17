@@ -26,7 +26,7 @@ import UIKit
 
 class PhotosInputPlaceholderCell: UICollectionViewCell {
 
-    private struct Constants {
+    fileprivate struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
         static let imageName = "lock"
     }
@@ -41,11 +41,11 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    private var imageView: UIImageView!
-    private func commonInit() {
+    fileprivate var imageView: UIImageView!
+    fileprivate func commonInit() {
         self.imageView = UIImageView()
-        self.imageView.contentMode = .Center
-        self.imageView.image = UIImage(named: Constants.imageName, inBundle: NSBundle(forClass: PhotosInputPlaceholderCell.self), compatibleWithTraitCollection: nil)
+        self.imageView.contentMode = .center
+        self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
     }
@@ -59,7 +59,7 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
 
 class PhotosInputCell: UICollectionViewCell {
 
-    private struct Constants {
+    fileprivate struct Constants {
         static let backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
     }
 
@@ -73,11 +73,11 @@ class PhotosInputCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    private var imageView: UIImageView!
-    private func commonInit() {
+    fileprivate var imageView: UIImageView!
+    fileprivate func commonInit() {
         self.clipsToBounds = true
         self.imageView = UIImageView()
-        self.imageView.contentMode = .ScaleAspectFill
+        self.imageView.contentMode = .scaleAspectFill
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
     }

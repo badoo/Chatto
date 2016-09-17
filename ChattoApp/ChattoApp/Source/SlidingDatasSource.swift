@@ -25,19 +25,19 @@
 import Foundation
 
 public enum InsertPosition {
-    case Top
-    case Bottom
+    case top
+    case bottom
 }
 
-public class SlidingDataSource<Element> {
+open class SlidingDataSource<Element> {
 
-    private var pageSize: Int
-    private var windowOffset: Int
-    private var windowCount: Int
-    private var itemGenerator: (() -> Element)?
-    private var items = [Element]()
-    private var itemsOffset: Int
-    public var itemsInWindow: [Element] {
+    fileprivate var pageSize: Int
+    fileprivate var windowOffset: Int
+    fileprivate var windowCount: Int
+    fileprivate var itemGenerator: (() -> Element)?
+    fileprivate var items = [Element]()
+    fileprivate var itemsOffset: Int
+    open var itemsInWindow: [Element] {
         let offset = self.windowOffset - self.itemsOffset
         return Array(items[offset..<offset+self.windowCount])
     }
@@ -48,29 +48,29 @@ public class SlidingDataSource<Element> {
         self.windowCount = 0
         self.pageSize = pageSize
         self.itemGenerator = itemGenerator
-        self.generateItems(min(pageSize, count), position: .Top)
+        self.generateItems(min(pageSize, count), position: .top)
     }
 
     public convenience init(items: [Element], pageSize: Int) {
         self.init(count: 0, pageSize: pageSize, itemGenerator: nil)
         for item in items {
-            self.insertItem(item, position: .Bottom)
+            self.insertItem(item, position: .bottom)
         }
     }
 
-    private func generateItems(count: Int, position: InsertPosition) {
+    fileprivate func generateItems(_ count: Int, position: InsertPosition) {
         guard count > 0 else { return }
         guard let itemGenerator = self.itemGenerator else {
             fatalError("Can't create messages without a generator")
         }
         for _ in 0..<count {
-            self.insertItem(itemGenerator(), position: .Top)
+            self.insertItem(itemGenerator(), position: .top)
         }
     }
 
-    public func insertItem(item: Element, position: InsertPosition) {
-        if position == .Top {
-            self.items.insert(item, atIndex: 0)
+    open func insertItem(_ item: Element, position: InsertPosition) {
+        if position == .top {
+            self.items.insert(item, at: 0)
             let shouldExpandWindow = self.itemsOffset == self.windowOffset
             self.itemsOffset -= 1
             if shouldExpandWindow {
@@ -86,34 +86,34 @@ public class SlidingDataSource<Element> {
         }
     }
 
-    public func hasPrevious() -> Bool {
+    open func hasPrevious() -> Bool {
         return self.windowOffset > 0
     }
 
-    public func hasMore() -> Bool {
+    open func hasMore() -> Bool {
         return self.windowOffset + self.windowCount < self.itemsOffset + self.items.count
     }
 
-    public func loadPrevious() {
+    open func loadPrevious() {
         let previousWindowOffset = self.windowOffset
         let previousWindowCount = self.windowCount
         let nextWindowOffset = max(0, self.windowOffset - self.pageSize)
         let messagesNeeded = self.itemsOffset - nextWindowOffset
         if messagesNeeded > 0 {
-            self.generateItems(messagesNeeded, position: .Top)
+            self.generateItems(messagesNeeded, position: .top)
         }
         let newItemsCount = previousWindowOffset - nextWindowOffset
         self.windowOffset = nextWindowOffset
         self.windowCount = previousWindowCount + newItemsCount
     }
 
-    public func loadNext() {
+    open func loadNext() {
         guard self.items.count > 0 else { return }
         let itemCountAfterWindow = self.itemsOffset + self.items.count - self.windowOffset - self.windowCount
         self.windowCount += min(self.pageSize, itemCountAfterWindow)
     }
 
-    public func adjustWindow(focusPosition focusPosition: Double, maxWindowSize: Int) -> Bool {
+    open func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
         assert(0 <= focusPosition && focusPosition <= 1, "")
         guard 0 <= focusPosition && focusPosition <= 1 else {
             assert(false, "focus should be in the [0, 1] interval")

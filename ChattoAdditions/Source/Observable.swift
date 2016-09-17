@@ -26,37 +26,37 @@ import Foundation
 
 // Be aware this is not thread safe!
 // Why class? https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20160711/002580.html
-public class Observable<T> {
+open class Observable<T> {
 
     public init(_ value: T) {
         self.value = value
     }
 
-    public var value: T {
+    open var value: T {
         didSet {
             self.cleanDeadObservers()
             for observer in self.observers {
-                observer.closure(old: oldValue, new: self.value)
+                observer.closure(oldValue, self.value)
             }
         }
     }
 
-    public func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
+    open func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
 
-    private func cleanDeadObservers() {
+    fileprivate func cleanDeadObservers() {
         self.observers = self.observers.filter { $0.owner != nil }
     }
 
-    private lazy var observers = [Observer<T>]()
+    fileprivate lazy var observers = [Observer<T>]()
 }
 
 private struct Observer<T> {
     weak var owner: AnyObject?
-    let closure: (old: T, new: T) -> ()
-    init (owner: AnyObject, closure: (old: T, new: T) -> ()) {
+    let closure: (_ old: T, _ new: T) -> ()
+    init (owner: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
         self.owner = owner
         self.closure = closure
     }

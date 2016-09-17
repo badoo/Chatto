@@ -29,7 +29,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_WhenCountGreaterThanPageSize_ThenInitializesCorrectly() {
         var uid = 0
-        let expectedArray = (0..<50).reverse().map { (id) -> String in
+        let expectedArray = (0..<50).reversed().map { (id) -> String in
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
@@ -44,7 +44,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_WhenCountLessThanPageSize_ThenInitializesCorrectly() {
         var uid = 0
-        let expectedArray = (0..<10).reverse().map { (id) -> String in
+        let expectedArray = (0..<10).reversed().map { (id) -> String in
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10, pageSize: 50) { () -> String in
@@ -71,7 +71,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_LoadPreviousAddsElementsOnTheTop() {
         var uid = 0
-        let expectedArray = (0..<100).reverse().map { (id) -> String in
+        let expectedArray = (0..<100).reversed().map { (id) -> String in
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (id) -> String in
@@ -88,7 +88,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_LoadNextAddsElementsOnTheBottom() {
         var uid = 0
-        let expectedArray = (300..<550).reverse().map { (id) -> String in
+        let expectedArray = (300..<550).reversed().map { (id) -> String in
             return "\(id)"
         }
 
@@ -108,7 +108,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_AdjustSizeReducesSizeAroundFocusPosition() {
         var uid = 0
-        let expectedArray = (140..<150).reverse().map { (id) -> String in
+        let expectedArray = (140..<150).reversed().map { (id) -> String in
             return "\(id)"
         }
 
@@ -128,7 +128,7 @@ class SlidingDataSourceTests: XCTestCase {
         // Scroll to the bottom adjusting window size
         // Load previous --> crash
         var uid = 0
-        var expectedArray = (0..<249).reverse().map { (id) -> String in
+        var expectedArray = (0..<249).reversed().map { (id) -> String in
             return "\(id)"
         }
         expectedArray.append("test")
@@ -157,7 +157,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_LastLoadPreviousContainsFirstMessage() {
         var uid = 0
-        let expectedArray = (0..<52).reverse().map { (id) -> String in
+        let expectedArray = (0..<52).reversed().map { (id) -> String in
             return "\(id)"
         }
         let dataSource = SlidingDataSource(count: 52, pageSize: 50) { (id) -> String in

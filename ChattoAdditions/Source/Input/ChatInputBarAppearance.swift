@@ -24,13 +24,13 @@
 
 public struct ChatInputBarAppearance {
     public struct SendButtonAppearance {
-        public var font = UIFont.systemFontOfSize(16)
+        public var font = UIFont.systemFont(ofSize: 16)
         public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         public var title = ""
         public var titleColors: [UIControlStateWrapper: UIColor] = [
-            UIControlStateWrapper(state: .Disabled): UIColor.bma_color(rgb: 0x9AA3AB),
-            UIControlStateWrapper(state: .Normal): UIColor.bma_color(rgb: 0x007AFF),
-            UIControlStateWrapper(state: .Highlighted): UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
+            UIControlStateWrapper(state: .disabled): UIColor.bma_color(rgb: 0x9AA3AB),
+            UIControlStateWrapper(state: UIControlState()): UIColor.bma_color(rgb: 0x007AFF),
+            UIControlStateWrapper(state: .highlighted): UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.white.withAlphaComponent(0.4))
         ]
     }
 
@@ -41,10 +41,10 @@ public struct ChatInputBarAppearance {
     }
 
     public struct TextInputAppearance {
-        public var font = UIFont.systemFontOfSize(12)
-        public var textColor = UIColor.blackColor()
-        public var placeholderFont = UIFont.systemFontOfSize(12)
-        public var placeholderColor = UIColor.grayColor()
+        public var font = UIFont.systemFont(ofSize: 12)
+        public var textColor = UIColor.black
+        public var placeholderFont = UIFont.systemFont(ofSize: 12)
+        public var placeholderColor = UIColor.gray
         public var placeholderText = ""
         public var textInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
     }

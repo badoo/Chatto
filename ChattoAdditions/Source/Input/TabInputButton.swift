@@ -34,14 +34,14 @@ public struct TabInputButtonAppearance {
     }
 }
 
-public class TabInputButton: UIButton {
+open class TabInputButton: UIButton {
 
-    static public func makeInputButton(withAppearance appearance: TabInputButtonAppearance, accessibilityID: String? = nil) -> TabInputButton {
+    static open func makeInputButton(withAppearance appearance: TabInputButtonAppearance, accessibilityID: String? = nil) -> TabInputButton {
         let images = appearance.images
-        let button = TabInputButton(type: .Custom)
-        button.exclusiveTouch = true
+        let button = TabInputButton(type: .custom)
+        button.isExclusiveTouch = true
         images.forEach { (state, image) in
-            button.setImage(image, forState: state.controlState)
+            button.setImage(image, for: state.controlState)
         }
         if let accessibilityIdentifier = accessibilityID {
             button.accessibilityIdentifier = accessibilityIdentifier
@@ -50,12 +50,12 @@ public class TabInputButton: UIButton {
         return button
     }
 
-    private var size: CGSize?
+    fileprivate var size: CGSize?
 
-    public override func intrinsicContentSize() -> CGSize {
+    open override var intrinsicContentSize : CGSize {
         if let size = self.size {
             return size
         }
-        return super.intrinsicContentSize()
+        return super.intrinsicContentSize
     }
 }

@@ -25,15 +25,15 @@
 import PhotosUI
 
 protocol PhotosInputDataProviderDelegate: class {
-    func handlePhotosInpudDataProviderUpdate(dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void)
+    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void)
 }
 
 protocol PhotosInputDataProviderProtocol {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
-    func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32
-    func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void)
-    func cancelPreviewImageRequest(requestID: Int32)
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32
+    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void)
+    func cancelPreviewImageRequest(_ requestID: Int32)
 }
 
 class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
@@ -49,68 +49,68 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
         return self.numberOfPlaceholders
     }
 
-    func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
         return 0
     }
 
-    func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void) {
+    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void) {
     }
 
-    func cancelPreviewImageRequest(requestID: Int32) {
+    func cancelPreviewImageRequest(_ requestID: Int32) {
     }
 }
 
 @objc
 class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?
-    private var imageManager = PHCachingImageManager()
-    private var fetchResult: PHFetchResult!
+    fileprivate var imageManager = PHCachingImageManager()
+    fileprivate var fetchResult: PHFetchResult<AnyObject>!
     override init() {
-        func fetchOptions(predicate: NSPredicate?) -> PHFetchOptions {
+        func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
             options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
             options.predicate = predicate
             return options
         }
 
-        if let userLibraryCollection = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
-            self.fetchResult = PHAsset.fetchAssetsInAssetCollection(userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.Image.rawValue)")))
+        if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
+            self.fetchResult = PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
         }
         else {
-            self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: fetchOptions(nil))
+            self.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions(nil))
         }
         super.init()
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+        PHPhotoLibrary.shared().register(self)
     }
 
     deinit {
-        PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self)
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
     var count: Int {
         return self.fetchResult.count
     }
 
-    func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index] as! PHAsset
         let options = PHImageRequestOptions()
-        options.deliveryMode = .HighQualityFormat
-        return self.imageManager.requestImageForAsset(asset, targetSize: targetSize, contentMode: .AspectFill, options: options) { (image, info) in
+        options.deliveryMode = .highQualityFormat
+        return self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
             if let image = image {
                 completion(image)
             }
         }
     }
 
-    func cancelPreviewImageRequest(requestID: Int32) {
+    func cancelPreviewImageRequest(_ requestID: Int32) {
         self.imageManager.cancelImageRequest(requestID)
     }
 
-    func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void) {
+    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index] as! PHAsset
-        self.imageManager.requestImageDataForAsset(asset, options: .None) { (data, dataUTI, orientation, info) -> Void in
+        self.imageManager.requestImageData(for: asset, options: .none) { (data, dataUTI, orientation, info) -> Void in
             if let data = data, let image = UIImage(data: data) {
                 completion(image)
             }
@@ -119,14 +119,14 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
     // MARK: PHPhotoLibraryChangeObserver
 
-    func photoLibraryDidChange(changeInstance: PHChange) {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
         // Photos may call this method on a background queue; switch to the main queue to update the UI.
-        dispatch_async(dispatch_get_main_queue()) { [weak self]  in
+        DispatchQueue.main.async { [weak self]  in
             guard let sSelf = self else { return }
 
-            if let changeDetails = changeInstance.changeDetailsForFetchResult(sSelf.fetchResult) {
+            if let changeDetails = changeInstance.changeDetails(for: sSelf.fetchResult as! PHFetchResult<PHObject>) {
                 let updateBlock = { () -> Void in
-                    self?.fetchResult = changeDetails.fetchResultAfterChanges
+                    (self?.fetchResult = changeDetails.fetchResultAfterChanges)!
                 }
                 sSelf.delegate?.handlePhotosInpudDataProviderUpdate(sSelf, updateBlock: updateBlock)
             }
@@ -136,8 +136,8 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
 class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
     weak var delegate: PhotosInputDataProviderDelegate?
-    private let photosDataProvider: PhotosInputDataProviderProtocol
-    private let placeholdersDataProvider: PhotosInputDataProviderProtocol
+    fileprivate let photosDataProvider: PhotosInputDataProviderProtocol
+    fileprivate let placeholdersDataProvider: PhotosInputDataProviderProtocol
 
     init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
         self.photosDataProvider = photosDataProvider
@@ -149,7 +149,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         return max(self.photosDataProvider.count, self.placeholdersDataProvider.count)
     }
 
-    func requestPreviewImageAtIndex(index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
+    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: (UIImage) -> Void) -> Int32 {
         if index < self.photosDataProvider.count {
             return self.photosDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
         } else {
@@ -157,7 +157,7 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         }
     }
 
-    func requestFullImageAtIndex(index: Int, completion: (UIImage) -> Void) {
+    func requestFullImageAtIndex(_ index: Int, completion: (UIImage) -> Void) {
         if index < self.photosDataProvider.count {
             return self.photosDataProvider.requestFullImageAtIndex(index, completion: completion)
         } else {
@@ -165,13 +165,13 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         }
     }
 
-    func cancelPreviewImageRequest(requestID: Int32) {
+    func cancelPreviewImageRequest(_ requestID: Int32) {
         return self.photosDataProvider.cancelPreviewImageRequest(requestID)
     }
 
     // MARK: PhotosInputDataProviderDelegate
 
-    func handlePhotosInpudDataProviderUpdate(dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void) {
+    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: () -> Void) {
         self.delegate?.handlePhotosInpudDataProviderUpdate(self, updateBlock: updateBlock)
     }
 }

@@ -26,7 +26,7 @@ import UIKit
 
 class SendingStatusCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet private weak var label: UILabel!
+    @IBOutlet fileprivate weak var label: UILabel!
 
     var text: NSAttributedString? {
         didSet {

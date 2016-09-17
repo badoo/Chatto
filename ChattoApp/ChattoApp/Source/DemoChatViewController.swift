@@ -36,20 +36,20 @@ class DemoChatViewController: BaseChatViewController {
         }
     }
 
-    lazy private var baseMessageHandler: BaseMessageHandler = {
+    lazy fileprivate var baseMessageHandler: BaseMessageHandler = {
         return BaseMessageHandler(messageSender: self.messageSender)
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let image = UIImage(named: "bubble-incoming-tail-border", inBundle: NSBundle(forClass: DemoChatViewController.self), compatibleWithTraitCollection: nil)?.bma_tintWithColor(UIColor.blueColor())
+        let image = UIImage(named: "bubble-incoming-tail-border", in: Bundle(for: DemoChatViewController.self), compatibleWith: nil)?.bma_tintWithColor(UIColor.blueColor())
         super.chatItemsDecorator = ChatItemsDemoDecorator()
         let addIncomingMessageButton = UIBarButtonItem(image: image, style: .Plain, target: self, action: #selector(DemoChatViewController.addRandomIncomingMessage))
         self.navigationItem.rightBarButtonItem = addIncomingMessageButton
     }
 
     @objc
-    private func addRandomIncomingMessage() {
+    fileprivate func addRandomIncomingMessage() {
         self.dataSource.addRandomIncomingMessage()
     }
 
@@ -97,7 +97,7 @@ class DemoChatViewController: BaseChatViewController {
         return items
     }
 
-    private func createTextInputItem() -> TextChatInputItem {
+    fileprivate func createTextInputItem() -> TextChatInputItem {
         let item = TextChatInputItem()
         item.textInputHandler = { [weak self] text in
             self?.dataSource.addTextMessage(text)
@@ -105,7 +105,7 @@ class DemoChatViewController: BaseChatViewController {
         return item
     }
 
-    private func createPhotoInputItem() -> PhotosChatInputItem {
+    fileprivate func createPhotoInputItem() -> PhotosChatInputItem {
         let item = PhotosChatInputItem(presentingController: self)
         item.photoInputHandler = { [weak self] image in
             self?.dataSource.addPhotoMessage(image)

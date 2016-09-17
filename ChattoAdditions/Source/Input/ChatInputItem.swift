@@ -25,9 +25,9 @@
 import Foundation
 
 public enum ChatInputItemPresentationMode: UInt {
-    case Keyboard
-    case CustomView
-    case None
+    case keyboard
+    case customView
+    case none
 }
 
 public protocol ChatInputItemProtocol: AnyObject {
@@ -37,5 +37,5 @@ public protocol ChatInputItemProtocol: AnyObject {
     var showsSendButton: Bool { get }
     var selected: Bool { get set }
 
-    func handleInput(input: AnyObject)
+    func handleInput(_ input: AnyObject)
 }

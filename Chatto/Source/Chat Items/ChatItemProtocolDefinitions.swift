@@ -35,29 +35,29 @@ public protocol ChatItemDecorationAttributesProtocol {
 }
 
 public protocol ChatItemPresenterProtocol: class {
-    static func registerCells(collectionView: UICollectionView)
+    static func registerCells(_ collectionView: UICollectionView)
     var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
-    func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell
-    func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
-    func cellWillBeShown(cell: UICollectionViewCell) // optional
-    func cellWasHidden(cell: UICollectionViewCell) // optional
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
+    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
+    func cellWillBeShown(_ cell: UICollectionViewCell) // optional
+    func cellWasHidden(_ cell: UICollectionViewCell) // optional
     func shouldShowMenu() -> Bool // optional. Default is false
-    func canPerformMenuControllerAction(action: Selector) -> Bool // optional. Default is false
-    func performMenuControllerAction(action: Selector) // optional
+    func canPerformMenuControllerAction(_ action: Selector) -> Bool // optional. Default is false
+    func performMenuControllerAction(_ action: Selector) // optional
 }
 
 public extension ChatItemPresenterProtocol { // Optionals
     var canCalculateHeightInBackground: Bool { return false }
-    func cellWillBeShown(cell: UICollectionViewCell) {}
-    func cellWasHidden(cell: UICollectionViewCell) {}
+    func cellWillBeShown(_ cell: UICollectionViewCell) {}
+    func cellWasHidden(_ cell: UICollectionViewCell) {}
     func shouldShowMenu() -> Bool { return false }
-    func canPerformMenuControllerAction(action: Selector) -> Bool { return false }
-    func performMenuControllerAction(action: Selector) {}
+    func canPerformMenuControllerAction(_ action: Selector) -> Bool { return false }
+    func performMenuControllerAction(_ action: Selector) {}
 }
 
 public protocol ChatItemPresenterBuilderProtocol {
-    func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool
-    func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
+    func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool
+    func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
     var presenterType: ChatItemPresenterProtocol.Type { get }
 }

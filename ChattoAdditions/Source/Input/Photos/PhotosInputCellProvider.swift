@@ -25,61 +25,61 @@
 import UIKit
 
 protocol PhotosInputCellProviderProtocol {
-    func cellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell
+    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell
 }
 
 class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
-    private let reuseIdentifier = "PhotosPlaceholderCellProvider"
-    private let collectionView: UICollectionView
+    fileprivate let reuseIdentifier = "PhotosPlaceholderCellProvider"
+    fileprivate let collectionView: UICollectionView
     init(collectionView: UICollectionView) {
         self.collectionView = collectionView
-        self.collectionView.registerClass(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
+        self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
-    func cellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
-        return self.collectionView.dequeueReusableCellWithReuseIdentifier(self.reuseIdentifier, forIndexPath: indexPath)
+    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell {
+        return self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath)
     }
 }
 
 class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
-    private let reuseIdentifier = "PhotosCellProvider"
-    private let collectionView: UICollectionView
-    private let dataProvider: PhotosInputDataProviderProtocol
+    fileprivate let reuseIdentifier = "PhotosCellProvider"
+    fileprivate let collectionView: UICollectionView
+    fileprivate let dataProvider: PhotosInputDataProviderProtocol
     init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {
         self.dataProvider = dataProvider
         self.collectionView = collectionView
-        self.collectionView.registerClass(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
+        self.collectionView.register(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
-    func cellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = self.collectionView.dequeueReusableCellWithReuseIdentifier(self.reuseIdentifier, forIndexPath: indexPath) as! PhotosInputCell
+    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! PhotosInputCell
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
 
-    private let previewRequests = NSMapTable.weakToStrongObjectsMapTable()
-    private func configureCell(cell: PhotosInputCell, atIndexPath indexPath: NSIndexPath) {
-        if let requestID = self.previewRequests.objectForKey(cell) as? NSNumber {
-            self.previewRequests.removeObjectForKey(cell)
-            self.dataProvider.cancelPreviewImageRequest(requestID.intValue)
+    fileprivate let previewRequests = NSMapTable.weakToStrongObjects()
+    fileprivate func configureCell(_ cell: PhotosInputCell, atIndexPath indexPath: IndexPath) {
+        if let requestID = self.previewRequests.object(forKey: cell) as? NSNumber {
+            self.previewRequests.removeObject(forKey: cell)
+            self.dataProvider.cancelPreviewImageRequest(requestID.int32Value)
         }
 
-        let index = indexPath.item - 1
+        let index = (indexPath as NSIndexPath).item - 1
         let targetSize = cell.bounds.size
         var imageProvidedSynchronously = true
         var requestID: Int32 = -1
         requestID = self.dataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize) { [weak self, weak cell] image in
-            guard let sSelf = self, sCell = cell else { return }
+            guard let sSelf = self, let sCell = cell else { return }
             // We can get here even afer calling cancelPreviewImageRequest (looks liek a race condition in PHImageManager)
             // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
             // This can also be called before returning from requestPreviewImageAtIndex (synchronously) if the image is cached by PHImageManager
-            let imageIsForThisCell = imageProvidedSynchronously || (sSelf.previewRequests.objectForKey(sCell) as? NSNumber)?.intValue == requestID
+            let imageIsForThisCell = imageProvidedSynchronously || (sSelf.previewRequests.object(forKey: sCell) as? NSNumber)?.int32Value == requestID
             if imageIsForThisCell {
                 sCell.image = image
             }
         }
         imageProvidedSynchronously = false
 
-        self.previewRequests.setObject(NSNumber(int: requestID), forKey:cell)
+        self.previewRequests.setObject(NSNumber(value: requestID as Int32), forKey:cell)
     }
 }

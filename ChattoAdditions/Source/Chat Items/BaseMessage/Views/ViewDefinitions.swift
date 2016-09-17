@@ -25,8 +25,8 @@
 import Foundation
 
 public enum ViewContext {
-    case Normal
-    case Sizing // You may skip some cell updates for faster sizing
+    case normal
+    case sizing // You may skip some cell updates for faster sizing
 }
 
 public protocol MaximumLayoutWidthSpecificable {

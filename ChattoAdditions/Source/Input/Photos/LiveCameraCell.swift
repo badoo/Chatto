@@ -32,8 +32,8 @@ public struct LiveCameraCellAppearance {
     public var cameraLockImageProvider: () -> UIImage?
 
     public init(backgroundColor: UIColor,
-                @autoclosure(escaping) cameraImage: () -> UIImage?,
-                @autoclosure(escaping) cameraLockImage: () -> UIImage?) {
+                cameraImage: @autoclosure @escaping () -> UIImage?,
+                cameraLockImage: @autoclosure @escaping () -> UIImage?) {
         self.backgroundColor = backgroundColor
         self.cameraImageProvider = cameraImage
         self.cameraLockImageProvider = cameraLockImage
@@ -42,15 +42,15 @@ public struct LiveCameraCellAppearance {
     public static func createDefaultAppearance() -> LiveCameraCellAppearance {
         return LiveCameraCellAppearance(
             backgroundColor: UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1),
-            cameraImage: UIImage(named: "camera", inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil),
-            cameraLockImage: UIImage(named: "camera_lock", inBundle: NSBundle(forClass: LiveCameraCell.self), compatibleWithTraitCollection: nil)
+            cameraImage: UIImage(named: "camera", in: Bundle(for: LiveCameraCell.self), compatibleWith: nil),
+            cameraLockImage: UIImage(named: "camera_lock", in: Bundle(for: LiveCameraCell.self), compatibleWith: nil)
         )
     }
 }
 
 class LiveCameraCell: UICollectionViewCell {
 
-    private var iconImageView: UIImageView!
+    fileprivate var iconImageView: UIImageView!
 
     var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance() {
         didSet {
@@ -68,7 +68,7 @@ class LiveCameraCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    private func commonInit() {
+    fileprivate func commonInit() {
         self.configureIcon()
         self.contentView.backgroundColor = self.appearance.backgroundColor
     }
@@ -81,44 +81,44 @@ class LiveCameraCell: UICollectionViewCell {
                     self.contentView.layer.insertSublayer(captureLayer, below: self.iconImageView.layer)
                     let animation = CABasicAnimation.bma_fadeInAnimationWithDuration(0.25)
                     let animationKey = "fadeIn"
-                    captureLayer.removeAnimationForKey(animationKey)
-                    captureLayer.addAnimation(animation, forKey: animationKey)
+                    captureLayer.removeAnimation(forKey: animationKey)
+                    captureLayer.add(animation, forKey: animationKey)
                 }
                 self.setNeedsLayout()
             }
         }
     }
 
-    typealias CellCallback = (cell: LiveCameraCell) -> Void
+    typealias CellCallback = (_ cell: LiveCameraCell) -> Void
 
     var onWasAddedToWindow: CellCallback?
     var onWasRemovedFromWindow: CellCallback?
     override func didMoveToWindow() {
         if let _ = self.window {
-            self.onWasAddedToWindow?(cell: self)
+            self.onWasAddedToWindow?(self)
         } else {
-            self.onWasRemovedFromWindow?(cell: self)
+            self.onWasRemovedFromWindow?(self)
         }
     }
 
-    func updateWithAuthorizationStatus(status: AVAuthorizationStatus) {
+    func updateWithAuthorizationStatus(_ status: AVAuthorizationStatus) {
         self.authorizationStatus = status
         self.updateIcon()
     }
 
-    private var authorizationStatus: AVAuthorizationStatus = .NotDetermined
+    fileprivate var authorizationStatus: AVAuthorizationStatus = .notDetermined
 
-    private func configureIcon() {
+    fileprivate func configureIcon() {
         self.iconImageView = UIImageView()
-        self.iconImageView.contentMode = .Center
+        self.iconImageView.contentMode = .center
         self.contentView.addSubview(self.iconImageView)
     }
 
-    private func updateIcon() {
+    fileprivate func updateIcon() {
         switch self.authorizationStatus {
-        case .NotDetermined, .Authorized:
+        case .notDetermined, .authorized:
             self.iconImageView.image = self.appearance.cameraImageProvider()
-        case .Restricted, .Denied:
+        case .restricted, .denied:
             self.iconImageView.image = self.appearance.cameraLockImageProvider()
         }
         self.setNeedsLayout()

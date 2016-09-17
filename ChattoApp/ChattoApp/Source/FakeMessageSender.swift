@@ -30,21 +30,21 @@ public protocol DemoMessageModelProtocol: MessageModelProtocol {
     var status: MessageStatus { get set }
 }
 
-public class FakeMessageSender {
+open class FakeMessageSender {
 
-    public var onMessageChanged: ((message: DemoMessageModelProtocol) -> Void)?
+    open var onMessageChanged: ((_ message: DemoMessageModelProtocol) -> Void)?
 
-    public func sendMessages(messages: [DemoMessageModelProtocol]) {
+    open func sendMessages(_ messages: [DemoMessageModelProtocol]) {
         for message in messages {
             self.fakeMessageStatus(message)
         }
     }
 
-    public func sendMessage(message: DemoMessageModelProtocol) {
+    open func sendMessage(_ message: DemoMessageModelProtocol) {
         self.fakeMessageStatus(message)
     }
 
-    private func fakeMessageStatus(message: DemoMessageModelProtocol) {
+    fileprivate func fakeMessageStatus(_ message: DemoMessageModelProtocol) {
         switch message.status {
         case .Success:
             break
@@ -61,22 +61,22 @@ public class FakeMessageSender {
                 }
             default:
                 let delaySeconds: Double = Double(arc4random_uniform(1200)) / 1000.0
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delaySeconds * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+                DispatchQueue.main.asyncAfter(deadline: delayTime) {
                     self.fakeMessageStatus(message)
                 }
             }
         }
     }
 
-    private func updateMessage(message: DemoMessageModelProtocol, status: MessageStatus) {
+    fileprivate func updateMessage(_ message: DemoMessageModelProtocol, status: MessageStatus) {
         if message.status != status {
             message.status = status
             self.notifyMessageChanged(message)
         }
     }
 
-    private func notifyMessageChanged(message: DemoMessageModelProtocol) {
-        self.onMessageChanged?(message: message)
+    fileprivate func notifyMessageChanged(_ message: DemoMessageModelProtocol) {
+        self.onMessageChanged?(message)
     }
 }

@@ -56,8 +56,8 @@ class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
         }
         self.transferStatus.value = .Transfering
         let delaySeconds: Double = Double(arc4random_uniform(600)) / 1000.0
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delaySeconds * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             let deltaProgress = Double(arc4random_uniform(15)) / 100.0
             self.transferProgress.value = min(self.transferProgress.value + deltaProgress, 1)
             self.fakeProgress()
@@ -75,7 +75,7 @@ class DemoPhotoMessageViewModelBuilder: ViewModelBuilderProtocol {
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    func createViewModel(model: DemoPhotoMessageModel) -> DemoPhotoMessageViewModel {
+    func createViewModel(_ model: DemoPhotoMessageModel) -> DemoPhotoMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
         let photoMessageViewModel = DemoPhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         photoMessageViewModel.avatarImage.value = UIImage(named: "userAvatar")

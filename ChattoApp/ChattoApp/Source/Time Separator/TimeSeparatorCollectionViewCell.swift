@@ -28,7 +28,7 @@ import Chatto
 
 class TimeSeparatorCollectionViewCell: UICollectionViewCell {
 
-    private let label: UILabel = UILabel()
+    fileprivate let label: UILabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,10 +40,10 @@ class TimeSeparatorCollectionViewCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    private func commonInit() {
-        self.label.font = UIFont.systemFontOfSize(12)
-        self.label.textAlignment = .Center
-        self.label.textColor = UIColor.grayColor()
+    fileprivate func commonInit() {
+        self.label.font = UIFont.systemFont(ofSize: 12)
+        self.label.textAlignment = .center
+        self.label.textColor = UIColor.gray
         self.contentView.addSubview(label)
     }
 
@@ -55,7 +55,7 @@ class TimeSeparatorCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private func setTextOnLabel(text: String) {
+    fileprivate func setTextOnLabel(_ text: String) {
         self.label.text = text
         self.setNeedsLayout()
     }

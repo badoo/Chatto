@@ -25,15 +25,15 @@
 import UIKit
 
 public enum TransferDirection {
-    case Upload
-    case Download
+    case upload
+    case download
 }
 
 public enum TransferStatus {
-    case Idle
-    case Transfering
-    case Failed
-    case Success
+    case idle
+    case transfering
+    case failed
+    case success
 }
 
 public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
@@ -44,21 +44,21 @@ public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol
     var imageSize: CGSize { get }
 }
 
-public class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {
-    public var photoMessage: PhotoMessageModelProtocol {
+open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {
+    open var photoMessage: PhotoMessageModelProtocol {
         return self._photoMessage
     }
-    public let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public var transferStatus: Observable<TransferStatus> = Observable(.Idle)
-    public var transferProgress: Observable<Double> = Observable(0)
-    public var transferDirection: Observable<TransferDirection> = Observable(.Download)
-    public var image: Observable<UIImage?>
-    public var imageSize: CGSize {
+    open let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    open var transferStatus: Observable<TransferStatus> = Observable(.idle)
+    open var transferProgress: Observable<Double> = Observable(0)
+    open var transferDirection: Observable<TransferDirection> = Observable(.download)
+    open var image: Observable<UIImage?>
+    open var imageSize: CGSize {
         return self.photoMessage.imageSize
     }
-    public let messageViewModel: MessageViewModelProtocol
-    public var showsFailedIcon: Bool {
-        return self.messageViewModel.showsFailedIcon || self.transferStatus.value == .Failed
+    open let messageViewModel: MessageViewModelProtocol
+    open var showsFailedIcon: Bool {
+        return self.messageViewModel.showsFailedIcon || self.transferStatus.value == .failed
     }
 
     public init(photoMessage: PhotoMessageModelT, messageViewModel: MessageViewModelProtocol) {
@@ -67,27 +67,27 @@ public class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol
         self.messageViewModel = messageViewModel
     }
 
-    public func willBeShown() {
+    open func willBeShown() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 
-    public func wasHidden() {
+    open func wasHidden() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 }
 
-public class PhotoMessageViewModelDefaultBuilder<PhotoMessageModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {
+open class PhotoMessageViewModelDefaultBuilder<PhotoMessageModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(model: PhotoMessageModelT) -> PhotoMessageViewModel<PhotoMessageModelT> {
+    open func createViewModel(_ model: PhotoMessageModelT) -> PhotoMessageViewModel<PhotoMessageModelT> {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
         let photoMessageViewModel = PhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         return photoMessageViewModel
     }
 
-    public func canCreateViewModel(fromModel model: Any) -> Bool {
+    open func canCreateViewModel(fromModel model: Any) -> Bool {
         return model is PhotoMessageModelT
     }
 }

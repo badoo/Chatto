@@ -23,13 +23,13 @@
 */
 
 public extension CABasicAnimation {
-    class func bma_fadeInAnimationWithDuration(duration: CFTimeInterval) -> CABasicAnimation {
+    class func bma_fadeInAnimationWithDuration(_ duration: CFTimeInterval) -> CABasicAnimation {
         let animation = CABasicAnimation.init(keyPath: "opacity")
         animation.duration = duration
         animation.fromValue = 0
         animation.toValue = 1
         animation.fillMode = kCAFillModeForwards
-        animation.additive = false
+        animation.isAdditive = false
         return animation
     }
 }

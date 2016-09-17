@@ -25,12 +25,12 @@
 import Foundation
 import Chatto
 
-public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT where
+open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
+: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT>
-: ChatItemPresenterBuilderProtocol {
+    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     typealias ViewModelT = ViewModelBuilderT.ViewModelT
     typealias ModelT = ViewModelBuilderT.ModelT
 
@@ -47,10 +47,10 @@ public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT 
 
     lazy var sizingCell: TextMessageCollectionViewCell = {
         var cell: TextMessageCollectionViewCell? = nil
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             cell = TextMessageCollectionViewCell.sizingCell()
         } else {
-            dispatch_sync(dispatch_get_main_queue(), {
+            DispatchQueue.main.sync(execute: {
                 cell =  TextMessageCollectionViewCell.sizingCell()
             })
         }
@@ -58,14 +58,14 @@ public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT 
         return cell!
     }()
 
-    public lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
-    public lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
+    open lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
+    open lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
 
-    public func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
+    open func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
     }
 
-    public func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
             messageModel: chatItem as! ModelT,
@@ -78,7 +78,7 @@ public class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT 
         )
     }
 
-    public var presenterType: ChatItemPresenterProtocol.Type {
+    open var presenterType: ChatItemPresenterProtocol.Type {
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>.self
     }
 }
