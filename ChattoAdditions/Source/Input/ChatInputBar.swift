@@ -199,7 +199,7 @@ extension ChatInputBar {
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
-        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: UIControlState())
+        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
         appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
             self.sendButton.setTitleColor(color, for: state.controlState)
         }

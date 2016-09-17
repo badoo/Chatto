@@ -196,7 +196,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         if self.isUpdating { return }
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
         if viewModel.showsFailedIcon {
-            self.failedButton.setImage(self.failedIcon, for: UIControlState())
+            self.failedButton.setImage(self.failedIcon, for: .normal)
             self.failedButton.setImage(self.failedIconHighlighted, for: .highlighted)
             self.failedButton.alpha = 1
         } else {
