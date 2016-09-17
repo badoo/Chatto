@@ -270,7 +270,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var accessoryViewRevealer: AccessoryViewRevealer!
     open fileprivate(set) var inputContainer: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
-    let presentersByCell = NSMapTable(keyOptions: .weakMemory, valueOptions: .weakMemory)
+    let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
     open internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()

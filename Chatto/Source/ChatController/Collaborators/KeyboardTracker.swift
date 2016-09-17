@@ -220,7 +220,7 @@ private class KeyboardTrackingView: UIView {
     }
 
     fileprivate override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard let object = object, let superview = self.superview else { return }
+        guard let object = object as? UIView, let superview = self.superview else { return }
         if object === superview {
             guard let sChange = change else { return }
             let oldCenter = (sChange[NSKeyValueChangeKey.oldKey] as! NSValue).cgPointValue

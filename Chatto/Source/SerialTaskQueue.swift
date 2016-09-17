@@ -24,10 +24,10 @@
 
 import Foundation
 
-public typealias TaskClosure = (_ completion: () -> Void) -> Void
+public typealias TaskClosure = (_ completion: @escaping () -> Void) -> Void
 
 public protocol SerialTaskQueueProtocol {
-    func addTask(_ task: TaskClosure)
+    func addTask(_ task: @escaping TaskClosure)
     func start()
     func stop()
     func flushQueue()

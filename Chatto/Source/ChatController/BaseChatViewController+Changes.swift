@@ -94,7 +94,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
         assert(self.visibleCellsAreValid(changes: changes), "Invalid visible cells. Don't call me")
 
-        let cellsToUpdate = updated(collection: self.visibleCellsFromCollectionViewApi() as! [NSIndexPath : _], withChanges: changes)
+        let cellsToUpdate = updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
         self.visibleCells = cellsToUpdate
 
         cellsToUpdate.forEach { (indexPath, cell) in
@@ -120,7 +120,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         // See more: https://github.com/diegosanchezr/UICollectionViewStressing
 
         if self.updatesConfig.fastUpdates {
-            return updated(collection: self.visibleCells, withChanges: changes) == updated(collection: self.visibleCellsFromCollectionViewApi() as! [NSIndexPath : _], withChanges: changes)
+            return updated(collection: self.visibleCells, withChanges: changes) == updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
         } else {
             return true // never seen inconsistency without fastUpdates
         }
@@ -232,10 +232,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         let performInBackground = updateType != .firstLoad
 
         self.autoLoadingEnabled = false
-        let perfomBatchUpdates: (_ changes: CollectionChanges, _ updateModelClosure: () -> Void) -> ()  = { [weak self] modelUpdate in
+        let perfomBatchUpdates: (_ changes: CollectionChanges, _ updateModelClosure: @escaping () -> Void) -> ()  = { [weak self] (changes, updateModelClosure) in
             self?.performBatchUpdates(
-                updateModelClosure: modelUpdate.updateModelClosure,
-                changes: modelUpdate.changes,
+                updateModelClosure: updateModelClosure,
+                changes: changes,
                 updateType: updateType,
                 completion: { () -> Void in
                     self?.autoLoadingEnabled = true

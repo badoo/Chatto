@@ -30,6 +30,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
         return self.chatItemCompanionCollection.count
     }
 
+    @objc(collectionView:cellForItemAtIndexPath:)
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let presenter = self.presenterForIndexPath(indexPath)
         let cell = presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
@@ -38,6 +39,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
         return cell
     }
 
+    @objc(collectionView:didEndDisplayingCell:forItemAtIndexPath:)
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // Carefull: this index path can refer to old data source after an update. Don't use it to grab items from the model
         // Instead let's use a mapping presenter <--> cell
@@ -60,6 +62,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
         }
     }
 
+    @objc(collectionView:willDisplayCell:forItemAtIndexPath:)
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // Here indexPath should always referer to updated data source.
 
@@ -80,14 +83,17 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
         }
     }
 
+    @objc(collectionView:shouldShowMenuForItemAtIndexPath:)
     public func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return self.presenterForIndexPath(indexPath).shouldShowMenu() ?? false
     }
 
+    @objc(collectionView:canPerformAction:forItemAtIndexPath:withSender:)
     public func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         return self.presenterForIndexPath(indexPath).canPerformMenuControllerAction(action) ?? false
     }
 
+    @objc(collectionView:performAction:forItemAtIndexPath:withSender:)
     public func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
         self.presenterForIndexPath(indexPath).performMenuControllerAction(action)
     }
