@@ -86,7 +86,7 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
 
         let attrs = [
             NSFontAttributeName : UIFont.systemFont(ofSize: 10.0),
-            NSForegroundColorAttributeName: self.statusModel.status == .Failed ? UIColor.redColor() : UIColor.blackColor()
+            NSForegroundColorAttributeName: self.statusModel.status == .failed ? UIColor.red : UIColor.black
         ]
         statusCell.text = NSAttributedString(
             string: self.statusText(),
@@ -95,9 +95,9 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
 
     func statusText() -> String {
         switch self.statusModel.status {
-        case .Failed:
+        case .failed:
             return NSLocalizedString("Sending failed", comment: "")
-        case .Sending:
+        case .sending:
             return NSLocalizedString("Sending...", comment: "")
         default:
             return ""

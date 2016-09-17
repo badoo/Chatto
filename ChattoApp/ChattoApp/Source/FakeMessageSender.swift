@@ -46,18 +46,18 @@ open class FakeMessageSender {
 
     fileprivate func fakeMessageStatus(_ message: DemoMessageModelProtocol) {
         switch message.status {
-        case .Success:
+        case .success:
             break
-        case .Failed:
-            self.updateMessage(message, status: .Sending)
+        case .failed:
+            self.updateMessage(message, status: .sending)
             self.fakeMessageStatus(message)
-        case .Sending:
+        case .sending:
             switch arc4random_uniform(100) % 5 {
             case 0:
                 if arc4random_uniform(100) % 2 == 0 {
-                    self.updateMessage(message, status: .Failed)
+                    self.updateMessage(message, status: .failed)
                 } else {
-                    self.updateMessage(message, status: .Success)
+                    self.updateMessage(message, status: .success)
                 }
             default:
                 let delaySeconds: Double = Double(arc4random_uniform(1200)) / 1000.0

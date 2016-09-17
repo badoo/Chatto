@@ -41,20 +41,20 @@ class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
     }
 
     func fakeProgress() {
-        if [TransferStatus.Success, TransferStatus.Failed].contains(self.transferStatus.value) {
+        if [TransferStatus.success, TransferStatus.failed].contains(self.transferStatus.value) {
             return
         }
         if self.transferProgress.value >= 1.0 {
             if arc4random_uniform(100) % 2 == 0 {
-                self.transferStatus.value = .Success
+                self.transferStatus.value = .success
                 self.image.value = self.fakeImage
             } else {
-                self.transferStatus.value = .Failed
+                self.transferStatus.value = .failed
             }
 
             return
         }
-        self.transferStatus.value = .Transfering
+        self.transferStatus.value = .transfering
         let delaySeconds: Double = Double(arc4random_uniform(600)) / 1000.0
         let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         DispatchQueue.main.asyncAfter(deadline: delayTime) {

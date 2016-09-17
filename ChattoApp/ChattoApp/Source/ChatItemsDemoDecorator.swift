@@ -54,7 +54,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                 }
 
                 if let previousMessage = prev as? MessageModelProtocol {
-                    addTimeSeparator = calendar.compareDate(currentMessage.date, toDate: previousMessage.date, toUnitGranularity: NSCalendar.Unit.Day) != ComparisonResult.OrderedSame
+                    addTimeSeparator = calendar.compare(currentMessage.date, to: previousMessage.date, toGranularity: Calendar.Component.day) != ComparisonResult.orderedSame
                 } else {
                     addTimeSeparator = true
                 }
@@ -92,7 +92,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
             return 0
         } else if currentMessage.senderId != nextMessage.senderId {
             return Constants.normalSeparation
-        } else if nextMessage.date.timeIntervalSinceDate(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
+        } else if nextMessage.date.timeIntervalSince(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
             return Constants.normalSeparation
         } else {
             return Constants.shortSeparation
@@ -100,6 +100,6 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
     }
 
     func showsStatusForMessage(_ message: MessageModelProtocol) -> Bool {
-        return message.status == .Failed || message.status == .Sending
+        return message.status == .failed || message.status == .sending
     }
 }

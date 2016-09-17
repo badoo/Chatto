@@ -41,7 +41,7 @@ func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> De
 
 func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
     let senderId = isIncoming ? "1" : "2"
-    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.Success : .Failed
+    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
     let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
     return messageModel
 }
