@@ -113,6 +113,7 @@ open class SlidingDataSource<Element> {
         self.windowCount += min(self.pageSize, itemCountAfterWindow)
     }
 
+    @discardableResult
     open func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
         assert(0 <= focusPosition && focusPosition <= 1, "")
         guard 0 <= focusPosition && focusPosition <= 1 else {

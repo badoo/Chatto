@@ -130,7 +130,7 @@ public final class LiveCameraCellPresenter {
 
     @objc
     fileprivate func handleWillResignActiveNotification() {
-        if self.captureSession.isCapturing ?? false {
+        if self.captureSession.isCapturing {
             self.needsRestoreCaptureSession = true
             self.stopCapturing()
         }

@@ -251,7 +251,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
 
         if performInBackground {
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async { () -> Void in
+            DispatchQueue.global(qos: .userInitiated).async { () -> Void in
                 let modelUpdate = createModelUpdate()
                 DispatchQueue.main.async(execute: { () -> Void in
                     perfomBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)

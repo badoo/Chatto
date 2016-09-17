@@ -45,7 +45,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         var layer = self.captureLayer
         layer?.removeFromSuperlayer()
         var session: AVCaptureSession? = self.isInitialized ? self.captureSession : nil
-        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async {
+        DispatchQueue.global(qos: .default).async {
             // Analogously to AVCaptureSession creation, dealloc can take very long, so let's do it out of the main thread
             if layer != nil { layer = nil }
             if session != nil { session = nil }
