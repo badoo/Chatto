@@ -198,7 +198,7 @@ extension PhotosInputView: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var cell: UICollectionViewCell
-        if (indexPath as NSIndexPath).item == Constants.liveCameraItemIndex {
+        if indexPath.item == Constants.liveCameraItemIndex {
             cell = self.liveCameraPresenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         } else {
             cell = self.cellProvider.cellForItemAtIndexPath(indexPath)
@@ -209,7 +209,7 @@ extension PhotosInputView: UICollectionViewDataSource {
 
 extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).item == Constants.liveCameraItemIndex {
+        if indexPath.item == Constants.liveCameraItemIndex {
             if self.cameraAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestCameraPermission(self)
             } else {
@@ -228,7 +228,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
             if self.photoLibraryAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
-                self.dataProvider.requestFullImageAtIndex((indexPath as NSIndexPath).item - 1) { image in
+                self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
                     self.delegate?.inputView(self, didSelectImage: image)
                 }
             }
@@ -236,7 +236,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return self.itemSizeCalculator.itemSizeForWidth(collectionView.bounds.width, atIndex: (indexPath as NSIndexPath).item)
+        return self.itemSizeCalculator.itemSizeForWidth(collectionView.bounds.width, atIndex: indexPath.item)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -248,13 +248,13 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).item == Constants.liveCameraItemIndex {
+        if indexPath.item == Constants.liveCameraItemIndex {
             self.liveCameraPresenter.cellWillBeShown(cell)
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if (indexPath as NSIndexPath).item == Constants.liveCameraItemIndex {
+        if indexPath.item == Constants.liveCameraItemIndex {
             self.liveCameraPresenter.cellWasHidden(cell)
         }
     }

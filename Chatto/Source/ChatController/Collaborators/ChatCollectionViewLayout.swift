@@ -101,8 +101,8 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
     }
 
     open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        if (indexPath as NSIndexPath).section < self.layoutModel.layoutAttributesBySectionAndItem.count && (indexPath as NSIndexPath).item < self.layoutModel.layoutAttributesBySectionAndItem[(indexPath as NSIndexPath).section].count {
-            return self.layoutModel.layoutAttributesBySectionAndItem[(indexPath as NSIndexPath).section][(indexPath as NSIndexPath).item]
+        if indexPath.section < self.layoutModel.layoutAttributesBySectionAndItem.count && indexPath.item < self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section].count {
+            return self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section][indexPath.item]
         }
         assert(false, "Unexpected indexPath requested:\(indexPath)")
         return nil

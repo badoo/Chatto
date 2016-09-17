@@ -99,7 +99,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     func presenterForIndexPath(_ indexPath: IndexPath) -> ChatItemPresenterProtocol {
-        return self.presenterForIndex((indexPath as NSIndexPath).item, chatItemCompanionCollection: self.chatItemCompanionCollection)
+        return self.presenterForIndex(indexPath.item, chatItemCompanionCollection: self.chatItemCompanionCollection)
     }
 
     func presenterForIndex(_ index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
@@ -115,6 +115,6 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     public func decorationAttributesForIndexPath(_ indexPath: IndexPath) -> ChatItemDecorationAttributesProtocol? {
-        return self.chatItemCompanionCollection[(indexPath as NSIndexPath).item].decorationAttributes
+        return self.chatItemCompanionCollection[indexPath.item].decorationAttributes
     }
 }
