@@ -49,7 +49,7 @@ class ChatInputBarTests: XCTestCase {
         return itemView
     }
 
-    private func simulateTapOnTextViewForDelegate(textViewDelegate: UITextViewDelegate) {
+    private func simulateTapOnTextViewForDelegate(_ textViewDelegate: UITextViewDelegate) {
         let dummyTextView = UITextView()
         let shouldBeginEditing = textViewDelegate.textViewShouldBeginEditing?(dummyTextView) ?? true
         guard shouldBeginEditing else { return }
@@ -196,14 +196,14 @@ class ChatInputBarTests: XCTestCase {
 
     func testThat_WhenTextViewGoingToBecomeEditable_ItBecomesEditableByDefault() {
         self.setupPresenter()
-        self.simulateTapOnTextViewForDelegate(textViewDelegate: self.bar)
+        self.simulateTapOnTextViewForDelegate(self.bar)
         XCTAssertTrue(self.presenter.onDidBeginEditingCalled)
     }
 
     func testThat_WhenTextViewGoingToBecomeEditableAndDelegateAllowsIt_ItWillBeEditable() {
         self.setupDelegate()
         self.delegate.inputBarShouldBeginTextEditingResult = true
-        self.simulateTapOnTextViewForDelegate(textViewDelegate: self.bar)
+        self.simulateTapOnTextViewForDelegate(self.bar)
         XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
         XCTAssertTrue(self.delegate.inputBarDidBeginEditingCalled)
     }
@@ -211,7 +211,7 @@ class ChatInputBarTests: XCTestCase {
     func testThat_WhenTextViewGoingToBecomeEditableAndDelegateDisallowsIt_ItWontBeEditable() {
         self.setupDelegate()
         self.delegate.inputBarShouldBeginTextEditingResult = false
-        self.simulateTapOnTextViewForDelegate(textViewDelegate: self.bar)
+        self.simulateTapOnTextViewForDelegate(self.bar)
         XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
         XCTAssertFalse(self.delegate.inputBarDidBeginEditingCalled)
     }
