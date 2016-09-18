@@ -110,20 +110,12 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
-        #if swift(>=2.3)
-            let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        #else
-            let selector = #selector(NSObject.copy(_:))
-        #endif
+        let selector = #selector(UIResponderStandardEditActions.copy(_:))
         return action == selector
     }
 
     open override func performMenuControllerAction(_ action: Selector) {
-        #if swift(>=2.3)
-            let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        #else
-            let selector = #selector(NSObject.copy(_:))
-        #endif
+        let selector = #selector(UIResponderStandardEditActions.copy(_:))
         if action == selector {
             UIPasteboard.general.string = self.messageViewModel.text
         } else {
