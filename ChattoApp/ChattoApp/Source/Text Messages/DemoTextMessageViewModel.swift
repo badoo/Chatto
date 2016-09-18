@@ -25,30 +25,30 @@
 import Foundation
 import ChattoAdditions
 
-open class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel>, DemoMessageViewModelProtocol {
+public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel>, DemoMessageViewModelProtocol {
 
     public override init(textMessage: DemoTextMessageModel, messageViewModel: MessageViewModelProtocol) {
         super.init(textMessage: textMessage, messageViewModel: messageViewModel)
     }
 
-    open var messageModel: DemoMessageModelProtocol {
+    public var messageModel: DemoMessageModelProtocol {
         return self.textMessage
     }
 }
 
-open class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
+public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    open func createViewModel(_ textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
+    public func createViewModel(_ textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = DemoTextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
         textMessageViewModel.avatarImage.value = UIImage(named: "userAvatar")
         return textMessageViewModel
     }
 
-    open func canCreateViewModel(fromModel model: Any) -> Bool {
+    public func canCreateViewModel(fromModel model: Any) -> Bool {
         return model is DemoTextMessageModel
     }
 }

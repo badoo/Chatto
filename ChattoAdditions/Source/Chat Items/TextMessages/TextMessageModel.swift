@@ -29,11 +29,11 @@ public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
 }
 
 open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
-    open var messageModel: MessageModelProtocol {
+    public var messageModel: MessageModelProtocol {
         return self._messageModel
     }
-    open let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    open let text: String
+    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public let text: String
     public init(messageModel: MessageModelT, text: String) {
         self._messageModel = messageModel
         self.text = text

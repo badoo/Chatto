@@ -32,7 +32,8 @@ protocol ChatInputBarPresenter: class {
     func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol)
 }
 
-@objc open class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+@objc
+public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter

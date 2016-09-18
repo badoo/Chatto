@@ -27,10 +27,10 @@ import Foundation
 open class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
-    open var photoInputHandler: ((UIImage) -> Void)?
-    open var cameraPermissionHandler: (() -> Void)?
-    open var photosPermissionHandler: (() -> Void)?
-    open weak var presentingController: UIViewController?
+    public var photoInputHandler: ((UIImage) -> Void)?
+    public var cameraPermissionHandler: (() -> Void)?
+    public var photosPermissionHandler: (() -> Void)?
+    public weak var presentingController: UIViewController?
 
     let buttonAppearance: TabInputButtonAppearance
     let inputViewAppearance: PhotosInputViewAppearance
@@ -42,7 +42,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         self.inputViewAppearance = inputViewAppearance
     }
 
-    open class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+    public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
         let images: [UIControlStateWrapper: UIImage] = [
             UIControlStateWrapper(state: .normal): UIImage(named: "camera-icon-unselected", in: Bundle(for: Class.self), compatibleWith: nil)!,
             UIControlStateWrapper(state: .selected): UIImage(named: "camera-icon-selected", in: Bundle(for: Class.self), compatibleWith: nil)!,
@@ -51,7 +51,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    open class func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
+    public static func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
         return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
     }
 

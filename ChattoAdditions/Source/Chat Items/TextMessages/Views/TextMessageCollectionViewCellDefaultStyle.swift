@@ -65,9 +65,9 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }
 
 
-    open let bubbleImages: BubbleImages
-    open let textStyle: TextStyle
-    open let baseStyle: BaseMessageCollectionViewCellDefaultStyle
+    public let bubbleImages: BubbleImages
+    public let textStyle: TextStyle
+    public let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     public init (
         bubbleImages: BubbleImages = Class.createDefaultBubbleImages(),
         textStyle: TextStyle = Class.createDefaultTextStyle(),

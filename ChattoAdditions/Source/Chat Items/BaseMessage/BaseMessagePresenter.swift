@@ -64,17 +64,17 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             self.interactionHandler = interactionHandler
     }
 
-    open let messageModel: ModelT
-    open let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
-    open let viewModelBuilder: ViewModelBuilderT
-    open let interactionHandler: InteractionHandlerT?
-    open let cellStyle: BaseMessageCollectionViewCellStyleProtocol
+    public let messageModel: ModelT
+    public let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
+    public let viewModelBuilder: ViewModelBuilderT
+    public let interactionHandler: InteractionHandlerT?
+    public let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
     public private(set) final lazy var messageViewModel: ViewModelT = {
         return self.createViewModel()
     }()
 
-    open func createViewModel() -> ViewModelT {
+    public func createViewModel() -> ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
         return viewModel
     }
@@ -93,7 +93,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         self.configureCell(cell, decorationAttributes: decorationAttributes, animated: false, additionalConfiguration: nil)
     }
 
-    open var decorationAttributes: ChatItemDecorationAttributes!
+    public var decorationAttributes: ChatItemDecorationAttributes!
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.showsTail

@@ -58,8 +58,8 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
         return cell!
     }()
 
-    open lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
-    open lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
+    public lazy var textCellStyle: TextMessageCollectionViewCellStyleProtocol = TextMessageCollectionViewCellDefaultStyle()
+    public lazy var baseMessageStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
 
     open func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)

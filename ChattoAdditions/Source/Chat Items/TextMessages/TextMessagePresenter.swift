@@ -55,12 +55,12 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
-    open override class func registerCells(_ collectionView: UICollectionView) {
+    public final override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-incoming")
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
     }
 
-    open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+    public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let identifier = self.messageViewModel.isIncoming ? "text-message-incoming" : "text-message-outcoming"
         return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
     }
@@ -74,7 +74,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         return viewModel
     }
 
-    open var textCell: TextMessageCollectionViewCell? {
+    public var textCell: TextMessageCollectionViewCell? {
         if let cell = self.cell {
             if let textCell = cell as? TextMessageCollectionViewCell {
                 return textCell
@@ -99,7 +99,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         }
     }
 
-    open func updateCurrentCell() {
+    public func updateCurrentCell() {
         if let cell = self.textCell, let decorationAttributes = self.decorationAttributes {
             self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .appearing, additionalConfiguration: nil)
         }

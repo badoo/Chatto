@@ -65,7 +65,7 @@ public struct ChatCollectionViewLayoutModel {
 
 open class ChatCollectionViewLayout: UICollectionViewLayout {
     var layoutModel: ChatCollectionViewLayoutModel!
-    open weak var delegate: ChatCollectionViewLayoutDelegate?
+    public weak var delegate: ChatCollectionViewLayoutDelegate?
 
     // Optimization: after reloadData we'll get invalidateLayout, but prepareLayout will be delayed until next run loop.
     // Client may need to force prepareLayout after reloadData, but we don't want to compute layout again in the next run loop.
@@ -96,7 +96,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
         return self.layoutModel?.contentSize ?? .zero
     }
 
-    override open func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         return self.layoutModel.layoutAttributes.filter { $0.frame.intersects(rect) }
     }
 

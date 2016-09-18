@@ -37,10 +37,10 @@ public protocol ChatInputBarDelegate: class {
 @objc
 open class ChatInputBar: ReusableXibView {
 
-    open weak var delegate: ChatInputBarDelegate?
+    public weak var delegate: ChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 
-    open var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
+    public var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
         return !inputBar.textView.text.isEmpty
     }
 
@@ -110,7 +110,7 @@ open class ChatInputBar: ReusableXibView {
         }
     }
 
-    open var maxCharactersCount: UInt? // nil -> unlimited
+    public var maxCharactersCount: UInt? // nil -> unlimited
 
     private func updateIntrinsicContentSizeAnimated() {
         let options: UIViewAnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
@@ -148,7 +148,7 @@ open class ChatInputBar: ReusableXibView {
         }
     }
 
-    open var inputText: String {
+    public var inputText: String {
         get {
             return self.textView.text
         }
@@ -167,7 +167,7 @@ open class ChatInputBar: ReusableXibView {
         self.delegate?.inputBarSendButtonPressed(self)
     }
 
-    open func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
+    public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
     }
 }

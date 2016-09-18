@@ -111,8 +111,8 @@ open class MessageViewModel: MessageViewModelProtocol {
         return self.dateFormatter.string(from: self.messageModel.date as Date)
     }()
 
-    open let dateFormatter: DateFormatter
-    open private(set) var messageModel: MessageModelProtocol
+    public let dateFormatter: DateFormatter
+    public private(set) var messageModel: MessageModelProtocol
 
     public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImage: UIImage?) {
         self.dateFormatter = dateFormatter
@@ -125,10 +125,10 @@ open class MessageViewModel: MessageViewModelProtocol {
         return self.status == .failed
     }
 
-    open var avatarImage: Observable<UIImage?>
+    public var avatarImage: Observable<UIImage?>
 }
 
-open class MessageViewModelDefaultBuilder {
+public class MessageViewModelDefaultBuilder {
 
     public init() {}
 
@@ -140,7 +140,7 @@ open class MessageViewModelDefaultBuilder {
         return formatter
     }()
 
-    open func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
+    public func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
         // Override to use default avatarImage
         return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImage: nil)
     }

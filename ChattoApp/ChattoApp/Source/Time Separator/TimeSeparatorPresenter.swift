@@ -26,18 +26,18 @@ import Foundation
 import UIKit
 import Chatto
 
-open class TimeSeparatorPresenterBuilder: ChatItemPresenterBuilderProtocol {
+public class TimeSeparatorPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
-    open func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
+    public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem is TimeSeparatorModel
     }
 
-    open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    public func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return TimeSeparatorPresenter(timeSeparatorModel: chatItem as! TimeSeparatorModel)
     }
 
-    open var presenterType: ChatItemPresenterProtocol.Type {
+    public var presenterType: ChatItemPresenterProtocol.Type {
         return TimeSeparatorPresenter.self
     }
 }

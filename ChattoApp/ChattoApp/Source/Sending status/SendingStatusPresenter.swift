@@ -44,20 +44,20 @@ class SendingStatusModel: ChatItemProtocol {
     }
 }
 
-open class SendingStatusPresenterBuilder: ChatItemPresenterBuilderProtocol {
+public class SendingStatusPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
-    open func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
+    public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem is SendingStatusModel ? true : false
     }
 
-    open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    public func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return SendingStatusPresenter(
             statusModel: chatItem as! SendingStatusModel
         )
     }
 
-    open var presenterType: ChatItemPresenterProtocol.Type {
+    public var presenterType: ChatItemPresenterProtocol.Type {
         return SendingStatusPresenter.self
     }
 }

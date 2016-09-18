@@ -35,11 +35,11 @@ public protocol PhotoBubbleViewStyleProtocol {
     func overlayColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor?
 }
 
-open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+public class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
-    open var viewContext: ViewContext = .normal
-    open var animationDuration: CFTimeInterval = 0.33
-    open var preferredMaxLayoutWidth: CGFloat = 0
+    public var viewContext: ViewContext = .normal
+    public var animationDuration: CFTimeInterval = 0.33
+    public var preferredMaxLayoutWidth: CGFloat = 0
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,7 +58,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.addSubview(self.progressIndicatorView)
     }
 
-    open private(set) lazy var imageView: UIImageView = {
+    public private(set) lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.autoresizingMask = UIViewAutoresizing()
         imageView.clipsToBounds = true
@@ -76,7 +76,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         return view
     }()
 
-    open private(set) var progressIndicatorView: CircleProgressIndicatorView = {
+    public private(set) var progressIndicatorView: CircleProgressIndicatorView = {
         let progressView = CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
         return progressView!
     }()
@@ -87,20 +87,20 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         return imageView
     }()
 
-    open var photoMessageViewModel: PhotoMessageViewModelProtocol! {
+    public var photoMessageViewModel: PhotoMessageViewModelProtocol! {
         didSet {
             self.updateViews()
         }
     }
 
-    open var photoMessageStyle: PhotoBubbleViewStyleProtocol! {
+    public var photoMessageStyle: PhotoBubbleViewStyleProtocol! {
         didSet {
             self.updateViews()
         }
     }
 
-    open private(set) var isUpdating: Bool = false
-    open func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() ->())?) {
+    public private(set) var isUpdating: Bool = false
+    public func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() ->())?) {
         self.isUpdating = true
         let updateAndRefreshViews = {
             updateClosure()
@@ -119,7 +119,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         }
     }
 
-    open func updateViews() {
+    public func updateViews() {
         if self.viewContext == .sizing { return }
         if isUpdating { return }
         guard let _ = self.photoMessageViewModel, let _ = self.photoMessageStyle else { return }

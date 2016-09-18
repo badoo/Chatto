@@ -29,11 +29,11 @@ public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol 
 }
 
 open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
-    open var text: String {
+    public var text: String {
         return self.textMessage.text
     }
-    open let textMessage: TextMessageModelT
-    open let messageViewModel: MessageViewModelProtocol
+    public let textMessage: TextMessageModelT
+    public let messageViewModel: MessageViewModelProtocol
 
     public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
         self.textMessage = textMessage

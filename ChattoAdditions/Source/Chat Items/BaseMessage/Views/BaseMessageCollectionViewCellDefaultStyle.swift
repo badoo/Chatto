@@ -108,16 +108,16 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
             self.avatarStyle = avatarStyle
     }
 
-    open lazy var baseColorIncoming: UIColor = self.colors.incoming()
-    open lazy var baseColorOutgoing: UIColor = self.colors.outgoing()
+    public lazy var baseColorIncoming: UIColor = self.colors.incoming()
+    public lazy var baseColorOutgoing: UIColor = self.colors.outgoing()
 
-    open lazy var borderIncomingTail: UIImage? = self.bubbleBorderImages?.borderIncomingTail()
-    open lazy var borderIncomingNoTail: UIImage? = self.bubbleBorderImages?.borderIncomingNoTail()
-    open lazy var borderOutgoingTail: UIImage? = self.bubbleBorderImages?.borderOutgoingTail()
-    open lazy var borderOutgoingNoTail: UIImage? = self.bubbleBorderImages?.borderOutgoingNoTail()
+    public lazy var borderIncomingTail: UIImage? = self.bubbleBorderImages?.borderIncomingTail()
+    public lazy var borderIncomingNoTail: UIImage? = self.bubbleBorderImages?.borderIncomingNoTail()
+    public lazy var borderOutgoingTail: UIImage? = self.bubbleBorderImages?.borderOutgoingTail()
+    public lazy var borderOutgoingNoTail: UIImage? = self.bubbleBorderImages?.borderOutgoingNoTail()
 
-    open lazy var failedIcon: UIImage = self.failedIconImages.normal()
-    open lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
+    public lazy var failedIcon: UIImage = self.failedIconImages.normal()
+    public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
     private lazy var dateFont: UIFont = self.dateTextStyle.font()
     private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 

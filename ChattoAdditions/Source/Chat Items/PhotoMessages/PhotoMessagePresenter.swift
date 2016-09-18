@@ -33,7 +33,7 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
-    open let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
+    public let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
 
     public init (
         messageModel: ModelT,
@@ -52,11 +52,11 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             )
     }
 
-    open override class func registerCells(_ collectionView: UICollectionView) {
+    public final override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(PhotoMessageCollectionViewCell.self, forCellWithReuseIdentifier: "photo-message")
     }
 
-    open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+    public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         return collectionView.dequeueReusableCell(withReuseIdentifier: "photo-message", for: indexPath)
     }
 
@@ -73,7 +73,7 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         return viewModel
     }
 
-    open var photoCell: PhotoMessageCollectionViewCell? {
+    public var photoCell: PhotoMessageCollectionViewCell? {
         if let cell = self.cell {
             if let photoCell = cell as? PhotoMessageCollectionViewCell {
                 return photoCell
@@ -97,7 +97,7 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         }
     }
 
-    open func updateCurrentCell() {
+    public func updateCurrentCell() {
         if let cell = self.photoCell, let decorationAttributes = self.decorationAttributes {
             self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .appearing, additionalConfiguration: nil)
         }

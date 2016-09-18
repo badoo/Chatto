@@ -67,10 +67,10 @@ public struct BaseMessageCollectionViewCellLayoutConstants {
 
 open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where BubbleViewType:UIView, BubbleViewType:MaximumLayoutWidthSpecificable, BubbleViewType: BackgroundSizingQueryable {
 
-    open var animationDuration: CFTimeInterval = 0.33
-    open var viewContext: ViewContext = .normal
+    public var animationDuration: CFTimeInterval = 0.33
+    public var viewContext: ViewContext = .normal
 
-    open private(set) var isUpdating: Bool = false
+    public private(set) var isUpdating: Bool = false
     open func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() ->())?) {
         self.isUpdating = true
         let updateAndRefreshViews = {
@@ -90,7 +90,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
     }
 
-    open var messageViewModel: MessageViewModelProtocol! {
+    public var messageViewModel: MessageViewModelProtocol! {
         didSet {
             updateViews()
         }
@@ -98,7 +98,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     var failedIcon: UIImage!
     var failedIconHighlighted: UIImage!
-    open var baseStyle: BaseMessageCollectionViewCellStyleProtocol! {
+    public var baseStyle: BaseMessageCollectionViewCellStyleProtocol! {
         didSet {
             self.failedIcon = self.baseStyle.failedIcon
             self.failedIconHighlighted = self.baseStyle.failedIconHighlighted
@@ -118,13 +118,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return self.bubbleView.canCalculateSizeInBackground
     }
 
-    open private(set) var bubbleView: BubbleViewType!
+    public private(set) var bubbleView: BubbleViewType!
     open func createBubbleView() -> BubbleViewType! {
         assert(false, "Override in subclass")
         return nil
     }
 
-    open private(set) var avatarView: UIImageView!
+    public private(set) var avatarView: UIImageView!
     func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
@@ -141,18 +141,18 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.commonInit()
     }
 
-    open private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+    public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleTapped(_:)))
         return tapGestureRecognizer
     }()
 
-    open private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
+    public private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
         let longpressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleLongPressed(_:)))
         longpressGestureRecognizer.delegate = self
         return longpressGestureRecognizer
     }()
 
-    open private(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
+    public private(set) lazy var avatarTapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.avatarTapped(_:)))
         return tapGestureRecognizer
     }()
@@ -183,7 +183,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.removeAccessoryView()
     }
 
-    open lazy var failedButton: UIButton = {
+    public lazy var failedButton: UIButton = {
         let button = UIButton(type: .custom)
         button.addTarget(self, action: #selector(BaseMessageCollectionViewCell.failedButtonTapped), for: .touchUpInside)
         return button
@@ -273,7 +273,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
     }
 
-    open var allowAccessoryViewRevealing: Bool = true
+    public var allowAccessoryViewRevealing: Bool = true
 
     open func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -312,26 +312,26 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     // MARK: User interaction
-    open var onFailedButtonTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onFailedButtonTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     func failedButtonTapped() {
         self.onFailedButtonTapped?(self)
     }
 
-    open var onAvatarTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onAvatarTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     func avatarTapped(_ tapGestureRecognizer: UITapGestureRecognizer) {
         self.onAvatarTapped?(self)
     }
 
-    open var onBubbleTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onBubbleTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     func bubbleTapped(_ tapGestureRecognizer: UITapGestureRecognizer) {
         self.onBubbleTapped?(self)
     }
 
-    open var onBubbleLongPressBegan: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
-    open var onBubbleLongPressEnded: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onBubbleLongPressBegan: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    public var onBubbleLongPressEnded: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     private func bubbleLongPressed(_ longPressGestureRecognizer: UILongPressGestureRecognizer) {
         switch longPressGestureRecognizer.state {

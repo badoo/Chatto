@@ -26,14 +26,14 @@ import Foundation
 
 open class TextChatInputItem {
     typealias Class = TextChatInputItem
-    open var textInputHandler: ((String) -> Void)?
+    public var textInputHandler: ((String) -> Void)?
 
     let buttonAppearance: TabInputButtonAppearance
     public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
         self.buttonAppearance = tabInputButtonAppearance
     }
 
-    open class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+    public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
         let images: [UIControlStateWrapper: UIImage] = [
             UIControlStateWrapper(state: .normal): UIImage(named: "text-icon-unselected", in: Bundle(for: TextChatInputItem.self), compatibleWith: nil)!,
             UIControlStateWrapper(state: .selected): UIImage(named: "text-icon-selected", in: Bundle(for: TextChatInputItem.self), compatibleWith: nil)!,

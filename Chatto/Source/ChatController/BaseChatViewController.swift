@@ -37,16 +37,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         public var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
     }
 
-    open var constants = Constants()
+    public var constants = Constants()
 
     public struct UpdatesConfig {
         public var fastUpdates = false // Allows another performBatchUpdates to be called before completion of a previous one (not recommended). Changing this value after viewDidLoad is not supported
         public var coalesceUpdates = false // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
     }
 
-    open var updatesConfig =  UpdatesConfig()
+    public var updatesConfig =  UpdatesConfig()
 
-    open private(set) var collectionView: UICollectionView!
+    public private(set) var collectionView: UICollectionView!
     public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
     private var _chatDataSource: ChatDataSourceProtocol?
     public final var chatDataSource: ChatDataSourceProtocol? {
@@ -89,7 +89,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.collectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
     }
 
-    open var endsEditingWhenTappingOnChatBackground = true
+    public var endsEditingWhenTappingOnChatBackground = true
     @objc
     open func userDidTapOnCollectionView() {
         if self.endsEditingWhenTappingOnChatBackground {
@@ -173,7 +173,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var notificationCenter = NotificationCenter.default
     var keyboardTracker: KeyboardTracker!
 
-    open var isFirstLayout: Bool = true
+    public private(set) var isFirstLayout: Bool = true
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -249,12 +249,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
-    open private(set) var inputContainer: UIView!
+    public private(set) var inputContainer: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
-    open internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
+    public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
 
     /**
      - You can use a decorator to:
@@ -262,7 +262,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
         - You can also add new items (for instance time markers or failed cells)
     */
-    open var chatItemsDecorator: ChatItemsDecoratorProtocol?
+    public var chatItemsDecorator: ChatItemsDecoratorProtocol?
 
     open func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = ChatCollectionViewLayout()
@@ -293,7 +293,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         When paginating up we need to change the scroll position as the content is pushed down.
         We take distance to top from beforeUpdate indexPath and then we make afterUpdate indexPath to appear at the same distance
     */
-    open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
+    public func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }

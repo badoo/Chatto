@@ -25,12 +25,12 @@
 import Foundation
 import ChattoAdditions
 
-open class DemoTextMessageModel: TextMessageModel<MessageModel>, DemoMessageModelProtocol {
+public class DemoTextMessageModel: TextMessageModel<MessageModel>, DemoMessageModelProtocol {
     public override init(messageModel: MessageModel, text: String) {
         super.init(messageModel: messageModel, text: text)
     }
 
-    open var status: MessageStatus {
+    public var status: MessageStatus {
         get {
             return self._messageModel.status
         }

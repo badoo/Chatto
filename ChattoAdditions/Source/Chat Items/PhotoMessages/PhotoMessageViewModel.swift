@@ -45,18 +45,18 @@ public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol
 }
 
 open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {
-    open var photoMessage: PhotoMessageModelProtocol {
+    public var photoMessage: PhotoMessageModelProtocol {
         return self._photoMessage
     }
-    open let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    open var transferStatus: Observable<TransferStatus> = Observable(.idle)
-    open var transferProgress: Observable<Double> = Observable(0)
-    open var transferDirection: Observable<TransferDirection> = Observable(.download)
-    open var image: Observable<UIImage?>
+    public let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public var transferStatus: Observable<TransferStatus> = Observable(.idle)
+    public var transferProgress: Observable<Double> = Observable(0)
+    public var transferDirection: Observable<TransferDirection> = Observable(.download)
+    public var image: Observable<UIImage?>
     open var imageSize: CGSize {
         return self.photoMessage.imageSize
     }
-    open let messageViewModel: MessageViewModelProtocol
+    public let messageViewModel: MessageViewModelProtocol
     open var showsFailedIcon: Bool {
         return self.messageViewModel.showsFailedIcon || self.transferStatus.value == .failed
     }

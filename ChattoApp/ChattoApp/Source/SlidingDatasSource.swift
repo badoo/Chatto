@@ -29,7 +29,7 @@ public enum InsertPosition {
     case bottom
 }
 
-open class SlidingDataSource<Element> {
+public class SlidingDataSource<Element> {
 
     private var pageSize: Int
     private var windowOffset: Int
@@ -37,7 +37,7 @@ open class SlidingDataSource<Element> {
     private var itemGenerator: (() -> Element)?
     private var items = [Element]()
     private var itemsOffset: Int
-    open var itemsInWindow: [Element] {
+    public var itemsInWindow: [Element] {
         let offset = self.windowOffset - self.itemsOffset
         return Array(items[offset..<offset+self.windowCount])
     }
@@ -68,7 +68,7 @@ open class SlidingDataSource<Element> {
         }
     }
 
-    open func insertItem(_ item: Element, position: InsertPosition) {
+    public func insertItem(_ item: Element, position: InsertPosition) {
         if position == .top {
             self.items.insert(item, at: 0)
             let shouldExpandWindow = self.itemsOffset == self.windowOffset
@@ -86,15 +86,15 @@ open class SlidingDataSource<Element> {
         }
     }
 
-    open func hasPrevious() -> Bool {
+    public func hasPrevious() -> Bool {
         return self.windowOffset > 0
     }
 
-    open func hasMore() -> Bool {
+    public func hasMore() -> Bool {
         return self.windowOffset + self.windowCount < self.itemsOffset + self.items.count
     }
 
-    open func loadPrevious() {
+    public func loadPrevious() {
         let previousWindowOffset = self.windowOffset
         let previousWindowCount = self.windowCount
         let nextWindowOffset = max(0, self.windowOffset - self.pageSize)
@@ -107,14 +107,14 @@ open class SlidingDataSource<Element> {
         self.windowCount = previousWindowCount + newItemsCount
     }
 
-    open func loadNext() {
+    public func loadNext() {
         guard self.items.count > 0 else { return }
         let itemCountAfterWindow = self.itemsOffset + self.items.count - self.windowOffset - self.windowCount
         self.windowCount += min(self.pageSize, itemCountAfterWindow)
     }
 
     @discardableResult
-    open func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
+    public func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
         assert(0 <= focusPosition && focusPosition <= 1, "")
         guard 0 <= focusPosition && focusPosition <= 1 else {
             assert(false, "focus should be in the [0, 1] interval")

@@ -30,17 +30,17 @@ public protocol DemoMessageModelProtocol: MessageModelProtocol {
     var status: MessageStatus { get set }
 }
 
-open class FakeMessageSender {
+public class FakeMessageSender {
 
-    open var onMessageChanged: ((_ message: DemoMessageModelProtocol) -> Void)?
+    public var onMessageChanged: ((_ message: DemoMessageModelProtocol) -> Void)?
 
-    open func sendMessages(_ messages: [DemoMessageModelProtocol]) {
+    public func sendMessages(_ messages: [DemoMessageModelProtocol]) {
         for message in messages {
             self.fakeMessageStatus(message)
         }
     }
 
-    open func sendMessage(_ message: DemoMessageModelProtocol) {
+    public func sendMessage(_ message: DemoMessageModelProtocol) {
         self.fakeMessageStatus(message)
     }
 

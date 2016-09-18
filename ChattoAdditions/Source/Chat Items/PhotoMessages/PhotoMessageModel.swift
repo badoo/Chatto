@@ -30,12 +30,12 @@ public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol {
 }
 
 open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageModelProtocol {
-    open var messageModel: MessageModelProtocol {
+    public var messageModel: MessageModelProtocol {
         return self._messageModel
     }
-    open let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    open let image: UIImage
-    open let imageSize: CGSize
+    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public let image: UIImage
+    public let imageSize: CGSize
     public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
         self._messageModel = messageModel
         self.imageSize = imageSize
