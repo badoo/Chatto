@@ -35,7 +35,7 @@ public protocol PhotoBubbleViewStyleProtocol {
     func overlayColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor?
 }
 
-public class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
+open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
     public var viewContext: ViewContext = .normal
     public var animationDuration: CFTimeInterval = 0.33
@@ -119,7 +119,7 @@ public class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, Background
         }
     }
 
-    public func updateViews() {
+    open func updateViews() {
         if self.viewContext == .sizing { return }
         if isUpdating { return }
         guard let _ = self.photoMessageViewModel, let _ = self.photoMessageStyle else { return }

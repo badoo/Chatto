@@ -74,7 +74,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         return self.createViewModel()
     }()
 
-    public func createViewModel() -> ViewModelT {
+    open func createViewModel() -> ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
         return viewModel
     }

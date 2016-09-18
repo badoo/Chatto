@@ -293,7 +293,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         When paginating up we need to change the scroll position as the content is pushed down.
         We take distance to top from beforeUpdate indexPath and then we make afterUpdate indexPath to appear at the same distance
     */
-    public func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
+    open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }
