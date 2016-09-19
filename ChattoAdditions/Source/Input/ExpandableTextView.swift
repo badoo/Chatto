@@ -95,6 +95,10 @@ public class ExpandableTextView: UITextView {
         self.placeholder.font = font
     }
 
+    public func setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifier: String) {
+        self.placeholder.accessibilityIdentifier = accessibilityIdentifier
+    }
+
     func textDidChange() {
         self.updatePlaceholderVisibility()
         self.scrollToCaret()

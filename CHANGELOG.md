@@ -1,3 +1,12 @@
+### 2.1 (Sept 17, 2016)
+* Enhanced customization for LiveCameraCell [#199](https://github.com/badoo/Chatto/pull/199) - [@TerekhovAnton](https://github.com/TerekhovAnton)
+* Fixes input not being at the bottom when chat is embedded in a UITabbarController [#202](https://github.com/badoo/Chatto/pull/202) - [@andris-zalitis](https://github.com/andris-zalitis)
+* Fixes collection view insets when keyboard is shown [#204](https://github.com/badoo/Chatto/pull/204) - [@dbburgess](https://github.com/dbburgess)
+* LiveCameraCellPresenter made public [#205](https://github.com/badoo/Chatto/pull/205) - [@diegosanchezr](https://github.com/diegosanchezr)
+* Fixes order of photos on iOS 10 [#215](https://github.com/badoo/Chatto/pull/215) - [@geegaset](https://github.com/geegaset)
+* Adds accessibility identifiers in ChatInputBar [#218](https://github.com/badoo/Chatto/pull/218), [#206](https://github.com/badoo/Chatto/pull/206) - [@geegaset](https://github.com/geegaset) 
+* Xcode 8 - Swift 2.3 support
+
 ### 2.0 (Aug 8, 2016)
 * Renames `ChatViewController` to `BaseChatViewController`. [#31](https://github.com/badoo/Chatto/pull/31) - [@diegosanchezr](https://github.com/diegosanchezr)
 * Makes presenters easier to reuse by relaxing generic constraints [#35](https://github.com/badoo/Chatto/pull/35) - [@diegosanchezr](https://github.com/diegosanchezr)

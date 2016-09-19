@@ -66,9 +66,19 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
     private var imageManager = PHCachingImageManager()
     private var fetchResult: PHFetchResult!
     override init() {
-        let options = PHFetchOptions()
-        options.sortDescriptors = [ NSSortDescriptor(key: "modificationDate", ascending: false) ]
-        self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: options)
+        func fetchOptions(predicate: NSPredicate?) -> PHFetchOptions {
+            let options = PHFetchOptions()
+            options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            options.predicate = predicate
+            return options
+        }
+
+        if let userLibraryCollection = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
+            self.fetchResult = PHAsset.fetchAssetsInAssetCollection(userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.Image.rawValue)")))
+        }
+        else {
+            self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: fetchOptions(nil))
+        }
         super.init()
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
     }
@@ -101,7 +111,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index] as! PHAsset
         self.imageManager.requestImageDataForAsset(asset, options: .None) { (data, dataUTI, orientation, info) -> Void in
-            if let data = data, image = UIImage(data: data) {
+            if let data = data, let image = UIImage(data: data) {
                 completion(image)
             }
         }
