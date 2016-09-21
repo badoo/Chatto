@@ -10,7 +10,6 @@
 		C33FBFAE1BDE441C008E3545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAC1BDE441C008E3545 /* Main.storyboard */; };
 		C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAF1BDE441C008E3545 /* Assets.xcassets */; };
 		C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */; };
-		C33FBFC91BDE441C008E3545 /* ChattoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */; };
 		C341D42E1C9635DF00FD3463 /* TimeSeparatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42B1C9635DF00FD3463 /* TimeSeparatorModel.swift */; };
 		C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42C1C9635DF00FD3463 /* TimeSeparatorPresenter.swift */; };
 		C341D4301C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */; };
@@ -45,13 +44,6 @@
 			remoteGlobalIDString = C33FBFA41BDE441C008E3545;
 			remoteInfo = ChattoApp;
 		};
-		C33FBFC51BDE441C008E3545 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C33FBF9D1BDE441C008E3545 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C33FBFA41BDE441C008E3545;
-			remoteInfo = ChattoApp;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -79,9 +71,6 @@
 		C33FBFB41BDE441C008E3545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C33FBFB91BDE441C008E3545 /* ChattoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C33FBFBF1BDE441C008E3545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C33FBFC41BDE441C008E3545 /* ChattoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattoAppUITests.swift; sourceTree = "<group>"; };
-		C33FBFCA1BDE441C008E3545 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C341D42B1C9635DF00FD3463 /* TimeSeparatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorModel.swift; path = "Time Separator/TimeSeparatorModel.swift"; sourceTree = "<group>"; };
 		C341D42C1C9635DF00FD3463 /* TimeSeparatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorPresenter.swift; path = "Time Separator/TimeSeparatorPresenter.swift"; sourceTree = "<group>"; };
 		C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimeSeparatorCollectionViewCell.swift; path = "Time Separator/TimeSeparatorCollectionViewCell.swift"; sourceTree = "<group>"; };
@@ -123,13 +112,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C33FBFC11BDE441C008E3545 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -156,7 +138,6 @@
 			children = (
 				C33FBFA71BDE441C008E3545 /* ChattoApp */,
 				C33FBFBC1BDE441C008E3545 /* ChattoAppTests */,
-				C33FBFC71BDE441C008E3545 /* ChattoAppUITests */,
 				C33FBFA61BDE441C008E3545 /* Products */,
 				0852C8B139C7CFA0A1C22090 /* Frameworks */,
 				B616EDF620454A787C7E7D84 /* Pods */,
@@ -168,7 +149,6 @@
 			children = (
 				C33FBFA51BDE441C008E3545 /* ChattoApp.app */,
 				C33FBFB91BDE441C008E3545 /* ChattoAppTests.xctest */,
-				C33FBFC41BDE441C008E3545 /* ChattoAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,15 +172,6 @@
 				C33FBFBF1BDE441C008E3545 /* Info.plist */,
 			);
 			path = ChattoAppTests;
-			sourceTree = "<group>";
-		};
-		C33FBFC71BDE441C008E3545 /* ChattoAppUITests */ = {
-			isa = PBXGroup;
-			children = (
-				C33FBFC81BDE441C008E3545 /* ChattoAppUITests.swift */,
-				C33FBFCA1BDE441C008E3545 /* Info.plist */,
-			);
-			path = ChattoAppUITests;
 			sourceTree = "<group>";
 		};
 		C341D42A1C96359000FD3463 /* Time Separator */ = {
@@ -307,24 +278,6 @@
 			productReference = C33FBFB91BDE441C008E3545 /* ChattoAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		C33FBFC31BDE441C008E3545 /* ChattoAppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C33FBFD31BDE441C008E3545 /* Build configuration list for PBXNativeTarget "ChattoAppUITests" */;
-			buildPhases = (
-				C33FBFC01BDE441C008E3545 /* Sources */,
-				C33FBFC11BDE441C008E3545 /* Frameworks */,
-				C33FBFC21BDE441C008E3545 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C33FBFC61BDE441C008E3545 /* PBXTargetDependency */,
-			);
-			name = ChattoAppUITests;
-			productName = ChattoAppUITests;
-			productReference = C33FBFC41BDE441C008E3545 /* ChattoAppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -340,11 +293,6 @@
 						LastSwiftMigration = 0800;
 					};
 					C33FBFB81BDE441C008E3545 = {
-						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
-						TestTargetID = C33FBFA41BDE441C008E3545;
-					};
-					C33FBFC31BDE441C008E3545 = {
 						CreatedOnToolsVersion = 7.1;
 						LastSwiftMigration = 0800;
 						TestTargetID = C33FBFA41BDE441C008E3545;
@@ -366,7 +314,6 @@
 			targets = (
 				C33FBFA41BDE441C008E3545 /* ChattoApp */,
 				C33FBFB81BDE441C008E3545 /* ChattoAppTests */,
-				C33FBFC31BDE441C008E3545 /* ChattoAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -384,13 +331,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C33FBFB71BDE441C008E3545 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C33FBFC21BDE441C008E3545 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -497,14 +437,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C33FBFC01BDE441C008E3545 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C33FBFC91BDE441C008E3545 /* ChattoAppUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -512,11 +444,6 @@
 			isa = PBXTargetDependency;
 			target = C33FBFA41BDE441C008E3545 /* ChattoApp */;
 			targetProxy = C33FBFBA1BDE441C008E3545 /* PBXContainerItemProxy */;
-		};
-		C33FBFC61BDE441C008E3545 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C33FBFA41BDE441C008E3545 /* ChattoApp */;
-			targetProxy = C33FBFC51BDE441C008E3545 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -686,32 +613,6 @@
 			};
 			name = Release;
 		};
-		C33FBFD41BDE441C008E3545 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = ChattoAppUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = ChattoApp;
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		C33FBFD51BDE441C008E3545 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = ChattoAppUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = ChattoApp;
-				USES_XCTRUNNER = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -738,15 +639,6 @@
 			buildConfigurations = (
 				C33FBFD11BDE441C008E3545 /* Debug */,
 				C33FBFD21BDE441C008E3545 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C33FBFD31BDE441C008E3545 /* Build configuration list for PBXNativeTarget "ChattoAppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C33FBFD41BDE441C008E3545 /* Debug */,
-				C33FBFD51BDE441C008E3545 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
