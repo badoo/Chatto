@@ -28,7 +28,7 @@ public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
     var text: String { get }
 }
 
-public class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
+open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
     public var messageModel: MessageModelProtocol {
         return self._messageModel
     }

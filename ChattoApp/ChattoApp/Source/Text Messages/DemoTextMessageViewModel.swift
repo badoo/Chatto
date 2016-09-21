@@ -41,7 +41,7 @@ public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
+    public func createViewModel(_ textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = DemoTextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
         textMessageViewModel.avatarImage.value = UIImage(named: "userAvatar")

@@ -41,9 +41,9 @@ class TimeSeparatorCollectionViewCell: UICollectionViewCell {
     }
 
     private func commonInit() {
-        self.label.font = UIFont.systemFontOfSize(12)
-        self.label.textAlignment = .Center
-        self.label.textColor = UIColor.grayColor()
+        self.label.font = UIFont.systemFont(ofSize: 12)
+        self.label.textAlignment = .center
+        self.label.textColor = UIColor.gray
         self.contentView.addSubview(label)
     }
 
@@ -55,7 +55,7 @@ class TimeSeparatorCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private func setTextOnLabel(text: String) {
+    private func setTextOnLabel(_ text: String) {
         self.label.text = text
         self.setNeedsLayout()
     }

@@ -25,7 +25,7 @@
 import Foundation
 
 protocol ChatInputItemViewDelegate: class {
-    func inputItemViewTapped(view: ChatInputItemView)
+    func inputItemViewTapped(_ view: ChatInputItemView)
 }
 
 class ChatInputItemView: UIView {
@@ -72,7 +72,7 @@ extension ChatInputItemView {
         self.inputItem.tabView.frame = self.bounds
     }
 
-    override func intrinsicContentSize() -> CGSize {
-        return self.inputItem.tabView.intrinsicContentSize()
+    override var intrinsicContentSize: CGSize {
+        return self.inputItem.tabView.intrinsicContentSize
     }
 }

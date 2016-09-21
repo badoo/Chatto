@@ -24,7 +24,7 @@
 
 import UIKit
 
-public class ExpandableTextView: UITextView {
+open class ExpandableTextView: UITextView {
 
     private let placeholder: UITextView = UITextView()
 
@@ -38,7 +38,7 @@ public class ExpandableTextView: UITextView {
         self.commonInit()
     }
 
-    override public var contentSize: CGSize {
+    override open var contentSize: CGSize {
         didSet {
             self.invalidateIntrinsicContentSize()
             self.layoutIfNeeded() // needed?
@@ -46,56 +46,56 @@ public class ExpandableTextView: UITextView {
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func commonInit() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextViewTextDidChangeNotification, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
     }
 
 
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         self.placeholder.frame = self.bounds
     }
 
-    override public func intrinsicContentSize() -> CGSize {
+    override open var intrinsicContentSize: CGSize {
         return self.contentSize
     }
 
-    override public var text: String! {
+    override open var text: String! {
         didSet {
             self.textDidChange()
         }
     }
 
-    override public var textContainerInset: UIEdgeInsets {
+    override open var textContainerInset: UIEdgeInsets {
         didSet {
             self.configurePlaceholder()
         }
     }
 
-    override public var textAlignment: NSTextAlignment {
+    override open var textAlignment: NSTextAlignment {
         didSet {
             self.configurePlaceholder()
         }
     }
 
-    public func setTextPlaceholder(textPlaceholder: String) {
+    open func setTextPlaceholder(_ textPlaceholder: String) {
         self.placeholder.text = textPlaceholder
     }
 
-    public func setTextPlaceholderColor(color: UIColor) {
+    open func setTextPlaceholderColor(_ color: UIColor) {
         self.placeholder.textColor = color
     }
 
-    public func setTextPlaceholderFont(font: UIFont) {
+    open func setTextPlaceholderFont(_ font: UIFont) {
         self.placeholder.font = font
     }
 
-    public func setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifier: String) {
+    open func setTextPlaceholderAccessibilityIdentifier(_ accessibilityIdentifier: String) {
         self.placeholder.accessibilityIdentifier = accessibilityIdentifier
     }
 
@@ -109,14 +109,14 @@ public class ExpandableTextView: UITextView {
             // 2. Paste very long text (so it snaps to nav bar and shows scroll indicators)
             // 3. Select all and cut
             // 4. Paste again: Texview it's smaller than it should be
-            self.scrollEnabled = false
-            self.scrollEnabled = true
+            self.isScrollEnabled = false
+            self.isScrollEnabled = true
         }
     }
 
     private func scrollToCaret() {
         if let textRange = self.selectedTextRange {
-            var rect = caretRectForPosition(textRange.end)
+            var rect = caretRect(for: textRange.end)
             rect = CGRect(origin: rect.origin, size: CGSize(width: rect.width, height: rect.height + textContainerInset.bottom))
 
             self.scrollRectToVisible(rect, animated: false)
@@ -141,11 +141,11 @@ public class ExpandableTextView: UITextView {
 
     private func configurePlaceholder() {
         self.placeholder.translatesAutoresizingMaskIntoConstraints = false
-        self.placeholder.editable = false
-        self.placeholder.selectable = false
-        self.placeholder.userInteractionEnabled = false
+        self.placeholder.isEditable = false
+        self.placeholder.isSelectable = false
+        self.placeholder.isUserInteractionEnabled = false
         self.placeholder.textAlignment = self.textAlignment
         self.placeholder.textContainerInset = self.textContainerInset
-        self.placeholder.backgroundColor = UIColor.clearColor()
+        self.placeholder.backgroundColor = UIColor.clear
     }
 }

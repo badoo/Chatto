@@ -35,7 +35,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
-        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "photo-message", isIncoming: true, date: NSDate(), status: .Success)
+        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "photo-message", isIncoming: true, date: NSDate() as Date, status: .success)
         let photoMessageModel = PhotoMessageModel(messageModel: messageModel, imageSize: CGSize(width: 30, height: 30), image: self.testImage)
         self.presenter = PhotoMessagePresenter(messageModel: photoMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: PhotoMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, photoCellStyle: photoStyle)
     }
@@ -60,18 +60,18 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
-        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
+        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: IndexPath(item: 0, section: 0)))
         collectionView.dataSource = nil
     }
 
     // MARK: Helpers
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath as IndexPath)
     }
 }
 
@@ -79,27 +79,27 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = PhotoMessageViewModel<PhotoMessageModel<MessageModel>>
 
     var didHandleTapOnFailIcon = false
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
+    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
         self.didHandleTapOnFailIcon = true
     }
 
     var didHandleTapOnAvatar = false
-    func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
+    func userDidTapOnAvatar(viewModel: ViewModelT) {
         self.didHandleTapOnAvatar = true
     }
 
     var didHandleTapOnBubble = false
-    func userDidTapOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidTapOnBubble(viewModel: ViewModelT) {
         self.didHandleTapOnBubble = true
     }
 
     var didHandleBeginLongPressOnBubble = false
-    func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
         self.didHandleBeginLongPressOnBubble = true
     }
 
     var didHandleEndLongPressOnBubble = false
-    func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
         self.didHandleEndLongPressOnBubble = true
     }
 }

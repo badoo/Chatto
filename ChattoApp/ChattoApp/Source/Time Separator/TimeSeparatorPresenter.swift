@@ -28,11 +28,11 @@ import Chatto
 
 public class TimeSeparatorPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
-    public func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
+    public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem is TimeSeparatorModel
     }
 
-    public func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    public func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return TimeSeparatorPresenter(timeSeparatorModel: chatItem as! TimeSeparatorModel)
     }
@@ -51,15 +51,15 @@ class TimeSeparatorPresenter: ChatItemPresenterProtocol {
 
     private static let cellReuseIdentifier = TimeSeparatorCollectionViewCell.self.description()
 
-    static func registerCells(collectionView: UICollectionView) {
-        collectionView.registerClass(TimeSeparatorCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+    static func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(TimeSeparatorCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
     }
 
-    func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCellWithReuseIdentifier(TimeSeparatorPresenter.cellReuseIdentifier, forIndexPath: indexPath)
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCell(withReuseIdentifier: TimeSeparatorPresenter.cellReuseIdentifier, for: indexPath)
     }
 
-    func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         guard let timeSeparatorCell = cell as? TimeSeparatorCollectionViewCell else {
             assert(false, "expecting status cell")
             return

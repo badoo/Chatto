@@ -24,7 +24,7 @@
 
 import UIKit
 
-public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
+open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
     typealias Class = TextMessageCollectionViewCellDefaultStyle
 
     public struct BubbleImages {
@@ -33,10 +33,10 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         let outgoingTail: () -> UIImage
         let outgoingNoTail: () -> UIImage
         public init(
-            @autoclosure(escaping) incomingTail: () -> UIImage,
-            @autoclosure(escaping) incomingNoTail: () -> UIImage,
-            @autoclosure(escaping) outgoingTail: () -> UIImage,
-            @autoclosure(escaping) outgoingNoTail: () -> UIImage) {
+            incomingTail: @autoclosure @escaping () -> UIImage,
+            incomingNoTail: @autoclosure @escaping () -> UIImage,
+            outgoingTail: @autoclosure @escaping () -> UIImage,
+            outgoingNoTail: @autoclosure @escaping () -> UIImage) {
                 self.incomingTail = incomingTail
                 self.incomingNoTail = incomingNoTail
                 self.outgoingTail = outgoingTail
@@ -51,9 +51,9 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         let incomingInsets: UIEdgeInsets
         let outgoingInsets: UIEdgeInsets
         public init(
-            @autoclosure(escaping) font: () -> UIFont,
-            @autoclosure(escaping) incomingColor: () -> UIColor,
-            @autoclosure(escaping) outgoingColor: () -> UIColor,
+            font: @autoclosure @escaping () -> UIFont,
+            incomingColor: @autoclosure @escaping () -> UIColor,
+            outgoingColor: @autoclosure @escaping () -> UIColor,
             incomingInsets: UIEdgeInsets,
             outgoingInsets: UIEdgeInsets) {
                 self.font = font
@@ -90,23 +90,23 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
     lazy var incomingColor: UIColor = self.textStyle.incomingColor()
     lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
 
-    public func textFont(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
+    open func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
         return self.font
     }
 
-    public func textColor(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
+    open func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
         return viewModel.isIncoming ? self.incomingColor : self.outgoingColor
     }
 
-    public func textInsets(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
+    open func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
         return viewModel.isIncoming ? self.textStyle.incomingInsets : self.textStyle.outgoingInsets
     }
 
-    public func bubbleImageBorder(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage? {
+    open func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage? {
         return self.baseStyle.borderImage(viewModel: viewModel)
     }
 
-    public func bubbleImage(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage {
+    open func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage {
         let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
 
         if let image = self.images[key] {
@@ -124,18 +124,18 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         return UIImage()
     }
 
-    public func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
+    open func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
         var color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
 
         switch status {
-        case .Success:
+        case .success:
             break
-        case .Failed, .Sending:
-            color = color.bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.70))
+        case .failed, .sending:
+            color = color.bma_blendWithColor(UIColor.white.withAlphaComponent(0.70))
         }
 
         if isSelected {
-            color = color.bma_blendWithColor(UIColor.blackColor().colorWithAlphaComponent(0.10))
+            color = color.bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
         }
 
         return image.bma_tintWithColor(color)
@@ -155,19 +155,19 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         }
 
         private func calculateHash(withHashValues hashes: [Int]) -> Int {
-            return hashes.reduce(0, combine: { 31 &* $0 &+ $1.hashValue })
+            return hashes.reduce(0, { 31 &* $0 &+ $1.hashValue })
         }
-    }
-}
 
-private func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
-    switch (lhs, rhs) {
-    case let (.template(lhsValues), .template(rhsValues)):
-        return lhsValues == rhsValues
-    case let (.normal(lhsValues), .normal(rhsValues)):
-        return lhsValues == rhsValues
-    default:
-        return false
+        static func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
+            switch (lhs, rhs) {
+            case let (.template(lhsValues), .template(rhsValues)):
+                return lhsValues == rhsValues
+            case let (.normal(lhsValues), .normal(rhsValues)):
+                return lhsValues == rhsValues
+            default:
+                return false
+            }
+        }
     }
 }
 
@@ -175,18 +175,18 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
 
     static public func createDefaultBubbleImages() -> BubbleImages {
         return BubbleImages(
-            incomingTail: UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            incomingNoTail: UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            outgoingTail: UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            outgoingNoTail: UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+            incomingTail: UIImage(named: "bubble-incoming-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            incomingNoTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            outgoingTail: UIImage(named: "bubble-outgoing-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            outgoingNoTail: UIImage(named: "bubble-outgoing", in: Bundle(for: Class.self), compatibleWith: nil)!
         )
     }
 
     static public func createDefaultTextStyle() -> TextStyle {
         return TextStyle(
-            font: UIFont.systemFontOfSize(16),
-            incomingColor: UIColor.blackColor(),
-            outgoingColor: UIColor.whiteColor(),
+            font: UIFont.systemFont(ofSize: 16),
+            incomingColor: UIColor.black,
+            outgoingColor: UIColor.white,
             incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
             outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
         )

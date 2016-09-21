@@ -32,8 +32,8 @@ public protocol AccessoryViewRevealable {
 
 public struct AccessoryViewRevealerConfig {
     public let angleThresholdInRads: CGFloat
-    public let translationTransform: (rawTranslation: CGFloat) -> CGFloat
-    public init(angleThresholdInRads: CGFloat, translationTransform: (rawTranslation: CGFloat) -> CGFloat) {
+    public let translationTransform: (_ rawTranslation: CGFloat) -> CGFloat
+    public init(angleThresholdInRads: CGFloat, translationTransform: @escaping (_ rawTranslation: CGFloat) -> CGFloat) {
         self.angleThresholdInRads = angleThresholdInRads
         self.translationTransform = translationTransform
     }
@@ -68,51 +68,51 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
 
     var isEnabled: Bool = true {
         didSet {
-            self.panRecognizer.enabled = self.isEnabled
+            self.panRecognizer.isEnabled = self.isEnabled
         }
     }
 
     var config = AccessoryViewRevealerConfig.defaultConfig()
 
     @objc
-    private func handlePan(panRecognizer: UIPanGestureRecognizer) {
+    private func handlePan(_ panRecognizer: UIPanGestureRecognizer) {
         switch panRecognizer.state {
-        case .Began:
+        case .began:
             break
-        case .Changed:
-            let translation = panRecognizer.translationInView(self.collectionView)
-            self.revealAccessoryView(atOffset: self.config.translationTransform(rawTranslation: -translation.x))
-        case .Ended, .Cancelled, .Failed:
+        case .changed:
+            let translation = panRecognizer.translation(in: self.collectionView)
+            self.revealAccessoryView(atOffset: self.config.translationTransform(-translation.x))
+        case .ended, .cancelled, .failed:
             self.revealAccessoryView(atOffset: 0)
         default:
             break
         }
     }
 
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 
-    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer != self.panRecognizer {
             return true
         }
 
-        let translation = self.panRecognizer.translationInView(self.collectionView)
-        let x = CGFloat.abs(translation.x), y = CGFloat.abs(translation.y)
+        let translation = self.panRecognizer.translation(in: self.collectionView)
+        let x = abs(translation.x), y = abs(translation.y)
         let angleRads = atan2(y, x)
         return angleRads <= self.config.angleThresholdInRads
     }
 
     private func revealAccessoryView(atOffset offset: CGFloat) {
         // Find max offset (cells can have slighlty different timestamp size ( 3.00 am vs 11.37 pm )
-        let cells: [AccessoryViewRevealable] = self.collectionView.visibleCells().filter({$0 is AccessoryViewRevealable}).map({$0 as! AccessoryViewRevealable})
+        let cells: [AccessoryViewRevealable] = self.collectionView.visibleCells.flatMap({$0 as? AccessoryViewRevealable})
         let offset = min(offset, cells.reduce(0) { (current, cell) -> CGFloat in
             return max(current, cell.preferredOffsetToRevealAccessoryView() ?? 0)
         })
 
-        for cell in self.collectionView.visibleCells() {
-            if let cell = cell as? AccessoryViewRevealable where cell.allowAccessoryViewRevealing {
+        for cell in self.collectionView.visibleCells {
+            if let cell = cell as? AccessoryViewRevealable, cell.allowAccessoryViewRevealing {
                 cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }

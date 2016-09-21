@@ -25,7 +25,7 @@ THE SOFTWARE.
 import Foundation
 
 public protocol ChatItemsDecoratorProtocol {
-    func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
+    func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }
 
 public struct DecoratedChatItem: UniqueIdentificable {

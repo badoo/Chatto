@@ -31,23 +31,23 @@ class DemoPhotoMessageHandler: BaseMessageInteractionHandlerProtocol {
         self.baseHandler = baseHandler
     }
 
-    func userDidTapOnFailIcon(viewModel viewModel: DemoPhotoMessageViewModel, failIconView: UIView) {
+    func userDidTapOnFailIcon(viewModel: DemoPhotoMessageViewModel, failIconView: UIView) {
         self.baseHandler.userDidTapOnFailIcon(viewModel: viewModel)
     }
 
-    func userDidTapOnAvatar(viewModel viewModel: DemoPhotoMessageViewModel) {
+    func userDidTapOnAvatar(viewModel: DemoPhotoMessageViewModel) {
         self.baseHandler.userDidTapOnAvatar(viewModel: viewModel)
     }
 
-    func userDidTapOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
+    func userDidTapOnBubble(viewModel: DemoPhotoMessageViewModel) {
         self.baseHandler.userDidTapOnBubble(viewModel: viewModel)
     }
 
-    func userDidBeginLongPressOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
+    func userDidBeginLongPressOnBubble(viewModel: DemoPhotoMessageViewModel) {
         self.baseHandler.userDidBeginLongPressOnBubble(viewModel: viewModel)
     }
 
-    func userDidEndLongPressOnBubble(viewModel viewModel: DemoPhotoMessageViewModel) {
+    func userDidEndLongPressOnBubble(viewModel: DemoPhotoMessageViewModel) {
         self.baseHandler.userDidEndLongPressOnBubble(viewModel: viewModel)
     }
 }

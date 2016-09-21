@@ -24,7 +24,7 @@
 
 import UIKit
 
-public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewCellStyleProtocol {
+open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewCellStyleProtocol {
 
     typealias Class = BaseMessageCollectionViewCellDefaultStyle
 
@@ -32,8 +32,8 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         let incoming: () -> UIColor
         let outgoing: () -> UIColor
         public init(
-            @autoclosure(escaping) incoming: () -> UIColor,
-            @autoclosure(escaping) outgoing: () -> UIColor) {
+            incoming: @autoclosure @escaping () -> UIColor,
+            outgoing: @autoclosure @escaping () -> UIColor) {
                 self.incoming = incoming
                 self.outgoing = outgoing
         }
@@ -45,10 +45,10 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         public let borderOutgoingTail: () -> UIImage
         public let borderOutgoingNoTail: () -> UIImage
         public init(
-            @autoclosure(escaping) borderIncomingTail: () -> UIImage,
-            @autoclosure(escaping) borderIncomingNoTail: () -> UIImage,
-            @autoclosure(escaping) borderOutgoingTail: () -> UIImage,
-            @autoclosure(escaping) borderOutgoingNoTail: () -> UIImage) {
+            borderIncomingTail: @autoclosure @escaping () -> UIImage,
+            borderIncomingNoTail: @autoclosure @escaping () -> UIImage,
+            borderOutgoingTail: @autoclosure @escaping () -> UIImage,
+            borderOutgoingNoTail: @autoclosure @escaping () -> UIImage) {
                 self.borderIncomingTail = borderIncomingTail
                 self.borderIncomingNoTail = borderIncomingNoTail
                 self.borderOutgoingTail = borderOutgoingTail
@@ -60,8 +60,8 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         let normal: () -> UIImage
         let highlighted: () -> UIImage
         public init(
-            @autoclosure(escaping) normal: () -> UIImage,
-            @autoclosure(escaping) highlighted: () -> UIImage) {
+            normal: @autoclosure @escaping () -> UIImage,
+            highlighted: @autoclosure @escaping () -> UIImage) {
                 self.normal = normal
                 self.highlighted = highlighted
         }
@@ -71,8 +71,8 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         let font: () -> UIFont
         let color: () -> UIColor
         public init(
-            @autoclosure(escaping) font: () -> UIFont,
-            @autoclosure(escaping) color: () -> UIColor) {
+            font: @autoclosure @escaping () -> UIFont,
+            color: @autoclosure @escaping () -> UIColor) {
                 self.font = font
                 self.color = color
         }
@@ -81,7 +81,7 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
     public struct AvatarStyle {
         let size: CGSize
         let alignment: VerticalAlignment
-        public init(size: CGSize = .zero, alignment: VerticalAlignment = .Bottom) {
+        public init(size: CGSize = .zero, alignment: VerticalAlignment = .bottom) {
             self.size = size
             self.alignment = alignment
         }
@@ -128,11 +128,11 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         ]
     }()
 
-    public func attributedStringForDate(date: String) -> NSAttributedString {
+    open func attributedStringForDate(_ date: String) -> NSAttributedString {
         return NSAttributedString(string: date, attributes: self.dateStringAttributes)
     }
 
-    public func borderImage(viewModel viewModel: MessageViewModelProtocol) -> UIImage? {
+    open func borderImage(viewModel: MessageViewModelProtocol) -> UIImage? {
         switch (viewModel.isIncoming, viewModel.showsTail) {
         case (true, true):
             return self.borderIncomingTail
@@ -145,15 +145,15 @@ public class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionVie
         }
     }
 
-    public func avatarSize(viewModel viewModel: MessageViewModelProtocol) -> CGSize {
+    open func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize {
         return self.avatarStyle.size
     }
 
-    public func avatarVerticalAlignment(viewModel viewModel: MessageViewModelProtocol) -> VerticalAlignment {
+    open func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment {
         return self.avatarStyle.alignment
     }
 
-    public func layoutConstants(viewModel viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
+    open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
         return self.layoutConstants
     }
 }
@@ -165,25 +165,25 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
 
     static public func createDefaultBubbleBorderImages() -> BubbleBorderImages {
         return BubbleBorderImages(
-            borderIncomingTail: UIImage(named: "bubble-incoming-border-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            borderIncomingNoTail: UIImage(named: "bubble-incoming-border", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            borderOutgoingTail: UIImage(named: "bubble-outgoing-border-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            borderOutgoingNoTail: UIImage(named: "bubble-outgoing-border", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+            borderIncomingTail: UIImage(named: "bubble-incoming-border-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            borderIncomingNoTail: UIImage(named: "bubble-incoming-border", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            borderOutgoingTail: UIImage(named: "bubble-outgoing-border-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            borderOutgoingNoTail: UIImage(named: "bubble-outgoing-border", in: Bundle(for: Class.self), compatibleWith: nil)!
         )
     }
 
     static public func createDefaultFailedIconImages() -> FailedIconImages {
         let normal = {
-            return UIImage(named: "base-message-failed-icon", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+            return UIImage(named: "base-message-failed-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
         }
         return FailedIconImages(
             normal: normal(),
-            highlighted: normal().bma_blendWithColor(UIColor.blackColor().colorWithAlphaComponent(0.10))
+            highlighted: normal().bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
         )
     }
 
     static public func createDefaultDateTextStyle() -> DateTextStyle {
-        return DateTextStyle(font: UIFont.systemFontOfSize(12), color: UIColor.bma_color(rgb: 0x9aa3ab))
+        return DateTextStyle(font: UIFont.systemFont(ofSize: 12), color: UIColor.bma_color(rgb: 0x9aa3ab))
     }
 
     static public func createDefaultLayoutConstants() -> BaseMessageCollectionViewCellLayoutConstants {

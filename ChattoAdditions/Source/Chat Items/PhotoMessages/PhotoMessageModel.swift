@@ -29,7 +29,7 @@ public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol {
     var imageSize: CGSize { get }
 }
 
-public class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageModelProtocol {
+open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageModelProtocol {
     public var messageModel: MessageModelProtocol {
         return self._messageModel
     }
