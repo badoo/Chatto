@@ -27,12 +27,12 @@ import Foundation
 class KeyboardTracker {
 
     private enum KeyboardStatus {
-        case Hidden
-        case Showing
-        case Shown
+        case hidden
+        case showing
+        case shown
     }
 
-    private var keyboardStatus: KeyboardStatus = .Hidden
+    private var keyboardStatus: KeyboardStatus = .hidden
     private let view: UIView
     var trackingView: UIView {
         return self.keyboardTrackerView
@@ -50,20 +50,20 @@ class KeyboardTracker {
 
     var isTracking = false
     var inputContainer: UIView
-    private var notificationCenter: NSNotificationCenter
+    private var notificationCenter: NotificationCenter
 
-    typealias LayoutBlock = (bottomMargin: CGFloat) -> Void
+    typealias LayoutBlock = (_ bottomMargin: CGFloat) -> Void
     private var layoutBlock: LayoutBlock
 
-    init(viewController: UIViewController, inputContainer: UIView, layoutBlock: LayoutBlock, notificationCenter: NSNotificationCenter) {
+    init(viewController: UIViewController, inputContainer: UIView, layoutBlock: @escaping LayoutBlock, notificationCenter: NotificationCenter) {
         self.view = viewController.view
         self.layoutBlock = layoutBlock
         self.inputContainer = inputContainer
         self.notificationCenter = notificationCenter
-        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidShow(_:)), name: UIKeyboardDidShowNotification, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillChangeFrame(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidShow(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
 
     deinit {
@@ -79,60 +79,60 @@ class KeyboardTracker {
     }
 
     @objc
-    private func keyboardWillShow(notification: NSNotification) {
+    private func keyboardWillShow(_ notification: Notification) {
         guard self.isTracking else { return }
         guard !self.isPerformingForcedLayout else { return}
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
-        self.keyboardStatus = .Showing
+        self.keyboardStatus = .showing
         self.layoutInputContainer(withBottomConstraint: bottomConstraint)
     }
 
     @objc
-    private func keyboardDidShow(notification: NSNotification) {
+    private func keyboardDidShow(_ notification: Notification) {
         guard self.isTracking else { return }
         guard !self.isPerformingForcedLayout else { return}
 
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
-        self.keyboardStatus = .Shown
+        self.keyboardStatus = .shown
         self.layoutInputContainer(withBottomConstraint: bottomConstraint)
         self.adjustTrackingViewSizeIfNeeded()
     }
 
     @objc
-    private func keyboardWillChangeFrame(notification: NSNotification) {
+    private func keyboardWillChangeFrame(_ notification: Notification) {
         guard self.isTracking else { return }
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         if bottomConstraint == 0 {
-            self.keyboardStatus = .Hidden
+            self.keyboardStatus = .hidden
             self.layoutInputAtBottom()
         }
     }
 
     @objc
-    private func keyboardWillHide(notification: NSNotification) {
+    private func keyboardWillHide(_ notification: Notification) {
         guard self.isTracking else { return }
-        self.keyboardStatus = .Hidden
+        self.keyboardStatus = .hidden
         self.layoutInputAtBottom()
     }
 
-    private func bottomConstraintFromNotification(notification: NSNotification) -> CGFloat {
-        guard let rect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() else { return 0 }
+    private func bottomConstraintFromNotification(_ notification: Notification) -> CGFloat {
+        guard let rect = ((notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return 0 }
         guard rect.height > 0 else { return 0 }
-        let rectInView = self.view.convertRect(rect, fromView: nil)
+        let rectInView = self.view.convert(rect, from: nil)
         guard rectInView.maxY >=~ self.view.bounds.height else { return 0 } // Undocked keyboard
-        return max(0, self.view.bounds.height - rectInView.minY - self.keyboardTrackerView.intrinsicContentSize().height)
+        return max(0, self.view.bounds.height - rectInView.minY - self.keyboardTrackerView.intrinsicContentSize.height)
     }
 
     private func bottomConstraintFromTrackingView() -> CGFloat {
         guard self.keyboardTrackerView.superview != nil else { return 0 }
-        let trackingViewRect = self.view.convertRect(self.keyboardTrackerView.bounds, fromView: self.keyboardTrackerView)
+        let trackingViewRect = self.view.convert(self.keyboardTrackerView.bounds, from: self.keyboardTrackerView)
         return max(0, self.view.bounds.height - trackingViewRect.maxY)
     }
 
     func adjustTrackingViewSizeIfNeeded() {
-        guard self.isTracking && self.keyboardStatus == .Shown else { return }
+        guard self.isTracking && self.keyboardStatus == .shown else { return }
         self.adjustTrackingViewSize()
     }
 
@@ -153,13 +153,13 @@ class KeyboardTracker {
 
     var isPerformingForcedLayout: Bool = false
     func layoutInputAtTrackingViewIfNeeded() {
-        guard self.isTracking && self.keyboardStatus == .Shown else { return }
+        guard self.isTracking && self.keyboardStatus == .shown else { return }
         self.layoutInputContainer(withBottomConstraint: self.bottomConstraintFromTrackingView())
     }
 
     private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
         self.isPerformingForcedLayout = true
-        self.layoutBlock(bottomMargin: constraint)
+        self.layoutBlock(constraint)
         self.isPerformingForcedLayout = false
     }
 }
@@ -186,13 +186,13 @@ private class KeyboardTrackingView: UIView {
     }
 
     private func commonInit() {
-        self.autoresizingMask = .FlexibleHeight
-        self.userInteractionEnabled = false
-        self.backgroundColor = UIColor.clearColor()
-        self.hidden = true
+        self.autoresizingMask = .flexibleHeight
+        self.isUserInteractionEnabled = false
+        self.backgroundColor = UIColor.clear
+        self.isHidden = true
     }
 
-    private var preferredSize: CGSize = .zero {
+    fileprivate var preferredSize: CGSize = .zero {
         didSet {
             if oldValue != self.preferredSize {
                 self.invalidateIntrinsicContentSize()
@@ -201,30 +201,30 @@ private class KeyboardTrackingView: UIView {
         }
     }
 
-    private override func intrinsicContentSize() -> CGSize {
+    private override var intrinsicContentSize: CGSize {
         return self.preferredSize
     }
 
-    override func willMoveToSuperview(newSuperview: UIView?) {
+    override func willMove(toSuperview newSuperview: UIView?) {
         if let observedView = self.observedView {
             observedView.removeObserver(self, forKeyPath: "center")
             self.observedView = nil
         }
 
         if let newSuperview = newSuperview {
-            newSuperview.addObserver(self, forKeyPath: "center", options: [.New, .Old], context: nil)
+            newSuperview.addObserver(self, forKeyPath: "center", options: [.new, .old], context: nil)
             self.observedView = newSuperview
         }
 
-        super.willMoveToSuperview(newSuperview)
+        super.willMove(toSuperview: newSuperview)
     }
 
-    private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        guard let object = object, superview = self.superview else { return }
+    private override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let object = object as? UIView, let superview = self.superview else { return }
         if object === superview {
             guard let sChange = change else { return }
-            let oldCenter = (sChange[NSKeyValueChangeOldKey] as! NSValue).CGPointValue()
-            let newCenter = (sChange[NSKeyValueChangeNewKey] as! NSValue).CGPointValue()
+            let oldCenter = (sChange[NSKeyValueChangeKey.oldKey] as! NSValue).cgPointValue
+            let newCenter = (sChange[NSKeyValueChangeKey.newKey] as! NSValue).cgPointValue
             if oldCenter != newCenter {
                 self.positionChangedCallback?()
             }

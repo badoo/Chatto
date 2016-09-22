@@ -35,7 +35,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
         let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
-        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate(), status: .Success)
+        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate() as Date, status: .success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
         self.presenter = TextMessagePresenter(messageModel: textMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: TextMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, textCellStyle: textStyle, layoutCache: NSCache())
     }
@@ -46,7 +46,7 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
-        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
+        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: IndexPath(item: 0, section: 0)))
         collectionView.dataSource = nil
     }
 
@@ -81,35 +81,35 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     // MARK: Helpers
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath as IndexPath)
     }
 }
 
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT, failIconView: UIView) {
+    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
 
     }
 
-    func userDidTapOnAvatar(viewModel viewModel: ViewModelT) {
+    func userDidTapOnAvatar(viewModel: ViewModelT) {
 
     }
 
-    func userDidTapOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidTapOnBubble(viewModel: ViewModelT) {
 
     }
 
-    func userDidBeginLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
 
     }
 
-    func userDidEndLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
 
     }
 }

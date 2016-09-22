@@ -29,8 +29,9 @@ public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol 
     var textViewDelegate: UITextViewDelegate? { get }
 }
 
-public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
+open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
     public var textViewDelegate: UITextViewDelegate?
+
     public var text: String {
         return self.textMessage.text
     }
@@ -42,27 +43,27 @@ public class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: 
         self.messageViewModel = messageViewModel
     }
 
-    public func willBeShown() {
+    open func willBeShown() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 
-    public func wasHidden() {
+    open func wasHidden() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
     }
 }
 
-public class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
+open class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
     public init() { }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    public func createViewModel(textMessage: TextMessageModelT) -> TextMessageViewModel<TextMessageModelT> {
+    open func createViewModel(_ textMessage: TextMessageModelT) -> TextMessageViewModel<TextMessageModelT> {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = TextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
         return textMessageViewModel
     }
 
-    public func canCreateViewModel(fromModel model: Any) -> Bool {
+    open func canCreateViewModel(fromModel model: Any) -> Bool {
         return model is TextMessageModelT
     }
 }

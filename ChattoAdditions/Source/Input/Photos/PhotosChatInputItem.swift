@@ -24,7 +24,7 @@
 
 import Foundation
 
-public class PhotosChatInputItem: ChatInputItemProtocol {
+open class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
     public var photoInputHandler: ((UIImage) -> Void)?
@@ -42,16 +42,16 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         self.inputViewAppearance = inputViewAppearance
     }
 
-    public class func createDefaultButtonAppearance() -> TabInputButtonAppearance {
+    public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
         let images: [UIControlStateWrapper: UIImage] = [
-            UIControlStateWrapper(state: .Normal): UIImage(named: "camera-icon-unselected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            UIControlStateWrapper(state: .Selected): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            UIControlStateWrapper(state: .Highlighted): UIImage(named: "camera-icon-selected", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
+            UIControlStateWrapper(state: .normal): UIImage(named: "camera-icon-unselected", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            UIControlStateWrapper(state: .selected): UIImage(named: "camera-icon-selected", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            UIControlStateWrapper(state: .highlighted): UIImage(named: "camera-icon-selected", in: Bundle(for: Class.self), compatibleWith: nil)!
         ]
         return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    public class func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
+    public static func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
         return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
     }
 
@@ -65,31 +65,31 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
         return photosInputView
     }()
 
-    public var selected = false {
+    open var selected = false {
         didSet {
-            self.internalTabView.selected = self.selected
+            self.internalTabView.isSelected = self.selected
         }
     }
 
     // MARK: - ChatInputItemProtocol
 
-    public var presentationMode: ChatInputItemPresentationMode {
-        return .CustomView
+    open var presentationMode: ChatInputItemPresentationMode {
+        return .customView
     }
 
-    public var showsSendButton: Bool {
+    open var showsSendButton: Bool {
         return false
     }
 
-    public var inputView: UIView? {
+    open var inputView: UIView? {
         return self.photosInputView as? UIView
     }
 
-    public var tabView: UIView {
+    open var tabView: UIView {
         return self.internalTabView
     }
 
-    public func handleInput(input: AnyObject) {
+    open func handleInput(_ input: AnyObject) {
         if let image = input as? UIImage {
             self.photoInputHandler?(image)
         }
@@ -98,15 +98,15 @@ public class PhotosChatInputItem: ChatInputItemProtocol {
 
 // MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
-    func inputView(inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
+    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)
     }
 
-    func inputViewDidRequestCameraPermission(inputView: PhotosInputViewProtocol) {
+    func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
         self.cameraPermissionHandler?()
     }
 
-    func inputViewDidRequestPhotoLibraryPermission(inputView: PhotosInputViewProtocol) {
+    func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
         self.photosPermissionHandler?()
     }
 }

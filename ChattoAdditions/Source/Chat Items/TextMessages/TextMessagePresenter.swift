@@ -24,12 +24,12 @@
 
 import UIKit
 
-public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
+open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
+: BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT>
-: BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> {
+    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
@@ -40,7 +40,7 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         sizingCell: TextMessageCollectionViewCell,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         textCellStyle: TextMessageCollectionViewCellStyleProtocol,
-        layoutCache: NSCache) {
+        layoutCache: NSCache<AnyObject, AnyObject>) {
             self.layoutCache = layoutCache
             self.textCellStyle = textCellStyle
             super.init(
@@ -52,20 +52,20 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
             )
     }
 
-    let layoutCache: NSCache
+    let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
-    public override class func registerCells(collectionView: UICollectionView) {
-        collectionView.registerClass(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-incoming")
-        collectionView.registerClass(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
+    public final override class func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-incoming")
+        collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
     }
 
-    public override func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
+    public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let identifier = self.messageViewModel.isIncoming ? "text-message-incoming" : "text-message-outcoming"
-        return collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
+        return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
     }
 
-    public override func createViewModel() -> ViewModelBuilderT.ViewModelT {
+    open override func createViewModel() -> ViewModelBuilderT.ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
         let updateClosure = { [weak self] (old: Any, new: Any) -> () in
             self?.updateCurrentCell()
@@ -85,7 +85,7 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         return nil
     }
 
-    public override func configureCell(cell: BaseMessageCollectionViewCell<TextBubbleView>, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
+    open override func configureCell(_ cell: BaseMessageCollectionViewCell<TextBubbleView>, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         guard let cell = cell as? TextMessageCollectionViewCell else {
             assert(false, "Invalid cell received")
             return
@@ -101,32 +101,24 @@ public class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
     }
 
     public func updateCurrentCell() {
-        if let cell = self.textCell, decorationAttributes = self.decorationAttributes {
-            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .Appearing, additionalConfiguration: nil)
+        if let cell = self.textCell, let decorationAttributes = self.decorationAttributes {
+            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .appearing, additionalConfiguration: nil)
         }
     }
 
-    public override func canShowMenu() -> Bool {
+    open override func canShowMenu() -> Bool {
         return true
     }
 
-    public override func canPerformMenuControllerAction(action: Selector) -> Bool {
-        #if swift(>=2.3)
-            let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        #else
-            let selector = #selector(NSObject.copy(_:))
-        #endif
+    open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
+        let selector = #selector(UIResponderStandardEditActions.copy(_:))
         return action == selector
     }
 
-    public override func performMenuControllerAction(action: Selector) {
-        #if swift(>=2.3)
-            let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        #else
-            let selector = #selector(NSObject.copy(_:))
-        #endif
+    open override func performMenuControllerAction(_ action: Selector) {
+        let selector = #selector(UIResponderStandardEditActions.copy(_:))
         if action == selector {
-            UIPasteboard.generalPasteboard().string = self.messageViewModel.text
+            UIPasteboard.general.string = self.messageViewModel.text
         } else {
             assert(false, "Unexpected action")
         }

@@ -30,14 +30,14 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
     struct Constants {
         static let shortSeparation: CGFloat = 3
         static let normalSeparation: CGFloat = 10
-        static let timeIntervalThresholdToIncreaseSeparation: NSTimeInterval = 120
+        static let timeIntervalThresholdToIncreaseSeparation: TimeInterval = 120
     }
 
-    func decorateItems(chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
+    func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
         var decoratedChatItems = [DecoratedChatItem]()
-        let calendar = NSCalendar.currentCalendar()
+        let calendar = Calendar.current
 
-        for (index, chatItem) in chatItems.enumerate() {
+        for (index, chatItem) in chatItems.enumerated() {
             let next: ChatItemProtocol? = (index + 1 < chatItems.count) ? chatItems[index + 1] : nil
             let prev: ChatItemProtocol? = (index > 0) ? chatItems[index - 1] : nil
 
@@ -54,7 +54,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                 }
 
                 if let previousMessage = prev as? MessageModelProtocol {
-                    addTimeSeparator = calendar.compareDate(currentMessage.date, toDate: previousMessage.date, toUnitGranularity: NSCalendarUnit.Day) != NSComparisonResult.OrderedSame
+                    addTimeSeparator = calendar.compare(currentMessage.date, to: previousMessage.date, toGranularity: Calendar.Component.day) != ComparisonResult.orderedSame
                 } else {
                     addTimeSeparator = true
                 }
@@ -77,13 +77,13 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                 chatItem: chatItem,
                 decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin, showsTail: showsTail, canShowAvatar: showsTail))
             )
-            decoratedChatItems.appendContentsOf(additionalItems)
+            decoratedChatItems.append(contentsOf: additionalItems)
         }
 
         return decoratedChatItems
     }
 
-    func separationAfterItem(current: ChatItemProtocol?, next: ChatItemProtocol?) -> CGFloat {
+    func separationAfterItem(_ current: ChatItemProtocol?, next: ChatItemProtocol?) -> CGFloat {
         guard let nexItem = next else { return 0 }
         guard let currentMessage = current as? MessageModelProtocol else { return Constants.normalSeparation }
         guard let nextMessage = nexItem as? MessageModelProtocol else { return Constants.normalSeparation }
@@ -92,14 +92,14 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
             return 0
         } else if currentMessage.senderId != nextMessage.senderId {
             return Constants.normalSeparation
-        } else if nextMessage.date.timeIntervalSinceDate(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
+        } else if nextMessage.date.timeIntervalSince(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
             return Constants.normalSeparation
         } else {
             return Constants.shortSeparation
         }
     }
 
-    func showsStatusForMessage(message: MessageModelProtocol) -> Bool {
-        return message.status == .Failed || message.status == .Sending
+    func showsStatusForMessage(_ message: MessageModelProtocol) -> Bool {
+        return message.status == .failed || message.status == .sending
     }
 }

@@ -25,8 +25,8 @@
 import Foundation
 
 public enum InsertPosition {
-    case Top
-    case Bottom
+    case top
+    case bottom
 }
 
 public class SlidingDataSource<Element> {
@@ -48,29 +48,29 @@ public class SlidingDataSource<Element> {
         self.windowCount = 0
         self.pageSize = pageSize
         self.itemGenerator = itemGenerator
-        self.generateItems(min(pageSize, count), position: .Top)
+        self.generateItems(min(pageSize, count), position: .top)
     }
 
     public convenience init(items: [Element], pageSize: Int) {
         self.init(count: 0, pageSize: pageSize, itemGenerator: nil)
         for item in items {
-            self.insertItem(item, position: .Bottom)
+            self.insertItem(item, position: .bottom)
         }
     }
 
-    private func generateItems(count: Int, position: InsertPosition) {
+    private func generateItems(_ count: Int, position: InsertPosition) {
         guard count > 0 else { return }
         guard let itemGenerator = self.itemGenerator else {
             fatalError("Can't create messages without a generator")
         }
         for _ in 0..<count {
-            self.insertItem(itemGenerator(), position: .Top)
+            self.insertItem(itemGenerator(), position: .top)
         }
     }
 
-    public func insertItem(item: Element, position: InsertPosition) {
-        if position == .Top {
-            self.items.insert(item, atIndex: 0)
+    public func insertItem(_ item: Element, position: InsertPosition) {
+        if position == .top {
+            self.items.insert(item, at: 0)
             let shouldExpandWindow = self.itemsOffset == self.windowOffset
             self.itemsOffset -= 1
             if shouldExpandWindow {
@@ -100,7 +100,7 @@ public class SlidingDataSource<Element> {
         let nextWindowOffset = max(0, self.windowOffset - self.pageSize)
         let messagesNeeded = self.itemsOffset - nextWindowOffset
         if messagesNeeded > 0 {
-            self.generateItems(messagesNeeded, position: .Top)
+            self.generateItems(messagesNeeded, position: .top)
         }
         let newItemsCount = previousWindowOffset - nextWindowOffset
         self.windowOffset = nextWindowOffset
@@ -113,7 +113,8 @@ public class SlidingDataSource<Element> {
         self.windowCount += min(self.pageSize, itemCountAfterWindow)
     }
 
-    public func adjustWindow(focusPosition focusPosition: Double, maxWindowSize: Int) -> Bool {
+    @discardableResult
+    public func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
         assert(0 <= focusPosition && focusPosition <= 1, "")
         guard 0 <= focusPosition && focusPosition <= 1 else {
             assert(false, "focus should be in the [0, 1] interval")

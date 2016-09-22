@@ -31,13 +31,13 @@ class ChatInputItemTests: XCTestCase {
 @objc
 class MockInputItem: NSObject, ChatInputItemProtocol {
     var selected = false
-    var presentationMode: ChatInputItemPresentationMode = .Keyboard
+    var presentationMode: ChatInputItemPresentationMode = .keyboard
     var showsSendButton = false
     var inputView: UIView? = nil
     let tabView = UIView()
 
     private(set) var handledInput: AnyObject?
-    func handleInput(input: AnyObject) {
+    func handleInput(_ input: AnyObject) {
         self.handledInput = input
     }
 }

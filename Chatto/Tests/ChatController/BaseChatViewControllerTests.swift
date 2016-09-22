@@ -61,7 +61,7 @@ class ChatViewControllerTests: XCTestCase {
     }
 
     func testThat_WhenDataSourceChanges_ThenCollectionViewUpdatesAsynchronously() {
-        let asyncExpectation = expectationWithDescription("update")
+        let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
@@ -74,7 +74,7 @@ class ChatViewControllerTests: XCTestCase {
             asyncExpectation.fulfill()
             completion()
         }
-        self.waitForExpectationsWithTimeout(1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (error) -> Void in
             XCTAssertEqual(3, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
         }
     }
@@ -91,7 +91,7 @@ class ChatViewControllerTests: XCTestCase {
     }
 
     func testThat_GivenManyItems_WhenScrollToTop_ThenLoadsPreviousPage() {
-        let asyncExpectation = expectationWithDescription("update")
+        let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
@@ -105,13 +105,13 @@ class ChatViewControllerTests: XCTestCase {
             completion()
             asyncExpectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (error) -> Void in
             XCTAssertTrue(fakeDataSource.wasRequestedForPrevious)
         }
     }
 
     func testThat_WhenLoadsNextPage_ThenPreservesScrollPosition() {
-        let asyncExpectation = expectationWithDescription("update")
+        let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
@@ -129,14 +129,14 @@ class ChatViewControllerTests: XCTestCase {
             completion()
         }
 
-        self.waitForExpectationsWithTimeout(1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (error) -> Void in
             XCTAssertEqual(3000, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
             XCTAssertEqual(contentOffset, controller.collectionView.contentOffset)
         }
     }
 
     func testThat_WhenManyMessagesAreLoaded_ThenRequestForMessageCountContention() {
-        let asyncExpectation = expectationWithDescription("update")
+        let asyncExpectation = expectation(description: "update")
         let updateQueue = SerialTaskQueueTestHelper()
         let presenterBuilder = FakePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
@@ -148,13 +148,13 @@ class ChatViewControllerTests: XCTestCase {
         updateQueue.onAllTasksFinished = {
             asyncExpectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (error) -> Void in
             XCTAssertTrue(fakeDataSource.wasRequestedForMessageCountContention)
         }
     }
 
     func testThat_WhenUpdatesFinish_ControllerIsNotRetained() {
-        let asyncExpectation = expectationWithDescription("update")
+        let asyncExpectation = expectation(description: "update")
         let updateQueue = SerialTaskQueueTestHelper()
         var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
         weak var weakController = controller
@@ -171,7 +171,7 @@ class ChatViewControllerTests: XCTestCase {
         updateQueue.onAllTasksFinished = {
             asyncExpectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (error) -> Void in
             controller = nil
             XCTAssertNil(weakController)
         }
@@ -193,28 +193,28 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_LayoutAdaptsWhenKeyboardIsShown() {
         let controller = TesteableChatViewController()
-        let notificationCenter = NSNotificationCenter()
+        let notificationCenter = NotificationCenter()
         controller.notificationCenter = notificationCenter
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
-        notificationCenter.postNotificationName(UIKeyboardWillShowNotification, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(CGRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        XCTAssertEqual(400, controller.view.convertRect(controller.chatInputView.bounds, fromView: controller.chatInputView).maxY)
+        notificationCenter.post(name: NSNotification.Name.UIKeyboardWillShow, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
+        XCTAssertEqual(400, controller.view.convert(controller.chatInputView.bounds, from: controller.chatInputView).maxY)
     }
 
     func testThat_LayoutAdaptsWhenKeyboardIsHidden() {
         let controller = TesteableChatViewController()
-        let notificationCenter = NSNotificationCenter()
+        let notificationCenter = NotificationCenter()
         controller.notificationCenter = notificationCenter
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
-        notificationCenter.postNotificationName(UIKeyboardWillShowNotification, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(CGRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        notificationCenter.postNotificationName(UIKeyboardDidShowNotification, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(CGRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        notificationCenter.postNotificationName(UIKeyboardWillHideNotification, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(CGRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        XCTAssertEqual(900, controller.view.convertRect(controller.chatInputView.bounds, fromView: controller.chatInputView).maxY)
+        notificationCenter.post(name: NSNotification.Name.UIKeyboardWillShow, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
+        notificationCenter.post(name: NSNotification.Name.UIKeyboardDidShow, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
+        notificationCenter.post(name: NSNotification.Name.UIKeyboardWillHide, object: self, userInfo: [UIKeyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
+        XCTAssertEqual(900, controller.view.convert(controller.chatInputView.bounds, from: controller.chatInputView).maxY)
     }
 
     func testThat_GivenCoalescingIsEnabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreCoalesced() {
@@ -225,7 +225,7 @@ class ChatViewControllerTests: XCTestCase {
         let updateQueue = SerialTaskQueueTestHelper()
         controller.updateQueue = updateQueue
 
-        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .None)
+        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .none)
         controller.chatDataSourceDidUpdate(fakeDataSource) // running
         controller.chatDataSourceDidUpdate(fakeDataSource) // discarded
         controller.chatDataSourceDidUpdate(fakeDataSource) // discarded
@@ -242,7 +242,7 @@ class ChatViewControllerTests: XCTestCase {
         controller.updateQueue = updateQueue
 
         updateQueue.start()
-        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .None)
+        controller.setChatDataSource(fakeDataSource, triggeringUpdateType: .none)
         controller.chatDataSourceDidUpdate(fakeDataSource) // running
         controller.chatDataSourceDidUpdate(fakeDataSource) // queued
         controller.chatDataSourceDidUpdate(fakeDataSource) // queued
@@ -253,7 +253,7 @@ class ChatViewControllerTests: XCTestCase {
 
     // MARK: helpers
 
-    private func fakeDidAppearAndLayout(controller controller: TesteableChatViewController) {
+    private func fakeDidAppearAndLayout(controller: TesteableChatViewController) {
         controller.view.frame = CGRect(x: 0, y: 0, width: 400, height: 900)
         controller.viewWillAppear(true)
         controller.viewDidAppear(true)

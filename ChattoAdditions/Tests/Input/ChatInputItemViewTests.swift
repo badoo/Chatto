@@ -45,7 +45,7 @@ class ChatInputItemViewTests: XCTestCase {
 
 class MockInputItemViewDelegate: ChatInputItemViewDelegate {
     var itemViewTapped = false
-    func inputItemViewTapped(view: ChatInputItemView) {
+    func inputItemViewTapped(_ view: ChatInputItemView) {
         self.itemViewTapped = true
     }
 }

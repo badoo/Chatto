@@ -33,20 +33,20 @@ extension Array {
     }
 }
 
-func createTextMessageModel(uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
+func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
     let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
     let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
     return textMessageModel
 }
 
-func createMessageModel(uid: String, isIncoming: Bool, type: String) -> MessageModel {
+func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
     let senderId = isIncoming ? "1" : "2"
-    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.Success : .Failed
-    let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: NSDate(), status: messageStatus)
+    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
+    let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
     return messageModel
 }
 
-func createPhotoMessageModel(uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
+func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
     let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
     let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize:size, image: image)
     return photoMessageModel
@@ -57,12 +57,12 @@ class FakeMessageFactory {
         "Lorem ipsum dolor sit amet 😇, https://github.com/badoo/Chatto consectetur adipiscing elit , sed do eiusmod tempor incididunt 07400000000 📞 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore https://github.com/badoo/Chatto eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 07400000000 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     ]
 
-    class func createChatItem(uid: String) -> MessageModelProtocol {
+    class func createChatItem(_ uid: String) -> MessageModelProtocol {
         let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
         return self.createChatItem(uid, isIncoming: isIncoming)
     }
 
-    class func createChatItem(uid: String, isIncoming: Bool) -> MessageModelProtocol {
+    class func createChatItem(_ uid: String, isIncoming: Bool) -> MessageModelProtocol {
         if arc4random_uniform(100) % 2 == 0 {
             return self.createTextMessageModel(uid, isIncoming: isIncoming)
         } else {
@@ -70,15 +70,15 @@ class FakeMessageFactory {
         }
     }
 
-    class func createTextMessageModel(uid: String, isIncoming: Bool) -> DemoTextMessageModel {
+    class func createTextMessageModel(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = "\(maxText.substringToIndex(maxText.startIndex.advancedBy(length))) incoming:\(incomingText), #:\(uid)"
+        let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
-    class func createPhotoMessageModel(uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
+    class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
         var imageSize = CGSize.zero
         switch arc4random_uniform(100) % 3 {
         case 0:
@@ -137,7 +137,7 @@ class TutorialMessageFactory {
 
     static func createMessages() -> [MessageModelProtocol] {
         var result = [MessageModelProtocol]()
-        for (index, message) in self.messages.enumerate() {
+        for (index, message) in self.messages.enumerated() {
             let type = message.0
             let content = message.1
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0

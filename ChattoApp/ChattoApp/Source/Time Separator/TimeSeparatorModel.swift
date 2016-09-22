@@ -41,16 +41,16 @@ class TimeSeparatorModel: ChatItemProtocol {
     }
 }
 
-extension NSDate {
+extension Date {
     // Have a time stamp formatter to avoid keep creating new ones. This improves performance
-    private static let weekdayAndDateStampDateFormatter: NSDateFormatter = {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+    private static let weekdayAndDateStampDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         dateFormatter.dateFormat = "EEEE, MMM dd yyyy" // "Monday, Mar 7 2016"
         return dateFormatter
     }()
 
     func toWeekDayAndDateString() -> String {
-        return NSDate.weekdayAndDateStampDateFormatter.stringFromDate(self)
+        return Date.weekdayAndDateStampDateFormatter.string(from: self)
     }
 }

@@ -46,11 +46,11 @@ class SendingStatusModel: ChatItemProtocol {
 
 public class SendingStatusPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
-    public func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
+    public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem is SendingStatusModel ? true : false
     }
 
-    public func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    public func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return SendingStatusPresenter(
             statusModel: chatItem as! SendingStatusModel
@@ -69,24 +69,24 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
         self.statusModel = statusModel
     }
 
-    static func registerCells(collectionView: UICollectionView) {
-        collectionView.registerNib(UINib(nibName: "SendingStatusCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "SendingStatusCollectionViewCell")
+    static func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(UINib(nibName: "SendingStatusCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "SendingStatusCollectionViewCell")
     }
 
-    func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("SendingStatusCollectionViewCell", forIndexPath: indexPath)
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SendingStatusCollectionViewCell", for: indexPath)
         return cell
     }
 
-    func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         guard let statusCell = cell as? SendingStatusCollectionViewCell else {
             assert(false, "expecting status cell")
             return
         }
 
         let attrs = [
-            NSFontAttributeName : UIFont.systemFontOfSize(10.0),
-            NSForegroundColorAttributeName: self.statusModel.status == .Failed ? UIColor.redColor() : UIColor.blackColor()
+            NSFontAttributeName : UIFont.systemFont(ofSize: 10.0),
+            NSForegroundColorAttributeName: self.statusModel.status == .failed ? UIColor.red : UIColor.black
         ]
         statusCell.text = NSAttributedString(
             string: self.statusText(),
@@ -95,9 +95,9 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
 
     func statusText() -> String {
         switch self.statusModel.status {
-        case .Failed:
+        case .failed:
             return NSLocalizedString("Sending failed", comment: "")
-        case .Sending:
+        case .sending:
             return NSLocalizedString("Sending...", comment: "")
         default:
             return ""

@@ -25,62 +25,62 @@
 import UIKit
 
 public enum ChatItemVisibility {
-    case Hidden
-    case Appearing
-    case Visible
+    case hidden
+    case appearing
+    case visible
 }
 
-public class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenterProtocol {
+open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenterProtocol {
     public final weak var cell: CellT?
 
     public init() { }
 
-    public class func registerCells(collectionView: UICollectionView) {
+    open class func registerCells(_ collectionView: UICollectionView) {
         assert(false, "Implement in subclass")
     }
 
-    public var canCalculateHeightInBackground: Bool {
+    open var canCalculateHeightInBackground: Bool {
         return false
     }
 
-    public func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
+    open func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         assert(false, "Implement in subclass")
         return 0
     }
 
-    public func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
+    open func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         assert(false, "Implemenent in subclass")
         return UICollectionViewCell()
     }
 
-    public func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+    open func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         assert(false, "Implemenent in subclass")
     }
 
-    final public private(set) var itemVisibility: ChatItemVisibility = .Hidden
+    final public private(set) var itemVisibility: ChatItemVisibility = .hidden
 
     // Need to override default implementatios. Otherwise subclasses's code won't be executed
     // http://stackoverflow.com/questions/31795158/swift-2-protocol-extension-not-calling-overriden-method-correctly
-    public final func cellWillBeShown(cell: UICollectionViewCell) {
+    public final func cellWillBeShown(_ cell: UICollectionViewCell) {
         if let cell = cell as? CellT {
             self.cell = cell
-            self.itemVisibility = .Appearing
+            self.itemVisibility = .appearing
             self.cellWillBeShown()
-            self.itemVisibility = .Visible
+            self.itemVisibility = .visible
         } else {
             assert(false, "Invalid cell was given to presenter!")
         }
     }
 
-    public func cellWillBeShown() {
+    open func cellWillBeShown() {
         // Hook for subclasses
     }
 
-    public func shouldShowMenu() -> Bool {
+    open func shouldShowMenu() -> Bool {
         return false
     }
 
-    public final func cellWasHidden(cell: UICollectionViewCell) {
+    public final func cellWasHidden(_ cell: UICollectionViewCell) {
         // Carefull!! This doesn't mean that this is no longer visible
         // If cell is replaced (due to a reload for instance) we can have the following sequence:
         //   - New cell is taken from the pool and configured. We'll get cellWillBeShown
@@ -89,7 +89,7 @@ public class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresent
         if let cell = cell as? CellT {
             if cell === self.cell {
                 self.cell = nil
-                self.itemVisibility = .Hidden
+                self.itemVisibility = .hidden
                 self.cellWasHidden()
             }
         } else {
@@ -97,15 +97,15 @@ public class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresent
         }
     }
 
-    public func cellWasHidden() {
+    open func cellWasHidden() {
         // Hook for subclasses. Here we are not visible for real.
     }
 
-    public func canPerformMenuControllerAction(action: Selector) -> Bool {
+    open func canPerformMenuControllerAction(_ action: Selector) -> Bool {
         return false
     }
 
-    public func performMenuControllerAction(action: Selector) {
+    open func performMenuControllerAction(_ action: Selector) {
         assert(self.canPerformMenuControllerAction(action))
     }
 }

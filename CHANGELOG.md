@@ -1,3 +1,6 @@
+### 3.0 (Sept 21, 2016)
+* Swift 3 support 🎉 - [#220](https://github.com/badoo/Chatto/pull/220) - [@diegosanchezr](https://github.com/diegosanchezr)
+
 ### 2.1 (Sept 17, 2016)
 * Enhanced customization for LiveCameraCell [#199](https://github.com/badoo/Chatto/pull/199) - [@TerekhovAnton](https://github.com/TerekhovAnton)
 * Fixes input not being at the bottom when chat is embedded in a UITabbarController [#202](https://github.com/badoo/Chatto/pull/202) - [@andris-zalitis](https://github.com/andris-zalitis)

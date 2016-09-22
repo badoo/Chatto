@@ -36,24 +36,24 @@ class BaseMessageHandler {
     init (messageSender: FakeMessageSender) {
         self.messageSender = messageSender
     }
-    func userDidTapOnFailIcon(viewModel viewModel: DemoMessageViewModelProtocol) {
+    func userDidTapOnFailIcon(viewModel: DemoMessageViewModelProtocol) {
         print("userDidTapOnFailIcon")
         self.messageSender.sendMessage(viewModel.messageModel)
     }
 
-    func userDidTapOnAvatar(viewModel viewModel: MessageViewModelProtocol) {
+    func userDidTapOnAvatar(viewModel: MessageViewModelProtocol) {
         print("userDidTapOnAvatar")
     }
 
-    func userDidTapOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+    func userDidTapOnBubble(viewModel: DemoMessageViewModelProtocol) {
         print("userDidTapOnBubble")
     }
 
-    func userDidBeginLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+    func userDidBeginLongPressOnBubble(viewModel: DemoMessageViewModelProtocol) {
         print("userDidBeginLongPressOnBubble")
     }
 
-    func userDidEndLongPressOnBubble(viewModel viewModel: DemoMessageViewModelProtocol) {
+    func userDidEndLongPressOnBubble(viewModel: DemoMessageViewModelProtocol) {
         print("userDidEndLongPressOnBubble")
     }
 }
