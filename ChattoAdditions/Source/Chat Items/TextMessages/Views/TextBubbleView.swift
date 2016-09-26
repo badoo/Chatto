@@ -164,7 +164,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             needsToUpdateText = true
         }
 
-        if needsToUpdateText || self.textView != viewModel.text {
+        if needsToUpdateText || self.textView.text != viewModel.text {
             self.textView.text = viewModel.text
         }
 
