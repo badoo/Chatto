@@ -161,6 +161,7 @@ public class BaseMessageCollectionViewCell<BubbleViewType where BubbleViewType:U
         self.avatarView = self.createAvatarView()
         self.avatarView.addGestureRecognizer(self.avatarTapGestureRecognizer)
         self.bubbleView = self.createBubbleView()
+        self.bubbleView.exclusiveTouch = true
         self.bubbleView.addGestureRecognizer(self.tapGestureRecognizer)
         self.bubbleView.addGestureRecognizer(self.longPressGestureRecognizer)
         self.contentView.addSubview(self.avatarView)
