@@ -127,13 +127,6 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     open func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
         var color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
 
-        switch status {
-        case .success:
-            break
-        case .failed, .sending:
-            color = color.bma_blendWithColor(UIColor.white.withAlphaComponent(0.70))
-        }
-
         if isSelected {
             color = color.bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
         }

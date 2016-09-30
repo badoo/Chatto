@@ -39,7 +39,7 @@ protocol PhotosInputViewProtocol {
 }
 
 protocol PhotosInputViewDelegate: class {
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
+    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: URL?)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
 }
@@ -228,7 +228,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
             if self.photoLibraryAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
-                self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
+                self.dataProvider.requestFileURLAtIndex(indexPath.item - 1) { image in
                     self.delegate?.inputView(self, didSelectImage: image)
                 }
             }

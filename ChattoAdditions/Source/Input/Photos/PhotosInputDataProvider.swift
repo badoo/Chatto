@@ -32,7 +32,7 @@ protocol PhotosInputDataProviderProtocol {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
     func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void)
+    func requestFileURLAtIndex(_ index: Int, completion: @escaping (URL?) -> Void)
     func cancelPreviewImageRequest(_ requestID: Int32)
 }
 
@@ -53,7 +53,7 @@ class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
         return 0
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
+    func requestFileURLAtIndex(_ index: Int, completion: @escaping (URL?) -> Void) {
     }
 
     func cancelPreviewImageRequest(_ requestID: Int32) {
@@ -106,15 +106,54 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
         self.imageManager.cancelImageRequest(requestID)
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
+    func requestFileURLAtIndex(_ index: Int, completion: @escaping (URL?) -> Void) {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
-        let asset = self.fetchResult[index]
-        self.imageManager.requestImageData(for: asset, options: .none) { (data, dataUTI, orientation, info) -> Void in
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
+        let asset = self.fetchResult[index] as! PHAsset
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .allDomainsMask, true)[0]
+        if asset.mediaType == .video {
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("mergeVideo\(arc4random()%1000)d").appendingPathExtension("mov")
+            if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+                try! FileManager.default.removeItem(atPath: outputURL.absoluteString)
+            }
+            self.imageManager.requestExportSession(forVideo: asset, options: .none, exportPreset: AVAssetExportPresetMediumQuality) {(session, info) -> Void in
+                if let session = session {
+                    session.outputFileType = AVFileTypeQuickTimeMovie
+                    session.outputURL = outputURL
+                    session.exportAsynchronously { () -> Void in
+                        if session.status == .completed {
+                            completion(outputURL)
+                        } else {
+                            completion(nil)
+                        }
+                    }
+                } else {
+                    completion(nil)
+                }
+            }
+        } else if asset.mediaType == .image {
+            let options = PHImageRequestOptions()
+            options.isNetworkAccessAllowed = true
+            self.imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: options) { (image, info) -> Void in
+                if let degraded = info?[PHImageResultIsDegradedKey] as? Bool, degraded {
+                    return
+                }
+                if let image = image, let data = UIImageJPEGRepresentation(image, 1.0) {
+                    let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("image\(arc4random()%1000)d").appendingPathExtension("jpg")
+                    if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+                        try! FileManager.default.removeItem(atPath: outputURL.absoluteString)
+                    }
+                    if (try? data.write(to: outputURL, options: .atomic)) != nil {
+                        completion(outputURL)
+                    } else {
+                        completion(nil)
+                    }
+                }
             }
         }
     }
+
 
     // MARK: PHPhotoLibraryChangeObserver
 
@@ -156,11 +195,11 @@ class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, 
         }
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
+    func requestFileURLAtIndex(_ index: Int, completion: @escaping (URL?) -> Void) {
         if index < self.photosDataProvider.count {
-            return self.photosDataProvider.requestFullImageAtIndex(index, completion: completion)
+            return self.photosDataProvider.requestFileURLAtIndex(index, completion: completion)
         } else {
-            return self.placeholdersDataProvider.requestFullImageAtIndex(index, completion: completion)
+            return self.placeholdersDataProvider.requestFileURLAtIndex(index, completion: completion)
         }
     }
 

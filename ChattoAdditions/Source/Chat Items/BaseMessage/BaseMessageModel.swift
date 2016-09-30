@@ -28,6 +28,7 @@ import Chatto
 public enum MessageStatus {
     case failed
     case sending
+    case sent
     case success
 }
 
