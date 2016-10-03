@@ -27,8 +27,8 @@ import Foundation
 // Handles messages that aren't supported so they appear as invisible
 class DummyChatItemPresenter: ChatItemPresenterProtocol {
 
-    class func registerCells(collectionView: UICollectionView) {
-        collectionView.registerClass(DummyCollectionViewCell.self, forCellWithReuseIdentifier: "cell-id-unhandled-message")
+    class func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(DummyCollectionViewCell.self, forCellWithReuseIdentifier: "cell-id-unhandled-message")
     }
 
     var canCalculateHeightInBackground: Bool {
@@ -39,12 +39,12 @@ class DummyChatItemPresenter: ChatItemPresenterProtocol {
         return 0
     }
 
-    func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCellWithReuseIdentifier("cell-id-unhandled-message", forIndexPath: indexPath)
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCell(withReuseIdentifier: "cell-id-unhandled-message", for: indexPath)
     }
 
-    func configureCell(cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
-        cell.hidden = true
+    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+        cell.isHidden = true
     }
 }
 

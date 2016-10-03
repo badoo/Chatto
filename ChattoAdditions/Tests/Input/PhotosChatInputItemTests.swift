@@ -33,7 +33,7 @@ class PhotosChatInputItemTests: XCTestCase {
     }
 
     func testThat_PresentationModeIsCustomView() {
-        XCTAssertEqual(self.inputItem.presentationMode, ChatInputItemPresentationMode.CustomView)
+        XCTAssertEqual(self.inputItem.presentationMode, ChatInputItemPresentationMode.customView)
     }
 
     func testThat_SendButtonDisabledForPhotosInputItem() {
@@ -54,7 +54,7 @@ class PhotosChatInputItemTests: XCTestCase {
         self.inputItem.photoInputHandler = { image in
             handled = true
         }
-        self.inputItem.handleInput(5)
+        self.inputItem.handleInput(5 as AnyObject)
         XCTAssertFalse(handled)
     }
 
@@ -68,15 +68,6 @@ class PhotosChatInputItemTests: XCTestCase {
         self.inputItem.inputView(inputView, didSelectImage: image)
 
         XCTAssertEqual(handledImage!, image)
-    }
-
-    func testThat_GivenItemIsNotSelected_WhenItemIsSelected_ItReloadsInputView() {
-        let mockPhotosInputView = MockPhotosInputView()
-        self.inputItem.photosInputView = mockPhotosInputView
-
-        self.inputItem.selected = true
-
-        XCTAssertTrue(mockPhotosInputView.reloaded)
     }
 
     func testThat_GivenItemIsSelected_WhenItemIsSelected_ItDoesntReloadInputView() {

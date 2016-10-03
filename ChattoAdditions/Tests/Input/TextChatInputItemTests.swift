@@ -20,7 +20,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- */
+*/
 
 import XCTest
 @testable import ChattoAdditions
@@ -45,7 +45,7 @@ class TextChatInputItemTests: XCTestCase {
         self.inputItem.textInputHandler = { text in
             handled = true
         }
-        self.inputItem.handleInput("text")
+        self.inputItem.handleInput("text" as AnyObject)
         XCTAssertTrue(handled)
     }
 
@@ -54,7 +54,7 @@ class TextChatInputItemTests: XCTestCase {
         self.inputItem.textInputHandler = { text in
             handled = true
         }
-        self.inputItem.handleInput(5)
+        self.inputItem.handleInput(5 as AnyObject)
         XCTAssertFalse(handled)
     }
 }

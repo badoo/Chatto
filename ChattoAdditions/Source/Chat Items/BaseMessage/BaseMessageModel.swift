@@ -26,16 +26,16 @@ import Foundation
 import Chatto
 
 public enum MessageStatus {
-    case Failed
-    case Sending
-    case Success
+    case failed
+    case sending
+    case success
 }
 
 public protocol MessageModelProtocol: ChatItemProtocol {
     var senderId: String { get }
     var isIncoming: Bool { get }
-    var date: NSDate { get }
-    var status: MessageStatus { get set }
+    var date: Date { get }
+    var status: MessageStatus { get }
 }
 
 public protocol DecoratedMessageModelProtocol: MessageModelProtocol {
@@ -59,29 +59,24 @@ public extension DecoratedMessageModelProtocol {
         return self.messageModel.isIncoming
     }
 
-    var date: NSDate {
+    var date: Date {
         return self.messageModel.date
     }
 
     var status: MessageStatus {
-        get {
-            return self.messageModel.status
-        }
-        set {
-            self.messageModel.status = newValue
-        }
+        return self.messageModel.status
     }
 }
 
-public class MessageModel: MessageModelProtocol {
-    public var uid: String
-    public var senderId: String
-    public var type: String
-    public var isIncoming: Bool
-    public var date: NSDate
-    public var status: MessageStatus
+open class MessageModel: MessageModelProtocol {
+    open var uid: String
+    open var senderId: String
+    open var type: String
+    open var isIncoming: Bool
+    open var date: Date
+    open var status: MessageStatus
 
-    public init(uid: String, senderId: String, type: String, isIncoming: Bool, date: NSDate, status: MessageStatus) {
+    public init(uid: String, senderId: String, type: String, isIncoming: Bool, date: Date, status: MessageStatus) {
         self.uid = uid
         self.senderId = senderId
         self.type = type

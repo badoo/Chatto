@@ -24,22 +24,22 @@
 
 import UIKit
 
-@objc public class ReusableXibView: UIView {
+@objc open class ReusableXibView: UIView {
 
     func loadViewFromNib() -> UIView {
-        let bundle = NSBundle(forClass: self.dynamicType)
-        let nib = UINib(nibName:self.dynamicType.nibName(), bundle: bundle)
-        let view = nib.instantiateWithOwner(nil, options: nil).first as! UIView
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName:type(of: self).nibName(), bundle: bundle)
+        let view = nib.instantiate(withOwner: nil, options: nil).first as! UIView
         return view
     }
 
-    override public func awakeAfterUsingCoder(aDecoder: NSCoder) -> AnyObject? {
+    override open func awakeAfter(using aDecoder: NSCoder) -> Any? {
         if self.subviews.count > 0 {
             return self
         }
 
-        let bundle = NSBundle(forClass: self.dynamicType)
-        if let loadedView = bundle.loadNibNamed(self.dynamicType.nibName(), owner: nil, options: nil).first as! UIView? {
+        let bundle = Bundle(for: type(of: self))
+        if let loadedView = bundle.loadNibNamed(type(of: self).nibName(), owner: nil, options: nil)?.first as? UIView {
             loadedView.frame = frame
             loadedView.autoresizingMask = autoresizingMask
             loadedView.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints

@@ -28,14 +28,14 @@ import Chatto
 
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
-    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false)
+    var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, canShowAvatar: false)
     override func setUp() {
-        let viewModelBuilder = TextMessageViewModelDefaultBuilder()
+        let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
         let sizingCell = TextMessageCollectionViewCell.sizingCell()
         let textStyle = TextMessageCollectionViewCellDefaultStyle()
-        let baseStyle = BaseMessageCollectionViewCellDefaultSyle()
-        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate(), status: .Success)
+        let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
+        let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate() as Date, status: .success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
         self.presenter = TextMessagePresenter(messageModel: textMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: TextMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, textCellStyle: textStyle, layoutCache: NSCache())
     }
@@ -43,10 +43,10 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     func testThat_RegistersAndDequeuesCells() {
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        TextMessagePresenter<TextMessageViewModelDefaultBuilder, TextMessageTestHandler>.registerCells(collectionView)
+        TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>.registerCells(collectionView)
         collectionView.dataSource = self
         collectionView.reloadData()
-        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: NSIndexPath(forItem: 0, inSection: 0)))
+        XCTAssertNotNil(self.presenter.dequeueCell(collectionView: collectionView, indexPath: IndexPath(item: 0, section: 0)))
         collectionView.dataSource = nil
     }
 
@@ -72,32 +72,44 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     }
 
     func testThat_CanPerformCopyAction() {
-        XCTAssertTrue(self.presenter.canPerformMenuControllerAction(Selector("copy:")))
+        #if swift(>=2.3)
+            XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(UIResponderStandardEditActions.copy(_:))))
+        #else
+            XCTAssertTrue(self.presenter.canPerformMenuControllerAction(#selector(NSObject.copy(_:))))
+        #endif
     }
 
     // MARK: Helpers
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return self.presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath as IndexPath)
     }
 }
 
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = TextMessageViewModel
+    typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnFailIcon(viewModel viewModel: ViewModelT) {
-
-    }
-
-    func userDidTapOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
 
     }
 
-    func userDidLongPressOnBubble(viewModel viewModel: ViewModelT) {
+    func userDidTapOnAvatar(viewModel: ViewModelT) {
+
+    }
+
+    func userDidTapOnBubble(viewModel: ViewModelT) {
+
+    }
+
+    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
+
+    }
+
+    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
 
     }
 }

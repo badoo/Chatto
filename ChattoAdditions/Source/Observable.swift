@@ -25,7 +25,8 @@
 import Foundation
 
 // Be aware this is not thread safe!
-public struct Observable<T> {
+// Why class? https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20160711/002580.html
+public class Observable<T> {
 
     public init(_ value: T) {
         self.value = value
@@ -35,17 +36,17 @@ public struct Observable<T> {
         didSet {
             self.cleanDeadObservers()
             for observer in self.observers {
-                observer.closure(old: oldValue, new: self.value)
+                observer.closure(oldValue, self.value)
             }
         }
     }
 
-    public mutating func observe(observer: AnyObject, closure: (old: T, new: T) -> ()) {
+    public func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
 
-    private mutating func cleanDeadObservers() {
+    private func cleanDeadObservers() {
         self.observers = self.observers.filter { $0.owner != nil }
     }
 
@@ -54,8 +55,8 @@ public struct Observable<T> {
 
 private struct Observer<T> {
     weak var owner: AnyObject?
-    let closure: (old: T, new: T) -> ()
-    init (owner: AnyObject, closure: (old: T, new: T) -> ()) {
+    let closure: (_ old: T, _ new: T) -> ()
+    init (owner: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
         self.owner = owner
         self.closure = closure
     }

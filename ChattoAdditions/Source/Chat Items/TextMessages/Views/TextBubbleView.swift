@@ -25,25 +25,25 @@
 import UIKit
 
 public protocol TextBubbleViewStyleProtocol {
-    func bubbleImage(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
-    func bubbleImageBorder(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
-    func textFont(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
-    func textColor(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
-    func textInsets(viewModel viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
+    func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
+    func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
+    func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
+    func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
+    func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
 }
 
 public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
     public var preferredMaxLayoutWidth: CGFloat = 0
     public var animationDuration: CFTimeInterval = 0.33
-    public var viewContext: ViewContext = .Normal {
+    public var viewContext: ViewContext = .normal {
         didSet {
-            if self.viewContext == .Sizing {
-                self.textView.dataDetectorTypes = .None
-                self.textView.selectable = false
+            if self.viewContext == .sizing {
+                self.textView.dataDetectorTypes = UIDataDetectorTypes()
+                self.textView.isSelectable = false
             } else {
-                self.textView.dataDetectorTypes = .All
-                self.textView.selectable = true
+                self.textView.dataDetectorTypes = .all
+                self.textView.isSelectable = true
             }
         }
     }
@@ -62,7 +62,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
     public var selected: Bool = false {
         didSet {
-            self.updateViews()
+            if self.selected != oldValue {
+                self.updateViews()
+            }
         }
     }
 
@@ -90,25 +92,26 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private var borderImageView: UIImageView = UIImageView()
     private var textView: UITextView = {
         let textView = ChatMessageTextView()
-        textView.backgroundColor = UIColor.clearColor()
-        textView.editable = false
-        textView.selectable = true
-        textView.dataDetectorTypes = .All
+        UIView.performWithoutAnimation({ () -> Void in // fixes iOS 8 blinking when cell appears
+            textView.backgroundColor = UIColor.clear
+        })
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.dataDetectorTypes = .all
         textView.scrollsToTop = false
-        textView.scrollEnabled = false
+        textView.isScrollEnabled = false
         textView.bounces = false
         textView.bouncesZoom = false
         textView.showsHorizontalScrollIndicator = false
         textView.showsVerticalScrollIndicator = false
         textView.layoutManager.allowsNonContiguousLayout = true
-        textView.exclusiveTouch = true
-        textView.textContainerInset = UIEdgeInsetsZero
+        textView.isExclusiveTouch = true
         textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
 
     public private(set) var isUpdating: Bool = false
-    public func performBatchUpdates(updateClosure: () -> Void, animated: Bool, completion: (() -> Void)?) {
+    public func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() -> Void)?) {
         self.isUpdating = true
         let updateAndRefreshViews = {
             updateClosure()
@@ -119,7 +122,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             }
         }
         if animated {
-            UIView.animateWithDuration(self.animationDuration, animations: updateAndRefreshViews, completion: { (finished) -> Void in
+            UIView.animate(withDuration: self.animationDuration, animations: updateAndRefreshViews, completion: { (finished) -> Void in
                 completion?()
             })
         } else {
@@ -128,32 +131,52 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     }
 
     private func updateViews() {
-        if self.viewContext == .Sizing { return }
+        if self.viewContext == .sizing { return }
         if isUpdating { return }
-        guard let style = self.style, viewModel = self.textMessageViewModel else { return }
+        guard let style = self.style else { return }
+
+        self.updateTextView()
+        let bubbleImage = style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        let borderImage = style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
+        if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage}
+        if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
+    }
+
+    private func updateTextView() {
+        guard let style = self.style, let viewModel = self.textMessageViewModel else { return }
+
         let font = style.textFont(viewModel: viewModel, isSelected: self.selected)
         let textColor = style.textColor(viewModel: viewModel, isSelected: self.selected)
-        let bubbleImage = self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
-        let borderImage = self.style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
 
-        if self.textView.font != font { self.textView.font = font}
-        if self.textView.text != viewModel.text {self.textView.text = viewModel.text}
+        var needsToUpdateText = false
+
+        if self.textView.font != font {
+            self.textView.font = font
+            needsToUpdateText = true
+        }
+
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
                 NSForegroundColorAttributeName: textColor,
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
             ]
+            needsToUpdateText = true
         }
-        if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage}
-        if self.borderImageView.image != borderImage { self.borderImageView.image = borderImage }
+
+        if needsToUpdateText || self.textView.text != viewModel.text {
+            self.textView.text = viewModel.text
+        }
+
+        let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
+        if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
     }
 
     private func bubbleImage() -> UIImage {
         return self.style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
     }
 
-    public override func sizeThatFits(size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         return self.calculateTextBubbleLayout(preferredMaxLayoutWidth: size.width).size
     }
 
@@ -166,8 +189,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         self.borderImageView.bma_rect = self.bubbleImageView.bounds
     }
 
-    public var layoutCache: NSCache!
-    private func calculateTextBubbleLayout(preferredMaxLayoutWidth preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
+    public var layoutCache: NSCache<AnyObject, AnyObject>!
+    private func calculateTextBubbleLayout(preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
         let layoutContext = TextBubbleLayoutModel.LayoutContext(
             text: self.textMessageViewModel.text,
             font: self.style.textFont(viewModel: self.textMessageViewModel, isSelected: self.selected),
@@ -175,14 +198,14 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             preferredMaxLayoutWidth: preferredMaxLayoutWidth
         )
 
-        if let layoutModel = self.layoutCache.objectForKey(layoutContext.hashValue) as? TextBubbleLayoutModel where layoutModel.layoutContext == layoutContext {
+        if let layoutModel = self.layoutCache.object(forKey: layoutContext.hashValue as AnyObject) as? TextBubbleLayoutModel, layoutModel.layoutContext == layoutContext {
             return layoutModel
         }
 
         let layoutModel = TextBubbleLayoutModel(layoutContext: layoutContext)
         layoutModel.calculateLayout()
 
-        self.layoutCache.setObject(layoutModel, forKey: layoutContext.hashValue)
+        self.layoutCache.setObject(layoutModel, forKey: layoutContext.hashValue as AnyObject)
         return layoutModel
     }
 
@@ -202,22 +225,22 @@ private final class TextBubbleLayoutModel {
         self.layoutContext = layoutContext
     }
 
-    class LayoutContext: Equatable, Hashable {
+    struct LayoutContext: Equatable, Hashable {
         let text: String
         let font: UIFont
         let textInsets: UIEdgeInsets
         let preferredMaxLayoutWidth: CGFloat
-        init (text: String, font: UIFont, textInsets: UIEdgeInsets, preferredMaxLayoutWidth: CGFloat) {
-            self.font = font
-            self.text = text
-            self.textInsets = textInsets
-            self.preferredMaxLayoutWidth = preferredMaxLayoutWidth
-        }
 
         var hashValue: Int {
             get {
                 return self.text.hashValue ^ self.textInsets.bma_hashValue ^ self.preferredMaxLayoutWidth.hashValue ^ self.font.hashValue
             }
+        }
+
+        static func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
+            let lhsValues = (lhs.text, lhs.textInsets, lhs.font, lhs.preferredMaxLayoutWidth)
+            let rhsValues = (rhs.text, rhs.textInsets, rhs.font, rhs.preferredMaxLayoutWidth)
+            return lhsValues == rhsValues
         }
     }
 
@@ -227,41 +250,73 @@ private final class TextBubbleLayoutModel {
         let textSize = self.textSizeThatFitsWidth(maxTextWidth)
         let bubbleSize = textSize.bma_outsetBy(dx: textHorizontalInset, dy: self.layoutContext.textInsets.bma_verticalInset)
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
-        self.textFrame = UIEdgeInsetsInsetRect(self.bubbleFrame, self.layoutContext.textInsets)
+        self.textFrame = self.bubbleFrame
         self.size = bubbleSize
     }
 
-    private func textSizeThatFitsWidth(width: CGFloat) -> CGSize {
-        return self.layoutContext.text.boundingRectWithSize(
-            CGSize(width: width, height: CGFloat.max),
-            options: [.UsesLineFragmentOrigin, .UsesFontLeading],
-            attributes: [NSFontAttributeName: self.layoutContext.font], context:  nil
-        ).size.bma_round()
+    private func textSizeThatFitsWidth(_ width: CGFloat) -> CGSize {
+        let textContainer: NSTextContainer = {
+            let size = CGSize(width: width, height: .greatestFiniteMagnitude)
+            let container = NSTextContainer(size: size)
+            container.lineFragmentPadding = 0
+            return container
+        }()
+
+        let textStorage = self.replicateUITextViewNSTextStorage()
+        let layoutManager: NSLayoutManager = {
+            let layoutManager = NSLayoutManager()
+            layoutManager.addTextContainer(textContainer)
+            textStorage.addLayoutManager(layoutManager)
+            return layoutManager
+        }()
+
+        let rect = layoutManager.usedRect(for: textContainer)
+        return rect.size.bma_round()
+    }
+
+    private func replicateUITextViewNSTextStorage() -> NSTextStorage {
+        // See https://github.com/badoo/Chatto/issues/129
+        return NSTextStorage(string: self.layoutContext.text, attributes: [
+            NSFontAttributeName: self.layoutContext.font,
+            "NSOriginalFont": self.layoutContext.font,
+        ])
     }
 }
-
-private func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
-    return lhs.text == rhs.text &&
-        lhs.textInsets == rhs.textInsets &&
-        lhs.font == rhs.font &&
-        lhs.preferredMaxLayoutWidth == rhs.preferredMaxLayoutWidth
-}
-
 
 /// UITextView with hacks to avoid selection, loupe, define...
 private final class ChatMessageTextView: UITextView {
 
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder: Bool {
         return false
     }
 
-    override func addGestureRecognizer(gestureRecognizer: UIGestureRecognizer) {
-        if gestureRecognizer.dynamicType == UILongPressGestureRecognizer.self && gestureRecognizer.delaysTouchesEnded {
+    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+        if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self && gestureRecognizer.delaysTouchesEnded {
             super.addGestureRecognizer(gestureRecognizer)
         }
     }
 
-    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
+    }
+
+    override var selectedRange: NSRange {
+        get {
+            return NSRange(location: 0, length: 0)
+        }
+        set {
+            // Part of the heaviest stack trace when scrolling (when updating text)
+            // See https://github.com/badoo/Chatto/pull/144
+        }
+    }
+
+    override var contentOffset: CGPoint {
+        get {
+            return .zero
+        }
+        set {
+            // Part of the heaviest stack trace when scrolling (when bounds are set)
+            // See https://github.com/badoo/Chatto/pull/144
+        }
     }
 }

@@ -20,7 +20,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- */
+*/
 
 import XCTest
 @testable import ChattoAdditions
@@ -31,13 +31,13 @@ class ChatInputItemTests: XCTestCase {
 @objc
 class MockInputItem: NSObject, ChatInputItemProtocol {
     var selected = false
-    var presentationMode: ChatInputItemPresentationMode = .Keyboard
+    var presentationMode: ChatInputItemPresentationMode = .keyboard
     var showsSendButton = false
     var inputView: UIView? = nil
     let tabView = UIView()
 
     private(set) var handledInput: AnyObject?
-    func handleInput(input: AnyObject) {
+    func handleInput(_ input: AnyObject) {
         self.handledInput = input
     }
 }

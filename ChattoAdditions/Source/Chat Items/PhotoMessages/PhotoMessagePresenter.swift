@@ -24,15 +24,16 @@
 
 import Foundation
 
-public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
+open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
+: BaseMessagePresenter<PhotoBubbleView, ViewModelBuilderT, InteractionHandlerT> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: PhotoMessageModelProtocol,
     ViewModelBuilderT.ViewModelT: PhotoMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT>
-: BaseMessagePresenter<PhotoBubbleView, ViewModelBuilderT, InteractionHandlerT> {
+    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
+
+    public let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
 
     public init (
         messageModel: ModelT,
@@ -51,21 +52,20 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
             )
     }
 
-    let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
-
-    public override class func registerCells(collectionView: UICollectionView) {
-        collectionView.registerClass(PhotoMessageCollectionViewCell.self, forCellWithReuseIdentifier: "photo-message")
+    public final override class func registerCells(_ collectionView: UICollectionView) {
+        collectionView.register(PhotoMessageCollectionViewCell.self, forCellWithReuseIdentifier: "photo-message")
     }
 
-    public override func dequeueCell(collectionView collectionView: UICollectionView, indexPath: NSIndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCellWithReuseIdentifier("photo-message", forIndexPath: indexPath)
+    public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionView.dequeueReusableCell(withReuseIdentifier: "photo-message", for: indexPath)
     }
 
-    public override func createViewModel() -> ViewModelBuilderT.ViewModelT {
+    open override func createViewModel() -> ViewModelBuilderT.ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
         let updateClosure = { [weak self] (old: Any, new: Any) -> () in
             self?.updateCurrentCell()
         }
+        viewModel.avatarImage.observe(self, closure: updateClosure)
         viewModel.image.observe(self, closure: updateClosure)
         viewModel.transferDirection.observe(self, closure: updateClosure)
         viewModel.transferProgress.observe(self, closure: updateClosure)
@@ -73,7 +73,7 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         return viewModel
     }
 
-    var photoCell: PhotoMessageCollectionViewCell? {
+    public var photoCell: PhotoMessageCollectionViewCell? {
         if let cell = self.cell {
             if let photoCell = cell as? PhotoMessageCollectionViewCell {
                 return photoCell
@@ -84,7 +84,7 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         return nil
     }
 
-    public override func configureCell(cell: BaseMessageCollectionViewCell<PhotoBubbleView>, decorationAttributes: ChatItemDecorationAttributes,  animated: Bool, additionalConfiguration: (() -> Void)?) {
+    open override func configureCell(_ cell: BaseMessageCollectionViewCell<PhotoBubbleView>, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         guard let cell = cell as? PhotoMessageCollectionViewCell else {
             assert(false, "Invalid cell received")
             return
@@ -97,18 +97,9 @@ public class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT where
         }
     }
 
-    public override func cellWillBeShown() {
-        self.messageViewModel.willBeShown()
-    }
-
-
-    public override func cellWasHidden() {
-        self.messageViewModel.wasHidden()
-    }
-
     public func updateCurrentCell() {
-        if let cell = self.photoCell, decorationAttributes = self.decorationAttributes {
-            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .Appearing, additionalConfiguration: nil)
+        if let cell = self.photoCell, let decorationAttributes = self.decorationAttributes {
+            self.configureCell(cell, decorationAttributes: decorationAttributes, animated: self.itemVisibility != .appearing, additionalConfiguration: nil)
         }
     }
 }

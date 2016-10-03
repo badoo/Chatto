@@ -25,13 +25,11 @@
 import Foundation
 import Chatto
 
-public class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT where
+open class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: PhotoMessageModelProtocol,
     ViewModelBuilderT.ViewModelT: PhotoMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT
->: ChatItemPresenterBuilderProtocol {
+    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
@@ -42,17 +40,17 @@ public class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT
             self.interactionHandler = interactionHandler
     }
 
-    let viewModelBuilder: ViewModelBuilderT
-    let interactionHandler: InteractionHandlerT?
+    public let viewModelBuilder: ViewModelBuilderT
+    public let interactionHandler: InteractionHandlerT?
     public lazy var sizingCell: PhotoMessageCollectionViewCell = PhotoMessageCollectionViewCell.sizingCell()
     public lazy var photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol = PhotoMessageCollectionViewCellDefaultStyle()
-    public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultSyle()
+    public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
 
-    public func canHandleChatItem(chatItem: ChatItemProtocol) -> Bool {
-        return chatItem is PhotoMessageModelProtocol ? true : false
+    open func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
+        return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
     }
 
-    public func createPresenterWithChatItem(chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
             messageModel: chatItem as! ModelT,
@@ -64,7 +62,7 @@ public class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT
         )
     }
 
-    public var presenterType: ChatItemPresenterProtocol.Type {
+    open var presenterType: ChatItemPresenterProtocol.Type {
         return PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>.self
     }
 }

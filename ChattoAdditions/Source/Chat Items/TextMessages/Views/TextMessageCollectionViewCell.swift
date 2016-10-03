@@ -30,21 +30,17 @@ public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<
 
     public static func sizingCell() -> TextMessageCollectionViewCell {
         let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
-        cell.viewContext = .Sizing
+        cell.viewContext = .sizing
         return cell
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
     }
 
     // MARK: Subclassing (view creation)
 
-    override func createBubbleView() -> TextBubbleView {
+    public override func createBubbleView() -> TextBubbleView {
         return TextBubbleView()
     }
 
-    public override func performBatchUpdates(updateClosure: () -> Void, animated: Bool, completion: (() -> Void)?) {
+    public override func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() -> Void)?) {
         super.performBatchUpdates({ () -> Void in
             self.bubbleView.performBatchUpdates(updateClosure, animated: false, completion: nil)
         }, animated: animated, completion: completion)
@@ -71,13 +67,13 @@ public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<
         }
     }
 
-    override public var selected: Bool {
+    override public var isSelected: Bool {
         didSet {
-            self.bubbleView.selected = self.selected
+            self.bubbleView.selected = self.isSelected
         }
     }
 
-    public var layoutCache: NSCache! {
+    public var layoutCache: NSCache<AnyObject, AnyObject>! {
         didSet {
             self.bubbleView.layoutCache = self.layoutCache
         }
