@@ -38,7 +38,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     var isInitialized: Bool = false
 
     var isCapturing: Bool {
-        return self.isInitialized && self.captureSession.isRunning
+        return self.isInitialized && self.captureSession?.isRunning ?? false
     }
 
     deinit {
@@ -57,7 +57,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         operation.addExecutionBlock { [weak operation, weak self] in
             guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
             sSelf.addInputDevicesIfNeeded()
-            sSelf.captureSession.startRunning()
+            sSelf.captureSession?.startRunning()
             DispatchQueue.main.async(execute: completion)
         }
         self.queue.cancelAllOperations()
@@ -68,7 +68,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak operation, weak self] in
             guard let sSelf = self, let strongOperation = operation, !strongOperation.isCancelled else { return }
-            sSelf.captureSession.stopRunning()
+            sSelf.captureSession?.stopRunning()
             sSelf.removeInputDevices()
             DispatchQueue.main.async(execute: completion)
         }
@@ -85,23 +85,27 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         return queue
     }()
 
-    private lazy var captureSession: AVCaptureSession = {
+    private lazy var captureSession: AVCaptureSession? = {
         assert(!Thread.isMainThread, "This can be very slow, make sure it happens in a background thread")
-
-        let session = AVCaptureSession()
-        self.captureLayer = AVCaptureVideoPreviewLayer(session: session)
-        self.captureLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
         self.isInitialized = true
-        return session
+
+        #if !(arch(i386) || arch(x86_64))
+            let session = AVCaptureSession()
+            self.captureLayer = AVCaptureVideoPreviewLayer(session: session)
+            self.captureLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+            return session
+        #else
+            return nil
+        #endif
     }()
 
     private func addInputDevicesIfNeeded() {
         assert(!Thread.isMainThread, "This can be very slow, make sure it happens in a background thread")
-        if self.captureSession.inputs?.count == 0 {
+        if self.captureSession?.inputs?.count == 0 {
             let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
             do {
                 let input = try AVCaptureDeviceInput(device: device)
-                self.captureSession.addInput(input)
+                self.captureSession?.addInput(input)
             } catch {
 
             }
@@ -110,8 +114,8 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
 
     private func removeInputDevices() {
         assert(!Thread.isMainThread, "This can be very slow, make sure it happens in a background thread")
-        self.captureSession.inputs?.forEach { (input) in
-            self.captureSession.removeInput(input as! AVCaptureInput)
+        self.captureSession?.inputs?.forEach { (input) in
+            self.captureSession?.removeInput(input as! AVCaptureInput)
         }
     }
 }
