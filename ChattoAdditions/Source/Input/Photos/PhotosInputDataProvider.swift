@@ -75,8 +75,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
         if let userLibraryCollection = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumUserLibrary, options: nil).firstObject as? PHAssetCollection {
             self.fetchResult = PHAsset.fetchAssetsInAssetCollection(userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.Image.rawValue)")))
-        }
-        else {
+        } else {
             self.fetchResult = PHAsset.fetchAssetsWithMediaType(.Image, options: fetchOptions(nil))
         }
         super.init()
