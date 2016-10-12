@@ -27,7 +27,6 @@ import UIKit
 public typealias TextMessageCollectionViewCellStyleProtocol = TextBubbleViewStyleProtocol
 
 public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<TextBubbleView> {
-
     public static func sizingCell() -> TextMessageCollectionViewCell {
         let cell = TextMessageCollectionViewCell(frame: CGRect.zero)
         cell.viewContext = .sizing
@@ -47,6 +46,11 @@ public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<
     }
 
     // MARK: Property forwarding
+    public var textViewDelegate: UITextViewDelegate? {
+        didSet {
+            self.bubbleView.textViewDelegate = self.textViewDelegate
+        }
+    }
 
     override public var viewContext: ViewContext {
         didSet {
