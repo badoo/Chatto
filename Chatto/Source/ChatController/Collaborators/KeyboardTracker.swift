@@ -185,14 +185,14 @@ private class KeyboardTrackingView: UIView {
         self.commonInit()
     }
 
-    private func commonInit() {
+    func commonInit() {
         self.autoresizingMask = .flexibleHeight
         self.isUserInteractionEnabled = false
         self.backgroundColor = UIColor.clear
         self.isHidden = true
     }
 
-    fileprivate var preferredSize: CGSize = .zero {
+    var preferredSize: CGSize = .zero {
         didSet {
             if oldValue != self.preferredSize {
                 self.invalidateIntrinsicContentSize()
@@ -201,7 +201,7 @@ private class KeyboardTrackingView: UIView {
         }
     }
 
-    private override var intrinsicContentSize: CGSize {
+    override var intrinsicContentSize: CGSize {
         return self.preferredSize
     }
 
@@ -219,7 +219,7 @@ private class KeyboardTrackingView: UIView {
         super.willMove(toSuperview: newSuperview)
     }
 
-    private override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let object = object as? UIView, let superview = self.superview else { return }
         if object === superview {
             guard let sChange = change else { return }
