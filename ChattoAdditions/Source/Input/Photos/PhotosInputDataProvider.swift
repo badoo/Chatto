@@ -69,6 +69,9 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
         func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
             options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+            if #available(iOS 9.0, *) {
+                options.includeAssetSourceTypes = [.typeUserLibrary, .typeiTunesSynced, .typeCloudShared]
+            }
             options.predicate = predicate
             return options
         }
@@ -76,7 +79,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
         if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
             self.fetchResult = PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
         } else {
-            self.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions(nil))
+            self.fetchResult = PHAsset.fetchAssets(with: fetchOptions(nil))
         }
         super.init()
         PHPhotoLibrary.shared().register(self)

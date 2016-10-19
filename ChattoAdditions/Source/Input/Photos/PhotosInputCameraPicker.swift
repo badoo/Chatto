@@ -51,6 +51,9 @@ class PhotosInputCameraPicker: NSObject {
         let controller = UIImagePickerController()
         controller.delegate = self
         controller.sourceType = .camera
+        if let mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) {
+            controller.mediaTypes = mediaTypes
+        }
         presentingController.present(controller, animated: true, completion:nil)
     }
 
