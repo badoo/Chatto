@@ -65,11 +65,11 @@ class PhotosInputCameraPicker: NSObject {
 }
 
 extension PhotosInputCameraPicker: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .allDomainsMask, true)[0]
         //guard let info = info else { return }
-        if editingInfo![UIImagePickerControllerMediaType] as! String == kUTTypeImage as String {
-            if let image = editingInfo![UIImagePickerControllerOriginalImage] as? UIImage, let data = UIImageJPEGRepresentation(image, 1.0) {
+        if info[UIImagePickerControllerMediaType] as! String == kUTTypeImage as String {
+            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage, let data = UIImageJPEGRepresentation(image, 1.0) {
                 let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("image\(arc4random()%1000)d").appendingPathExtension("jpg")
                 if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
                     try! FileManager.default.removeItem(atPath: outputURL.absoluteString)
@@ -81,8 +81,8 @@ extension PhotosInputCameraPicker: UIImagePickerControllerDelegate, UINavigation
 
                 }
             }
-        } else if editingInfo![UIImagePickerControllerMediaType] as! String == kUTTypeMovie as String{
-            if let outputURL = editingInfo![UIImagePickerControllerMediaURL] as? URL {
+        } else if info[UIImagePickerControllerMediaType] as! String == kUTTypeMovie as String{
+            if let outputURL = info[UIImagePickerControllerMediaURL] as? URL {
                 self.finishPickingImage(outputURL, fromPicker: picker)
             }
         }
