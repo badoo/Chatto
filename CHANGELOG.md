@@ -1,3 +1,9 @@
+### 3.0.1 (Nov 14, 2016)
+* Swift 3.0.1 / Xcode 8.1 support [#233](https://github.com/badoo/Chatto/pull/233) - [@diegosanchezr](https://github.com/diegosanchezr)
+* Fixes weird linker issue with Carthage [#232](https://github.com/badoo/Chatto/pull/232) - [@zwang](https://github.com/zwang)
+* Avoids using AVCapture in simulator [#235](https://github.com/badoo/Chatto/pull/235) - [@geegaset](https://github.com/geegaset)
+* Avoids crashing when receiving a nil indexPath (WebDriverAgent) [#248](https://github.com/badoo/Chatto/pull/248) - [@geegaset](https://github.com/diegosanchezr)
+
 ### 3.0 (Sept 21, 2016)
 * Swift 3 support 🎉 - [#220](https://github.com/badoo/Chatto/pull/220) - [@diegosanchezr](https://github.com/diegosanchezr)
 
