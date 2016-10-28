@@ -274,7 +274,7 @@ extension PhotosInputView: PhotosInputDataProviderDelegate {
 }
 
 private class PhotosInputCollectionViewLayout: UICollectionViewFlowLayout {
-    private override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    fileprivate override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return newBounds.width != self.collectionView?.bounds.width
     }
 }
