@@ -89,7 +89,10 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     @objc(collectionView:canPerformAction:forItemAtIndexPath:withSender:)
-    open func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath?, withSender sender: Any?) -> Bool {
+        // Note: IndexPath set optional due to https://github.com/badoo/Chatto/issues/247. SR-2417 might be related
+        // Might be related: https://bugs.swift.org/browse/SR-2417
+        guard let indexPath = indexPath else { return false }
         return self.presenterForIndexPath(indexPath).canPerformMenuControllerAction(action)
     }
 
