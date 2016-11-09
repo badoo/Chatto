@@ -27,6 +27,7 @@ import Foundation
 public enum MessageViewModelStatus {
     case success
     case sending
+    case sent
     case failed
 }
 
@@ -37,6 +38,8 @@ public extension MessageStatus {
             return MessageViewModelStatus.success
         case .failed:
             return MessageViewModelStatus.failed
+        case .sent:
+            return MessageViewModelStatus.sent
         case .sending:
             return MessageViewModelStatus.sending
         }
@@ -49,6 +52,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsFailedIcon: Bool { get }
     var date: String { get }
     var status: MessageViewModelStatus { get }
+    var messageModel: MessageModelProtocol { get }
     var avatarImage: Observable<UIImage?> { set get }
     func willBeShown() // Optional
     func wasHidden() // Optional
@@ -94,6 +98,10 @@ extension DecoratedMessageViewModelProtocol {
         set {
             self.messageViewModel.avatarImage = newValue
         }
+    }
+
+    public var messageModel: MessageModelProtocol {
+        return self.messageViewModel.messageModel
     }
 }
 
