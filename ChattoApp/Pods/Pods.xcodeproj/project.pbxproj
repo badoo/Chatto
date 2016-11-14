@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0102345B5CC2A31FF69607FCC3A13AAF /* BaseChatViewController+Scrolling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882CCF9E1FA68D196280E4AB07D2ACE4 /* BaseChatViewController+Scrolling.swift */; };
-		0557CAA25498BFC887FBF32216BC7A90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 279FD63A8A28081D2937D64AEA1E8B07 /* Foundation.framework */; };
 		07AAC46296648A34AEE0FD9DC1DC5C44 /* CircleProgressIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = E9121558403FFC354D652B3E4185008E /* CircleProgressIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0BB7999EEF829FE7A2B51587CB5D5E92 /* PhotosInputCameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A644492E88B1CD83519293AD7D974 /* PhotosInputCameraPicker.swift */; };
 		11BB41B18C825E153D68A471D9AD991C /* TextChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413BC0391BDB6808FB3CE89AC990D50 /* TextChatInputItem.swift */; };
@@ -51,8 +50,10 @@
 		7CB8DD915602DFDBE9D4CD0E1C8DD043 /* PhotosChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7007A799EF57F96DB1EFD516442F5AA /* PhotosChatInputItem.swift */; };
 		7D6572C5C68008483F32ECA6F44CA389 /* ChatInputBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED23E7B0A1292014B48906F6EE243AF6 /* ChatInputBarPresenter.swift */; };
 		7DA7833161812AF0D3A4E5F43457D328 /* TextMessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD59E21870EB3606ACE0E8EEA0FCC7F8 /* TextMessageCollectionViewCell.swift */; };
+		7FF96BB18E21345C5203C62B1F3E7F7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC366F31D64FF6F5CFA32A39F0979377 /* Foundation.framework */; };
 		804888FBFF23C28839A22CE0ABB097C0 /* PhotoMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B78925BA94E725D1FC4C9EEFA6003 /* PhotoMessageModel.swift */; };
 		81586206BFFE251DC5310CA247169644 /* ViewDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DA088CD007C7CFA2DF2DB596C91C28 /* ViewDefinitions.swift */; };
+		81725114A9127ADE8DEFAB1AE56DD664 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC366F31D64FF6F5CFA32A39F0979377 /* Foundation.framework */; };
 		85F1DC37BCBDDD173784AD6A0DBA2DEF /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FE43AE16BC2356351CE54411E7A09B /* KeyboardTracker.swift */; };
 		8C63F6FFFABD4F53472FBB0EC60D096C /* ChatItemDecorationAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E1959B5319EF794F3ABB1FE415C245 /* ChatItemDecorationAttributes.swift */; };
 		92CA2D819A6722CE8C4BFC6C5A0885FA /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0D073A6C8292215CF9C18BDE409BE1 /* Text.xcassets */; };
@@ -62,8 +63,8 @@
 		9950C153489C03D88650477AE0ADC9B9 /* ReadOnlyOrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E90819091BCEF228F57100FF8C977E /* ReadOnlyOrderedDictionary.swift */; };
 		9D8D73287891EC9DA20C41B5505081BD /* ChatInputBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CB54D5839F21DAD3987AE53089556B /* ChatInputBarAppearance.swift */; };
 		A1B958CDCF9FC1E472A609E16C656AD6 /* ChatCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC12F31AA8B7C20FD1784C4E98C7A9D /* ChatCollectionViewLayout.swift */; };
+		A244C40FF69BDDB4CDA308A4A0CAD4BF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC366F31D64FF6F5CFA32A39F0979377 /* Foundation.framework */; };
 		A64C96D2CEA679E1E518D3E421A8B617 /* Chatto-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 41A9B2AAC21030F2945A94BC7CBD1423 /* Chatto-dummy.m */; };
-		A9E4305112713B1638E43CF17B0B7BDD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 279FD63A8A28081D2937D64AEA1E8B07 /* Foundation.framework */; };
 		AF4843DB453997848C5AF58F0D0AF8D2 /* BaseMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667C1CA3478EA3D81ADADD11F7EFB62C /* BaseMessageAssets.xcassets */; };
 		AF937EAD0FD4F9788305ABD479F421A4 /* PhotosInputDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA74C6FA4698B48048CEF5C23B4D60FF /* PhotosInputDataProvider.swift */; };
 		B073E3DCBE4C1EAED2510C69D07A0D3B /* ExpandableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96828BB92772CE300432BA86B596C687 /* ExpandableTextView.swift */; };
@@ -77,7 +78,6 @@
 		CEABA65D428D2569FF9327C1BF40447C /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15E9514B57BB6916F3A257FBF50C801 /* ChatInputBar.swift */; };
 		CF1BAA3F386F8B9BCDB56A0A2C7DAF71 /* Pods-ChattoApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D72C6BD70BD003D7302046B549A377 /* Pods-ChattoApp-dummy.m */; };
 		D0889BB28833D28397EDC14649F72AF5 /* PhotosInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B57C191BD0C6028BA2AA303584083F /* PhotosInputCell.swift */; };
-		D7DDC3ECEDA8EAD034F52A3672709BE8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 279FD63A8A28081D2937D64AEA1E8B07 /* Foundation.framework */; };
 		DB910B25FF41AF614C4BA1AA658CCDBE /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F665EFEF85A414EA8DF1B5518183440D /* BaseChatViewController.swift */; };
 		E201884FCED458F243EB082BA594E851 /* ChatInputBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64098046251F40CFE18AABFF28F8AF30 /* ChatInputBar.xib */; };
 		E28FE2A4E00399F9A54B5FA41EAF1F16 /* ChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE933845F288AD8CAAEE30168C29BD06 /* ChatInputItem.swift */; };
@@ -137,7 +137,6 @@
 		23602E61546717BB32B1001CF4C0C31F /* HorizontalStackScrollView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalStackScrollView.swift; sourceTree = "<group>"; };
 		2370201D6DC465D5C439B760902F92D7 /* PhotosInputViewItemSizeCalculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotosInputViewItemSizeCalculator.swift; sourceTree = "<group>"; };
 		2550B3C85E35D204D94E367811EC52C0 /* Observable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
-		279FD63A8A28081D2937D64AEA1E8B07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		28DF8CAFAAEC128ADFC0FC72519C98F9 /* TabInputButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TabInputButton.swift; sourceTree = "<group>"; };
 		2A0D073A6C8292215CF9C18BDE409BE1 /* Text.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Text.xcassets; sourceTree = "<group>"; };
 		34E00521A87A02865E0488C620301682 /* TextMessageCollectionViewCellDefaultStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextMessageCollectionViewCellDefaultStyle.swift; sourceTree = "<group>"; };
@@ -187,6 +186,7 @@
 		A65DE185A12E70BE17EFA373F195C9E6 /* Chatto.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Chatto.xcconfig; sourceTree = "<group>"; };
 		A8AFCDC34A96C2B57F7A1C1A332382CB /* Pods-ChattoApp-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChattoApp-resources.sh"; sourceTree = "<group>"; };
 		AB02ED1F2E01B87195E665A464B6E23E /* TextMessageModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextMessageModel.swift; sourceTree = "<group>"; };
+		AC366F31D64FF6F5CFA32A39F0979377 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		AF3827E052F4369A86F32B555BFE2E80 /* Chatto-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Chatto-prefix.pch"; sourceTree = "<group>"; };
 		AF5BD772CABAA008A4802F6B3A73307E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B20598F484478DFEE1B31B07C6FA131F /* Pods-ChattoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChattoApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -234,7 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BD079C09506395573BF7DB600FD7565 /* Chatto.framework in Frameworks */,
-				0557CAA25498BFC887FBF32216BC7A90 /* Foundation.framework in Frameworks */,
+				7FF96BB18E21345C5203C62B1F3E7F7C /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9E4305112713B1638E43CF17B0B7BDD /* Foundation.framework in Frameworks */,
+				81725114A9127ADE8DEFAB1AE56DD664 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,21 +250,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7DDC3ECEDA8EAD034F52A3672709BE8 /* Foundation.framework in Frameworks */,
+				A244C40FF69BDDB4CDA308A4A0CAD4BF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		021F1A144A717BEB7E5C7DE8F5412828 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				279FD63A8A28081D2937D64AEA1E8B07 /* Foundation.framework */,
-			);
-			name = iOS;
-			sourceTree = "<group>";
-		};
 		05D31F297955F0F0DD4FEC528EE49A5F /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,6 +343,14 @@
 				A3643B3F3761685639739C82F2307E77 /* Views */,
 			);
 			path = PhotoMessages;
+			sourceTree = "<group>";
+		};
+		2C62B942C64204808FEB860B15CEBF66 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				AC366F31D64FF6F5CFA32A39F0979377 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		3882A61CF128C4409DEE2E421E4EA59D /* Chatto */ = {
@@ -487,7 +487,7 @@
 			isa = PBXGroup;
 			children = (
 				D0A636ED63D4950987B5410B6B50F1B4 /* Chatto.framework */,
-				021F1A144A717BEB7E5C7DE8F5412828 /* iOS */,
+				2C62B942C64204808FEB860B15CEBF66 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -958,7 +958,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		47BEF9D903506B003EA5C2B249729489 /* Debug */ = {
+		015A368F878AC3E2CEAE21DDE8026304 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -976,6 +976,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -995,108 +996,19 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
 		};
-		52E70A29AC7086666DBE1C1319E04DCD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A65DE185A12E70BE17EFA373F195C9E6 /* Chatto.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/Chatto/Chatto-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Chatto/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Chatto/Chatto.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = Chatto;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		5772E213C6C10B4CF1EF4E8D697586FF /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A65DE185A12E70BE17EFA373F195C9E6 /* Chatto.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/Chatto/Chatto-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Chatto/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Chatto/Chatto.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = Chatto;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		77A07C3C5E4810B8BF52EEC7C33C5D52 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD7E5A5969A01E3A504D0135C6F25CFF /* ChattoAdditions.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/ChattoAdditions/ChattoAdditions-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ChattoAdditions/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ChattoAdditions/ChattoAdditions.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = ChattoAdditions;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		838F460822D8686DB6961199FE95793C /* Debug */ = {
+		26953028755874AF6C40B9B518D163F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9661D8308C0146658FC05299FF59AA85 /* Pods-ChattoApp.debug.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -1120,44 +1032,47 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3;
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		8AD7D38CCD011FB3C72BC74A5831FA65 /* Release */ = {
+		29609CCD747A32F75329717984006FB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD7E5A5969A01E3A504D0135C6F25CFF /* ChattoAdditions.xcconfig */;
+			baseConfigurationReference = A65DE185A12E70BE17EFA373F195C9E6 /* Chatto.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/ChattoAdditions/ChattoAdditions-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ChattoAdditions/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Chatto/Chatto-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Chatto/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ChattoAdditions/ChattoAdditions.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = ChattoAdditions;
+				MODULEMAP_FILE = "Target Support Files/Chatto/Chatto.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = Chatto;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
-		AAF678CED40D3499169D10F63CA0719E /* Release */ = {
+		44CDBB6D11DE06DB64D6268622BDC47E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1175,6 +1090,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1189,17 +1105,84 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = "${SRCROOT}/../build";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		F412EB3A0F857719C7E517786267DCF9 /* Release */ = {
+		752AA35029A0665BCA9A39E253F8499E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A65DE185A12E70BE17EFA373F195C9E6 /* Chatto.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/Chatto/Chatto-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Chatto/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Chatto/Chatto.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = Chatto;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		C95911F9388E6014309F572D27788437 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7E5A5969A01E3A504D0135C6F25CFF /* ChattoAdditions.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/ChattoAdditions/ChattoAdditions-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ChattoAdditions/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/ChattoAdditions/ChattoAdditions.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = ChattoAdditions;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E54828DDF40D87B6800DEE0817062A38 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B20598F484478DFEE1B31B07C6FA131F /* Pods-ChattoApp.release.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -1222,12 +1205,45 @@
 				PRODUCT_NAME = Pods_ChattoApp;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3;
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		FA40309F90568E801CE3B1C60EF63B82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7E5A5969A01E3A504D0135C6F25CFF /* ChattoAdditions.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/ChattoAdditions/ChattoAdditions-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ChattoAdditions/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/ChattoAdditions/ChattoAdditions.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = ChattoAdditions;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1235,8 +1251,8 @@
 		0B4973C2E4A5B6BF772173AC37C96EE7 /* Build configuration list for PBXNativeTarget "Chatto" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				52E70A29AC7086666DBE1C1319E04DCD /* Debug */,
-				5772E213C6C10B4CF1EF4E8D697586FF /* Release */,
+				29609CCD747A32F75329717984006FB8 /* Debug */,
+				752AA35029A0665BCA9A39E253F8499E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1244,8 +1260,8 @@
 		2B6089397C25425A8A3F79387C1CD0C4 /* Build configuration list for PBXNativeTarget "Pods-ChattoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				838F460822D8686DB6961199FE95793C /* Debug */,
-				F412EB3A0F857719C7E517786267DCF9 /* Release */,
+				26953028755874AF6C40B9B518D163F3 /* Debug */,
+				E54828DDF40D87B6800DEE0817062A38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1253,8 +1269,8 @@
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				47BEF9D903506B003EA5C2B249729489 /* Debug */,
-				AAF678CED40D3499169D10F63CA0719E /* Release */,
+				015A368F878AC3E2CEAE21DDE8026304 /* Debug */,
+				44CDBB6D11DE06DB64D6268622BDC47E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1262,8 +1278,8 @@
 		CCA1D230BB5775F9163D7A6D19D74937 /* Build configuration list for PBXNativeTarget "ChattoAdditions" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				77A07C3C5E4810B8BF52EEC7C33C5D52 /* Debug */,
-				8AD7D38CCD011FB3C72BC74A5831FA65 /* Release */,
+				FA40309F90568E801CE3B1C60EF63B82 /* Debug */,
+				C95911F9388E6014309F572D27788437 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
