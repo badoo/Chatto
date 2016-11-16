@@ -50,7 +50,7 @@ open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: Te
 }
 
 open class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
-    public init() { }
+    public init() {}
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 

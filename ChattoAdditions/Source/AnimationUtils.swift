@@ -24,7 +24,7 @@
 
 public extension CABasicAnimation {
     class func bma_fadeInAnimationWithDuration(_ duration: CFTimeInterval) -> CABasicAnimation {
-        let animation = CABasicAnimation.init(keyPath: "opacity")
+        let animation = CABasicAnimation(keyPath: "opacity")
         animation.duration = duration
         animation.fromValue = 0
         animation.toValue = 1

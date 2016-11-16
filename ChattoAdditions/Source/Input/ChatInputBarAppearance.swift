@@ -56,7 +56,6 @@ public struct ChatInputBarAppearance {
     public init() {}
 }
 
-
 // Workaround for SR-2223
 public struct UIControlStateWrapper: Hashable {
 

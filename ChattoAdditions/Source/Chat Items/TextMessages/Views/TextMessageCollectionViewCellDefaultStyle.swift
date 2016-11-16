@@ -64,7 +64,6 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
         }
     }
 
-
     public let bubbleImages: BubbleImages
     public let textStyle: TextStyle
     public let baseStyle: BaseMessageCollectionViewCellDefaultStyle

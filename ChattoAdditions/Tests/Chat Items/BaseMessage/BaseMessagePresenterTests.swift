@@ -33,6 +33,7 @@ class BaseMessagePresenterTests: XCTestCase {
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, canShowAvatar: false)
     var interactionHandler: PhotoMessageTestHandler!
     override func setUp() {
+        super.setUp()
         let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()

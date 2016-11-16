@@ -37,7 +37,7 @@ public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel
 }
 
 public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
-    public init() { }
+    public init() {}
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 

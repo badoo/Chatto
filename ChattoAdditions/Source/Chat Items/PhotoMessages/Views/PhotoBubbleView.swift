@@ -178,7 +178,6 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.imageView.layer.mask = UIImageView(image: self.photoMessageStyle.maskingImage(viewModel: self.photoMessageViewModel)).layer
     }
 
-
     // MARK: Layout
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -209,7 +208,6 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }
 
 }
-
 
 private class PhotoBubbleLayoutModel {
     var photoFrame: CGRect = CGRect.zero

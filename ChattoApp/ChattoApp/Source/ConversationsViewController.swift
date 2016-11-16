@@ -44,7 +44,6 @@ class ConversationsViewController: UITableViewController {
             assert(false, "segue not handled!")
         }
 
-
         let chatController = { () -> DemoChatViewController? in
             if let controller = segue.destination as? DemoChatViewController {
                 return controller
