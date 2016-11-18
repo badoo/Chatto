@@ -31,6 +31,7 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
     let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, canShowAvatar: false)
     let testImage = UIImage()
     override func setUp() {
+        super.setUp()
         let viewModelBuilder = PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>()
         let sizingCell = PhotoMessageCollectionViewCell.sizingCell()
         let photoStyle = PhotoMessageCollectionViewCellDefaultStyle()

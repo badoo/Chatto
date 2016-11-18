@@ -1,4 +1,9 @@
-disabled_rules: # rule identifiers to exclude from running
+opt_in_rules:
+  - closure_spacing
+  - overridden_super_call
+  - redundant_nil_coalesing
+  - explicit_init
+disabled_rules:
   - file_length
   - force_cast
   - function_body_length

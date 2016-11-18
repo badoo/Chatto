@@ -81,7 +81,7 @@ class KeyboardTracker {
     @objc
     private func keyboardWillShow(_ notification: Notification) {
         guard self.isTracking else { return }
-        guard !self.isPerformingForcedLayout else { return}
+        guard !self.isPerformingForcedLayout else { return }
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
         self.keyboardStatus = .showing
@@ -91,7 +91,7 @@ class KeyboardTracker {
     @objc
     private func keyboardDidShow(_ notification: Notification) {
         guard self.isTracking else { return }
-        guard !self.isPerformingForcedLayout else { return}
+        guard !self.isPerformingForcedLayout else { return }
 
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions

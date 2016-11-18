@@ -62,7 +62,6 @@ public struct ChatCollectionViewLayoutModel {
     }
 }
 
-
 open class ChatCollectionViewLayout: UICollectionViewLayout {
     var layoutModel: ChatCollectionViewLayoutModel!
     public weak var delegate: ChatCollectionViewLayoutDelegate?

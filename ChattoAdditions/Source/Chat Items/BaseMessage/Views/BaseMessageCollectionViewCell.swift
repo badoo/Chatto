@@ -263,7 +263,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return layoutModel
     }
 
-
     // MARK: timestamp revealing
 
     lazy var accessoryTimestampView = UILabel()
@@ -280,7 +279,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
         return self.accessoryTimestampView.intrinsicContentSize.width + layoutConstants.horizontalTimestampMargin
     }
-
 
     open func revealAccessoryView(withOffset offset: CGFloat, animated: Bool) {
         self.offsetToRevealAccessoryView = offset
@@ -353,7 +351,6 @@ struct BaseMessageLayoutModel {
     private (set) var avatarViewFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
-
     mutating func calculateLayout(parameters: BaseMessageLayoutModelParameters) {
         let containerWidth = parameters.containerWidth
         let isIncoming = parameters.isIncoming
@@ -367,7 +364,6 @@ struct BaseMessageLayoutModel {
         let preferredWidthForBubble = (containerWidth * parameters.maxContainerWidthPercentageForBubbleView).bma_round()
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .greatestFiniteMagnitude))
         let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
-
 
         self.bubbleViewFrame = bubbleSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)
         self.failedViewFrame = failedButtonSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)

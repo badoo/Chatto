@@ -80,7 +80,7 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
 }
 
-class FakeCell: UICollectionViewCell { }
+class FakeCell: UICollectionViewCell {}
 
 class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
     var presentersCreatedCount: Int = 0

@@ -48,5 +48,4 @@ class DummyChatItemPresenter: ChatItemPresenterProtocol {
     }
 }
 
-
 class DummyCollectionViewCell: UICollectionViewCell {}

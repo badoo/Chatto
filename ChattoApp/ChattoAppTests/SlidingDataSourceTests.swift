@@ -68,7 +68,6 @@ class SlidingDataSourceTests: XCTestCase {
         XCTAssertFalse(dataSource.hasMore())
     }
 
-
     func testThat_LoadPreviousAddsElementsOnTheTop() {
         var uid = 0
         let expectedArray = (0..<100).reversed().map { (id) -> String in
@@ -143,7 +142,6 @@ class SlidingDataSourceTests: XCTestCase {
             dataSource.adjustWindow(focusPosition: 0, maxWindowSize: 200)
         }
         dataSource.insertItem("test", position: .bottom)
-
 
         while dataSource.hasMore() {
             dataSource.loadNext()

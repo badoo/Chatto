@@ -33,7 +33,7 @@ public enum ChatItemVisibility {
 open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenterProtocol {
     public final weak var cell: CellT?
 
-    public init() { }
+    public init() {}
 
     open class func registerCells(_ collectionView: UICollectionView) {
         assert(false, "Implement in subclass")
