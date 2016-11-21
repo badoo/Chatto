@@ -30,6 +30,7 @@ class BaseChatItemPresenterTests: XCTestCase {
     var presenter: BaseChatItemPresenter<UICollectionViewCell>!
 
     override func setUp() {
+        super.setUp()
         self.presenter = BaseChatItemPresenter()
     }
 

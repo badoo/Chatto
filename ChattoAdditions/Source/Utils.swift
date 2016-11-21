@@ -105,7 +105,6 @@ public extension CGRect {
     }
 }
 
-
 public extension CGPoint {
     func bma_offsetBy(dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
@@ -146,7 +145,6 @@ public extension UIEdgeInsets {
     }
 
 }
-
 
 public extension UIImage {
 

@@ -55,7 +55,6 @@ open class ExpandableTextView: UITextView {
         self.updatePlaceholderVisibility()
     }
 
-
     override open func layoutSubviews() {
         super.layoutSubviews()
         self.placeholder.frame = self.bounds

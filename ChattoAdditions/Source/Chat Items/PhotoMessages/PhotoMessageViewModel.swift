@@ -38,7 +38,7 @@ public enum TransferStatus {
 
 public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var transferDirection: Observable<TransferDirection> { get set }
-    var transferProgress: Observable<Double> { get  set} // in [0,1]
+    var transferProgress: Observable<Double> { get  set } // in [0,1]
     var transferStatus: Observable<TransferStatus> { get set }
     var image: Observable<UIImage?> { get set }
     var imageSize: CGSize { get }
@@ -77,7 +77,7 @@ open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>:
 }
 
 open class PhotoMessageViewModelDefaultBuilder<PhotoMessageModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {
-    public init() { }
+    public init() {}
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 

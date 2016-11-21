@@ -138,7 +138,6 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         return self.sizingCell.canCalculateSizeInBackground
     }
 
-
     open override func cellWillBeShown() {
         self.messageViewModel.willBeShown()
     }

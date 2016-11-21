@@ -121,7 +121,7 @@ public class SlidingDataSource<Element> {
             return false
         }
         let sizeDiff = self.windowCount - maxWindowSize
-        guard sizeDiff > 0 else { return false}
+        guard sizeDiff > 0 else { return false }
         self.windowOffset +=  Int(focusPosition * Double(sizeDiff))
         self.windowCount = maxWindowSize
         return true
