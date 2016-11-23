@@ -73,6 +73,9 @@ open class ChatInputBar: ReusableXibView {
         self.textView.scrollsToTop = false
         self.textView.delegate = self
         self.textView.delegate_ = self
+        self.textView.layer.cornerRadius = 5.0
+        self.textView.layer.borderWidth = 1.0
+        self.textView.layer.borderColor = UIColor.lightGray.cgColor
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
     }
@@ -207,12 +210,12 @@ extension ChatInputBar {
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
-        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
-        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
-        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
-            self.sendButton.setTitleColor(color, for: state.controlState)
-        }
-        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+//        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
+//        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
+//        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+//            self.sendButton.setTitleColor(color, for: state.controlState)
+//        }
+//        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
