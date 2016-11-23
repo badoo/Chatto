@@ -72,6 +72,7 @@ open class ChatInputBar: ReusableXibView {
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self
+        self.textView.delegate_ = self
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
     }
@@ -170,6 +171,14 @@ open class ChatInputBar: ReusableXibView {
     public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
     }
+    
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(UIResponderStandardEditActions.paste(_:)) || action == #selector(UIResponderStandardEditActions.copy(_:)) {
+            return true
+        }
+        
+        return false
+    }
 }
 
 // MARK: - ChatInputItemViewDelegate
@@ -258,6 +267,13 @@ extension ChatInputBar: UITextViewDelegate {
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
+    }
+}
+
+// MARK: ExpandableTextViewDelegate
+extension ChatInputBar: ExpandableTextViewDelegate {
+    func didPasteImageWithData(_ imageData: Data) {
+        self.presenter?.onSendImage(imageData)
     }
 }
 

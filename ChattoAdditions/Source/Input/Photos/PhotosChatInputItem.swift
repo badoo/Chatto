@@ -94,6 +94,12 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
             self.photoInputHandler?(image)
         }
     }
+    
+    open func handleImageInput(_ input: AnyObject) {
+        if let image = input as? URL {
+            self.photoInputHandler?(image)
+        }
+    }
 }
 
 // MARK: - PhotosInputViewDelegate

@@ -24,9 +24,14 @@
 
 import UIKit
 
+protocol ExpandableTextViewDelegate {
+    func didPasteImageWithData(_ imageData: Data)
+}
+
 open class ExpandableTextView: UITextView {
 
     private let placeholder: UITextView = UITextView()
+    var delegate_: ExpandableTextViewDelegate?
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -147,5 +152,24 @@ open class ExpandableTextView: UITextView {
         self.placeholder.textAlignment = self.textAlignment
         self.placeholder.textContainerInset = self.textContainerInset
         self.placeholder.backgroundColor = UIColor.clear
+    }
+    
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(UIResponderStandardEditActions.paste(_:)) || action == #selector(UIResponderStandardEditActions.copy(_:)) {
+            return true
+        }
+        
+        return false
+    }
+    
+    override open func paste(_ sender: Any?) {
+        print("paste")
+        
+        if (UIPasteboard.general.string != nil) {
+            super.paste(sender)
+        } else if (UIPasteboard.general.image != nil) {
+            print("paste", UIPasteboard.general.image?.size)
+            delegate_?.didPasteImageWithData(UIPasteboard.general.data(forPasteboardType: "public.png")!)
+        }
     }
 }

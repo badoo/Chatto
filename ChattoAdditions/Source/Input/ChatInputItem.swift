@@ -38,4 +38,5 @@ public protocol ChatInputItemProtocol: AnyObject {
     var selected: Bool { get set }
 
     func handleInput(_ input: AnyObject)
+    func handleImageInput(_ input: AnyObject)
 }

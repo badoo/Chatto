@@ -27,6 +27,7 @@ import Foundation
 open class TextChatInputItem {
     typealias Class = TextChatInputItem
     public var textInputHandler: ((String) -> Void)?
+    public var imageInputHandler: ((Data) -> Void)?
 
     let buttonAppearance: TabInputButtonAppearance
     public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
@@ -74,6 +75,12 @@ extension TextChatInputItem : ChatInputItemProtocol {
     public func handleInput(_ input: AnyObject) {
         if let text = input as? String {
             self.textInputHandler?(text)
+        }
+    }
+    
+    public func handleImageInput(_ input: AnyObject) {
+        if let image = input as? Data {
+            self.imageInputHandler?(image)
         }
     }
 }
