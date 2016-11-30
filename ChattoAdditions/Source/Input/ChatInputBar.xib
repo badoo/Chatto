@@ -31,13 +31,17 @@
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTn-y5-Ubx">
-                    <rect key="frame" x="555" y="20" width="29" height="29"/>
+                    <rect key="frame" x="535" y="0.0" width="66" height="68"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="29" id="W62-Ta-W5Y"/>
-                        <constraint firstAttribute="width" constant="29" id="wVY-Sr-Pio"/>
+                        <constraint firstAttribute="height" constant="68" id="W62-Ta-W5Y"/>
+                        <constraint firstAttribute="width" constant="66" id="wVY-Sr-Pio"/>
                     </constraints>
-                    <state key="normal" image="closeShelfButton"/>
+                    <state key="normal" image="Send_Msg_Button"/>
+                    <state key="disabled" image="Send_Msg_Button_Disabled"/>
+                    <state key="selected" image="Send_Msg_Button"/>
+                    <state key="highlighted" image="Send_Msg_Button_Disabled"/>
+                    <state key="focused" image="Send_Msg_Button"/>
                     <connections>
                         <action selector="buttonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="uLr-96-pNg"/>
                     </connections>
@@ -82,8 +86,8 @@
                 <constraint firstAttribute="bottom" secondItem="hkz-tq-X6j" secondAttribute="bottom" id="HFl-3K-Xpk"/>
                 <constraint firstAttribute="trailing" secondItem="hkz-tq-X6j" secondAttribute="trailing" id="V4u-Kv-Ub2"/>
                 <constraint firstItem="fsh-hH-hKG" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="ZsI-iu-9nR"/>
-                <constraint firstAttribute="trailing" secondItem="cTn-y5-Ubx" secondAttribute="trailing" constant="16" id="c7V-EP-C9e"/>
-                <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="cTn-y5-Ubx" secondAttribute="bottom" constant="19" id="dmQ-L9-08a"/>
+                <constraint firstAttribute="trailing" secondItem="cTn-y5-Ubx" secondAttribute="trailing" constant="-1" id="c7V-EP-C9e"/>
+                <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="cTn-y5-Ubx" secondAttribute="bottom" id="dmQ-L9-08a"/>
                 <constraint firstItem="hkz-tq-X6j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eGb-Fb-2Of"/>
                 <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gpt-vU-KzZ"/>
                 <constraint firstAttribute="trailing" secondItem="b1n-fp-7di" secondAttribute="trailing" id="lmb-AV-eyD"/>
@@ -110,10 +114,12 @@
                 <outletCollection property="constraintsForHiddenSendButton" destination="ciR-Nt-1tI" collectionClass="NSMutableArray" id="KTM-lg-5xh"/>
                 <outletCollection property="constraintsForVisibleSendButton" destination="c7V-EP-C9e" collectionClass="NSMutableArray" id="9YE-TF-OTG"/>
             </connections>
-            <point key="canvasLocation" x="-341" y="68"/>
+            <point key="canvasLocation" x="-503" y="-15"/>
         </view>
     </objects>
     <resources>
+        <image name="Send_Msg_Button" width="29" height="29"/>
+        <image name="Send_Msg_Button_Disabled" width="29" height="29"/>
         <image name="closeShelfButton" width="31" height="32"/>
     </resources>
 </document>
