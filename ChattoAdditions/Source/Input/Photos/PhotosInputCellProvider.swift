@@ -64,7 +64,7 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
             self.dataProvider.cancelPreviewImageRequest(requestID.int32Value)
         }
 
-        let index = indexPath.item - 1
+        let index = indexPath.item
         let targetSize = cell.bounds.size
         var imageProvidedSynchronously = true
         var requestID: Int32 = -1
