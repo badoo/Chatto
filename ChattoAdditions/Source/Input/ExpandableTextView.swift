@@ -168,8 +168,8 @@ open class ExpandableTextView: UITextView {
         if (UIPasteboard.general.string != nil) {
             super.paste(sender)
         } else if (UIPasteboard.general.image != nil) {
-            print("paste", UIPasteboard.general.image?.size)
-            delegate_?.didPasteImageWithData(UIPasteboard.general.data(forPasteboardType: "public.png")!)
+            let imageData: NSData = UIImagePNGRepresentation(UIPasteboard.general.image!)! as NSData
+            delegate_?.didPasteImageWithData(imageData as Data)
         }
     }
 }
