@@ -72,6 +72,10 @@ open class ChatInputBar: ReusableXibView {
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self
+        self.textView.delegate_ = self
+        self.textView.layer.cornerRadius = 5.0
+        self.textView.layer.borderWidth = 1.0
+        self.textView.layer.borderColor = UIColor.lightGray.cgColor
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
     }
@@ -170,6 +174,14 @@ open class ChatInputBar: ReusableXibView {
     public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
     }
+    
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(UIResponderStandardEditActions.paste(_:)) || action == #selector(UIResponderStandardEditActions.copy(_:)) {
+            return true
+        }
+        
+        return false
+    }
 }
 
 // MARK: - ChatInputItemViewDelegate
@@ -198,12 +210,12 @@ extension ChatInputBar {
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
-        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
-        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
-        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
-            self.sendButton.setTitleColor(color, for: state.controlState)
-        }
-        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+//        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
+//        self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
+//        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+//            self.sendButton.setTitleColor(color, for: state.controlState)
+//        }
+//        self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
@@ -258,6 +270,13 @@ extension ChatInputBar: UITextViewDelegate {
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
+    }
+}
+
+// MARK: ExpandableTextViewDelegate
+extension ChatInputBar: ExpandableTextViewDelegate {
+    func didPasteImageWithData(_ imageData: Data) {
+        self.presenter?.onSendImage(imageData)
     }
 }
 

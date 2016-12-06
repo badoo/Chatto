@@ -23,21 +23,21 @@
 */
 
 struct PhotosInputViewItemSizeCalculator {
-    var itemsPerRow: Int = 0
+    var itemsPerCell: Int = 0
     var interitemSpace: CGFloat = 0
 
-    func itemSizeForWidth(_ width: CGFloat, atIndex index: Int) -> CGSize {
-        let availableWidth = width - self.interitemSpace * CGFloat((self.itemsPerRow - 1))
-        if availableWidth <= 0 {
+    func itemSizeForWidth(_ height: CGFloat, atIndex index: Int) -> CGSize {
+        let availableheight = height - self.interitemSpace * CGFloat((self.itemsPerCell - 1))
+        if availableheight <= 0 {
             return CGSize.zero
         }
 
-        var itemWidth = Int(floor(availableWidth / CGFloat(self.itemsPerRow)))
-        let itemHeigth = itemWidth
-        let extraPixels = Int(availableWidth) % self.itemsPerRow
-        let isItemWithExtraPixel = index % self.itemsPerRow < extraPixels
+        var itemHeigth = Int(floor(availableheight / CGFloat(self.itemsPerCell)))
+        let itemWidth = itemHeigth
+        let extraPixels = Int(availableheight) % self.itemsPerCell
+        let isItemWithExtraPixel = index % self.itemsPerCell < extraPixels
         if isItemWithExtraPixel {
-            itemWidth += 1
+            itemHeigth += 1
         }
         return CGSize(width: itemWidth, height: itemHeigth)
     }

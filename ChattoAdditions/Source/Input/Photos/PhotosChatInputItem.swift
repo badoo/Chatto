@@ -52,7 +52,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     public static func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
-        return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
+        return PhotosInputViewAppearance(liveCameraHeaderAppearance: LiveCameraHeaderAppearance.createDefaultAppearance())
     }
 
     lazy private var internalTabView: UIButton = {
@@ -90,6 +90,12 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     open func handleInput(_ input: AnyObject) {
+        if let image = input as? URL {
+            self.photoInputHandler?(image)
+        }
+    }
+    
+    open func handleImageInput(_ input: AnyObject) {
         if let image = input as? URL {
             self.photoInputHandler?(image)
         }

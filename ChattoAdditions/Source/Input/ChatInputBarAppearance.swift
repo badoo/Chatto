@@ -35,15 +35,15 @@ public struct ChatInputBarAppearance {
     }
 
     public struct TabBarAppearance {
-        public var interItemSpacing: CGFloat = 10
+        public var interItemSpacing: CGFloat = UIScreen.main.bounds.size.width == 320 ? 22 : (UIScreen.main.bounds.size.width == 375 ? 31 : 38)
         public var height: CGFloat = 44
         public var contentInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     }
 
     public struct TextInputAppearance {
-        public var font = UIFont.systemFont(ofSize: 12)
+        public var font = UIFont.systemFont(ofSize: 17)
         public var textColor = UIColor.black
-        public var placeholderFont = UIFont.systemFont(ofSize: 12)
+        public var placeholderFont = UIFont.systemFont(ofSize: 17)
         public var placeholderColor = UIColor.gray
         public var placeholderText = ""
         public var textInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)

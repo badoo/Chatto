@@ -60,11 +60,11 @@ open class HorizontalStackScrollView: UIScrollView {
         for (index, view) in arrangedViews.enumerated() {
             switch index {
             case 0:
-                let constraint = NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
+                let constraint = NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 10)
                 self.addConstraint(constraint)
                 self.arrangedViewContraints.append(constraint)
             case arrangedViews.count-1:
-                let constraint = NSLayoutConstraint(item: view, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
+                let constraint = NSLayoutConstraint(item: view, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 10)
                 self.addConstraint(constraint)
                 self.arrangedViewContraints.append(constraint)
                 fallthrough
