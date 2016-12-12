@@ -194,6 +194,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
     }
 
+    public func getTopPoint()->CGPoint {
+        var refPoint = keyboardTracker.inputContainer.center
+        refPoint.y -= keyboardTracker.inputContainer.frame.height
+        
+        return refPoint
+    }
+    
     private func adjustCollectionViewInsets() {
         let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
