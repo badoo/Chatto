@@ -15,6 +15,12 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="112"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t5q-uB-aU0">
+                    <rect key="frame" x="10" y="-110" width="580" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="sSN-fw-Qj2"/>
+                    </constraints>
+                </scrollView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SF0-Bw-9OZ">
                     <rect key="frame" x="16" y="20" width="29" height="29"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -25,7 +31,7 @@
                     <state key="normal" image="closeShelfButton"/>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="fsh-hH-hKG" userLabel="TextView" customClass="ExpandableTextView" customModule="ChattoAdditions" customModuleProvider="target">
-                    <rect key="frame" x="61" y="20" width="478" height="29"/>
+                    <rect key="frame" x="61" y="20" width="478" height="30"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -79,12 +85,15 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="fsh-hH-hKG" secondAttribute="bottom" constant="19" id="4Vl-vV-gaa"/>
+                <constraint firstItem="t5q-uB-aU0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="3p6-C7-lrV"/>
+                <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="fsh-hH-hKG" secondAttribute="bottom" constant="18" id="4Vl-vV-gaa"/>
                 <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="SF0-Bw-9OZ" secondAttribute="bottom" constant="19" id="6Ka-he-Wj4"/>
+                <constraint firstAttribute="trailing" secondItem="t5q-uB-aU0" secondAttribute="trailing" constant="10" id="9Ot-0o-khu"/>
                 <constraint firstItem="SF0-Bw-9OZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="DqT-hP-kM6"/>
                 <constraint firstItem="fsh-hH-hKG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="61" id="GEh-XP-Zha"/>
                 <constraint firstAttribute="bottom" secondItem="hkz-tq-X6j" secondAttribute="bottom" id="HFl-3K-Xpk"/>
                 <constraint firstAttribute="trailing" secondItem="hkz-tq-X6j" secondAttribute="trailing" id="V4u-Kv-Ub2"/>
+                <constraint firstItem="t5q-uB-aU0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="-110" id="WOY-Ar-VGz"/>
                 <constraint firstItem="fsh-hH-hKG" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="ZsI-iu-9nR"/>
                 <constraint firstAttribute="trailing" secondItem="cTn-y5-Ubx" secondAttribute="trailing" constant="-1" id="c7V-EP-C9e"/>
                 <constraint firstItem="hkz-tq-X6j" firstAttribute="top" secondItem="cTn-y5-Ubx" secondAttribute="bottom" id="dmQ-L9-08a"/>
@@ -104,7 +113,10 @@
                 </mask>
             </variation>
             <connections>
-                <outlet property="scrollView" destination="WNX-pj-5AB" id="Qqy-Ny-mng"/>
+                <outlet property="constraintsScrollViewViewTop" destination="WOY-Ar-VGz" id="rl6-Wg-VOM"/>
+                <outlet property="constraintsTextViewTop" destination="ZsI-iu-9nR" id="9Sv-qc-Vym"/>
+                <outlet property="scrollView" destination="WNX-pj-5AB" id="LQ4-PV-pIO"/>
+                <outlet property="scrollViewPhotos" destination="t5q-uB-aU0" id="f0j-ID-5g5"/>
                 <outlet property="sendButton" destination="cTn-y5-Ubx" id="yat-DS-NwZ"/>
                 <outlet property="tabBarContainerHeightConstraint" destination="vwa-F7-EIB" id="d3G-fs-hEH"/>
                 <outlet property="textView" destination="fsh-hH-hKG" id="QMH-G9-ADs"/>
@@ -114,7 +126,7 @@
                 <outletCollection property="constraintsForHiddenSendButton" destination="ciR-Nt-1tI" collectionClass="NSMutableArray" id="KTM-lg-5xh"/>
                 <outletCollection property="constraintsForVisibleSendButton" destination="c7V-EP-C9e" collectionClass="NSMutableArray" id="9YE-TF-OTG"/>
             </connections>
-            <point key="canvasLocation" x="-503" y="-15"/>
+            <point key="canvasLocation" x="-787" y="-129"/>
         </view>
     </objects>
     <resources>

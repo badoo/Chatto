@@ -29,28 +29,39 @@ public protocol ChatInputBarDelegate: class {
     func inputBarDidBeginEditing(_ inputBar: ChatInputBar)
     func inputBarDidEndEditing(_ inputBar: ChatInputBar)
     func inputBarDidChangeText(_ inputBar: ChatInputBar)
+    func inputBarDidRemovePhoto(_ inputBar: ChatInputBar, item: (index: IndexPath, url: URL))
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
 
 @objc
-open class ChatInputBar: ReusableXibView {
+open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
 
     public weak var delegate: ChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 
     public var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
+        for photoCell in inputBar.scrollViewPhotos.subviews {
+            if photoCell is ChatInputPhotoCell {
+                return true
+            }
+        }
+
         return !inputBar.textView.text.isEmpty
     }
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
     @IBOutlet public weak var sendButton: UIButton!
+    @IBOutlet weak var scrollViewPhotos: UIScrollView!
+    
     @IBOutlet weak var topBorderHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
     @IBOutlet var constraintsForVisibleTextView: [NSLayoutConstraint]!
+    @IBOutlet weak var constraintsTextViewTop: NSLayoutConstraint!
+    @IBOutlet weak var constraintsScrollViewViewTop: NSLayoutConstraint!
 
     @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
     @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
@@ -69,6 +80,8 @@ open class ChatInputBar: ReusableXibView {
 
     open override func awakeFromNib() {
         super.awakeFromNib()
+        
+        self.clipsToBounds = true
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self
@@ -78,23 +91,28 @@ open class ChatInputBar: ReusableXibView {
         self.textView.layer.borderColor = UIColor.lightGray.cgColor
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
+        
+        self.scrollViewPhotos.layer.cornerRadius = 5
+        self.scrollViewPhotos.layer.borderColor = UIColor.lightGray.cgColor
+        self.scrollViewPhotos.layer.borderWidth = 1
     }
 
     open override func updateConstraints() {
-        if self.showsTextView {
-            NSLayoutConstraint.activate(self.constraintsForVisibleTextView)
-            NSLayoutConstraint.deactivate(self.constraintsForHiddenTextView)
-        } else {
-            NSLayoutConstraint.deactivate(self.constraintsForVisibleTextView)
-            NSLayoutConstraint.activate(self.constraintsForHiddenTextView)
-        }
-        if self.showsSendButton {
-            NSLayoutConstraint.deactivate(self.constraintsForHiddenSendButton)
-            NSLayoutConstraint.activate(self.constraintsForVisibleSendButton)
-        } else {
-            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
-            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
-        }
+//        if self.showsTextView {
+//            NSLayoutConstraint.activate(self.constraintsForVisibleTextView)
+//            NSLayoutConstraint.deactivate(self.constraintsForHiddenTextView)
+//        } else {
+//            NSLayoutConstraint.deactivate(self.constraintsForVisibleTextView)
+//            NSLayoutConstraint.activate(self.constraintsForHiddenTextView)
+//        }
+//        if self.showsSendButton {
+//            NSLayoutConstraint.deactivate(self.constraintsForHiddenSendButton)
+//            NSLayoutConstraint.activate(self.constraintsForVisibleSendButton)
+//        }
+//        else {
+//            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
+//            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
+//        }
         super.updateConstraints()
     }
 
@@ -182,6 +200,64 @@ open class ChatInputBar: ReusableXibView {
         
         return false
     }
+
+    public func showPhotosCollectionView(_ value: Bool) {
+        self.constraintsTextViewTop.constant = value ? 120 : 20
+        self.constraintsScrollViewViewTop.constant = value ? 10 : -110
+        self.scrollViewPhotos.isHidden = !value
+    }
+    
+    public func setPhotoItemList(_ list: [(index: IndexPath, url: URL)]) {
+        if list != nil && list.count > 0 {
+            self.showPhotosCollectionView(true)
+        } else {
+            self.showPhotosCollectionView(false)
+        }
+
+        for item in self.scrollViewPhotos.subviews {
+            if item is ChatInputPhotoCell {
+                item.removeFromSuperview()
+            }
+        }
+        
+        var i:Int = 0
+        for item in list {
+            let url:URL = item.url
+            var imageView: ChatInputPhotoCell = ChatInputPhotoCell(frame: CGRect(x: 5 + 150*i, y: 5, width: 144, height: 90))
+            imageView.item = item
+            imageView.delegate = self
+            let imgData = try! Data(contentsOf: url)
+            imageView.image = UIImage(data: imgData)
+            self.scrollViewPhotos.addSubview(imageView)
+            i += 1
+        }
+        
+        self.scrollViewPhotos.contentSize =  CGSize(width: list.count*150 + 10, height: 100)
+        self.scrollViewPhotos.scrollRectToVisible(CGRect(x: self.scrollViewPhotos.contentSize.width - self.scrollViewPhotos.frame.size.width, y: 0, width: self.scrollViewPhotos.frame.size.width, height: self.scrollViewPhotos.frame.size.height), animated: true)
+        self.updateSendButton()
+    }
+    
+    func chatInputPhotoCellDidRemove(cell: ChatInputPhotoCell, item: (index: IndexPath, url: URL)) {
+        self.delegate?.inputBarDidRemovePhoto(self, item: item)
+
+        cell.removeFromSuperview()
+        
+        var i: Int = 0
+        for photoCell in self.scrollViewPhotos.subviews {
+            if photoCell is ChatInputPhotoCell {
+                photoCell.frame = CGRect(x: 5 + 150*i, y: 5, width: 144, height: 90)
+                i += 1
+            }
+        }
+        
+        self.scrollViewPhotos.contentSize =  CGSize(width: i*150 + 10, height: 100)
+
+        if i == 0 {
+            self.showPhotosCollectionView(false)
+        }
+
+        self.updateSendButton()
+    }
 }
 
 // MARK: - ChatInputItemViewDelegate
@@ -252,6 +328,7 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.tintColor = UIColor(red: 71.0/255.0, green:160.0/255.0, blue:219.0/255.0, alpha: 1.0)
         self.presenter?.onDidBeginEditing()
         self.delegate?.inputBarDidBeginEditing(self)
     }

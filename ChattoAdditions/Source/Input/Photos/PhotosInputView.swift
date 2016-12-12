@@ -40,11 +40,12 @@ protocol PhotosInputViewProtocol {
 
 protocol PhotosInputViewDelegate: class {
     func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: URL?)
+    func inputViewSelectImages(_ inputView: PhotosInputViewProtocol, selectImageList image: [(index: IndexPath, url: URL)]?)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
 }
 
-class PhotosInputView: UIView, PhotosInputViewProtocol {
+class PhotosInputView: UIView, PhotosInputViewProtocol, LiveCameraHeaderPresenterDelegate {
 
     fileprivate lazy var collectionViewQueue = SerialTaskQueue()
     fileprivate var collectionView: UICollectionView!
@@ -52,7 +53,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     fileprivate var dataProvider: PhotosInputDataProviderProtocol!
     fileprivate var cellProvider: PhotosInputCellProviderProtocol!
     fileprivate var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
-    fileprivate var selectedItemList = [IndexPath]()
+    fileprivate var selectedItemList = [(index: IndexPath, url: URL)]()
 
     var cameraAuthorizationStatus: AVAuthorizationStatus {
         return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
@@ -166,8 +167,33 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     }()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraHeaderPresenter = {
-        return LiveCameraHeaderPresenter(headerAppearance: self.appearance?.liveCameraHeaderAppearance ?? LiveCameraHeaderAppearance.createDefaultAppearance())
+        var presenter = LiveCameraHeaderPresenter(headerAppearance: self.appearance?.liveCameraHeaderAppearance ?? LiveCameraHeaderAppearance.createDefaultAppearance())
+        presenter.delegate = self
+        return presenter
     }()
+
+    public func removeItemFromList(item: (index: IndexPath, url: URL)) {
+        for (index, image) in selectedItemList.enumerated() {
+            if image.index == item.index {
+                selectedItemList.remove(at: index)
+                
+                if image.index.section != 2 {
+                    self.collectionView.reloadItems(at: [image.index])
+                }
+                
+                break
+            }
+        }
+    }
+    
+    public func getSelectedPhotoItems() -> [(index: IndexPath, url: URL)] {
+        return selectedItemList
+    }
+    
+    internal func liveCameraHeaderPresenterImageSavedToPath(_ url: URL) {
+        self.selectedItemList.append((index: IndexPath(item: 0, section: 2), url: url))
+        self.delegate?.inputViewSelectImages(self, selectImageList: self.selectedItemList)
+    }
 }
 
 extension PhotosInputView: UICollectionViewDataSource {
@@ -201,12 +227,21 @@ extension PhotosInputView: UICollectionViewDataSource {
 
         cell = self.cellProvider.cellForItemAtIndexPath(indexPath) as! PhotosInputCell
 
-        if (selectedItemList as NSArray).contains(indexPath) {
-            cell.selectForSend = true
-        } else {
-            cell.selectForSend = false
+        var found: Bool = false
+        
+        for (index, item) in selectedItemList.enumerated() {
+            if item.index == indexPath {
+                cell.selectForSend = true
+                found = true
+                
+                break
+            }
         }
         
+        if !found {
+            cell.selectForSend = false
+        }
+
         return cell
     }
 
@@ -239,25 +274,30 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
         if self.photoLibraryAuthorizationStatus != .authorized {
             self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
         } else {
-//                if let contained = selectedItemList.contains(indexPath) {
-//                    
-//                }
-            
             var cell: PhotosInputCell
             cell = collectionView.cellForItem(at: indexPath) as! PhotosInputCell
             
-            if (selectedItemList as NSArray).contains(indexPath) {
-                let index = selectedItemList.index(of: indexPath)
-                selectedItemList.remove(at: index!)
-                cell.selectForSend = false
-            } else {
-                selectedItemList.append(indexPath)
-                cell.selectForSend = true
+            var found: Bool = false
+            
+            for (index, item) in selectedItemList.enumerated() {
+                if item.index == indexPath {
+                    selectedItemList.remove(at: index)
+                    cell.selectForSend = false
+                    self.delegate?.inputViewSelectImages(self, selectImageList: self.selectedItemList)
+                    found = true
+                    
+                    break
+                }
             }
             
-//                self.dataProvider.requestFileURLAtIndex(indexPath.item - 1) { image in
-//                    self.delegate?.inputView(self, didSelectImage: image)
-//                }
+            if !found {
+                self.dataProvider.requestFileURLAtIndex(indexPath.item) { image in
+                    self.selectedItemList.append((index: indexPath, url: image!))
+                    self.delegate?.inputViewSelectImages(self, selectImageList: self.selectedItemList)
+                }
+                
+                cell.selectForSend = true
+            }
         }
     }
 

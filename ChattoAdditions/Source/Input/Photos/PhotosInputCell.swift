@@ -84,7 +84,7 @@ class PhotosInputCell: UICollectionViewCell {
 
         self.imageViewSelected = UIImageView()
         self.imageViewSelected.contentMode = .center
-        self.imageViewSelected.image = UIImage(named: "selected-image-icon", in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
+        self.imageViewSelected.image = UIImage(named: "select-photo-indicator", in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
         self.imageView.addSubview(self.imageViewSelected)
         self.imageViewSelected.backgroundColor = UIColor.clear
     }
