@@ -95,7 +95,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
         let asset = self.fetchResult[index]
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
-        return self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
+        return self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, _) in
             if let image = image {
                 completion(image)
             }
@@ -109,7 +109,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
     func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index]
-        self.imageManager.requestImageData(for: asset, options: .none) { (data, dataUTI, orientation, info) -> Void in
+        self.imageManager.requestImageData(for: asset, options: .none) { (data, _, _, _) -> Void in
             if let data = data, let image = UIImage(data: data) {
                 completion(image)
             }

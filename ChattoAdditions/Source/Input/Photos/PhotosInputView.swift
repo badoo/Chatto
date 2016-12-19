@@ -110,7 +110,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     private func requestAccessToVideo() {
         guard self.cameraAuthorizationStatus != .authorized else { return }
 
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { (success) -> Void in
+        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { (_) -> Void in
             DispatchQueue.main.async(execute: { () -> Void in
                 self.reloadVideoItem()
             })
@@ -123,7 +123,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
 
             sSelf.collectionView.performBatchUpdates({
                 sSelf.collectionView.reloadItems(at: [IndexPath(item: Constants.liveCameraItemIndex, section: 0)])
-            }, completion: { (finished) in
+            }, completion: { (_) in
                 DispatchQueue.main.async(execute: completion)
             })
         }

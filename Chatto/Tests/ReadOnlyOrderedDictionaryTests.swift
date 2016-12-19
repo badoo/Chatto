@@ -33,7 +33,7 @@ class ReadOnlyOrderedDictionaryTests: XCTestCase {
         let items = [
             FakeChatItem(uid: "3", type: "type3"),
             FakeChatItem(uid: "1", type: "type1"),
-            FakeChatItem(uid: "2", type: "type2"),
+            FakeChatItem(uid: "2", type: "type2")
         ]
         self.orderedDictionary = ReadOnlyOrderedDictionary<FakeChatItem>(items: items)
     }

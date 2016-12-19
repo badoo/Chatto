@@ -66,7 +66,7 @@ public struct UIControlStateWrapper: Hashable {
     }
 
     public var hashValue: Int {
-        return Int(self.controlState.rawValue)
+        return self.controlState.rawValue.hashValue
     }
 }
 
