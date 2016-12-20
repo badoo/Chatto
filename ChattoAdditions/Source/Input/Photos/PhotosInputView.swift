@@ -189,7 +189,11 @@ class PhotosInputView: UIView, PhotosInputViewProtocol, LiveCameraHeaderPresente
     public func getSelectedPhotoItems() -> [(index: IndexPath, url: URL)] {
         return selectedItemList
     }
-    
+
+    public func addItemToList(item: (index: IndexPath, url: URL)) {
+        self.selectedItemList.append(item)
+    }
+
     internal func liveCameraHeaderPresenterImageSavedToPath(_ url: URL) {
         self.selectedItemList.append((index: IndexPath(item: 0, section: 2), url: url))
         self.delegate?.inputViewSelectImages(self, selectImageList: self.selectedItemList)

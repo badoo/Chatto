@@ -226,8 +226,14 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
             var imageView: ChatInputPhotoCell = ChatInputPhotoCell(frame: CGRect(x: 5 + 150*i, y: 5, width: 144, height: 90))
             imageView.item = item
             imageView.delegate = self
-            let imgData = try! Data(contentsOf: url)
-            imageView.image = UIImage(data: imgData)
+            
+            if url.pathExtension.lowercased() == "pdf" {
+                imageView.image = self.drawPDFfromURL(url: url)
+            } else {
+                let imgData = try! Data(contentsOf: url)
+                imageView.image = UIImage(data: imgData)
+            }
+            
             self.scrollViewPhotos.addSubview(imageView)
             i += 1
         }
@@ -257,6 +263,29 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
         }
 
         self.updateSendButton()
+    }
+    
+    func drawPDFfromURL(url: URL) -> UIImage? {
+        guard let document = CGPDFDocument(url as CFURL) else { return nil }
+        guard let page = document.page(at: 1) else { return nil }
+        
+        let pageRect = page.getBoxRect(.mediaBox)
+        if #available(iOS 10.0, *) {
+            let renderer = UIGraphicsImageRenderer(size: pageRect.size)
+            let img1 = renderer.jpegData(withCompressionQuality: 1.0, actions: { cnv in
+                UIColor.white.set()
+                cnv.fill(pageRect)
+                cnv.cgContext.translateBy(x: 0.0, y: pageRect.size.height);
+                cnv.cgContext.scaleBy(x: 1.0, y: -1.0);
+                cnv.cgContext.drawPDFPage(page);
+            })
+            let img2 = UIImage(data: img1)
+            return img2
+        } else {
+            
+        }
+        
+        return nil
     }
 }
 

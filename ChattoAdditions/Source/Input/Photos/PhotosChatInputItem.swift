@@ -64,6 +64,10 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return (self.photosInputView as! PhotosInputView).getSelectedPhotoItems()
     }
 
+    public func addItemToList(item: (index: IndexPath, url: URL)) {
+        (self.photosInputView as! PhotosInputView).addItemToList(item: item)
+    }
+    
     lazy private var internalTabView: UIButton = {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
