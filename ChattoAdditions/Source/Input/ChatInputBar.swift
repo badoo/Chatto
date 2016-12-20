@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import ImageIO
 
 public protocol ChatInputBarDelegate: class {
     func inputBarShouldBeginTextEditing(_ inputBar: ChatInputBar) -> Bool
@@ -228,7 +229,13 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
             imageView.delegate = self
             
             if url.pathExtension.lowercased() == "pdf" {
-                imageView.image = self.drawPDFfromURL(url: url)
+                let img:UIImage? = self.drawPDFfromURL(url: url)
+                
+                if img != nil {
+                    imageView.image = img
+                } else {
+                    imageView.backgroundColor = UIColor(red: 71.0/255.0, green:160.0/255.0, blue:219.0/255.0, alpha: 1.0)
+                }
             } else {
                 let imgData = try! Data(contentsOf: url)
                 imageView.image = UIImage(data: imgData)
@@ -282,7 +289,14 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
             let img2 = UIImage(data: img1)
             return img2
         } else {
-            
+            if let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) {
+                let thumbSize = 640
+                let options: [NSString: NSObject] = [
+                    kCGImageSourceThumbnailMaxPixelSize: thumbSize as NSObject,
+                    kCGImageSourceCreateThumbnailFromImageIfAbsent: true as NSObject,
+                    kCGImageSourceCreateThumbnailWithTransform: true as NSObject]
+                return CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary?).flatMap { UIImage(cgImage: $0) }
+            }
         }
         
         return nil
