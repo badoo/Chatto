@@ -32,7 +32,6 @@ class DemoChatViewController: BaseChatViewController {
     var dataSource: FakeDataSource! {
         didSet {
             self.chatDataSource = self.dataSource
-            self.chatDataSourceDidUpdate(self.dataSource)
         }
     }
 
