@@ -55,19 +55,25 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
     @IBOutlet public weak var sendButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var scrollViewPhotos: UIScrollView!
+    @IBOutlet weak var tabSelectorContainer: UIView!
     
     @IBOutlet weak var topBorderHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
-    @IBOutlet var constraintsForVisibleTextView: [NSLayoutConstraint]!
     @IBOutlet weak var constraintsTextViewTop: NSLayoutConstraint!
+    @IBOutlet weak var constraintsTextViewBottom: NSLayoutConstraint!
     @IBOutlet weak var constraintsScrollViewViewTop: NSLayoutConstraint!
+    @IBOutlet weak var constraionTabSelectorContainerBottom: NSLayoutConstraint!
 
     @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
     @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
     @IBOutlet var tabBarContainerHeightConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var constraintsCloseButtonBottom: NSLayoutConstraint!
+    @IBOutlet weak var constraintsSendButtonBottom: NSLayoutConstraint!
+    
     class open func loadNib() -> ChatInputBar {
         let view = Bundle(for: self).loadNibNamed(self.nibName(), owner: nil, options: nil)!.first as! ChatInputBar
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +120,12 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
 //            NSLayoutConstraint.deactivate(self.constraintsForVisibleSendButton)
 //            NSLayoutConstraint.activate(self.constraintsForHiddenSendButton)
 //        }
+
+        self.constraintsCloseButtonBottom.constant = self.showsShelf ? 44 : 0
+        self.constraintsTextViewBottom.constant = self.showsShelf ? 54 : 10
+        self.constraintsSendButtonBottom.constant = self.showsShelf ? 44 : 0
+        self.constraionTabSelectorContainerBottom.constant = self.showsShelf ? 0 : -44
+
         super.updateConstraints()
     }
 
@@ -122,6 +134,14 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
             self.setNeedsUpdateConstraints()
             self.setNeedsLayout()
             self.updateIntrinsicContentSizeAnimated()
+        }
+    }
+
+    open var showsShelf: Bool = true {
+        didSet {
+            self.setNeedsUpdateConstraints()
+            self.setNeedsLayout()
+//            self.updateIntrinsicContentSizeAnimated()
         }
     }
 
@@ -190,6 +210,10 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
         self.delegate?.inputBarSendButtonPressed(self)
     }
 
+    @IBAction func closeButtonTapped(_ sender: Any) {
+        self.showsShelf = !self.showsShelf
+    }
+    
     public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
     }
@@ -203,7 +227,7 @@ open class ChatInputBar: ReusableXibView, ChatInputPhotoCellProtocol {
     }
 
     public func showPhotosCollectionView(_ value: Bool) {
-        self.constraintsTextViewTop.constant = value ? 120 : 20
+        self.constraintsTextViewTop.constant = value ? 120 : 10
         self.constraintsScrollViewViewTop.constant = value ? 10 : -110
         self.scrollViewPhotos.isHidden = !value
     }
