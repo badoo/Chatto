@@ -200,7 +200,7 @@ extension ChatInputBar {
         self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
         if enableReturnKeyToSend {
-            self.textView.returnKeyType = .Send
+            self.textView.returnKeyType = .send
             self.textView.enablesReturnKeyAutomatically = true
         }
      
@@ -260,7 +260,7 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
-        if self.enableReturnKeyToSend && text.containsString("\n") {
+        if self.enableReturnKeyToSend && text.rangeOfString("\n") != nil {
             self.presenter?.onSendButtonPressed()
             return false
         }
