@@ -260,7 +260,7 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
-        if self.enableReturnKeyToSend && text.rangeOfString("\n") != nil {
+        if self.enableReturnKeyToSend && text.range(of: "\n") != nil {
             self.presenter?.onSendButtonPressed()
             return false
         }
