@@ -110,6 +110,9 @@ public class ChatInputBar: ReusableXibView {
         }
     }
 
+    // enable press the return key to send message
+    public var enableReturnKeyToSend: Bool = false
+
     public var maxCharactersCount: UInt? // nil -> unlimited
 
     private func updateIntrinsicContentSizeAnimated() {
@@ -196,14 +199,21 @@ extension ChatInputBar {
         self.textView.setTextPlaceholderFont(appearance.textInputAppearance.placeholderFont)
         self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
+        if enableReturnKeyToSend {
+            self.textView.returnKeyType = .Send
+            self.textView.enablesReturnKeyAutomatically = true
+        }
+
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
+
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
         self.sendButton.setTitle(appearance.sendButtonAppearance.title, forState: .Normal)
         appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
             self.sendButton.setTitleColor(color, forState: state.controlState)
         }
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
@@ -250,6 +260,11 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textView(textView: UITextView, shouldChangeTextInRange nsRange: NSRange, replacementText text: String) -> Bool {
+        if self.enableReturnKeyToSend && text.containsString("\n") {
+            self.presenter?.onSendButtonPressed()
+            return false
+        }
+
         let range = self.textView.text.bma_rangeFromNSRange(nsRange)
         if let maxCharactersCount = self.maxCharactersCount {
             let currentCount = textView.text.characters.count
