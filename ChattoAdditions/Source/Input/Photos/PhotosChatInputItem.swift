@@ -28,6 +28,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
     public var photoInputHandler: ((URL?) -> Void)?
+    public var photoSelectionHandler: (([(index: IndexPath, url: URL)]?) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
@@ -55,6 +56,18 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return PhotosInputViewAppearance(liveCameraHeaderAppearance: LiveCameraHeaderAppearance.createDefaultAppearance())
     }
 
+    public func removeItemFromList(item: (index: IndexPath, url: URL)) {
+        (self.photosInputView as! PhotosInputView).removeItemFromList(item: item)
+    }
+    
+    public func getSelectedPhotoItems() -> [(index: IndexPath, url: URL)] {
+        return (self.photosInputView as! PhotosInputView).getSelectedPhotoItems()
+    }
+
+    public func addItemToList(item: (index: IndexPath, url: URL)) {
+        (self.photosInputView as! PhotosInputView).addItemToList(item: item)
+    }
+    
     lazy private var internalTabView: UIButton = {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
@@ -108,6 +121,10 @@ extension PhotosChatInputItem: PhotosInputViewDelegate {
         self.photoInputHandler?(image)
     }
 
+    func inputViewSelectImages(_ inputView: PhotosInputViewProtocol, selectImageList image: [(index: IndexPath, url: URL)]?) {
+        self.photoSelectionHandler?(image)
+    }
+    
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
         self.cameraPermissionHandler?()
     }

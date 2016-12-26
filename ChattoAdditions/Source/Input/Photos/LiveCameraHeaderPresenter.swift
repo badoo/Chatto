@@ -25,13 +25,23 @@
 import Foundation
 import Photos
 
-public final class LiveCameraHeaderPresenter {
+protocol LiveCameraHeaderPresenterProtocol {
+    weak var delegate: LiveCameraHeaderPresenterDelegate? { get set }
+}
+
+protocol LiveCameraHeaderPresenterDelegate: class {
+    func liveCameraHeaderPresenterImageSavedToPath(_ url: URL)
+}
+
+public final class LiveCameraHeaderPresenter:  LiveCameraHeaderDelegate, LiveCameraCaptureSessionDelegate {
+
     private typealias Class = LiveCameraHeaderPresenter
     public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
 
 
     private let headerAppearance: LiveCameraHeaderAppearance
     private let authorizationStatusProvider: () -> AVAuthorizationStatus
+    weak var delegate: LiveCameraHeaderPresenterDelegate?
     public init(headerAppearance: LiveCameraHeaderAppearance = LiveCameraHeaderAppearance.createDefaultAppearance(), authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraHeaderPresenter.createDefaultCameraAuthorizationStatusProvider()) {
         self.headerAppearance = headerAppearance
         self.authorizationStatusProvider = authorizationStatusProvider
@@ -64,6 +74,7 @@ public final class LiveCameraHeaderPresenter {
             return
         }
         self.header = header
+        self.header?.delegate = self
         self.configureCell()
         self.startCapturing()
     }
@@ -153,6 +164,7 @@ public final class LiveCameraHeaderPresenter {
     func startCapturing() {
         guard self.isCaptureAvailable, let _ = self.header else { return }
 
+        self.captureSession.delegate = self
         self.captureSession.startCapturing() { [weak self] in
             self?.header?.captureLayer = self?.captureSession.captureLayer
         }
@@ -184,6 +196,28 @@ public final class LiveCameraHeaderPresenter {
             } else {
                 self.unsubscribeFromAppNotifications()
             }
+        }
+    }
+    
+    internal func liveCameraHeaderTakePhoto() {
+        self.captureSession.takePhoto()
+    }
+
+    internal func liveCameraHeaderChangeCamera() {
+        self.captureSession.changeCamera()
+    }
+
+    internal func liveCameraCaptureSessionPhotoToken(_ image: Data) {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .allDomainsMask, true)[0]
+        let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("image\(arc4random()%1000)d").appendingPathExtension("jpg")
+        if FileManager.default.fileExists(atPath: outputURL.absoluteString) {
+            try! FileManager.default.removeItem(atPath: outputURL.absoluteString)
+        }
+        if (try? image.write(to: outputURL, options: .atomic)) != nil {
+            self.delegate?.liveCameraHeaderPresenterImageSavedToPath(outputURL)
+//            completion(outputURL)
+        } else {
+//            completion(nil)
         }
     }
 }

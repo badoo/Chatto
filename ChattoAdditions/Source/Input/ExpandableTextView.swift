@@ -163,13 +163,15 @@ open class ExpandableTextView: UITextView {
     }
     
     override open func paste(_ sender: Any?) {
-        print("paste")
-        
         if (UIPasteboard.general.string != nil) {
             super.paste(sender)
         } else if (UIPasteboard.general.image != nil) {
             let imageData: NSData = UIImagePNGRepresentation(UIPasteboard.general.image!)! as NSData
             delegate_?.didPasteImageWithData(imageData as Data)
         }
+    }
+    
+    override open var canBecomeFirstResponder: Bool {
+        return true
     }
 }

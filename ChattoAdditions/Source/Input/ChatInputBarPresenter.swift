@@ -148,6 +148,7 @@ extension BasicChatInputBarPresenter {
     }
 
     func onSendButtonPressed() {
+        self.focusedItem = self.firstKeyboardInputItem()
         if let focusedItem = self.focusedItem {
             focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
@@ -168,7 +169,7 @@ extension BasicChatInputBarPresenter {
 
         self.focusedItem = item
         self.chatInputBar.showsSendButton = item.showsSendButton
-        self.chatInputBar.showsTextView = item.presentationMode == .keyboard
+        self.chatInputBar.showsTextView = (item.presentationMode == .keyboard || item.presentationMode == .customView)
         self.updateFirstResponderWithInputItem(item)
     }
 }
