@@ -106,7 +106,7 @@ extension BaseChatViewController {
         self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentOffset.y + diffY)
     }
 
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }

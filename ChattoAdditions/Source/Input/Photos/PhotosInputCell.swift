@@ -74,17 +74,25 @@ class PhotosInputCell: UICollectionViewCell {
     }
 
     private var imageView: UIImageView!
+    private var imageViewSelected: UIImageView!
     private func commonInit() {
         self.clipsToBounds = true
         self.imageView = UIImageView()
         self.imageView.contentMode = .scaleAspectFill
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
+
+        self.imageViewSelected = UIImageView()
+        self.imageViewSelected.contentMode = .center
+        self.imageViewSelected.image = UIImage(named: "select-photo-indicator", in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
+        self.imageView.addSubview(self.imageViewSelected)
+        self.imageViewSelected.backgroundColor = UIColor.clear
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView.frame = self.bounds
+        self.imageViewSelected.frame = CGRect(x: self.imageView.frame.size.width - 27 - 6, y: self.imageView.frame.size.height - 27 - 6, width: 27, height: 27)
     }
 
     override func prepareForReuse() {
@@ -98,6 +106,12 @@ class PhotosInputCell: UICollectionViewCell {
         }
         set {
             self.imageView.image = newValue
+        }
+    }
+    
+    var selectForSend: Bool? {
+        didSet {
+            self.imageViewSelected.isHidden = !selectForSend!
         }
     }
 }

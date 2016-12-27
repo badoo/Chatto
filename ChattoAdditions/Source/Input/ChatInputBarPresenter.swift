@@ -29,6 +29,7 @@ protocol ChatInputBarPresenter: class {
     func onDidBeginEditing()
     func onDidEndEditing()
     func onSendButtonPressed()
+    func onSendImage(_ imageData: Data)
     func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol)
 }
 
@@ -147,6 +148,7 @@ extension BasicChatInputBarPresenter {
     }
 
     func onSendButtonPressed() {
+        self.focusedItem = self.firstKeyboardInputItem()
         if let focusedItem = self.focusedItem {
             focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
@@ -155,13 +157,19 @@ extension BasicChatInputBarPresenter {
         self.chatInputBar.inputText = ""
     }
 
+    func onSendImage(_ imageData: Data) {
+        if let focusedItem = self.focusedItem {
+            focusedItem.handleImageInput(imageData as AnyObject)
+        }
+    }
+    
     func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
         guard item.presentationMode != .none else { return }
         guard item !== self.focusedItem else { return }
 
         self.focusedItem = item
         self.chatInputBar.showsSendButton = item.showsSendButton
-        self.chatInputBar.showsTextView = item.presentationMode == .keyboard
+        self.chatInputBar.showsTextView = (item.presentationMode == .keyboard || item.presentationMode == .customView)
         self.updateFirstResponderWithInputItem(item)
     }
 }
