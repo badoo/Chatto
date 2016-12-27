@@ -28,6 +28,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     typealias Class = PhotosChatInputItem
 
     public var photoInputHandler: ((URL?) -> Void)?
+    public var photoInputHandlerData: ((Data?) -> Void)?
     public var photoSelectionHandler: (([(index: IndexPath, url: URL)]?) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
@@ -64,8 +65,8 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return (self.photosInputView as! PhotosInputView).getSelectedPhotoItems()
     }
 
-    public func addItemToList(item: (index: IndexPath, url: URL)) {
-        (self.photosInputView as! PhotosInputView).addItemToList(item: item)
+    public func addItemToList(item: (index: IndexPath, url: URL)) -> [(index: IndexPath, url: URL)] {
+        return (self.photosInputView as! PhotosInputView).addItemToList(item: item)
     }
     
     lazy private var internalTabView: UIButton = {
@@ -111,6 +112,8 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     open func handleImageInput(_ input: AnyObject) {
         if let image = input as? URL {
             self.photoInputHandler?(image)
+        } else if let image = input as? Data {
+            self.photoInputHandlerData?(image)
         }
     }
 }
