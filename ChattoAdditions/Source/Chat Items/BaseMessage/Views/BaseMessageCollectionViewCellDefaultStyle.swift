@@ -79,11 +79,15 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     }
 
     public struct AvatarStyle {
+
         let size: CGSize
         let alignment: VerticalAlignment
-        public init(size: CGSize = .zero, alignment: VerticalAlignment = .bottom) {
+        let imageViewSetup: AvatarImageViewSetup?
+
+        public init(size: CGSize = .zero, alignment: VerticalAlignment = .bottom, imageViewSetup : AvatarImageViewSetup? = nil) {
             self.size = size
             self.alignment = alignment
+            self.imageViewSetup = imageViewSetup
         }
     }
 
@@ -151,6 +155,10 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     open func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment {
         return self.avatarStyle.alignment
+    }
+
+    open func avatarImageViewSetup(viewModel: MessageViewModelProtocol) -> AvatarImageViewSetup? {
+        return self.avatarStyle.imageViewSetup
     }
 
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
