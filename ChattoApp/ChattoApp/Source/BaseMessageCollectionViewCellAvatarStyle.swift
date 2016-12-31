@@ -30,4 +30,15 @@ class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDef
         // Display avatar for both incoming and outgoing messages for demo purpose
         return CGSize(width: 35, height: 35)
     }
+
+    override func avatarImageViewSetup(viewModel: MessageViewModelProtocol) -> AvatarImageViewSetup? {
+        return { imageView in
+            imageView?.contentMode = .scaleAspectFit
+            imageView?.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
+            imageView?.layer.cornerRadius = 4
+            imageView?.layer.masksToBounds = true
+            imageView?.layer.borderColor = UIColor.black.cgColor
+            imageView?.layer.borderWidth = 1.0
+        }
+    }
 }

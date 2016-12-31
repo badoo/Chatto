@@ -39,6 +39,8 @@ public enum VerticalAlignment {
     case bottom
 }
 
+public typealias AvatarImageViewSetup = (_ imageView: UIImageView?) -> Void
+
 public extension CGSize {
     func bma_insetBy(dx: CGFloat, dy: CGFloat) -> CGSize {
         return CGSize(width: self.width - dx, height: self.height - dy)
