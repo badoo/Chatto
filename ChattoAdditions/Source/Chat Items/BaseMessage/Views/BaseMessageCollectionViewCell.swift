@@ -208,11 +208,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         let avatarImageSize = baseStyle.avatarSize(viewModel: messageViewModel)
         if avatarImageSize != CGSize.zero {
             self.avatarView.image = self.messageViewModel.avatarImage.value
+            if let setup = baseStyle.avatarImageViewSetup(viewModel: messageViewModel) {
+                setup(self.avatarView)
+            }
         }
-        if let setup = baseStyle.avatarImageViewSetup(viewModel: messageViewModel) {
-            setup(self.avatarView)
-        }
-
         self.setNeedsLayout()
     }
 
