@@ -24,12 +24,18 @@
 
 import UIKit
 
-public protocol ChatInputBarDelegate: class {
-    func inputBarShouldBeginTextEditing(inputBar: ChatInputBar) -> Bool
-    func inputBarDidBeginEditing(inputBar: ChatInputBar)
-    func inputBarDidEndEditing(inputBar: ChatInputBar)
-    func inputBarDidChangeText(inputBar: ChatInputBar)
-    func inputBarSendButtonPressed(inputBar: ChatInputBar)
+@objc public protocol ChatInputBarDelegate: class {
+    optional func inputBarShouldBeginTextEditing(inputBar: ChatInputBar) -> Bool
+    optional func inputBarShouldEndTextEditing(inputBar: ChatInputBar) -> Bool
+    optional func inputBarDidBeginEditing(inputBar: ChatInputBar)
+    optional func inputBarDidEndEditing(inputBar: ChatInputBar)
+    optional func inputBarDidChangeText(inputBar: ChatInputBar)
+    optional func inputBarSendButtonPressed(inputBar: ChatInputBar)
+}
+
+
+/// all methods defined in RequiredChatInputBarDelegate must be implemented.
+public protocol RequiredChatInputBarDelegate: class {
     func inputBar(inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
 }
@@ -38,11 +44,15 @@ public protocol ChatInputBarDelegate: class {
 public class ChatInputBar: ReusableXibView {
 
     public weak var delegate: ChatInputBarDelegate?
+    public weak var requiredDelegate: RequiredChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 
     public var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
         return !inputBar.textView.text.isEmpty
     }
+
+    // enable press the return key to send message		
+    public var enableReturnKeyToSend: Bool = false
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
@@ -164,7 +174,7 @@ public class ChatInputBar: ReusableXibView {
 
     @IBAction func buttonTapped(sender: AnyObject) {
         self.presenter?.onSendButtonPressed()
-        self.delegate?.inputBarSendButtonPressed(self)
+        self.delegate?.inputBarSendButtonPressed?(self)
     }
 
     public func setTextViewPlaceholderAccessibilityIdentifer(accessibilityIdentifer: String) {
@@ -179,11 +189,11 @@ extension ChatInputBar: ChatInputItemViewDelegate {
     }
 
     public func focusOnInputItem(inputItem: ChatInputItemProtocol) {
-        let shouldFocus = self.delegate?.inputBar(self, shouldFocusOnItem: inputItem) ?? true
+        let shouldFocus = self.requiredDelegate?.inputBar(self, shouldFocusOnItem: inputItem) ?? true
         guard shouldFocus else { return }
 
         self.presenter?.onDidReceiveFocusOnItem(inputItem)
-        self.delegate?.inputBar(self, didReceiveFocusOnItem: inputItem)
+        self.requiredDelegate?.inputBar(self, didReceiveFocusOnItem: inputItem)
     }
 }
 
@@ -196,14 +206,22 @@ extension ChatInputBar {
         self.textView.setTextPlaceholderFont(appearance.textInputAppearance.placeholderFont)
         self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
+
+        if enableReturnKeyToSend {        
+            self.textView.returnKeyType = .Send        
+            self.textView.enablesReturnKeyAutomatically = true        
+        }
+
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
+
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
         self.sendButton.setTitle(appearance.sendButtonAppearance.title, forState: .Normal)
         appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
             self.sendButton.setTitleColor(color, forState: state.controlState)
         }
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
@@ -231,25 +249,34 @@ extension ChatInputBar { // Tabar
 // MARK: UITextViewDelegate
 extension ChatInputBar: UITextViewDelegate {
     public func textViewShouldBeginEditing(textView: UITextView) -> Bool {
-        return self.delegate?.inputBarShouldBeginTextEditing(self) ?? true
+        return self.delegate?.inputBarShouldBeginTextEditing?(self) ?? true
+    }
+    
+    public func textViewShouldEndEditing(textView: UITextView) -> Bool {
+        return self.delegate?.inputBarShouldEndTextEditing?(self) ?? true
     }
 
     public func textViewDidEndEditing(textView: UITextView) {
         self.presenter?.onDidEndEditing()
-        self.delegate?.inputBarDidEndEditing(self)
+        self.delegate?.inputBarDidEndEditing?(self)
     }
 
     public func textViewDidBeginEditing(textView: UITextView) {
         self.presenter?.onDidBeginEditing()
-        self.delegate?.inputBarDidBeginEditing(self)
+        self.delegate?.inputBarDidBeginEditing?(self)
     }
 
     public func textViewDidChange(textView: UITextView) {
         self.updateSendButton()
-        self.delegate?.inputBarDidChangeText(self)
+        self.delegate?.inputBarDidChangeText?(self)
     }
 
     public func textView(textView: UITextView, shouldChangeTextInRange nsRange: NSRange, replacementText text: String) -> Bool {
+        if self.enableReturnKeyToSend && text.containsString("\n") {        
+            self.presenter?.onSendButtonPressed()        
+            return false        
+        }
+
         let range = self.textView.text.bma_rangeFromNSRange(nsRange)
         if let maxCharactersCount = self.maxCharactersCount {
             let currentCount = textView.text.characters.count
