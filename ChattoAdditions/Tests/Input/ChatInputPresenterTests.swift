@@ -140,7 +140,7 @@ class ChatInputPresenterTests: XCTestCase {
             itemThatHandledInput = 2
         }
 
-        let inputItems: Array<ChatInputItemProtocol> = [firstInputItem, secondInputItem]
+        let inputItems: [ChatInputItemProtocol] = [firstInputItem, secondInputItem]
         self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems, chatInputBarAppearance: ChatInputBarAppearance())
         self.presenter.onSendButtonPressed()
         XCTAssertEqual(itemThatHandledInput, 1)
@@ -167,7 +167,7 @@ class ChatInputPresenterTests: XCTestCase {
     }
 
     func testThat_GivenPresenterHasNoFocusedItem_WhenBarDidBeginEditing_FirstKeyboardItemBecomesFocused() {
-        let inputItems: Array<ChatInputItemProtocol> = [TextChatInputItem(), TextChatInputItem()]
+        let inputItems: [ChatInputItemProtocol] = [TextChatInputItem(), TextChatInputItem()]
         self.presenter = BasicChatInputBarPresenter(chatInputBar: self.bar, chatInputItems: inputItems, chatInputBarAppearance: ChatInputBarAppearance())
         self.presenter.onDidBeginEditing()
         XCTAssertTrue(self.presenter.focusedItem! === inputItems[0])

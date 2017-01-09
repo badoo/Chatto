@@ -82,7 +82,7 @@ class PhotosChatInputItemTests: XCTestCase {
 }
 
 class MockPhotosInputView: PhotosInputViewProtocol {
-    var delegate: PhotosInputViewDelegate?
+    weak var delegate: PhotosInputViewDelegate?
     var presentingController: UIViewController?
 
     var reloaded: Bool = false

@@ -98,7 +98,7 @@ class CollectionChangesTests: XCTestCase {
             indexPath1: 1,
             indexPath2: 2,
             indexPath3: 3,
-            indexPath4: 4,
+            indexPath4: 4
         ]
 
         let deletions = Set([indexPath0, indexPath1])
@@ -116,7 +116,7 @@ class CollectionChangesTests: XCTestCase {
             indexPath0: 2,
             indexPath1: 3,
             // indexPath2: new
-            indexPath3: 4,
+            indexPath3: 4
         ]
 
         XCTAssertEqual(result, expected)

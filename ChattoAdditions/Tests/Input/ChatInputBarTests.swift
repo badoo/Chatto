@@ -28,7 +28,7 @@ import XCTest
 class ChatInputBarTests: XCTestCase {
     private var bar: ChatInputBar!
     private var presenter: FakeChatInputBarPresenter!
-    private var delegate: FakeChatInputBarDelegate!
+    private var delegateStrong: FakeChatInputBarDelegate!
     override func setUp() {
         super.setUp()
         self.bar = ChatInputBar.loadNib()
@@ -39,8 +39,8 @@ class ChatInputBarTests: XCTestCase {
     }
 
     private func setupDelegate() {
-        self.delegate = FakeChatInputBarDelegate()
-        self.bar.delegate = self.delegate
+        self.delegateStrong = FakeChatInputBarDelegate()
+        self.bar.delegate = self.delegateStrong
     }
 
     private func createItemView(inputItem: ChatInputItemProtocol) -> ChatInputItemView {
@@ -120,33 +120,33 @@ class ChatInputBarTests: XCTestCase {
         let item = MockInputItem()
         self.bar.inputItemViewTapped(createItemView(inputItem: item))
 
-        XCTAssertTrue(self.delegate.inputBarDidReceiveFocusOnItemCalled)
-        XCTAssertTrue(self.delegate.focusedItem === item)
+        XCTAssertTrue(self.delegateStrong.inputBarDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.focusedItem === item)
     }
 
     func testThat_WhenTextViewDidBeginEditing_ItNotifiesDelegate() {
         self.setupDelegate()
         self.bar.textViewDidBeginEditing(self.bar.textView)
-        XCTAssertTrue(self.delegate.inputBarDidBeginEditingCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidBeginEditingCalled)
     }
 
     func testThat_WhenTextViewDidEndEditing_ItNotifiesDelegate() {
         self.setupDelegate()
         self.bar.textViewDidEndEditing(self.bar.textView)
-        XCTAssertTrue(self.delegate.inputBarDidEndEditingCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidEndEditingCalled)
     }
 
     func testThat_WhenTextViewDidChangeText_ItNotifiesDelegate() {
         self.setupDelegate()
         self.bar.inputText = "text"
         self.bar.textViewDidChange(self.bar.textView)
-        XCTAssertTrue(self.delegate.inputBarDidChangeTextCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidChangeTextCalled)
     }
 
     func testThat_WhenSendButtonTapped_ItNotifiesDelegate() {
         self.setupDelegate()
         self.bar.buttonTapped(self.bar)
-        XCTAssertTrue(self.delegate.inputBarSendButtonPressedCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarSendButtonPressedCalled)
     }
 
     func testThat_WhenInputTextChangedAndCustomStateUpdateClosureProvided_BarUpdatesSendButtonStateAccordingly() {
@@ -173,25 +173,25 @@ class ChatInputBarTests: XCTestCase {
 
     func testThat_WhenItemViewTappedAndDelegateAllowsFocusing_ItWillFocusTheItem() {
         self.setupDelegate()
-        self.delegate.inputBarShouldFocusOnItemResult = true
+        self.delegateStrong.inputBarShouldFocusOnItemResult = true
 
         let item = MockInputItem()
         self.bar.inputItemViewTapped(createItemView(inputItem: item))
 
-        XCTAssertTrue(self.delegate.inputBarShouldFocusOnItemCalled)
-        XCTAssertTrue(self.delegate.inputBarDidReceiveFocusOnItemCalled)
-        XCTAssertTrue(self.delegate.focusedItem === item)
+        XCTAssertTrue(self.delegateStrong.inputBarShouldFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.focusedItem === item)
     }
 
     func testThat_WhenItemViewTappedAndDelegateDisallowsFocusing_ItWontFocusTheItem() {
         self.setupDelegate()
-        self.delegate.inputBarShouldFocusOnItemResult = false
+        self.delegateStrong.inputBarShouldFocusOnItemResult = false
 
         let item = MockInputItem()
         self.bar.inputItemViewTapped(createItemView(inputItem: item))
 
-        XCTAssertTrue(self.delegate.inputBarShouldFocusOnItemCalled)
-        XCTAssertFalse(self.delegate.inputBarDidReceiveFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarShouldFocusOnItemCalled)
+        XCTAssertFalse(self.delegateStrong.inputBarDidReceiveFocusOnItemCalled)
     }
 
     func testThat_WhenTextViewGoingToBecomeEditable_ItBecomesEditableByDefault() {
@@ -202,18 +202,18 @@ class ChatInputBarTests: XCTestCase {
 
     func testThat_WhenTextViewGoingToBecomeEditableAndDelegateAllowsIt_ItWillBeEditable() {
         self.setupDelegate()
-        self.delegate.inputBarShouldBeginTextEditingResult = true
+        self.delegateStrong.inputBarShouldBeginTextEditingResult = true
         self.simulateTapOnTextViewForDelegate(self.bar)
-        XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
-        XCTAssertTrue(self.delegate.inputBarDidBeginEditingCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarShouldBeginTextEditingCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidBeginEditingCalled)
     }
 
     func testThat_WhenTextViewGoingToBecomeEditableAndDelegateDisallowsIt_ItWontBeEditable() {
         self.setupDelegate()
-        self.delegate.inputBarShouldBeginTextEditingResult = false
+        self.delegateStrong.inputBarShouldBeginTextEditingResult = false
         self.simulateTapOnTextViewForDelegate(self.bar)
-        XCTAssertTrue(self.delegate.inputBarShouldBeginTextEditingCalled)
-        XCTAssertFalse(self.delegate.inputBarDidBeginEditingCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarShouldBeginTextEditingCalled)
+        XCTAssertFalse(self.delegateStrong.inputBarDidBeginEditingCalled)
     }
 }
 

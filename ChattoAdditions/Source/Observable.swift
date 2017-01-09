@@ -41,7 +41,7 @@ public class Observable<T> {
         }
     }
 
-    public func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
+    public func observe(_ observer: AnyObject, closure: @escaping (_ old: T, _ new: T) -> Void) {
         self.observers.append(Observer(owner: observer, closure: closure))
         self.cleanDeadObservers()
     }
@@ -55,8 +55,8 @@ public class Observable<T> {
 
 private struct Observer<T> {
     weak var owner: AnyObject?
-    let closure: (_ old: T, _ new: T) -> ()
-    init (owner: AnyObject, closure: @escaping (_ old: T, _ new: T) -> ()) {
+    let closure: (_ old: T, _ new: T) -> Void
+    init (owner: AnyObject, closure: @escaping (_ old: T, _ new: T) -> Void) {
         self.owner = owner
         self.closure = closure
     }

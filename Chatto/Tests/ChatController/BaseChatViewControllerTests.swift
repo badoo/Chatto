@@ -74,7 +74,7 @@ class ChatViewControllerTests: XCTestCase {
             asyncExpectation.fulfill()
             completion()
         }
-        self.waitForExpectations(timeout: 1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (_) -> Void in
             XCTAssertEqual(3, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
         }
     }
@@ -105,7 +105,7 @@ class ChatViewControllerTests: XCTestCase {
             completion()
             asyncExpectation.fulfill()
         }
-        self.waitForExpectations(timeout: 1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (_) -> Void in
             XCTAssertTrue(fakeDataSource.wasRequestedForPrevious)
         }
     }
@@ -129,7 +129,7 @@ class ChatViewControllerTests: XCTestCase {
             completion()
         }
 
-        self.waitForExpectations(timeout: 1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (_) -> Void in
             XCTAssertEqual(3000, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
             XCTAssertEqual(contentOffset, controller.collectionView.contentOffset)
         }
@@ -148,7 +148,7 @@ class ChatViewControllerTests: XCTestCase {
         updateQueue.onAllTasksFinished = {
             asyncExpectation.fulfill()
         }
-        self.waitForExpectations(timeout: 1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (_) -> Void in
             XCTAssertTrue(fakeDataSource.wasRequestedForMessageCountContention)
         }
     }
@@ -171,7 +171,7 @@ class ChatViewControllerTests: XCTestCase {
         updateQueue.onAllTasksFinished = {
             asyncExpectation.fulfill()
         }
-        self.waitForExpectations(timeout: 1) { (error) -> Void in
+        self.waitForExpectations(timeout: 1) { (_) -> Void in
             controller = nil
             XCTAssertNil(weakController)
         }

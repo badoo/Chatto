@@ -67,7 +67,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func createViewModel() -> ViewModelBuilderT.ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)
-        let updateClosure = { [weak self] (old: Any, new: Any) -> () in
+        let updateClosure = { [weak self] (old: Any, new: Any) -> Void in
             self?.updateCurrentCell()
         }
         viewModel.avatarImage.observe(self, closure: updateClosure)

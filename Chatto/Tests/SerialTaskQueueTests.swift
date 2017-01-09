@@ -30,7 +30,7 @@ class SerialTaskQueueTests: XCTestCase {
     func testThat_GivenIsFreshlyCreated_WhenNewTaskIsAdded_ThenTaskIsNotExecuted() {
         let queue = SerialTaskQueue()
         var executed = false
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             executed = true
             completion()
         }
@@ -40,7 +40,7 @@ class SerialTaskQueueTests: XCTestCase {
     func testThat_GivenPausedQueueWithOneTask_WhenQueueIsStarted_ThenTaskIsExecuted() {
         let queue = SerialTaskQueue()
         var executed = false
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             executed = true
             completion()
         }
@@ -51,10 +51,10 @@ class SerialTaskQueueTests: XCTestCase {
     func testThat_GivenQueueWithTwoTasks_WhenFirstTaskFinished_ThenSecondTaskIsExecuted() {
         let queue = SerialTaskQueue()
         var secondTaskExecuted = false
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             completion()
         }
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             secondTaskExecuted = true
             completion()
         }
@@ -66,10 +66,10 @@ class SerialTaskQueueTests: XCTestCase {
     func testThat_GivenQueueWithRunningTask_WhenNewTaskIsAdded_ThenNewTaskIsNotExecute() {
         let queue = SerialTaskQueue()
         var secondTaskExecuted = false
-        queue.addTask { (completion) -> () in
+        queue.addTask { (_) -> Void in
             // First task diddn't finish, second task won't be executed
         }
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             secondTaskExecuted = true
             completion()
         }
@@ -82,7 +82,7 @@ class SerialTaskQueueTests: XCTestCase {
         var executed = false
         let queue = SerialTaskQueue()
         queue.start()
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             executed = true
             completion()
         }
@@ -93,11 +93,11 @@ class SerialTaskQueueTests: XCTestCase {
         let queue = SerialTaskQueue()
         var secondTaskExecuted = false
         queue.start()
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             completion()
         }
         queue.stop()
-        queue.addTask { (completion) -> () in
+        queue.addTask { (completion) -> Void in
             secondTaskExecuted = true
             completion()
         }
