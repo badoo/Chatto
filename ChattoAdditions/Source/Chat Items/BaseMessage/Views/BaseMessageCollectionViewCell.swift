@@ -265,7 +265,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     // MARK: timestamp revealing
 
-    lazy var accessoryTimestampView = UILabel()
+    var accessoryTimestampView = UILabel()
 
     var offsetToRevealAccessoryView: CGFloat = 0 {
         didSet {
