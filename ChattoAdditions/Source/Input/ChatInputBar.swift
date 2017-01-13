@@ -47,6 +47,8 @@ public class ChatInputBar: ReusableXibView {
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
     @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var sendButtonContainerView: UIView!
+    
     @IBOutlet weak var topBorderHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
@@ -55,6 +57,9 @@ public class ChatInputBar: ReusableXibView {
     @IBOutlet var constraintsForVisibleSendButton: [NSLayoutConstraint]!
     @IBOutlet var constraintsForHiddenSendButton: [NSLayoutConstraint]!
     @IBOutlet var tabBarContainerHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var constraintsForSendButtonInsetsInContainer: [NSLayoutConstraint]!
+    
 
     class public func loadNib() -> ChatInputBar {
         let view = NSBundle(forClass: self).loadNibNamed(self.nibName(), owner: nil, options: nil)!.first as! ChatInputBar
@@ -188,6 +193,20 @@ extension ChatInputBar: ChatInputItemViewDelegate {
 }
 
 // MARK: - ChatInputBarAppearance
+private extension UIImage {
+    private convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        color.setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        guard let cgImage = image?.CGImage else { return nil }
+        self.init(CGImage: cgImage)
+    }
+}
+
 extension ChatInputBar {
     public func setAppearance(appearance: ChatInputBarAppearance) {
         self.textView.font = appearance.textInputAppearance.font
@@ -198,11 +217,34 @@ extension ChatInputBar {
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
-        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
+        self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.titleInsets
         self.sendButton.setTitle(appearance.sendButtonAppearance.title, forState: .Normal)
         appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
             self.sendButton.setTitleColor(color, forState: state.controlState)
         }
+        appearance.sendButtonAppearance.backgroundColors.forEach { (state, color) in
+            self.sendButton.setBackgroundImage(UIImage(color: color), forState: state.controlState)
+        }
+        for constraint in self.constraintsForSendButtonInsetsInContainer {
+            var item = constraint.firstItem as! NSObject
+            var attr = constraint.firstAttribute
+            if item == self.sendButton && attr == .Top {
+                constraint.constant = appearance.sendButtonAppearance.buttonInsets.top
+            }
+            if item == self.sendButton && attr == .Leading {
+                constraint.constant = appearance.sendButtonAppearance.buttonInsets.left
+            }
+            item = constraint.secondItem as! NSObject
+            attr = constraint.secondAttribute
+            if item == self.sendButton && attr == .Bottom {
+                constraint.constant = appearance.sendButtonAppearance.buttonInsets.bottom
+            }
+            if item == self.sendButton && attr == .Trailing {
+                constraint.constant = appearance.sendButtonAppearance.buttonInsets.right
+            }
+        }
+        self.sendButton.layer.cornerRadius = appearance.sendButtonAppearance.cornerRadius
+        self.sendButton.clipsToBounds = true
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }

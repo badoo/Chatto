@@ -59,6 +59,13 @@ class DemoChatViewController: BaseChatViewController {
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
+        appearance.sendButtonAppearance.backgroundColors = [
+            UIControlStateWrapper(state: .Disabled): UIColor.greenColor().colorWithAlphaComponent(0.5),
+            UIControlStateWrapper(state: .Normal): UIColor.greenColor(),
+            UIControlStateWrapper(state: .Highlighted): UIColor.clearColor()
+        ]
+        appearance.sendButtonAppearance.cornerRadius = 15
+        appearance.sendButtonAppearance.buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
         chatInputView.maxCharactersCount = 1000
         return chatInputView

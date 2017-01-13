@@ -25,13 +25,20 @@
 public struct ChatInputBarAppearance {
     public struct SendButtonAppearance {
         public var font = UIFont.systemFontOfSize(16)
-        public var insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        public var titleInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         public var title = ""
         public var titleColors: [UIControlStateWrapper: UIColor] = [
             UIControlStateWrapper(state: .Disabled): UIColor.bma_color(rgb: 0x9AA3AB),
             UIControlStateWrapper(state: .Normal): UIColor.bma_color(rgb: 0x007AFF),
             UIControlStateWrapper(state: .Highlighted): UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.whiteColor().colorWithAlphaComponent(0.4))
         ]
+        public var backgroundColors: [UIControlStateWrapper: UIColor] = [
+            UIControlStateWrapper(state: .Disabled): UIColor.clearColor(),
+            UIControlStateWrapper(state: .Normal): UIColor.clearColor(),
+            UIControlStateWrapper(state: .Highlighted): UIColor.clearColor()
+        ]
+        public var cornerRadius: CGFloat = 0
+        public var buttonInsets: UIEdgeInsets = UIEdgeInsetsZero
     }
 
     public struct TabBarAppearance {
