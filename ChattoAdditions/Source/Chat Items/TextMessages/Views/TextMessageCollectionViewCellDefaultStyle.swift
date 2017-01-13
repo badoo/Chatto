@@ -32,11 +32,17 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         let incomingNoTail: () -> UIImage
         let outgoingTail: () -> UIImage
         let outgoingNoTail: () -> UIImage
+        
+        private static func getDefaultBubbleImageWithName(name: String) -> UIImage {
+            return UIImage(named: name, inBundle: NSBundle(forClass: TextMessageCollectionViewCellDefaultStyle.self),
+                           compatibleWithTraitCollection: nil)!
+        }
+        
         public init(
-            @autoclosure(escaping) incomingTail: () -> UIImage,
-            @autoclosure(escaping) incomingNoTail: () -> UIImage,
-            @autoclosure(escaping) outgoingTail: () -> UIImage,
-            @autoclosure(escaping) outgoingNoTail: () -> UIImage) {
+            @autoclosure(escaping) incomingTail: () -> UIImage = BubbleImages.getDefaultBubbleImageWithName("bubble-incoming-tail"),
+            @autoclosure(escaping) incomingNoTail: () -> UIImage = BubbleImages.getDefaultBubbleImageWithName("bubble-incoming"),
+            @autoclosure(escaping) outgoingTail: () -> UIImage = BubbleImages.getDefaultBubbleImageWithName("bubble-outgoing-tail"),
+            @autoclosure(escaping) outgoingNoTail: () -> UIImage = BubbleImages.getDefaultBubbleImageWithName("bubble-outgoing")) {
                 self.incomingTail = incomingTail
                 self.incomingNoTail = incomingNoTail
                 self.outgoingTail = outgoingTail
@@ -51,11 +57,11 @@ public class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionVie
         let incomingInsets: UIEdgeInsets
         let outgoingInsets: UIEdgeInsets
         public init(
-            @autoclosure(escaping) font: () -> UIFont,
-            @autoclosure(escaping) incomingColor: () -> UIColor,
-            @autoclosure(escaping) outgoingColor: () -> UIColor,
-            incomingInsets: UIEdgeInsets,
-            outgoingInsets: UIEdgeInsets) {
+            @autoclosure(escaping) font: () -> UIFont = UIFont.systemFontOfSize(16),
+            @autoclosure(escaping) incomingColor: () -> UIColor = UIColor.blackColor(),
+            @autoclosure(escaping) outgoingColor: () -> UIColor = UIColor.whiteColor(),
+            incomingInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
+            outgoingInsets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)) {
                 self.font = font
                 self.incomingColor = incomingColor
                 self.outgoingColor = outgoingColor
@@ -174,21 +180,10 @@ private func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: T
 public extension TextMessageCollectionViewCellDefaultStyle { // Default values
 
     static public func createDefaultBubbleImages() -> BubbleImages {
-        return BubbleImages(
-            incomingTail: UIImage(named: "bubble-incoming-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            incomingNoTail: UIImage(named: "bubble-incoming", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            outgoingTail: UIImage(named: "bubble-outgoing-tail", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!,
-            outgoingNoTail: UIImage(named: "bubble-outgoing", inBundle: NSBundle(forClass: Class.self), compatibleWithTraitCollection: nil)!
-        )
+        return BubbleImages()
     }
 
     static public func createDefaultTextStyle() -> TextStyle {
-        return TextStyle(
-            font: UIFont.systemFontOfSize(16),
-            incomingColor: UIColor.blackColor(),
-            outgoingColor: UIColor.whiteColor(),
-            incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
-            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
-        )
+        return TextStyle()
     }
 }
