@@ -41,7 +41,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             self.updateQueue.flushQueue()
         }
 
-        self.updateQueue.addTask({ [weak self] (completion) -> () in
+        self.updateQueue.addTask({ [weak self] (completion) -> Void in
             guard let sSelf = self else { return }
 
             let oldItems = sSelf.chatItemCompanionCollection
@@ -57,7 +57,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
     public func enqueueMessageCountReductionIfNeeded() {
         guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount, (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
-        self.updateQueue.addTask { [weak self] (completion) -> () in
+        self.updateQueue.addTask { [weak self] (completion) -> Void in
             guard let sSelf = self else { return }
             sSelf.chatDataSource?.adjustNumberOfMessages(preferredMaxCount: sSelf.constants.preferredMaxMessageCountAdjustment, focusPosition: sSelf.focusPosition, completion: { (didAdjust) -> Void in
                 guard didAdjust, let sSelf = self else {
@@ -197,7 +197,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                     for move in changes.movedIndexPaths {
                         self.collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
-                }) { [weak self] (finished) -> Void in
+                }) { [weak self] (_) -> Void in
                     defer { myCompletion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
@@ -232,7 +232,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         let performInBackground = updateType != .firstLoad
 
         self.autoLoadingEnabled = false
-        let perfomBatchUpdates: (_ changes: CollectionChanges, _ updateModelClosure: @escaping () -> Void) -> ()  = { [weak self] (changes, updateModelClosure) in
+        let perfomBatchUpdates: (_ changes: CollectionChanges, _ updateModelClosure: @escaping () -> Void) -> Void  = { [weak self] (changes, updateModelClosure) in
             self?.performBatchUpdates(
                 updateModelClosure: updateModelClosure,
                 changes: changes,

@@ -30,3 +30,8 @@ infix operator >=~
 func >=~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
     return round(lhs * scale) >= round(rhs * scale)
 }
+
+@inline(__always)
+public func bma_combine(hashes: [Int]) -> Int {
+    return hashes.reduce(0, { 31 &* $0 &+ $1.hashValue })
+}

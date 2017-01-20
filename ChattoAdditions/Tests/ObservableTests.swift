@@ -30,7 +30,7 @@ class ObservableTests: XCTestCase {
     func testThatObserverClosureIsExecuted() {
         let subject = Observable<Int>(0)
         var executed = false
-        subject.observe(self) { (old, new) -> () in
+        subject.observe(self) { (_, _) -> Void in
             executed = true
         }
         subject.value = 1
@@ -40,10 +40,10 @@ class ObservableTests: XCTestCase {
     func testThatObserverClosuresAreExecuted() {
         let subject = Observable<Int>(0)
         var executed1 = false, executed2 = false
-        subject.observe(self) { (old, new) -> () in
+        subject.observe(self) { (_, _) -> Void in
             executed1 = true
         }
-        subject.observe(self) { (old, new) -> () in
+        subject.observe(self) { (_, _) -> Void in
             executed2 = true
         }
         subject.value = 1
@@ -53,9 +53,9 @@ class ObservableTests: XCTestCase {
 
     func testThatObserverClosureIsNotExecutedIfObserverWasDeallocated() {
         let subject = Observable<Int>(0)
-        var observer: NSObject? = NSObject()
+        var observer: NSObject! = NSObject()
         var executed = false
-        subject.observe(observer!) { (old, new) -> () in
+        subject.observe(observer) { (_, _) -> Void in
             executed = true
         }
         observer = nil

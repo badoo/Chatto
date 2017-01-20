@@ -1,7 +1,8 @@
 opt_in_rules:
   - closure_spacing
   - overridden_super_call
-  - redundant_nil_coalesing
+  - redundant_nil_coalescing
+  - prohibited_super_call
   - explicit_init
 disabled_rules:
   - file_length

@@ -36,7 +36,7 @@ public struct CollectionChangeMove: Equatable, Hashable {
         self.indexPathNew = indexPathNew
     }
 
-    public var hashValue: Int { return indexPathOld.hashValue ^ indexPathNew.hashValue }
+    public var hashValue: Int { return Chatto.bma_combine(hashes: [indexPathOld.hashValue, indexPathNew.hashValue]) }
 }
 
 public func == (lhs: CollectionChangeMove, rhs: CollectionChangeMove) -> Bool {
