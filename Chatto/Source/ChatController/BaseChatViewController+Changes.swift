@@ -190,7 +190,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                 self.unfinishedBatchUpdatesCount += 1
                 self.collectionView.performBatchUpdates({ () -> Void in
                     updateModelClosure()
-                    self.updateVisibleCells(changes) // For instace, to support removal of tails
+                    self.updateVisibleCells(changes) // For instance, to support removal of tails
 
                     self.collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
                     self.collectionView.insertItems(at: Array(changes.insertedIndexPaths))
