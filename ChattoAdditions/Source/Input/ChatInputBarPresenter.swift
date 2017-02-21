@@ -34,7 +34,7 @@ protocol ChatInputBarPresenter: class {
 
 @objc
 public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
-    let chatInputBar: ChatInputBar
+    public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
 
