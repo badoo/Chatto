@@ -45,5 +45,5 @@ public protocol ChatDataSourceProtocol: class {
 
     func loadNext() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
     func loadPrevious() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
-    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:((didAdjust: Bool)) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
+    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:((Bool)) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
 }

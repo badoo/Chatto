@@ -135,7 +135,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
 class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
     weak var delegate: PhotosInputDataProviderDelegate?
-    private let photosDataProvider: PhotosInputDataProviderProtocol
+    private var photosDataProvider: PhotosInputDataProviderProtocol
     private let placeholdersDataProvider: PhotosInputDataProviderProtocol
 
     init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
