@@ -28,7 +28,7 @@ protocol PhotosInputDataProviderDelegate: class {
     func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void)
 }
 
-protocol PhotosInputDataProviderProtocol {
+protocol PhotosInputDataProviderProtocol : class {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
     func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32
@@ -135,7 +135,7 @@ class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhot
 
 class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
     weak var delegate: PhotosInputDataProviderDelegate?
-    private var photosDataProvider: PhotosInputDataProviderProtocol
+    private let photosDataProvider: PhotosInputDataProviderProtocol
     private let placeholdersDataProvider: PhotosInputDataProviderProtocol
 
     init(photosDataProvider: PhotosInputDataProviderProtocol, placeholdersDataProvider: PhotosInputDataProviderProtocol) {
