@@ -28,7 +28,7 @@ protocol PhotosInputDataProviderDelegate: class {
     func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void)
 }
 
-protocol PhotosInputDataProviderProtocol {
+protocol PhotosInputDataProviderProtocol : class {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
     func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32
