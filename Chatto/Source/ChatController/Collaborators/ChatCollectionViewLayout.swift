@@ -60,6 +60,15 @@ public struct ChatCollectionViewLayoutModel {
             calculatedForWidth: collectionViewWidth
         )
     }
+
+    public static func createEmptyModel() -> ChatCollectionViewLayoutModel {
+        return ChatCollectionViewLayoutModel(
+            contentSize: .zero,
+            layoutAttributes: [],
+            layoutAttributesBySectionAndItem: [],
+            calculatedForWidth: 0
+        )
+    }
 }
 
 open class ChatCollectionViewLayout: UICollectionViewLayout {
@@ -77,7 +86,10 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
     open override func prepare() {
         super.prepare()
         guard self.layoutNeedsUpdate else { return }
-        guard let delegate = self.delegate else { return }
+        guard let delegate = self.delegate else {
+            self.layoutModel = ChatCollectionViewLayoutModel.createEmptyModel()
+            return
+        }
         var oldLayoutModel = self.layoutModel
         self.layoutModel = delegate.chatCollectionViewLayoutModel()
         self.layoutNeedsUpdate = false
