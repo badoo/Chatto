@@ -108,7 +108,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
             self.avatarStyle = avatarStyle
     }
     
-    convenience init() {
+    public convenience init() {
         self.init(
             colors: Class.createDefaultColors(),
             bubbleBorderImages: Class.createDefaultBubbleBorderImages(),
