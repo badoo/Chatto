@@ -94,18 +94,28 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let dateTextStyle: DateTextStyle
     let avatarStyle: AvatarStyle
     public init (
-        colors: Colors = Class.createDefaultColors(),
-        bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
-        failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
-        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
-        dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
-        avatarStyle: AvatarStyle = AvatarStyle()) {
+        colors: Colors,
+        bubbleBorderImages: BubbleBorderImages,
+        failedIconImages: FailedIconImages,
+        layoutConstants: BaseMessageCollectionViewCellLayoutConstants,
+        dateTextStyle: DateTextStyle,
+        avatarStyle: AvatarStyle) {
             self.colors = colors
             self.bubbleBorderImages = bubbleBorderImages
             self.failedIconImages = failedIconImages
             self.layoutConstants = layoutConstants
             self.dateTextStyle = dateTextStyle
             self.avatarStyle = avatarStyle
+    }
+    
+    convenience init() {
+        self.init(
+            colors: Class.createDefaultColors(),
+            bubbleBorderImages: Class.createDefaultBubbleBorderImages(),
+            failedIconImages: Class.createDefaultFailedIconImages(),
+            layoutConstants: Class.createDefaultLayoutConstants(),
+            dateTextStyle: Class.createDefaultDateTextStyle(),
+            avatarStyle: AvatarStyle())
     }
 
     public lazy var baseColorIncoming: UIColor = self.colors.incoming()
