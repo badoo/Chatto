@@ -84,7 +84,8 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     @objc(collectionView:shouldShowMenuForItemAtIndexPath:)
-    open func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath?) -> Bool {
+        guard let indexPath = indexPath else { return false }
         return self.presenterForIndexPath(indexPath).shouldShowMenu()
     }
 
