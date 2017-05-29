@@ -70,5 +70,5 @@ Source code is distributed under MIT license.
 ## Android
 Check our colleagues' project [Chateau]( https://github.com/badoo/Chateau)!
 
-##Blog
+## Blog
 Read more on our [tech blog](http://techblog.badoo.com/) or explore our other [open source projects](https://github.com/badoo)
