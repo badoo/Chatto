@@ -63,7 +63,7 @@ open class ChatInputBar: ReusableXibView {
         return view
     }
 
-    override class func nibName() -> String {
+    public override class func nibName() -> String {
         return "ChatInputBar"
     }
 
