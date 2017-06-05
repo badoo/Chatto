@@ -137,9 +137,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                                                 completion: @escaping () -> Void) {
 
         let usesBatchUpdates: Bool
+        let animateBatchUpdates: Bool
         do { // Recover from too fast updates...
             let visibleCellsAreValid = self.visibleCellsAreValid(changes: changes)
-            let wantsReloadData = updateType != .normal
+            let wantsReloadData = ![UpdateType.normal, UpdateType.pagination].contains(updateType)
             let hasUnfinishedBatchUpdates = self.unfinishedBatchUpdatesCount > 0 // This can only happen when enabling self.updatesConfig.fastUpdates
 
             // a) It's unsafe to perform reloadData while there's a performBatchUpdates animating: https://github.com/diegosanchezr/UICollectionViewStressing/tree/master/GhostCells
@@ -158,6 +159,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             // ... if they are still invalid the only thing we can do is a reloadData
             let mustDoReloadData = !visibleCellsAreValid // Only way to recover from this inconsistent state
             usesBatchUpdates = !wantsReloadData && !mustDoReloadData
+            animateBatchUpdates = updateType != .pagination
         }
 
         let scrollAction: ScrollAction
@@ -186,7 +188,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
         }
 
         if usesBatchUpdates {
-            UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
+            let batchUpdates = {
                 self.unfinishedBatchUpdatesCount += 1
                 self.collectionView.performBatchUpdates({ () -> Void in
                     updateModelClosure()
@@ -205,7 +207,17 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                         DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                     }
                 }
-            })
+            }
+
+            if animateBatchUpdates {
+                UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
+                    batchUpdates()
+                })
+            } else {
+                UIView.performWithoutAnimation {
+                    batchUpdates()
+                }
+            }
         } else {
             self.visibleCells = [:]
             updateModelClosure()
