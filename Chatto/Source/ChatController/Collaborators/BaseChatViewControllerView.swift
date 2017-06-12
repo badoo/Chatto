@@ -24,7 +24,7 @@
 
 import Foundation
 
-protocol BaseChatViewControllerViewProtocol {
+public protocol BaseChatViewControllerViewProtocol {
     var bmaInputAccessoryView: UIView? { get set }
 }
 
