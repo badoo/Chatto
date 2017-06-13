@@ -58,6 +58,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
     }
 
+    // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
+    // Must be set before loadView is called.
+    public var substitutesMainViewAutomatically = true
+
     // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
     public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
         self._chatDataSource = dataSource
@@ -73,8 +77,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open override func loadView() {
-        self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
-        self.view.backgroundColor = UIColor.white
+        if substitutesMainViewAutomatically {
+            self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
+            self.view.backgroundColor = UIColor.white
+        } else {
+            super.loadView()
+        }
+
     }
 
     override open func viewDidLoad() {
