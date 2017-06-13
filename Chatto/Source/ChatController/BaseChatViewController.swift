@@ -177,12 +177,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
         self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
 
-        // Compiler can't understand this cast inline. 
-        // Although we are only setting a property on a constant, it believes that we change reference to it.
-        // We do not.
-        if var customView = (self.view as? BaseChatViewControllerViewProtocol) {
-            customView.bmaInputAccessoryView = self.keyboardTracker?.trackingView
-        }
+        (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
+
     }
 
     var notificationCenter = NotificationCenter.default

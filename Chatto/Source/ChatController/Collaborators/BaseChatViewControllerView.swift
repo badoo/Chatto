@@ -25,7 +25,7 @@
 import Foundation
 
 // If you wish to use your custom view instead of BaseChatViewControllerView, you must implement this protocol.
-public protocol BaseChatViewControllerViewProtocol {
+public protocol BaseChatViewControllerViewProtocol: class {
     var bmaInputAccessoryView: UIView? { get set }
 }
 
