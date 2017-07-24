@@ -186,7 +186,15 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
 
-            if self.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == self {
+            // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
+            let navigatedCtrl: UIViewController
+            if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
+                navigatedCtrl = parent
+            } else {
+                navigatedCtrl = self
+            }
+            
+            if navigatedCtrl.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedCtrl {
                 self.inputContainerBottomConstraint.constant = 0
             } else {
                 self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
