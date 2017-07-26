@@ -156,6 +156,23 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
+    private func setupInputContainerBottomConstraint() {
+        // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
+        // because it has incorrect value when we actually have a bottom bar (tabbar)
+        // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
+        let navigatedController: UIViewController
+        if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
+            navigatedController = parent
+        } else {
+            navigatedController = self
+        }
+        
+        if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
+            self.inputContainerBottomConstraint.constant = 0
+        } else {
+            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+        }
+    }
 
     var isAdjustingInputContainer: Bool = false
     open func setupKeyboardTracker() {
@@ -183,14 +200,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
-            // because it has incorrect value when we actually have a bottom bar (tabbar)
-
-            if self.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == self {
-                self.inputContainerBottomConstraint.constant = 0
-            } else {
-                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
-            }
+            self.setupInputContainerBottomConstraint()
         }
     }
 
