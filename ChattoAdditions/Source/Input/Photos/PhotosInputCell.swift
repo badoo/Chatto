@@ -60,7 +60,7 @@ class PhotosInputPlaceholderCell: UICollectionViewCell {
 class PhotosInputCell: UICollectionViewCell {
 
     private struct Constants {
-        static let backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
+        static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
     }
 
     override init(frame: CGRect) {
