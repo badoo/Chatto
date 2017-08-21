@@ -135,16 +135,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.collectionView, attribute: .trailing, multiplier: 1, constant: 0))
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
+
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
 
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
-
-        if #available(iOS 11.0, *) {
-            self.collectionView.contentInsetAdjustmentBehavior = .never
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = false
-        }
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
