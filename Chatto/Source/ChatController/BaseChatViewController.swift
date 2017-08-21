@@ -140,7 +140,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
 
-        self.automaticallyAdjustsScrollViewInsets = false
+        if #available(iOS 11.0, *) {
+            self.collectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
