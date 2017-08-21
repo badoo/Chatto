@@ -45,6 +45,7 @@ public extension MessageStatus {
 
 public protocol MessageViewModelProtocol: class { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
     var isIncoming: Bool { get }
+    var isUserInteractionEnabled: Bool { get set }
     var showsTail: Bool { get set }
     var showsFailedIcon: Bool { get }
     var showsAvatar: Bool { get set }
@@ -67,6 +68,15 @@ public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
 extension DecoratedMessageViewModelProtocol {
     public var isIncoming: Bool {
         return self.messageViewModel.isIncoming
+    }
+
+    public var isUserInteractionEnabled: Bool {
+        get {
+            return self.messageViewModel.isUserInteractionEnabled
+        }
+        set {
+            self.messageViewModel.isUserInteractionEnabled = newValue
+        }
     }
 
     public var showsTail: Bool {
@@ -113,6 +123,8 @@ open class MessageViewModel: MessageViewModelProtocol {
     open var isIncoming: Bool {
         return self.messageModel.isIncoming
     }
+
+    open var isUserInteractionEnabled: Bool = true
 
     open var status: MessageViewModelStatus {
         return self.messageModel.status.viewModelStatus()

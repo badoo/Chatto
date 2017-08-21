@@ -98,7 +98,8 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.showsTail
             self.messageViewModel.showsAvatar = decorationAttributes.showsAvatar
-            cell.bubbleView.isUserInteractionEnabled = true // just in case something went wrong while showing UIMenuController
+            // just in case something went wrong while showing UIMenuController
+            self.messageViewModel.isUserInteractionEnabled = true
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
             cell.onBubbleTapped = { [weak self] (cell) in
