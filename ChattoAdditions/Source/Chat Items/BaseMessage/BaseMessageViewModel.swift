@@ -51,7 +51,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsAvatar: Bool { get set }
     var date: String { get }
     var status: MessageViewModelStatus { get }
-    var avatarImage: Observable<UIImage?> { set get }
+    var avatarImage: Observable<UIImage?> { get set }
     func willBeShown() // Optional
     func wasHidden() // Optional
 }

@@ -94,7 +94,7 @@ class LiveCameraCell: UICollectionViewCell {
     var onWasAddedToWindow: CellCallback?
     var onWasRemovedFromWindow: CellCallback?
     override func didMoveToWindow() {
-        if let _ = self.window {
+        if self.window != nil {
             self.onWasAddedToWindow?(self)
         } else {
             self.onWasRemovedFromWindow?(self)

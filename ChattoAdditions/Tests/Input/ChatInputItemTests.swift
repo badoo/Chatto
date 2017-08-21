@@ -33,7 +33,7 @@ class MockInputItem: NSObject, ChatInputItemProtocol {
     var selected = false
     var presentationMode: ChatInputItemPresentationMode = .keyboard
     var showsSendButton = false
-    var inputView: UIView? = nil
+    var inputView: UIView?
     let tabView = UIView()
 
     private(set) var handledInput: AnyObject?
