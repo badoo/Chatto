@@ -179,7 +179,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         } else {
             navigatedController = self
         }
-        
+
         if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
             self.inputContainerBottomConstraint.constant = 0
         } else {

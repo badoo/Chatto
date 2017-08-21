@@ -132,9 +132,9 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     }
 
     func performBatchUpdates(updateModelClosure: @escaping () -> Void,
-                                                changes: CollectionChanges,
-                                                updateType: UpdateType,
-                                                completion: @escaping () -> Void) {
+                             changes: CollectionChanges,
+                             updateType: UpdateType,
+                             completion: @escaping () -> Void) {
 
         let usesBatchUpdates: Bool
         do { // Recover from too fast updates...
