@@ -47,6 +47,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var isIncoming: Bool { get }
     var showsTail: Bool { get set }
     var showsFailedIcon: Bool { get }
+    var showsAvatar: Bool { get set }
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { set get }
@@ -67,6 +68,7 @@ extension DecoratedMessageViewModelProtocol {
     public var isIncoming: Bool {
         return self.messageViewModel.isIncoming
     }
+
     public var showsTail: Bool {
         get {
             return self.messageViewModel.showsTail
@@ -75,6 +77,16 @@ extension DecoratedMessageViewModelProtocol {
             self.messageViewModel.showsTail = newValue
         }
     }
+
+    public var showsAvatar: Bool {
+        get {
+            return self.messageViewModel.showsAvatar
+        }
+        set {
+            self.messageViewModel.showsAvatar = newValue
+        }
+    }
+
     public var date: String {
         return self.messageViewModel.date
     }
@@ -107,6 +119,8 @@ open class MessageViewModel: MessageViewModelProtocol {
     }
 
     open var showsTail: Bool
+    open var showsAvatar: Bool
+
     open lazy var date: String = {
         return self.dateFormatter.string(from: self.messageModel.date as Date)
     }()
@@ -114,9 +128,14 @@ open class MessageViewModel: MessageViewModelProtocol {
     public let dateFormatter: DateFormatter
     public private(set) var messageModel: MessageModelProtocol
 
-    public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImage: UIImage?) {
+    public init(dateFormatter: DateFormatter,
+                showsTail: Bool,
+                showsAvatar: Bool,
+                messageModel: MessageModelProtocol,
+                avatarImage: UIImage?) {
         self.dateFormatter = dateFormatter
         self.showsTail = showsTail
+        self.showsAvatar = showsAvatar
         self.messageModel = messageModel
         self.avatarImage = Observable<UIImage?>(avatarImage)
     }
@@ -142,6 +161,10 @@ public class MessageViewModelDefaultBuilder {
 
     public func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
         // Override to use default avatarImage
-        return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImage: nil)
+        return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter,
+                                showsTail: false,
+                                showsAvatar: false,
+                                messageModel: message,
+                                avatarImage: nil)
     }
 }
