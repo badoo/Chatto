@@ -162,7 +162,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
                 NSForegroundColorAttributeName: textColor,
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+                NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue
             ]
             needsToUpdateText = true
         }

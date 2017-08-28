@@ -58,6 +58,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
     }
 
+    // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
+    // Must be set before loadView is called.
+    public var substitutesMainViewAutomatically = true
+
     // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
     public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
         self._chatDataSource = dataSource
@@ -73,8 +77,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open override func loadView() {
-        self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
-        self.view.backgroundColor = UIColor.white
+        if substitutesMainViewAutomatically {
+            self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
+            self.view.backgroundColor = UIColor.white
+        } else {
+            super.loadView()
+        }
+
     }
 
     override open func viewDidLoad() {
@@ -126,12 +135,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.collectionView, attribute: .trailing, multiplier: 1, constant: 0))
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
+
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
 
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
-
-        self.automaticallyAdjustsScrollViewInsets = false
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
@@ -156,6 +165,23 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
+    private func setupInputContainerBottomConstraint() {
+        // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
+        // because it has incorrect value when we actually have a bottom bar (tabbar)
+        // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
+        let navigatedController: UIViewController
+        if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
+            navigatedController = parent
+        } else {
+            navigatedController = self
+        }
+
+        if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
+            self.inputContainerBottomConstraint.constant = 0
+        } else {
+            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+        }
+    }
 
     var isAdjustingInputContainer: Bool = false
     open func setupKeyboardTracker() {
@@ -167,7 +193,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             sSelf.isAdjustingInputContainer = false
         }
         self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
-        (self.view as? BaseChatViewControllerView)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
+
+        (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
+
     }
 
     var notificationCenter = NotificationCenter.default
@@ -183,14 +211,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
-            // because it has incorrect value when we actually have a bottom bar (tabbar)
-
-            if self.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == self {
-                self.inputContainerBottomConstraint.constant = 0
-            } else {
-                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
-            }
+            self.setupInputContainerBottomConstraint()
         }
     }
 
