@@ -139,8 +139,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
+        self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
 
-        self.automaticallyAdjustsScrollViewInsets = false
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
