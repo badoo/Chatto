@@ -150,7 +150,7 @@ public final class LiveCameraCellPresenter {
     }
 
     func startCapturing() {
-        guard self.isCaptureAvailable, let _ = self.cell else { return }
+        guard self.isCaptureAvailable, self.cell != nil else { return }
 
         self.captureSession.startCapturing { [weak self] in
             self?.cell?.captureLayer = self?.captureSession.captureLayer
