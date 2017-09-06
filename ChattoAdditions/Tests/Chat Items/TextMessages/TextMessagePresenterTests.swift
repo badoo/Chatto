@@ -29,7 +29,7 @@ import Chatto
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, showsAvatar: false)
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, canShowTail: false, canShowAvatar: false, canShowFailedIcon: true)
     override func setUp() {
         super.setUp()
         let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
