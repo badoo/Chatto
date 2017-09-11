@@ -135,12 +135,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.collectionView, attribute: .trailing, multiplier: 1, constant: 0))
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
+
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
 
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: self.collectionView)
-
-        self.automaticallyAdjustsScrollViewInsets = false
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
@@ -175,7 +175,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         } else {
             navigatedController = self
         }
-        
+
         if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
             self.inputContainerBottomConstraint.constant = 0
         } else {

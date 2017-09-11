@@ -132,9 +132,9 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     }
 
     func performBatchUpdates(updateModelClosure: @escaping () -> Void,
-                                                changes: CollectionChanges,
-                                                updateType: UpdateType,
-                                                completion: @escaping () -> Void) {
+                             changes: CollectionChanges,
+                             updateType: UpdateType,
+                             completion: @escaping () -> Void) {
 
         let usesBatchUpdates: Bool
         do { // Recover from too fast updates...
@@ -301,7 +301,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
                 return (height: intermediateLayoutData.height!, bottomMargin: intermediateLayoutData.bottomMargin)
             }
-            return ChatCollectionViewLayoutModel.createModel(self.collectionView.bounds.width, itemsLayoutData: layoutData)
+            return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
         }
 
         let isInbackground = !Thread.isMainThread

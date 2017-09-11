@@ -92,7 +92,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open var messageViewModel: MessageViewModelProtocol! {
         didSet {
-            updateViews()
+            self.updateViews()
         }
     }
 
@@ -196,6 +196,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         if self.viewContext == .sizing { return }
         if self.isUpdating { return }
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
+        self.bubbleView.isUserInteractionEnabled = viewModel.isUserInteractionEnabled
         if viewModel.showsFailedIcon {
             self.failedButton.setImage(self.failedIcon, for: .normal)
             self.failedButton.setImage(self.failedIconHighlighted, for: .highlighted)
@@ -204,11 +205,18 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
-        let avatarImageSize = baseStyle.avatarSize(viewModel: messageViewModel)
-        if avatarImageSize != CGSize.zero {
-            self.avatarView.image = self.messageViewModel.avatarImage.value
-        }
+        self.updateAvatarView(from: viewModel, with: style)
         self.setNeedsLayout()
+    }
+
+    private func updateAvatarView(from viewModel: MessageViewModelProtocol,
+                                  with style: BaseMessageCollectionViewCellStyleProtocol) {
+        self.avatarView.isHidden = !viewModel.showsAvatar
+
+        let avatarImageSize = style.avatarSize(viewModel: viewModel)
+        if avatarImageSize != .zero {
+            self.avatarView.image = viewModel.avatarImage.value
+        }
     }
 
     // MARK: layout
