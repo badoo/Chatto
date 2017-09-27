@@ -105,7 +105,6 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.bouncesZoom = false
         textView.showsHorizontalScrollIndicator = false
         textView.showsVerticalScrollIndicator = false
-        textView.layoutManager.allowsNonContiguousLayout = true
         textView.isExclusiveTouch = true
         textView.textContainer.lineFragmentPadding = 0
         return textView
