@@ -34,6 +34,10 @@ public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel
     public var messageModel: DemoMessageModelProtocol {
         return self.textMessage
     }
+
+    public override func canInteractWith(url: URL) -> Bool {
+        return url.scheme != "http"
+    }
 }
 
 public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {

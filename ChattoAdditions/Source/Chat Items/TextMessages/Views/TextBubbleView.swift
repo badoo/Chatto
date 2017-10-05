@@ -82,6 +82,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private func commonInit() {
         self.addSubview(self.bubbleImageView)
         self.addSubview(self.textView)
+
+        self.textView.delegate = self
     }
 
     private lazy var bubbleImageView: UIImageView = {
@@ -322,5 +324,25 @@ private final class ChatMessageTextView: UITextView {
             // Part of the heaviest stack trace when scrolling (when bounds are set)
             // See https://github.com/badoo/Chatto/pull/144
         }
+    }
+}
+
+extension TextBubbleView: UITextViewDelegate {
+    @available(iOS 10.0, *)
+    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        return textMessageViewModel.canInteractWith(url: URL)
+    }
+
+    @available(iOS 10.0, *)
+    public func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        return textMessageViewModel.canInteractWith(attach: textAttachment)
+    }
+
+    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        return textMessageViewModel.canInteractWith(url: URL)
+    }
+
+    public func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange) -> Bool {
+        return textMessageViewModel.canInteractWith(attach: textAttachment)
     }
 }

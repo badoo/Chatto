@@ -26,6 +26,9 @@ import Foundation
 
 public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var text: String { get }
+
+    func canInteractWith(url: URL) -> Bool
+    func canInteractWith(attach: NSTextAttachment) -> Bool
 }
 
 open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
@@ -46,6 +49,14 @@ open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: Te
 
     open func wasHidden() {
         // Need to declare empty. Otherwise subclass code won't execute (as of Xcode 7.2)
+    }
+
+    open func canInteractWith(url: URL) -> Bool {
+        return true
+    }
+
+    open func canInteractWith(attach: NSTextAttachment) -> Bool {
+        return true
     }
 }
 
