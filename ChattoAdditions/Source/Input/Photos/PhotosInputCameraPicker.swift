@@ -50,7 +50,7 @@ class PhotosInputCameraPicker: NSObject {
         let controller = UIImagePickerController()
         controller.delegate = self
         controller.sourceType = .camera
-        presentingController.present(controller, animated: true, completion:nil)
+        presentingController.present(controller, animated: true, completion: nil)
     }
 
     fileprivate func finishPickingImage(_ image: UIImage?, fromPicker picker: UIImagePickerController) {
@@ -61,7 +61,7 @@ class PhotosInputCameraPicker: NSObject {
 }
 
 extension PhotosInputCameraPicker: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String: AnyObject]?) {
         self.finishPickingImage(image, fromPicker: picker)
     }
 

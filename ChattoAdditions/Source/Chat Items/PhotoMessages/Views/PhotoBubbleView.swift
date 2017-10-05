@@ -228,7 +228,10 @@ private class PhotoBubbleLayoutModel {
         }
 
         init(photoMessageViewModel model: PhotoMessageViewModelProtocol, style: PhotoBubbleViewStyleProtocol, containerWidth width: CGFloat) {
-            self.init(photoSize: style.bubbleSize(viewModel: model), tailWidth:style.tailWidth(viewModel: model), isIncoming: model.isIncoming, preferredMaxLayoutWidth: width)
+            self.init(photoSize: style.bubbleSize(viewModel: model),
+                      tailWidth: style.tailWidth(viewModel: model),
+                      isIncoming: model.isIncoming,
+                      preferredMaxLayoutWidth: width)
         }
     }
 
