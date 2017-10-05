@@ -28,7 +28,7 @@ import UIKit
 
     func loadViewFromNib() -> UIView {
         let bundle = Bundle(for: type(of: self))
-        let nib = UINib(nibName:type(of: self).nibName(), bundle: bundle)
+        let nib = UINib(nibName: type(of: self).nibName(), bundle: bundle)
         let view = nib.instantiate(withOwner: nil, options: nil).first as! UIView
         return view
     }

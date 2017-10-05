@@ -85,7 +85,7 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
         }
 
         let attrs = [
-            NSFontAttributeName : UIFont.systemFont(ofSize: 10.0),
+            NSFontAttributeName: UIFont.systemFont(ofSize: 10.0),
             NSForegroundColorAttributeName: self.statusModel.status == .failed ? UIColor.red : UIColor.black
         ]
         statusCell.text = NSAttributedString(

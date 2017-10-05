@@ -197,14 +197,14 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                     for move in changes.movedIndexPaths {
                         self.collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
-                }) { [weak self] (_) -> Void in
+                }, completion: { [weak self] (_) -> Void in
                     defer { myCompletion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
                     if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
                         DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                     }
-                }
+                })
             })
         } else {
             self.visibleCells = [:]
@@ -247,7 +247,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             return self.createModelUpdates(
                 newItems: newItems,
                 oldItems: oldItems,
-                collectionViewWidth:collectionViewWidth)
+                collectionViewWidth: collectionViewWidth)
         }
 
         if performInBackground {
