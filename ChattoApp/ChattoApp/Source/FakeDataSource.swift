@@ -31,9 +31,10 @@ class FakeDataSource: ChatDataSourceProtocol {
 
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
     init(count: Int, pageSize: Int) {
-        self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { () -> ChatItemProtocol in
-            defer { self.nextMessageId += 1 }
-            return FakeMessageFactory.createChatItem("\(self.nextMessageId)")
+        self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { [weak self] () -> ChatItemProtocol in
+            guard let sSelf = self else { return FakeMessageFactory.createChatItem("") }
+            defer { sSelf.nextMessageId += 1 }
+            return FakeMessageFactory.createChatItem("\(sSelf.nextMessageId)")
         }
     }
 
