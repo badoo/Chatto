@@ -48,6 +48,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var isUserInteractionEnabled: Bool { get set }
     var showsTail: Bool { get set }
     var showsFailedIcon: Bool { get }
+    var canShowFailedIcon: Bool { get set }
     var showsAvatar: Bool { get set }
     var date: String { get }
     var status: MessageViewModelStatus { get }
@@ -109,6 +110,15 @@ extension DecoratedMessageViewModelProtocol {
         return self.messageViewModel.showsFailedIcon
     }
 
+    public var canShowFailedIcon: Bool {
+        get {
+            return self.messageViewModel.canShowFailedIcon
+        }
+        set {
+            self.messageViewModel.canShowFailedIcon = newValue
+        }
+    }
+
     public var avatarImage: Observable<UIImage?> {
         get {
             return self.messageViewModel.avatarImage
@@ -155,6 +165,7 @@ open class MessageViewModel: MessageViewModelProtocol {
     open var showsFailedIcon: Bool {
         return self.status == .failed
     }
+    open var canShowFailedIcon: Bool = true
 
     public var avatarImage: Observable<UIImage?>
 }
