@@ -30,7 +30,7 @@ class BaseMessagePresenterTests: XCTestCase {
 
     // BaseMessagePresenter is generic, let's use the photo one for instance
     var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, showsTail: false, showsAvatar: false)
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, canShowTail: false, canShowAvatar: false, canShowFailedIcon: true)
     var interactionHandler: PhotoMessageTestHandler!
     override func setUp() {
         super.setUp()
@@ -70,5 +70,13 @@ class BaseMessagePresenterTests: XCTestCase {
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
         cell.onBubbleLongPressEnded?(cell)
         XCTAssertTrue(self.interactionHandler.didHandleEndLongPressOnBubble)
+    }
+
+    func testThat_WhenProvideDecorationAttributes_ThenViewModelIsUpdated() {
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
+        var decorationAttributes = self.decorationAttributes
+        decorationAttributes.canShowFailedIcon = false
+        self.presenter.configureCell(cell, decorationAttributes: decorationAttributes)
+        XCTAssertFalse(self.presenter.messageViewModel.canShowFailedIcon)
     }
 }
