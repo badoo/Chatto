@@ -1,3 +1,16 @@
+### 3.2.0 (October 20, 107)
+
+#### Features:
+ - Added support for custom main view in BaseChatViewController #323 by @serge-star 
+ - Added ability to change input bar border color and width #339 by @NSEGeorge 
+ - Added ability to control visibility of failed icon #359 by @turbulem
+ - Added Xcode 9 and iOS 11 support #352 by @AntonPalich
+ - Added support for swiftlint 0.23 #371 by @AntonPalich
+#### Bugs:
+ - Fixed crash caused by missing optionality identifier in UIKit #310 by @raisaanjani92 
+ - Fixed input container position when presenting chat as child controller #338 by @KaterinaPetrova 
+ - Fixed issue with gesture recognizers that wasn't disabled for text messages on iOS 11 #366 by @AntonPalich
+
 ### 3.1.0 (May 29, 2017)
 
 * swiftlint 0.13 support & Xcode 8.2 compatibility [#253](https://github.com/badoo/Chatto/pull/253) - [@diegosanchezr](https://github.com/diegosanchezr)
