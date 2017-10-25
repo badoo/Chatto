@@ -54,7 +54,7 @@ open class TextChatInputItem {
 }
 
 // MARK: - ChatInputItemProtocol
-extension TextChatInputItem : ChatInputItemProtocol {
+extension TextChatInputItem: ChatInputItemProtocol {
     public var presentationMode: ChatInputItemPresentationMode {
         return .keyboard
     }

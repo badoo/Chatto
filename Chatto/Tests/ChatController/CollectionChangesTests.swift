@@ -70,7 +70,7 @@ class CollectionChangesTests: XCTestCase {
             newCollection: [Item(uid: "a"), Item(uid: "c"), Item(uid: "b")]
         )
         XCTAssertEqual(changes.deletedIndexPaths, [])
-        XCTAssertEqual(Set(changes.movedIndexPaths), Set([Move(1, to: 2), Move(2, to:1)]))
+        XCTAssertEqual(Set(changes.movedIndexPaths), Set([Move(1, to: 2), Move(2, to: 1)]))
         XCTAssertEqual(changes.insertedIndexPaths, [])
     }
 
@@ -109,7 +109,9 @@ class CollectionChangesTests: XCTestCase {
             CollectionChangeMove(indexPathOld: indexPath4, indexPathNew: indexPath3)
         ]
 
-        let changes = CollectionChanges(insertedIndexPaths: insertions, deletedIndexPaths: deletions, movedIndexPaths:movements)
+        let changes = CollectionChanges(insertedIndexPaths: insertions,
+                                        deletedIndexPaths: deletions,
+                                        movedIndexPaths: movements)
         let result = updated(collection: collection, withChanges: changes)
 
         let expected = [
