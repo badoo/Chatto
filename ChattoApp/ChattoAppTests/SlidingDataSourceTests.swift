@@ -73,7 +73,7 @@ class SlidingDataSourceTests: XCTestCase {
         let expectedArray = (0..<100).reversed().map { (id) -> String in
             return "\(id)"
         }
-        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (_) -> String in
+        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
@@ -91,7 +91,7 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
 
-        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (_) -> String in
+        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
@@ -111,7 +111,7 @@ class SlidingDataSourceTests: XCTestCase {
             return "\(id)"
         }
 
-        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (_) -> String in
+        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
@@ -132,7 +132,7 @@ class SlidingDataSourceTests: XCTestCase {
         }
         expectedArray.append("test")
 
-        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { (_) -> String in
+        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
@@ -158,7 +158,7 @@ class SlidingDataSourceTests: XCTestCase {
         let expectedArray = (0..<52).reversed().map { (id) -> String in
             return "\(id)"
         }
-        let dataSource = SlidingDataSource(count: 52, pageSize: 50) { (_) -> String in
+        let dataSource = SlidingDataSource(count: 52, pageSize: 50) { () -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
