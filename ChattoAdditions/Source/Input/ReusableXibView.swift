@@ -44,9 +44,10 @@ import UIKit
             loadedView.autoresizingMask = autoresizingMask
             loadedView.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
             for constraint in constraints {
-                let firstItem = constraint.firstItem === self ? loadedView : constraint.firstItem
-                let secondItem = constraint.secondItem === self ? loadedView : constraint.secondItem
-                loadedView.addConstraint(NSLayoutConstraint(item: firstItem, attribute: constraint.firstAttribute, relatedBy: constraint.relation, toItem: secondItem, attribute: constraint.secondAttribute, multiplier: constraint.multiplier, constant: constraint.constant))
+                if let firstItem = constraint.firstItem === self ? loadedView : constraint.firstItem,
+                    let secondItem = constraint.secondItem === self ? loadedView : constraint.secondItem {
+                    loadedView.addConstraint(NSLayoutConstraint(item: firstItem, attribute: constraint.firstAttribute, relatedBy: constraint.relation, toItem: secondItem, attribute: constraint.secondAttribute, multiplier: constraint.multiplier, constant: constraint.constant))
+                }
             }
             return loadedView
         } else {
