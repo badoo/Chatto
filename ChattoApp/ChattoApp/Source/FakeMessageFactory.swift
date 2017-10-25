@@ -74,7 +74,7 @@ class FakeMessageFactory {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
+        let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)])) incoming:\(incomingText), #:\(uid)"
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
