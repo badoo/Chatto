@@ -33,7 +33,7 @@
 		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
 		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
 		DD49AA1095C478DD42524839 /* Pods_ChattoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */; };
-		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
+		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellStyleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellStyleFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,7 +93,7 @@
 		C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
 		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
-		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellAvatarStyle.swift; sourceTree = "<group>"; };
+		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellStyleFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellStyleFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,7 +200,7 @@
 				C3F91DC81C75EFE300D461D2 /* Sending status */,
 				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
 				C341D42A1C96359000FD3463 /* Time Separator */,
-				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
+				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellStyleFactory.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -413,7 +413,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */,
+				FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellStyleFactory.swift in Sources */,
 				C3F91DBF1C75EF9E00D461D2 /* FakeMessageSender.swift in Sources */,
 				C3F91DB81C75EF9E00D461D2 /* ConversationsViewController.swift in Sources */,
 				C3F91DC41C75EF9E00D461D2 /* DemoTextMessageHandler.swift in Sources */,
@@ -590,7 +590,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -605,7 +605,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
