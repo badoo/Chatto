@@ -48,7 +48,7 @@ func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> Messag
 
 func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
     let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
-    let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize:size, image: image)
+    let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize: size, image: image)
     return photoMessageModel
 }
 
@@ -74,7 +74,7 @@ class FakeMessageFactory {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
+        let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)])) incoming:\(incomingText), #:\(uid)"
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
@@ -85,8 +85,6 @@ class FakeMessageFactory {
             imageSize = CGSize(width: 400, height: 300)
         case 1:
             imageSize = CGSize(width: 300, height: 400)
-        case 2:
-            fallthrough
         default:
             imageSize = CGSize(width: 300, height: 300)
         }
@@ -97,8 +95,6 @@ class FakeMessageFactory {
             imageName = "pic-test-1"
         case 1:
             imageName = "pic-test-2"
-        case 2:
-            fallthrough
         default:
             imageName = "pic-test-3"
         }
@@ -146,7 +142,13 @@ class TutorialMessageFactory {
                 result.append(createTextMessageModel("tutorial-\(index)", text: content, isIncoming: isIncoming))
             } else {
                 let image = UIImage(named: content)!
-                result.append(createPhotoMessageModel("tutorial-\(index)", image:image, size: image.size, isIncoming: isIncoming))
+                let photoMessage = createPhotoMessageModel(
+                    "tutorial-\(index)",
+                    image: image,
+                    size: image.size,
+                    isIncoming: isIncoming
+                )
+                result.append(photoMessage)
             }
         }
         return result

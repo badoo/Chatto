@@ -79,10 +79,10 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
 
     lazy private var images: [ImageKey: UIImage] = {
         return [
-            .template(isIncoming: true, showsTail: true) : self.bubbleImages.incomingTail(),
-            .template(isIncoming: true, showsTail: false) : self.bubbleImages.incomingNoTail(),
-            .template(isIncoming: false, showsTail: true) : self.bubbleImages.outgoingTail(),
-            .template(isIncoming: false, showsTail: false) : self.bubbleImages.outgoingNoTail()
+            .template(isIncoming: true, showsTail: true): self.bubbleImages.incomingTail(),
+            .template(isIncoming: true, showsTail: false): self.bubbleImages.incomingNoTail(),
+            .template(isIncoming: false, showsTail: true): self.bubbleImages.outgoingTail(),
+            .template(isIncoming: false, showsTail: false): self.bubbleImages.outgoingNoTail()
         ]
     }()
 

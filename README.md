@@ -31,8 +31,8 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 2. Include the following in your `Podfile`:
   ```
   # Swift 3
-  pod 'Chatto', '= 3.0.1'
-  pod 'ChattoAdditions', '= 3.0.1' # if you want to use the cells or the input component
+  pod 'Chatto', '= 3.2.0'
+  pod 'ChattoAdditions', '= 3.2.0' # if you want to use the cells or the input component
   ```
   ```
   # Swift 2.x
@@ -70,5 +70,5 @@ Source code is distributed under MIT license.
 ## Android
 Check our colleagues' project [Chateau]( https://github.com/badoo/Chateau)!
 
-##Blog
+## Blog
 Read more on our [tech blog](http://techblog.badoo.com/) or explore our other [open source projects](https://github.com/badoo)

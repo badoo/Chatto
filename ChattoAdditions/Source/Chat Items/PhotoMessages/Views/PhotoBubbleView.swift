@@ -122,7 +122,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     open func updateViews() {
         if self.viewContext == .sizing { return }
         if isUpdating { return }
-        guard let _ = self.photoMessageViewModel, let _ = self.photoMessageStyle else { return }
+        guard self.photoMessageViewModel != nil, self.photoMessageStyle != nil else { return }
 
         self.updateProgressIndicator()
         self.updateImages()
@@ -228,7 +228,10 @@ private class PhotoBubbleLayoutModel {
         }
 
         init(photoMessageViewModel model: PhotoMessageViewModelProtocol, style: PhotoBubbleViewStyleProtocol, containerWidth width: CGFloat) {
-            self.init(photoSize: style.bubbleSize(viewModel: model), tailWidth:style.tailWidth(viewModel: model), isIncoming: model.isIncoming, preferredMaxLayoutWidth: width)
+            self.init(photoSize: style.bubbleSize(viewModel: model),
+                      tailWidth: style.tailWidth(viewModel: model),
+                      isIncoming: model.isIncoming,
+                      preferredMaxLayoutWidth: width)
         }
     }
 

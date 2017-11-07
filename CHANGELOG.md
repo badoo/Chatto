@@ -1,3 +1,27 @@
+### 3.2.0 (October 20, 107)
+
+#### Features:
+ - Added support for custom main view in BaseChatViewController #323 by @serge-star 
+ - Added ability to change input bar border color and width #339 by @NSEGeorge 
+ - Added ability to control visibility of failed icon #359 by @turbulem
+ - Added Xcode 9 and iOS 11 support #352 by @AntonPalich
+ - Added support for swiftlint 0.23 #371 by @AntonPalich
+#### Bugs:
+ - Fixed crash caused by missing optionality identifier in UIKit #310 by @raisaanjani92 
+ - Fixed input container position when presenting chat as child controller #338 by @KaterinaPetrova 
+ - Fixed issue with gesture recognizers that wasn't disabled for text messages on iOS 11 #366 by @AntonPalich
+
+### 3.1.0 (May 29, 2017)
+
+* swiftlint 0.13 support & Xcode 8.2 compatibility [#253](https://github.com/badoo/Chatto/pull/253) - [@diegosanchezr](https://github.com/diegosanchezr)
+* swiftlint 0.14 support & hashes improvements [#271](https://github.com/badoo/Chatto/pull/271) - [@diegosanchezr](https://github.com/diegosanchezr)
+* Removed lazy keyword from accessoryTimestampView property in BaseMessageCollectionViewCell [#286](https://github.com/badoo/Chatto/pull/286) - [@geegaset](https://github.com/geegaset)
+* Fixed typo in a comment in BaseChatViewController+Changes.swift [#296](https://github.com/badoo/Chatto/pull/296) - [@NickAger](https://github.com/NickAger)
+* BasicChatInputBarPresenter.chatInputBar became public [#297](https://github.com/badoo/Chatto/pull/297) - [@NickAger](https://github.com/NickAger)
+* Added ability to specify tint color for text input [#301](https://github.com/badoo/Chatto/pull/301) - [@V0idPRO](https://github.com/V0idPRO)
+* Xcode 8.3 compatibility [#300](https://github.com/badoo/Chatto/pull/300) - [@geegaset](https://github.com/geegaset)
+* Empty layout model is returned if layout delegate is nil [#304](https://github.com/badoo/Chatto/pull/304) - [@chupakabr](https://github.com/chupakabr)
+
 ### 3.0.1 (Nov 14, 2016)
 * Swift 3.0.1 / Xcode 8.1 support [#233](https://github.com/badoo/Chatto/pull/233) - [@diegosanchezr](https://github.com/diegosanchezr)
 * Fixes weird linker issue with Carthage [#232](https://github.com/badoo/Chatto/pull/232) - [@zwang](https://github.com/zwang)

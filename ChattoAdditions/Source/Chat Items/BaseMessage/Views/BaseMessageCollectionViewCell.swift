@@ -65,7 +65,10 @@ public struct BaseMessageCollectionViewCellLayoutConstants {
         - Have a BubbleViewType that responds properly to sizeThatFits:
 */
 
-open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where BubbleViewType:UIView, BubbleViewType:MaximumLayoutWidthSpecificable, BubbleViewType: BackgroundSizingQueryable {
+open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where
+    BubbleViewType: UIView,
+    BubbleViewType: MaximumLayoutWidthSpecificable,
+    BubbleViewType: BackgroundSizingQueryable {
 
     public var animationDuration: CFTimeInterval = 0.33
     open var viewContext: ViewContext = .normal
@@ -92,7 +95,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open var messageViewModel: MessageViewModelProtocol! {
         didSet {
-            updateViews()
+            self.updateViews()
         }
     }
 
@@ -104,6 +107,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedIconHighlighted = self.baseStyle.failedIconHighlighted
             self.updateViews()
         }
+    }
+    private var shouldShowFailedIcon: Bool {
+        return self.messageViewModel?.canShowFailedIcon == true && self.messageViewModel?.showsFailedIcon == true
     }
 
     override open var isSelected: Bool {
@@ -196,7 +202,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         if self.viewContext == .sizing { return }
         if self.isUpdating { return }
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
-        if viewModel.showsFailedIcon {
+        self.bubbleView.isUserInteractionEnabled = viewModel.isUserInteractionEnabled
+        if self.shouldShowFailedIcon {
             self.failedButton.setImage(self.failedIcon, for: .normal)
             self.failedButton.setImage(self.failedIconHighlighted, for: .highlighted)
             self.failedButton.alpha = 1
@@ -204,11 +211,18 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
-        let avatarImageSize = baseStyle.avatarSize(viewModel: messageViewModel)
-        if avatarImageSize != CGSize.zero {
-            self.avatarView.image = self.messageViewModel.avatarImage.value
-        }
+        self.updateAvatarView(from: viewModel, with: style)
         self.setNeedsLayout()
+    }
+
+    private func updateAvatarView(from viewModel: MessageViewModelProtocol,
+                                  with style: BaseMessageCollectionViewCellStyleProtocol) {
+        self.avatarView.isHidden = !viewModel.showsAvatar
+
+        let avatarImageSize = style.avatarSize(viewModel: viewModel)
+        if avatarImageSize != .zero {
+            self.avatarView.image = viewModel.avatarImage.value
+        }
     }
 
     // MARK: layout
@@ -254,7 +268,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             maxContainerWidthPercentageForBubbleView: layoutConstants.maxContainerWidthPercentageForBubbleView,
             bubbleView: self.bubbleView,
             isIncoming: self.messageViewModel.isIncoming,
-            isFailed: self.messageViewModel.showsFailedIcon,
+            isFailed: self.shouldShowFailedIcon,
             avatarSize: baseStyle.avatarSize(viewModel: messageViewModel),
             avatarVerticalAlignment: baseStyle.avatarVerticalAlignment(viewModel: messageViewModel)
         )

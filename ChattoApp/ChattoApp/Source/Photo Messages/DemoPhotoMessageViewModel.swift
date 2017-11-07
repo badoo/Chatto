@@ -57,10 +57,11 @@ class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
         self.transferStatus.value = .transfering
         let delaySeconds: Double = Double(arc4random_uniform(600)) / 1000.0
         let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+        DispatchQueue.main.asyncAfter(deadline: delayTime) { [weak self] in
+            guard let sSelf = self else { return }
             let deltaProgress = Double(arc4random_uniform(15)) / 100.0
-            self.transferProgress.value = min(self.transferProgress.value + deltaProgress, 1)
-            self.fakeProgress()
+            sSelf.transferProgress.value = min(sSelf.transferProgress.value + deltaProgress, 1)
+            sSelf.fakeProgress()
         }
     }
 }

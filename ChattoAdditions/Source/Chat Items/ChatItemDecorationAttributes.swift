@@ -27,11 +27,17 @@ import Chatto
 
 public struct ChatItemDecorationAttributes: ChatItemDecorationAttributesProtocol {
     public let bottomMargin: CGFloat
-    public let showsTail: Bool
+    public let canShowTail: Bool
     public let canShowAvatar: Bool
-    public init(bottomMargin: CGFloat, showsTail: Bool, canShowAvatar: Bool) {
+    public var canShowFailedIcon: Bool
+
+    public init(bottomMargin: CGFloat,
+                canShowTail: Bool,
+                canShowAvatar: Bool,
+                canShowFailedIcon: Bool) {
         self.bottomMargin = bottomMargin
-        self.showsTail = showsTail
+        self.canShowTail = canShowTail
         self.canShowAvatar = canShowAvatar
+        self.canShowFailedIcon = canShowFailedIcon
     }
 }

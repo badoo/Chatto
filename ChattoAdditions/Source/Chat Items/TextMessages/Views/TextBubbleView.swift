@@ -159,8 +159,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
-                NSForegroundColorAttributeName: textColor,
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedStringKey.foregroundColor.rawValue: textColor,
+                NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue
             ]
             needsToUpdateText = true
         }
@@ -275,8 +275,8 @@ private final class TextBubbleLayoutModel {
     private func replicateUITextViewNSTextStorage() -> NSTextStorage {
         // See https://github.com/badoo/Chatto/issues/129
         return NSTextStorage(string: self.layoutContext.text, attributes: [
-            NSFontAttributeName: self.layoutContext.font,
-            "NSOriginalFont": self.layoutContext.font
+            NSAttributedStringKey.font: self.layoutContext.font,
+            NSAttributedStringKey(rawValue: "NSOriginalFont"): self.layoutContext.font
         ])
     }
 }
@@ -288,9 +288,15 @@ private final class ChatMessageTextView: UITextView {
         return false
     }
 
-    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
-        if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self && gestureRecognizer.delaysTouchesEnded {
-            super.addGestureRecognizer(gestureRecognizer)
+    // See https://github.com/badoo/Chatto/issues/363
+    override var gestureRecognizers: [UIGestureRecognizer]? {
+        set {
+            super.gestureRecognizers = newValue
+        }
+        get {
+            return super.gestureRecognizers?.filter({ (gestureRecognizer) -> Bool in
+                return type(of: gestureRecognizer) == UILongPressGestureRecognizer.self && gestureRecognizer.delaysTouchesEnded
+            })
         }
     }
 

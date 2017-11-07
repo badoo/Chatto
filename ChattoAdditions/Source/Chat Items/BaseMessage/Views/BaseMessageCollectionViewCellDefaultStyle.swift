@@ -121,10 +121,10 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     private lazy var dateFont: UIFont = self.dateTextStyle.font()
     private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 
-    private lazy var dateStringAttributes: [String : AnyObject] = {
+    private lazy var dateStringAttributes: [NSAttributedStringKey: AnyObject] = {
         return [
-            NSFontAttributeName : self.dateFont,
-            NSForegroundColorAttributeName: self.dateFontColor
+            NSAttributedStringKey.font: self.dateFont,
+            NSAttributedStringKey.foregroundColor: self.dateFontColor
         ]
     }()
 

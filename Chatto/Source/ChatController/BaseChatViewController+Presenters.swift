@@ -84,7 +84,10 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     @objc(collectionView:shouldShowMenuForItemAtIndexPath:)
-    open func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+    open func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath?) -> Bool {
+        // Note: IndexPath set optional due to https://github.com/badoo/Chatto/issues/310
+        // Might be related: https://bugs.swift.org/browse/SR-2417
+        guard let indexPath = indexPath else { return false }
         return self.presenterForIndexPath(indexPath).shouldShowMenu()
     }
 

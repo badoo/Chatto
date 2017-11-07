@@ -132,9 +132,9 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
     }
 
     func performBatchUpdates(updateModelClosure: @escaping () -> Void,
-                                                changes: CollectionChanges,
-                                                updateType: UpdateType,
-                                                completion: @escaping () -> Void) {
+                             changes: CollectionChanges,
+                             updateType: UpdateType,
+                             completion: @escaping () -> Void) {
 
         let usesBatchUpdates: Bool
         do { // Recover from too fast updates...
@@ -197,14 +197,14 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                     for move in changes.movedIndexPaths {
                         self.collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
-                }) { [weak self] (_) -> Void in
+                }, completion: { [weak self] (_) -> Void in
                     defer { myCompletion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
                     if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
                         DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                     }
-                }
+                })
             })
         } else {
             self.visibleCells = [:]
@@ -247,7 +247,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             return self.createModelUpdates(
                 newItems: newItems,
                 oldItems: oldItems,
-                collectionViewWidth:collectionViewWidth)
+                collectionViewWidth: collectionViewWidth)
         }
 
         if performInBackground {
@@ -301,7 +301,7 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
                 return (height: intermediateLayoutData.height!, bottomMargin: intermediateLayoutData.bottomMargin)
             }
-            return ChatCollectionViewLayoutModel.createModel(self.collectionView.bounds.width, itemsLayoutData: layoutData)
+            return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
         }
 
         let isInbackground = !Thread.isMainThread
