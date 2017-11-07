@@ -32,6 +32,8 @@ public protocol ChatInputBarDelegate: class {
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
+    func inputBar(_ inputBar: ChatInputBar, didShowPlaceholderWithText placeholderText: String?)
+    func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar)
 }
 
 @objc
@@ -72,6 +74,7 @@ open class ChatInputBar: ReusableXibView {
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self
+        self.textView.placeholderDelegate = self
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
     }
@@ -179,6 +182,10 @@ open class ChatInputBar: ReusableXibView {
     public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
     }
+
+    public func setTextViewPlaceholderText(_ text: String) {
+        self.textView.setTextPlaceholder(text)
+    }
 }
 
 // MARK: - ChatInputItemViewDelegate
@@ -270,6 +277,17 @@ extension ChatInputBar: UITextViewDelegate {
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
+    }
+}
+
+// MARK: ExpandableTextViewPlaceholderDelegate
+extension ChatInputBar: ExpandableTextViewPlaceholderDelegate {
+    public func expandableTextView(_ textView: ExpandableTextView, didShowPlaceholderWithText placeholderText: String?) {
+        self.delegate?.inputBar(self, didShowPlaceholderWithText: placeholderText)
+    }
+
+    public func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView) {
+        self.delegate?.inputBarDidHidePlaceholder(self)
     }
 }
 
