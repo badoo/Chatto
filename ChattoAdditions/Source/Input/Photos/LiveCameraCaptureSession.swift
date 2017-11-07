@@ -35,10 +35,15 @@ protocol LiveCameraCaptureSessionProtocol {
 
 class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
 
+    let settings: LiveCameraSettings
     var isInitialized: Bool = false
 
     var isCapturing: Bool {
         return self.isInitialized && self.captureSession?.isRunning ?? false
+    }
+    
+    init(settings: LiveCameraSettings) {
+        self.settings = settings
     }
 
     deinit {
@@ -102,7 +107,9 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
     private func addInputDevicesIfNeeded() {
         assert(!Thread.isMainThread, "This can be very slow, make sure it happens in a background thread")
         if self.captureSession?.inputs?.count == 0 {
-            let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+            let device = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
+                .flatMap { $0 as? AVCaptureDevice }
+                .first { $0.position == self.settings.cameraPosition } ?? AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
             do {
                 let input = try AVCaptureDeviceInput(device: device)
                 self.captureSession?.addInput(input)
