@@ -24,9 +24,15 @@
 
 import UIKit
 
+public protocol ExpandableTextViewPlaceholderDelegate: class {
+    func expandableTextView(_ textView: ExpandableTextView, didShowPlaceholderWithText placeholderText: String?)
+    func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView)
+}
+
 open class ExpandableTextView: UITextView {
 
     private let placeholder: UITextView = UITextView()
+    public weak var placeholderDelegate: ExpandableTextViewPlaceholderDelegate?
 
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -53,6 +59,16 @@ open class ExpandableTextView: UITextView {
         NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
+    }
+
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        if self.isPlaceholderViewAttached {
+            self.placeholderDelegate?.expandableTextView(self, didShowPlaceholderWithText: self.placeholder.text)
+        } else {
+            self.placeholderDelegate?.expandableTextViewDidHidePlaceholder(self)
+        }
     }
 
     override open func layoutSubviews() {
@@ -131,11 +147,25 @@ open class ExpandableTextView: UITextView {
     }
 
     private func showPlaceholder() {
+        let wasAttachedBeforeShowing = self.isPlaceholderViewAttached
         self.addSubview(self.placeholder)
+
+        if !wasAttachedBeforeShowing {
+            self.placeholderDelegate?.expandableTextView(self, didShowPlaceholderWithText: self.placeholder.text)
+        }
     }
 
     private func hidePlaceholder() {
+        let wasAttachedBeforeHiding = self.isPlaceholderViewAttached
         self.placeholder.removeFromSuperview()
+
+        if wasAttachedBeforeHiding {
+            self.placeholderDelegate?.expandableTextViewDidHidePlaceholder(self)
+        }
+    }
+
+    private var isPlaceholderViewAttached: Bool {
+        return self.placeholder.superview != nil
     }
 
     private func configurePlaceholder() {
