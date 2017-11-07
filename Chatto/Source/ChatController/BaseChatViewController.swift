@@ -177,7 +177,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
 
         if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-            self.inputContainerBottomConstraint.constant = 0
+            if #available(iOS 11, *) {
+                self.inputContainerBottomConstraint.constant = self.view.safeAreaInsets.bottom
+            } else {
+                self.inputContainerBottomConstraint.constant = 0
+            }
         } else {
             self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
         }
