@@ -26,9 +26,9 @@ import Foundation
 import Photos
 
 public struct LiveCameraSettings {
-    public let cameraPosition: AVCaptureDevice.Position
+    public let cameraPosition: AVCaptureDevicePosition
     
-    public init(cameraPosition: AVCaptureDevice.Position) {
+    public init(cameraPosition: AVCaptureDevicePosition) {
         self.cameraPosition = cameraPosition
     }
     
