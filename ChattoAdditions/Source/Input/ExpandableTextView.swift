@@ -86,7 +86,7 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    public var placeholderText: String {
+    open var placeholderText: String {
         get {
             return self.placeholder.text
         }
