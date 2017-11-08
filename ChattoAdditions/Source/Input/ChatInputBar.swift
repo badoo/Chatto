@@ -32,6 +32,8 @@ public protocol ChatInputBarDelegate: class {
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
+    func inputBarDidShowPlaceholder(_ inputBar: ChatInputBar)
+    func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar)
 }
 
 @objc
@@ -72,6 +74,7 @@ open class ChatInputBar: ReusableXibView {
         self.topBorderHeightConstraint.constant = 1 / UIScreen.main.scale
         self.textView.scrollsToTop = false
         self.textView.delegate = self
+        self.textView.placeholderDelegate = self
         self.scrollView.scrollsToTop = false
         self.sendButton.isEnabled = false
     }
@@ -158,6 +161,15 @@ open class ChatInputBar: ReusableXibView {
         }
     }
 
+    public var placeholderText: String {
+        get {
+            return self.textView.placeholderText
+        }
+        set {
+            self.textView.placeholderText = newValue
+        }
+    }
+
     fileprivate func updateSendButton() {
         self.sendButton.isEnabled = self.shouldEnableSendButton(self)
     }
@@ -196,7 +208,7 @@ extension ChatInputBar {
         self.textView.textContainerInset = appearance.textInputAppearance.textInsets
         self.textView.setTextPlaceholderFont(appearance.textInputAppearance.placeholderFont)
         self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
-        self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
+        self.textView.placeholderText = appearance.textInputAppearance.placeholderText
         self.textView.layer.borderColor = appearance.textInputAppearance.borderColor.cgColor
         self.textView.layer.borderWidth = appearance.textInputAppearance.borderWidth
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
@@ -261,6 +273,17 @@ extension ChatInputBar: UITextViewDelegate {
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
+    }
+}
+
+// MARK: ExpandableTextViewPlaceholderDelegate
+extension ChatInputBar: ExpandableTextViewPlaceholderDelegate {
+    public func expandableTextViewDidShowPlaceholder(_ textView: ExpandableTextView) {
+        self.delegate?.inputBarDidShowPlaceholder(self)
+    }
+
+    public func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView) {
+        self.delegate?.inputBarDidHidePlaceholder(self)
     }
 }
 
