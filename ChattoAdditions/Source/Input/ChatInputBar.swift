@@ -157,6 +157,15 @@ open class ChatInputBar: ReusableXibView {
             self.updateSendButton()
         }
     }
+    
+    public var inputSelectedRange: NSRange {
+        get {
+            return self.textView.selectedRange
+        }
+        set {
+            self.textView.selectedRange = newValue
+        }
+    }
 
     fileprivate func updateSendButton() {
         self.sendButton.isEnabled = self.shouldEnableSendButton(self)
