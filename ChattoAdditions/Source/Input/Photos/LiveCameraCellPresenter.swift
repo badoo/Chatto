@@ -25,13 +25,29 @@
 import Foundation
 import Photos
 
+public struct LiveCameraSettings {
+    public let cameraPosition: AVCaptureDevicePosition
+    
+    public init(cameraPosition: AVCaptureDevicePosition) {
+        self.cameraPosition = cameraPosition
+    }
+    
+    public static func makeDefaultSettings() -> LiveCameraSettings {
+        return LiveCameraSettings(cameraPosition: .unspecified)
+    }
+}
+
 public final class LiveCameraCellPresenter {
     private typealias Class = LiveCameraCellPresenter
     public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
 
+    private let cameraSettings: LiveCameraSettings
     private let cellAppearance: LiveCameraCellAppearance
     private let authorizationStatusProvider: () -> AVAuthorizationStatus
-    public init(cellAppearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance(), authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
+    public init(cameraSettings: LiveCameraSettings = LiveCameraSettings.makeDefaultSettings(),
+                cellAppearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance(),
+                authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
+        self.cameraSettings = cameraSettings
         self.cellAppearance = cellAppearance
         self.authorizationStatusProvider = authorizationStatusProvider
     }
@@ -174,7 +190,7 @@ public final class LiveCameraCellPresenter {
         }
     }
 
-    lazy var captureSession: LiveCameraCaptureSessionProtocol = LiveCameraCaptureSession()
+    lazy var captureSession: LiveCameraCaptureSessionProtocol = LiveCameraCaptureSession(settings: self.cameraSettings)
 
     private var cameraAuthorizationStatus: AVAuthorizationStatus = .notDetermined {
         didSet {
