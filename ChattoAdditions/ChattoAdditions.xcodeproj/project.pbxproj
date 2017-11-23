@@ -195,6 +195,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		55ABA5521FC738E300923302 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C3A646FE1BFE8D40001BC98B /* Utils.swift */,
+				C38658B11BFE55620012F181 /* AnimationUtils.swift */,
+				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		C35FE3C31C0331AE00D42980 /* TextMessages */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,9 +247,7 @@
 			children = (
 				C3C0CC961BFE4A2A0052747C /* ChattoAdditions.h */,
 				C3C0CC021BFE496A0052747C /* Info.plist */,
-				C38658B11BFE55620012F181 /* AnimationUtils.swift */,
-				C3A646FE1BFE8D40001BC98B /* Utils.swift */,
-				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
+				55ABA5521FC738E300923302 /* Common */,
 				C3C0CBD51BFE496A0052747C /* Chat Items */,
 				C3C0CC031BFE496A0052747C /* Input */,
 				C3C0CC1D1BFE496A0052747C /* UI Components */,
