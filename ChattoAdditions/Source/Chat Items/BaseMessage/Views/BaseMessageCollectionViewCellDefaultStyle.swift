@@ -106,6 +106,11 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
             self.layoutConstants = layoutConstants
             self.dateTextStyle = dateTextStyle
             self.avatarStyle = avatarStyle
+
+            self.dateStringAttributes = [
+                NSAttributedStringKey.font: self.dateTextStyle.font(),
+                NSAttributedStringKey.foregroundColor: self.dateTextStyle.color()
+            ]
     }
 
     public lazy var baseColorIncoming: UIColor = self.colors.incoming()
@@ -118,15 +123,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
-    private lazy var dateFont: UIFont = self.dateTextStyle.font()
-    private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 
-    private lazy var dateStringAttributes: [NSAttributedStringKey: AnyObject] = {
-        return [
-            NSAttributedStringKey.font: self.dateFont,
-            NSAttributedStringKey.foregroundColor: self.dateFontColor
-        ]
-    }()
+    private let dateStringAttributes: [NSAttributedStringKey: AnyObject]
 
     open func attributedStringForDate(_ date: String) -> NSAttributedString {
         return NSAttributedString(string: date, attributes: self.dateStringAttributes)
