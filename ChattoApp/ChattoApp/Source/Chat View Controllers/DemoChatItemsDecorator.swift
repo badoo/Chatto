@@ -26,7 +26,7 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
+final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
     private struct Constants {
         static let shortSeparation: CGFloat = 3
         static let normalSeparation: CGFloat = 10

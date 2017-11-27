@@ -32,8 +32,8 @@ public protocol DemoMessageViewModelProtocol {
 
 class BaseMessageHandler {
 
-    private let messageSender: FakeMessageSender
-    init (messageSender: FakeMessageSender) {
+    private let messageSender: DemoChatMessageSender
+    init (messageSender: DemoChatMessageSender) {
         self.messageSender = messageSender
     }
     func userDidTapOnFailIcon(viewModel: DemoMessageViewModelProtocol) {

@@ -30,7 +30,7 @@ public protocol DemoMessageModelProtocol: MessageModelProtocol {
     var status: MessageStatus { get set }
 }
 
-public class FakeMessageSender {
+public class DemoChatMessageSender {
 
     public var onMessageChanged: ((_ message: DemoMessageModelProtocol) -> Void)?
 
