@@ -57,20 +57,20 @@ class DemoChatMessageFactory {
         "Lorem ipsum dolor sit amet 😇, https://github.com/badoo/Chatto consectetur adipiscing elit , sed do eiusmod tempor incididunt 07400000000 📞 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore https://github.com/badoo/Chatto eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 07400000000 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     ]
 
-    class func createChatItem(_ uid: String) -> MessageModelProtocol {
+    class func makeRandomMessage(_ uid: String) -> MessageModelProtocol {
         let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
-        return self.createChatItem(uid, isIncoming: isIncoming)
+        return self.makeRandomMessage(uid, isIncoming: isIncoming)
     }
 
-    class func createChatItem(_ uid: String, isIncoming: Bool) -> MessageModelProtocol {
+    class func makeRandomMessage(_ uid: String, isIncoming: Bool) -> MessageModelProtocol {
         if arc4random_uniform(100) % 2 == 0 {
-            return self.createTextMessageModel(uid, isIncoming: isIncoming)
+            return self.makeRandomTextMessage(uid, isIncoming: isIncoming)
         } else {
-            return self.createPhotoMessageModel(uid, isIncoming: isIncoming)
+            return self.makeRandomPhotoMessage(uid, isIncoming: isIncoming)
         }
     }
 
-    class func createTextMessageModel(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
+    private class func makeRandomTextMessage(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
@@ -78,7 +78,7 @@ class DemoChatMessageFactory {
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
-    class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
+    private class func makeRandomPhotoMessage(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
         var imageSize = CGSize.zero
         switch arc4random_uniform(100) % 3 {
         case 0:

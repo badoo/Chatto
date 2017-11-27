@@ -32,9 +32,9 @@ class DemoChatDataSource: ChatDataSourceProtocol {
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
     init(count: Int, pageSize: Int) {
         self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { [weak self] () -> ChatItemProtocol in
-            guard let sSelf = self else { return DemoChatMessageFactory.createChatItem("") }
+            guard let sSelf = self else { return DemoChatMessageFactory.makeRandomMessage("") }
             defer { sSelf.nextMessageId += 1 }
-            return DemoChatMessageFactory.createChatItem("\(sSelf.nextMessageId)")
+            return DemoChatMessageFactory.makeRandomMessage("\(sSelf.nextMessageId)")
         }
     }
 
@@ -96,7 +96,7 @@ class DemoChatDataSource: ChatDataSourceProtocol {
     }
 
     func addRandomIncomingMessage() {
-        let message = DemoChatMessageFactory.createChatItem("\(self.nextMessageId)", isIncoming: true)
+        let message = DemoChatMessageFactory.makeRandomMessage("\(self.nextMessageId)", isIncoming: true)
         self.nextMessageId += 1
         self.slidingWindow.insertItem(message, position: .bottom)
         self.delegate?.chatDataSourceDidUpdate(self)
