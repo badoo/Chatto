@@ -145,6 +145,14 @@
 			path = "Base Message";
 			sourceTree = "<group>";
 		};
+		55A77B501FCC6BEA0040C77E /* Chat View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
+			);
+			path = "Chat View Controllers";
+			sourceTree = "<group>";
+		};
 		B616EDF620454A787C7E7D84 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,11 +217,11 @@
 		C3F91D9F1C75EF9E00D461D2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				55A77B501FCC6BEA0040C77E /* Chat View Controllers */,
 				55A77B471FCC41CC0040C77E /* Chat Items */,
 				C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */,
 				C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */,
 				C3F91DA21C75EF9E00D461D2 /* ConversationsViewController.swift */,
-				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
 				C3F91DA91C75EF9E00D461D2 /* FakeDataSource.swift */,
 				C3F91DAA1C75EF9E00D461D2 /* FakeMessageFactory.swift */,
 				C3F91DAB1C75EF9E00D461D2 /* FakeMessageSender.swift */,
