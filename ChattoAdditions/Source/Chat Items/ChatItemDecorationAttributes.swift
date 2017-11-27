@@ -30,14 +30,17 @@ public struct ChatItemDecorationAttributes: ChatItemDecorationAttributesProtocol
     public let canShowTail: Bool
     public let canShowAvatar: Bool
     public var canShowFailedIcon: Bool
+    public let showsCheckIcon: Bool
 
     public init(bottomMargin: CGFloat,
                 canShowTail: Bool,
                 canShowAvatar: Bool,
-                canShowFailedIcon: Bool) {
+                canShowFailedIcon: Bool,
+                showsCheckIcon: Bool) {
         self.bottomMargin = bottomMargin
         self.canShowTail = canShowTail
         self.canShowAvatar = canShowAvatar
         self.canShowFailedIcon = canShowFailedIcon
+        self.showsCheckIcon = showsCheckIcon
     }
 }

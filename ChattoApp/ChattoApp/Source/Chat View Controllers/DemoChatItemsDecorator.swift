@@ -79,7 +79,8 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
                     decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin,
                                                                        canShowTail: showsTail,
                                                                        canShowAvatar: showsTail,
-                                                                       canShowFailedIcon: true)
+                                                                       canShowFailedIcon: true,
+                                                                       showsCheckIcon: false)
                 )
             )
             decoratedChatItems.append(contentsOf: additionalItems)

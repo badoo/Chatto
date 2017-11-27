@@ -101,6 +101,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.canShowTail
             self.messageViewModel.showsAvatar = decorationAttributes.canShowAvatar
+            self.messageViewModel.showsCheckIcon = decorationAttributes.showsCheckIcon
             self.messageViewModel.canShowFailedIcon = decorationAttributes.canShowFailedIcon
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true

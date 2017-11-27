@@ -87,25 +87,42 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         }
     }
 
+    public struct CheckIconStyle {
+        let margins: UIEdgeInsets
+        let uncheckedImage: () -> UIImage
+        let checkedImage: () -> UIImage
+        public init(margins: UIEdgeInsets,
+                    uncheckedImage: @autoclosure @escaping ()-> UIImage,
+                    checkedImage: @autoclosure @escaping ()-> UIImage) {
+            self.margins = margins
+            self.uncheckedImage = uncheckedImage
+            self.checkedImage = checkedImage
+        }
+    }
+
     let colors: Colors
     let bubbleBorderImages: BubbleBorderImages?
     let failedIconImages: FailedIconImages
     let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
     let dateTextStyle: DateTextStyle
     let avatarStyle: AvatarStyle
+    let checkIconStyle: CheckIconStyle
+
     public init (
         colors: Colors = Class.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
         failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
         layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
         dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
-        avatarStyle: AvatarStyle = AvatarStyle()) {
+        avatarStyle: AvatarStyle = AvatarStyle(),
+        checkIconStyle: CheckIconStyle = Class.createDefaultCheckIconStyle()) {
             self.colors = colors
             self.bubbleBorderImages = bubbleBorderImages
             self.failedIconImages = failedIconImages
             self.layoutConstants = layoutConstants
             self.dateTextStyle = dateTextStyle
             self.avatarStyle = avatarStyle
+            self.checkIconStyle = checkIconStyle
 
             self.dateStringAttributes = [
                 NSAttributedStringKey.font: self.dateTextStyle.font(),
@@ -123,6 +140,10 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
+
+    public lazy var checkIconMargins: UIEdgeInsets = self.checkIconStyle.margins
+    public lazy var checkIconCheckedImage: UIImage = self.checkIconStyle.checkedImage()
+    public lazy var checkIconUncheckedImage: UIImage = self.checkIconStyle.uncheckedImage()
 
     private let dateStringAttributes: [NSAttributedStringKey: AnyObject]
 
@@ -189,5 +210,13 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
                                                             horizontalInterspacing: 4,
                                                             horizontalTimestampMargin: 11,
                                                             maxContainerWidthPercentageForBubbleView: 0.68)
+    }
+
+    static public func createDefaultCheckIconStyle() -> CheckIconStyle {
+        return CheckIconStyle(
+            margins: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10),
+            uncheckedImage: UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            checkedImage: UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
+        )
     }
 }
