@@ -26,13 +26,6 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-extension Array {
-    func randomItem() -> Element {
-        let index = Int(arc4random_uniform(UInt32(self.count)))
-        return self[index]
-    }
-}
-
 func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
     let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
     let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
@@ -53,9 +46,8 @@ func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isInco
 }
 
 class DemoChatMessageFactory {
-    static let demoTexts = [
+    private static let demoText =
         "Lorem ipsum dolor sit amet 😇, https://github.com/badoo/Chatto consectetur adipiscing elit , sed do eiusmod tempor incididunt 07400000000 📞 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore https://github.com/badoo/Chatto eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 07400000000 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    ]
 
     class func makeRandomMessage(_ uid: String) -> MessageModelProtocol {
         let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
@@ -72,9 +64,9 @@ class DemoChatMessageFactory {
 
     private class func makeRandomTextMessage(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
-        let maxText = self.demoTexts.randomItem()
+        let maxText = self.demoText
         let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)])) incoming:\(incomingText), #:\(uid)"
+        let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)]))\n\n\(incomingText)\n#\(uid)"
         return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
