@@ -80,7 +80,7 @@ class DemoChatDataSource: ChatDataSourceProtocol {
     func addTextMessage(_ text: String) {
         let uid = "\(self.nextMessageId)"
         self.nextMessageId += 1
-        let message = createTextMessageModel(uid, text: text, isIncoming: false)
+        let message = DemoChatMessageFactory.createTextMessageModel(uid, text: text, isIncoming: false)
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .bottom)
         self.delegate?.chatDataSourceDidUpdate(self)
@@ -89,7 +89,7 @@ class DemoChatDataSource: ChatDataSourceProtocol {
     func addPhotoMessage(_ image: UIImage) {
         let uid = "\(self.nextMessageId)"
         self.nextMessageId += 1
-        let message = createPhotoMessageModel(uid, image: image, size: image.size, isIncoming: false)
+        let message = DemoChatMessageFactory.createPhotoMessageModel(uid, image: image, size: image.size, isIncoming: false)
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .bottom)
         self.delegate?.chatDataSourceDidUpdate(self)

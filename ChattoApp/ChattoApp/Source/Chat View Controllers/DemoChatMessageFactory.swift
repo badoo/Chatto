@@ -26,25 +26,6 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
-    let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
-    return textMessageModel
-}
-
-func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
-    let senderId = isIncoming ? "1" : "2"
-    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
-    let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
-    return messageModel
-}
-
-func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
-    let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize: size, image: image)
-    return photoMessageModel
-}
-
 class DemoChatMessageFactory {
     private static let demoText =
         "Lorem ipsum dolor sit amet 😇, https://github.com/badoo/Chatto consectetur adipiscing elit , sed do eiusmod tempor incididunt 07400000000 📞 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore https://github.com/badoo/Chatto eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 07400000000 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
@@ -62,12 +43,31 @@ class DemoChatMessageFactory {
         }
     }
 
+    class func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
+        let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
+        let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
+        return textMessageModel
+    }
+
+    class func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
+        let senderId = isIncoming ? "1" : "2"
+        let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
+        let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
+        return messageModel
+    }
+
+    class func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
+        let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
+        let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize: size, image: image)
+        return photoMessageModel
+    }
+
     private class func makeRandomTextMessage(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoText
         let length: Int = 10 + Int(arc4random_uniform(300))
         let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)]))\n\n\(incomingText)\n#\(uid)"
-        return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
+        return self.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
     }
 
     private class func makeRandomPhotoMessage(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
@@ -90,7 +90,7 @@ class DemoChatMessageFactory {
         default:
             imageName = "pic-test-3"
         }
-        return ChattoApp.createPhotoMessageModel(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
+        return self.createPhotoMessageModel(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
     }
 }
 
@@ -131,10 +131,10 @@ class TutorialMessageFactory {
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
 
             if type == "text" {
-                result.append(createTextMessageModel("tutorial-\(index)", text: content, isIncoming: isIncoming))
+                result.append(DemoChatMessageFactory.createTextMessageModel("tutorial-\(index)", text: content, isIncoming: isIncoming))
             } else {
                 let image = UIImage(named: content)!
-                let photoMessage = createPhotoMessageModel(
+                let photoMessage = DemoChatMessageFactory.createPhotoMessageModel(
                     "tutorial-\(index)",
                     image: image,
                     size: image.size,
