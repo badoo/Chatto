@@ -106,42 +106,42 @@ extension PhotoMessageModel {
 }
 
 class TutorialMessageFactory {
-    static let messages = [
-        ("text", "Welcome to Chatto! A lightweight Swift framework to build chat apps"),
-        ("text", "It calculates sizes in the background for smooth pagination and rotation, and it can deal with thousands of messages with a sliding data source"),
-        ("text", "Along with Chatto there's ChattoAdditions, with bubbles and the input component"),
-        ("text", "This is a TextMessageCollectionViewCell. It uses UITextView with data detectors so you can interact with urls: https://github.com/badoo/Chatto, phone numbers: 07400000000, dates: 3 jan 2016 and others"),
-        ("image", "pic-test-1"),
-        ("image", "pic-test-2"),
-        ("image", "pic-test-3"),
-        ("text", "Those were some PhotoMessageCollectionViewCell. With some fake data transfer"),
-        ("text", "Both Text and Photo cells inherit from BaseMessageCollectionViewCell which adds support for a failed icon and a timestamp you can reveal by swiping from the right"),
-        ("text", "Each message is paired with a Presenter. Each presenter is responsible to present a message by managing a corresponding UICollectionViewCell. New types of messages can be easily added by creating new types of presenters!"),
-        ("text", "Messages have different margins and only some bubbles show a tail. This is done with a decorator that conforms to ChatItemsDecoratorProtocol"),
-        ("text", "Failed/sending status are completly separated cells. This helps to keep cells them simpler. They are generated with the decorator as well, but other approaches are possible, like being returned by the DataSource or using more complex cells"),
-        ("text", "More info on https://github.com/badoo/Chatto. We are waiting for your pull requests!")
+
+    private enum TutorialMessage {
+        case text(String)
+        case image(String)
+    }
+
+    private static let tutorialMessages: [TutorialMessage] = [
+        .text("Welcome to Chatto! A lightweight Swift framework to build chat apps"),
+        .text("It calculates sizes in the background for smooth pagination and rotation, and it can deal with thousands of messages with a sliding data source"),
+        .text("Along with Chatto there's ChattoAdditions, with bubbles and the input component"),
+        .text("This is a TextMessageCollectionViewCell. It uses UITextView with data detectors so you can interact with urls: https://github.com/badoo/Chatto, phone numbers: 07400000000, dates: 3 jan 2016 and others"),
+        .image("pic-test-1"),
+        .image("pic-test-2"),
+        .image("pic-test-3"),
+        .text("Those were some PhotoMessageCollectionViewCell. With some fake data transfer"),
+        .text("Both Text and Photo cells inherit from BaseMessageCollectionViewCell which adds support for a failed icon and a timestamp you can reveal by swiping from the right"),
+        .text("Each message is paired with a Presenter. Each presenter is responsible to present a message by managing a corresponding UICollectionViewCell. New types of messages can be easily added by creating new types of presenters!"),
+        .text("Messages have different margins and only some bubbles show a tail. This is done with a decorator that conforms to ChatItemsDecoratorProtocol"),
+        .text("Failed/sending status are completly separated cells. This helps to keep cells them simpler. They are generated with the decorator as well, but other approaches are possible, like being returned by the DataSource or using more complex cells"),
+        .text("More info on https://github.com/badoo/Chatto. We are waiting for your pull requests!")
     ]
 
-    static func createMessages() -> [MessageModelProtocol] {
-        var result = [MessageModelProtocol]()
-        for (index, message) in self.messages.enumerated() {
-            let type = message.0
-            let content = message.1
+    private static func messages(fromTutorialMessages tutorialMessages: [TutorialMessage]) -> [MessageModelProtocol] {
+        return tutorialMessages.map { (tutorialMessage) in
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
-
-            if type == "text" {
-                result.append(DemoChatMessageFactory.makeTextMessage("tutorial-\(index)", text: content, isIncoming: isIncoming))
-            } else {
-                let image = UIImage(named: content)!
-                let photoMessage = DemoChatMessageFactory.makePhotoMessage(
-                    "tutorial-\(index)",
-                    image: image,
-                    size: image.size,
-                    isIncoming: isIncoming
-                )
-                result.append(photoMessage)
+            switch tutorialMessage {
+            case .text(let text):
+                return DemoChatMessageFactory.makeTextMessage(NSUUID().uuidString, text: text, isIncoming: isIncoming)
+            case .image(let name):
+                let image = UIImage(named: name)!
+                return DemoChatMessageFactory.makePhotoMessage(NSUUID().uuidString, image: image, size: image.size, isIncoming: isIncoming)
             }
         }
-        return result
+    }
+
+    static func makeMessages() -> [MessageModelProtocol] {
+        return self.messages(fromTutorialMessages: self.tutorialMessages)
     }
 }

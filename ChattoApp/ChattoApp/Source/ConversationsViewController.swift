@@ -39,7 +39,7 @@ class ConversationsViewController: UITableViewController {
         } else if segue.identifier == "10000 messages" {
             initialCount = 10000
         } else if segue.identifier == "overview" {
-            dataSource = DemoChatDataSource(messages: TutorialMessageFactory.createMessages(), pageSize: pageSize)
+            dataSource = DemoChatDataSource(messages: TutorialMessageFactory.makeMessages(), pageSize: pageSize)
         } else {
             assert(false, "segue not handled!")
         }
