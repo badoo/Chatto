@@ -124,6 +124,27 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		55A77B471FCC41CC0040C77E /* Chat Items */ = {
+			isa = PBXGroup;
+			children = (
+				55A77B481FCC42250040C77E /* Base Message */,
+				C3F91DAC1C75EF9E00D461D2 /* Photo Messages */,
+				C3F91DC81C75EFE300D461D2 /* Sending status */,
+				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
+				C341D42A1C96359000FD3463 /* Time Separator */,
+			);
+			path = "Chat Items";
+			sourceTree = "<group>";
+		};
+		55A77B481FCC42250040C77E /* Base Message */ = {
+			isa = PBXGroup;
+			children = (
+				C3F91DB51C75EF9E00D461D2 /* BaseMessageHandler.swift */,
+				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
+			);
+			path = "Base Message";
+			sourceTree = "<group>";
+		};
 		B616EDF620454A787C7E7D84 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,11 +203,13 @@
 				C341D42D1C9635DF00FD3463 /* TimeSeparatorCollectionViewCell.swift */,
 			);
 			name = "Time Separator";
+			path = ..;
 			sourceTree = "<group>";
 		};
 		C3F91D9F1C75EF9E00D461D2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				55A77B471FCC41CC0040C77E /* Chat Items */,
 				C3F91DA01C75EF9E00D461D2 /* AppDelegate.swift */,
 				C3F91DA11C75EF9E00D461D2 /* ChatItemsDemoDecorator.swift */,
 				C3F91DA21C75EF9E00D461D2 /* ConversationsViewController.swift */,
@@ -195,12 +218,6 @@
 				C3F91DAA1C75EF9E00D461D2 /* FakeMessageFactory.swift */,
 				C3F91DAB1C75EF9E00D461D2 /* FakeMessageSender.swift */,
 				C3F91DB01C75EF9E00D461D2 /* SlidingDatasSource.swift */,
-				C3F91DB51C75EF9E00D461D2 /* BaseMessageHandler.swift */,
-				C3F91DAC1C75EF9E00D461D2 /* Photo Messages */,
-				C3F91DC81C75EFE300D461D2 /* Sending status */,
-				C3F91DB11C75EF9E00D461D2 /* Text Messages */,
-				C341D42A1C96359000FD3463 /* Time Separator */,
-				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
