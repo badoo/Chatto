@@ -41,9 +41,14 @@ class DemoChatViewController: BaseChatViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let image = UIImage(named: "bubble-incoming-tail-border", in: Bundle(for: DemoChatViewController.self), compatibleWith: nil)?.bma_tintWithColor(.blue)
-        super.chatItemsDecorator = DemoChatItemsDecorator()
-        let addIncomingMessageButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(DemoChatViewController.addRandomIncomingMessage))
+
+        self.chatItemsDecorator = DemoChatItemsDecorator()
+        let addIncomingMessageButton = UIBarButtonItem(
+            title: "Add message",
+            style: .plain,
+            target: self,
+            action: #selector(addRandomIncomingMessage)
+        )
         self.navigationItem.rightBarButtonItem = addIncomingMessageButton
     }
 
