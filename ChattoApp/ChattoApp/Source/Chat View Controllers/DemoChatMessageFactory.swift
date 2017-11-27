@@ -43,21 +43,14 @@ class DemoChatMessageFactory {
         }
     }
 
-    class func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
-        let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
+    class func makeTextMessage(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
+        let messageModel = self.makeMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
         let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
         return textMessageModel
     }
 
-    class func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
-        let senderId = isIncoming ? "1" : "2"
-        let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
-        let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
-        return messageModel
-    }
-
-    class func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
-        let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
+    class func makePhotoMessage(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
+        let messageModel = self.makeMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
         let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize: size, image: image)
         return photoMessageModel
     }
@@ -67,7 +60,7 @@ class DemoChatMessageFactory {
         let maxText = self.demoText
         let length: Int = 10 + Int(arc4random_uniform(300))
         let text = "\(String(maxText[..<maxText.characters.index(maxText.startIndex, offsetBy: length)]))\n\n\(incomingText)\n#\(uid)"
-        return self.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
+        return self.makeTextMessage(uid, text: text, isIncoming: isIncoming)
     }
 
     private class func makeRandomPhotoMessage(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
@@ -90,7 +83,13 @@ class DemoChatMessageFactory {
         default:
             imageName = "pic-test-3"
         }
-        return self.createPhotoMessageModel(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
+        return self.makePhotoMessage(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
+    }
+
+    private class func makeMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
+        let senderId = isIncoming ? "1" : "2"
+        let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
+        return MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
     }
 }
 
@@ -131,10 +130,10 @@ class TutorialMessageFactory {
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
 
             if type == "text" {
-                result.append(DemoChatMessageFactory.createTextMessageModel("tutorial-\(index)", text: content, isIncoming: isIncoming))
+                result.append(DemoChatMessageFactory.makeTextMessage("tutorial-\(index)", text: content, isIncoming: isIncoming))
             } else {
                 let image = UIImage(named: content)!
-                let photoMessage = DemoChatMessageFactory.createPhotoMessageModel(
+                let photoMessage = DemoChatMessageFactory.makePhotoMessage(
                     "tutorial-\(index)",
                     image: image,
                     size: image.size,
