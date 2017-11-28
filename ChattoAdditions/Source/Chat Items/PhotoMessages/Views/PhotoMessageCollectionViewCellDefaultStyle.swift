@@ -137,12 +137,12 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
         return viewModel.isIncoming ? self.placeholderBackgroundIncoming : self.placeholderBackgroundOutgoing
     }
 
-    open func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> (icon: UIImage?, tintColor: UIColor?) {
-        if viewModel.image.value == nil && viewModel.transferStatus.value == .failed {
-            let tintColor = viewModel.isIncoming ? self.colors.placeholderIconTintIncoming : self.colors.placeholderIconTintOutgoing
-            return (self.placeholderIcon, tintColor)
-        }
-        return (nil, nil)
+    open func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage {
+        return self.placeholderIcon
+    }
+
+    open func placeholderIconTintColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor {
+        return viewModel.isIncoming ? self.colors.placeholderIconTintIncoming : self.colors.placeholderIconTintOutgoing
     }
 
     open func tailWidth(viewModel: PhotoMessageViewModelProtocol) -> CGFloat {

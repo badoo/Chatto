@@ -213,6 +213,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateAvatarView(from: viewModel, with: style)
         self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     private func updateAvatarView(from viewModel: MessageViewModelProtocol,
@@ -390,27 +391,28 @@ fileprivate struct Layout {
             currentX = horizontalMargin
             self.avatarViewFrame.origin.x = currentX
             currentX += avatarSize.width
-            currentX += horizontalInterspacing
-
             if isFailed {
+                currentX += horizontalInterspacing
                 self.failedButtonFrame.origin.x = currentX
                 currentX += failedButtonSize.width
                 currentX += horizontalInterspacing
             } else {
-                self.failedButtonFrame.origin.x = -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX - failedButtonSize.width
+                currentX += horizontalInterspacing
             }
             self.bubbleViewFrame.origin.x = currentX
         } else {
             currentX = containerRect.maxX - horizontalMargin
             currentX -= avatarSize.width
             self.avatarViewFrame.origin.x = currentX
-            currentX -= horizontalInterspacing
             if isFailed {
+                currentX -= horizontalInterspacing
                 currentX -= failedButtonSize.width
                 self.failedButtonFrame.origin.x = currentX
                 currentX -= horizontalInterspacing
             } else {
-                self.failedButtonFrame.origin.x = containerRect.width - -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX
+                currentX -= horizontalInterspacing
             }
             currentX -= bubbleSize.width
             self.bubbleViewFrame.origin.x = currentX
