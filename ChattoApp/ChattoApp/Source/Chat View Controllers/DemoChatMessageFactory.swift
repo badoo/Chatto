@@ -105,14 +105,14 @@ extension PhotoMessageModel {
     }
 }
 
-class TutorialMessageFactory {
+extension DemoChatMessageFactory {
 
-    private enum TutorialMessage {
+    private enum DemoMessage {
         case text(String)
         case image(String)
     }
 
-    private static let tutorialMessages: [TutorialMessage] = [
+    private static let overviewMessages: [DemoMessage] = [
         .text("Welcome to Chatto! A lightweight Swift framework to build chat apps"),
         .text("It calculates sizes in the background for smooth pagination and rotation, and it can deal with thousands of messages with a sliding data source"),
         .text("Along with Chatto there's ChattoAdditions, with bubbles and the input component"),
@@ -128,10 +128,10 @@ class TutorialMessageFactory {
         .text("More info on https://github.com/badoo/Chatto. We are waiting for your pull requests!")
     ]
 
-    private static func messages(fromTutorialMessages tutorialMessages: [TutorialMessage]) -> [MessageModelProtocol] {
-        return tutorialMessages.map { (tutorialMessage) in
+    private static func messages(fromDemoMessages demoMessages: [DemoMessage]) -> [MessageModelProtocol] {
+        return demoMessages.map { (demoMessage) in
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
-            switch tutorialMessage {
+            switch demoMessage {
             case .text(let text):
                 return DemoChatMessageFactory.makeTextMessage(NSUUID().uuidString, text: text, isIncoming: isIncoming)
             case .image(let name):
@@ -141,7 +141,7 @@ class TutorialMessageFactory {
         }
     }
 
-    static func makeMessages() -> [MessageModelProtocol] {
-        return self.messages(fromTutorialMessages: self.tutorialMessages)
+    static func makeOverviewMessages() -> [MessageModelProtocol] {
+        return self.messages(fromDemoMessages: self.overviewMessages)
     }
 }
