@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */; };
 		C33FBFAE1BDE441C008E3545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAC1BDE441C008E3545 /* Main.storyboard */; };
 		C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFAF1BDE441C008E3545 /* Assets.xcassets */; };
 		C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C33FBFB11BDE441C008E3545 /* LaunchScreen.storyboard */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChattoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
+		558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRandomMessageChatViewController.swift; sourceTree = "<group>"; };
 		623390018DA74FF277EE2626 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DABD92E2BA40464C1727DA2 /* Pods-ChattoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.release.xcconfig"; sourceTree = "<group>"; };
 		C33FBFA51BDE441C008E3545 /* ChattoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChattoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,6 +150,7 @@
 		55A77B501FCC6BEA0040C77E /* Chat View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */,
 				C3F91DA11C75EF9E00D461D2 /* DemoChatItemsDecorator.swift */,
 				C3F91DA91C75EF9E00D461D2 /* DemoChatDataSource.swift */,
 				C3F91DAA1C75EF9E00D461D2 /* DemoChatMessageFactory.swift */,
@@ -455,6 +458,7 @@
 				C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
 				C3F91DB71C75EF9E00D461D2 /* DemoChatItemsDecorator.swift in Sources */,
+				558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */,
 				C3F91DC11C75EF9E00D461D2 /* DemoPhotoMessageModel.swift in Sources */,
 				C3F91DC21C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift in Sources */,
 				C3F91DBE1C75EF9E00D461D2 /* DemoChatMessageFactory.swift in Sources */,

@@ -104,36 +104,4 @@ class DemoChatViewController: BaseChatViewController {
         }
         return item
     }
-
-    // MARK: - Right navigation item
-
-    struct RightNavigationItem {
-        let title: String
-        let action: () -> Void
-    }
-
-    var rightNavigationItem: RightNavigationItem? {
-        didSet {
-            self.updateRightNavigationItem()
-        }
-    }
-
-    private func updateRightNavigationItem() {
-        if let item = self.rightNavigationItem {
-            let button = UIBarButtonItem(
-                title: item.title,
-                style: .plain,
-                target: self,
-                action: #selector(performRightNavigationItemAction)
-            )
-            self.navigationItem.rightBarButtonItem = button
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
-    }
-
-    @objc
-    private func performRightNavigationItemAction() {
-        self.rightNavigationItem?.action()
-    }
 }

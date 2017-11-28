@@ -60,11 +60,5 @@ class ConversationsViewController: UITableViewController {
         }
         chatController.dataSource = dataSource
         chatController.messageSender = dataSource.messageSender
-        chatController.rightNavigationItem = DemoChatViewController.RightNavigationItem(
-            title: "Add message",
-            action: { [weak dataSource] in
-                dataSource?.addRandomIncomingMessage()
-            }
-        )
     }
 }
