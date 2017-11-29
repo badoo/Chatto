@@ -37,8 +37,8 @@ public struct ChatItemDecorationAttributes: ChatItemDecorationAttributesProtocol
                 canShowTail: Bool,
                 canShowAvatar: Bool,
                 canShowFailedIcon: Bool,
-                showsCheckIcon: Bool,
-                isChecked: Bool) {
+                showsCheckIcon: Bool = false,
+                isChecked: Bool = false) {
         self.bottomMargin = bottomMargin
         self.canShowTail = canShowTail
         self.canShowAvatar = canShowAvatar
