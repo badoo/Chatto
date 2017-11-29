@@ -215,6 +215,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.updateAvatarView(from: viewModel, with: style)
         self.updateCheckIcon(with: style)
 
+        self.allowAccessoryViewRevealing = !viewModel.showsCheckIcon
         self.contentView.isUserInteractionEnabled = !viewModel.showsCheckIcon
         self.selectionTapGestureRecognizer.isEnabled = viewModel.showsCheckIcon
 
