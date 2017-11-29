@@ -22,7 +22,6 @@
  THE SOFTWARE.
 */
 
-import ChattoAdditions
 import Foundation
 
 public protocol MessagesSelectorDelegate: class {
