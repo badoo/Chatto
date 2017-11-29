@@ -116,6 +116,26 @@
                                             <segue destination="QHk-uH-HdW" kind="show" identifier="10000 messages" id="8Ld-Nt-cKX"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="f02-0B-tMJ" style="IBUITableViewCellStyleDefault" id="k74-qQ-qh5">
+                                        <rect key="frame" x="0.0" y="176" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="k74-qQ-qh5" id="xYU-Hx-QJ2">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Chat messages selection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="f02-0B-tMJ">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="k6C-41-dPm" kind="show" identifier="messages_selection" id="Tz5-ZL-Ed1"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -175,6 +195,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="SUy-Fa-YaG" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="ozs-Zv-IKt">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
@@ -186,8 +207,27 @@
             </objects>
             <point key="canvasLocation" x="9" y="1453"/>
         </scene>
+        <!--Chat-->
+        <scene sceneID="jh0-Tv-sSI">
+            <objects>
+                <viewController id="k6C-41-dPm" customClass="MessagesSelectionChatViewController" customModule="ChattoApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="shV-Wy-JTI"/>
+                        <viewControllerLayoutGuide type="bottom" id="sVt-HZ-c9i"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cdv-iW-i1T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Chat" id="cbE-tu-dbg"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jT5-Uu-bFA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="774" y="-18"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8Ld-Nt-cKX"/>
+        <segue reference="Cki-6B-cN6"/>
     </inferredMetricsTieBreakers>
 </document>

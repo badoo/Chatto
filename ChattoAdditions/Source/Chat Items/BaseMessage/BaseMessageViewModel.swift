@@ -51,6 +51,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var canShowFailedIcon: Bool { get set }
     var showsAvatar: Bool { get set }
     var showsCheckIcon: Bool { get set }
+    var isChecked: Bool { get set }
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { get set }
@@ -108,6 +109,15 @@ extension DecoratedMessageViewModelProtocol {
         }
     }
 
+    public var isChecked: Bool {
+        get {
+            return self.messageViewModel.isChecked
+        }
+        set {
+            self.messageViewModel.isChecked = newValue
+        }
+    }
+
     public var date: String {
         return self.messageViewModel.date
     }
@@ -153,6 +163,7 @@ open class MessageViewModel: MessageViewModelProtocol {
     open var showsTail: Bool
     open var showsAvatar: Bool
     open var showsCheckIcon: Bool
+    open var isChecked: Bool
 
     open lazy var date: String = {
         return self.dateFormatter.string(from: self.messageModel.date as Date)
@@ -165,12 +176,14 @@ open class MessageViewModel: MessageViewModelProtocol {
                 showsTail: Bool,
                 showsAvatar: Bool,
                 showsCheckIcon: Bool,
+                isChecked: Bool,
                 messageModel: MessageModelProtocol,
                 avatarImage: UIImage?) {
         self.dateFormatter = dateFormatter
         self.showsTail = showsTail
         self.showsAvatar = showsAvatar
         self.showsCheckIcon = showsCheckIcon
+        self.isChecked = isChecked
         self.messageModel = messageModel
         self.avatarImage = Observable<UIImage?>(avatarImage)
     }
@@ -200,7 +213,8 @@ public class MessageViewModelDefaultBuilder {
         return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter,
                                 showsTail: false,
                                 showsAvatar: false,
-                                showsCheckIcon: true,
+                                showsCheckIcon: false,
+                                isChecked: false,
                                 messageModel: message,
                                 avatarImage: nil)
     }

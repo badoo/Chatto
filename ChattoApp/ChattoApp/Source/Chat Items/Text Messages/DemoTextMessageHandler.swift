@@ -50,4 +50,12 @@ class DemoTextMessageHandler: BaseMessageInteractionHandlerProtocol {
     func userDidEndLongPressOnBubble(viewModel: DemoTextMessageViewModel) {
         self.baseHandler.userDidEndLongPressOnBubble(viewModel: viewModel)
     }
+
+    func userDidSelectMessage(viewModel: DemoTextMessageViewModel) {
+        self.baseHandler.userDidSelectMessage(viewModel: viewModel)
+    }
+
+    func userDidDeselectMessage(viewModel: DemoTextMessageViewModel) {
+        self.baseHandler.userDidDeselectMessage(viewModel: viewModel)
+    }
 }

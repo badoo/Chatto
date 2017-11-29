@@ -39,6 +39,8 @@ public protocol BaseMessageInteractionHandlerProtocol {
     func userDidTapOnBubble(viewModel: ViewModelT)
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
     func userDidEndLongPressOnBubble(viewModel: ViewModelT)
+    func userDidSelectMessage(viewModel: ViewModelT)
+    func userDidDeselectMessage(viewModel: ViewModelT)
 }
 
 open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT>: BaseChatItemPresenter<BaseMessageCollectionViewCell<BubbleViewT>> where
@@ -102,6 +104,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             self.messageViewModel.showsTail = decorationAttributes.canShowTail
             self.messageViewModel.showsAvatar = decorationAttributes.canShowAvatar
             self.messageViewModel.showsCheckIcon = decorationAttributes.showsCheckIcon
+            self.messageViewModel.isChecked = decorationAttributes.isChecked
             self.messageViewModel.canShowFailedIcon = decorationAttributes.canShowFailedIcon
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
@@ -126,6 +129,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellFailedButtonTapped(cell.failedButton)
+            }
+            cell.onSelection = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellSelection()
             }
             additionalConfiguration?()
         }, animated: animated, completion: nil)
@@ -199,5 +206,13 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
         self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel, failIconView: failedButtonView)
+    }
+
+    open func onCellSelection() {
+        if self.messageViewModel.isChecked {
+            self.interactionHandler?.userDidDeselectMessage(viewModel: self.messageViewModel)
+        } else {
+            self.interactionHandler?.userDidSelectMessage(viewModel: self.messageViewModel)
+        }
     }
 }

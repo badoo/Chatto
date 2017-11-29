@@ -144,4 +144,16 @@ extension DemoChatMessageFactory {
     static func makeOverviewMessages() -> [MessageModelProtocol] {
         return self.messages(fromDemoMessages: self.overviewMessages)
     }
+
+    private static let messagesSelectionMessages: [DemoMessage] = [
+        .text("Now you have an ability to select chat messages"),
+        .text("Press \"Select\" to enter selection mode"),
+        .text("Press \"Cancel\" to exit selection mode"),
+        .text("In selection mode all interactions with bubbles are disabled"),
+        .text("A message can be selected or deselected by tapping on a message cell")
+    ]
+
+    static func makeMessagesSelectionMessages() -> [MessageModelProtocol] {
+        return self.messages(fromDemoMessages: self.messagesSelectionMessages)
+    }
 }

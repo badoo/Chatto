@@ -31,8 +31,7 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }
     var checkIconMargins: UIEdgeInsets { get }
-    var checkIconCheckedImage: UIImage { get }
-    var checkIconUncheckedImage: UIImage { get }
+    func checkIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
 }
@@ -175,6 +174,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.failedButton)
         self.contentView.addSubview(self.checkIcon)
         self.contentView.isExclusiveTouch = true
+        self.addGestureRecognizer(self.selectionTapGestureRecognizer)
         self.isExclusiveTouch = true
     }
 
@@ -214,6 +214,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateAvatarView(from: viewModel, with: style)
         self.updateCheckIcon(with: style)
+
+        self.contentView.isUserInteractionEnabled = !viewModel.showsCheckIcon
+        self.selectionTapGestureRecognizer.isEnabled = viewModel.showsCheckIcon
+
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -273,10 +277,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             isIncoming: self.messageViewModel.isIncoming,
             showFailedButton: self.shouldShowFailedIcon,
             failedButtonSize: self.baseStyle.failedIcon.size,
-            avatarSize: self.baseStyle.avatarSize(viewModel: messageViewModel),
-            avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: messageViewModel),
+            avatarSize: self.baseStyle.avatarSize(viewModel: self.messageViewModel),
+            avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
             showCheckIcon: self.messageViewModel.showsCheckIcon,
-            checkIconSize: self.baseStyle.checkIconCheckedImage.size,
+            checkIconSize: self.baseStyle.checkIcon(for: self.messageViewModel).size,
             checkIconMargins: self.baseStyle.checkIconMargins
         )
         var layoutModel = Layout()
@@ -333,11 +337,22 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     // MARK: Selection
 
-    private let checkIcon = UIButton(type: .custom)
+    private let checkIcon = UIImageView(frame: .zero)
 
     private func updateCheckIcon(with style: BaseMessageCollectionViewCellStyleProtocol) {
-        self.checkIcon.setImage(style.checkIconCheckedImage, for: .selected)
-        self.checkIcon.setImage(style.checkIconUncheckedImage, for: .normal)
+        self.checkIcon.image = style.checkIcon(for: self.messageViewModel)
+    }
+
+    private lazy var selectionTapGestureRecognizer: UITapGestureRecognizer = {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap(_:)))
+        return tapGestureRecognizer
+    }()
+
+    public var onSelection: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+
+    @objc
+    private func handleSelectionTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        self.onSelection?(self)
     }
 
     // MARK: User interaction

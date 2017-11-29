@@ -141,10 +141,6 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
 
-    public lazy var checkIconMargins: UIEdgeInsets = self.checkIconStyle.margins
-    public lazy var checkIconCheckedImage: UIImage = self.checkIconStyle.checkedImage()
-    public lazy var checkIconUncheckedImage: UIImage = self.checkIconStyle.uncheckedImage()
-
     private let dateStringAttributes: [NSAttributedStringKey: AnyObject]
 
     open func attributedStringForDate(_ date: String) -> NSAttributedString {
@@ -172,14 +168,26 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return self.avatarStyle.alignment
     }
 
+    public lazy var checkIconMargins: UIEdgeInsets = self.checkIconStyle.margins
+    private lazy var checkedImage: UIImage = self.checkIconStyle.checkedImage()
+    private lazy var uncheckedImage: UIImage = self.checkIconStyle.uncheckedImage()
+
+    public func checkIcon(for viewModel: MessageViewModelProtocol) -> UIImage {
+        return viewModel.isChecked ? self.checkedImage : self.uncheckedImage
+    }
+
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
         return self.layoutConstants
     }
 }
 
 public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
+
+    private static let defaultIncomingColor = UIColor.bma_color(rgb: 0xE6ECF2)
+    private static let defaultOutgoingColor = UIColor.bma_color(rgb: 0x3D68F5)
+
     static public func createDefaultColors() -> Colors {
-        return Colors(incoming: UIColor.bma_color(rgb: 0xE6ECF2), outgoing: UIColor.bma_color(rgb: 0x3D68F5))
+        return Colors(incoming: self.defaultIncomingColor, outgoing: self.defaultOutgoingColor)
     }
 
     static public func createDefaultBubbleBorderImages() -> BubbleBorderImages {
@@ -212,11 +220,14 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
                                                             maxContainerWidthPercentageForBubbleView: 0.68)
     }
 
+    private static let uncheckedIcon = UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(UIColor.bma_color(rgb: 0xC6C6C6))
+    private static let checkedIcon = UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(BaseMessageCollectionViewCellDefaultStyle.defaultOutgoingColor)
+
     static public func createDefaultCheckIconStyle() -> CheckIconStyle {
         return CheckIconStyle(
             margins: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10),
-            uncheckedImage: UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!,
-            checkedImage: UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
+            uncheckedImage: self.uncheckedIcon,
+            checkedImage: self.checkedIcon
         )
     }
 }

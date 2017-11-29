@@ -29,6 +29,8 @@ import ChattoAdditions
 class DemoChatViewController: BaseChatViewController {
 
     var messageSender: DemoChatMessageSender!
+    let messagesSelector = BaseMessagesSelector()
+
     var dataSource: DemoChatDataSource! {
         didSet {
             self.chatDataSource = self.dataSource
@@ -36,13 +38,14 @@ class DemoChatViewController: BaseChatViewController {
     }
 
     lazy private var baseMessageHandler: BaseMessageHandler = {
-        return BaseMessageHandler(messageSender: self.messageSender)
+        return BaseMessageHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.chatItemsDecorator = DemoChatItemsDecorator()
+        self.messagesSelector.delegate = self
+        self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
     }
 
     var chatInputPresenter: BasicChatInputBarPresenter!
@@ -71,12 +74,8 @@ class DemoChatViewController: BaseChatViewController {
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         return [
-            DemoTextMessageModel.chatItemType: [
-                textMessagePresenter
-            ],
-            DemoPhotoMessageModel.chatItemType: [
-                photoMessagePresenter
-            ],
+            DemoTextMessageModel.chatItemType: [textMessagePresenter],
+            DemoPhotoMessageModel.chatItemType: [photoMessagePresenter],
             SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
         ]
@@ -103,5 +102,15 @@ class DemoChatViewController: BaseChatViewController {
             self?.dataSource.addPhotoMessage(image)
         }
         return item
+    }
+}
+
+extension DemoChatViewController: MessagesSelectorDelegate {
+    func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol) {
+        self.enqueueModelUpdate(updateType: .normal)
+    }
+
+    func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol) {
+        self.enqueueModelUpdate(updateType: .normal)
     }
 }

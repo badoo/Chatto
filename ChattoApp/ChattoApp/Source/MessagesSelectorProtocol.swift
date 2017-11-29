@@ -22,28 +22,20 @@
  THE SOFTWARE.
 */
 
+import ChattoAdditions
 import Foundation
-import Chatto
 
-public struct ChatItemDecorationAttributes: ChatItemDecorationAttributesProtocol {
-    public let bottomMargin: CGFloat
-    public let canShowTail: Bool
-    public let canShowAvatar: Bool
-    public var canShowFailedIcon: Bool
-    public let showsCheckIcon: Bool
-    public let isChecked: Bool
+public protocol MessagesSelectorDelegate: class {
+    func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol)
+    func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol)
+}
 
-    public init(bottomMargin: CGFloat,
-                canShowTail: Bool,
-                canShowAvatar: Bool,
-                canShowFailedIcon: Bool,
-                showsCheckIcon: Bool,
-                isChecked: Bool) {
-        self.bottomMargin = bottomMargin
-        self.canShowTail = canShowTail
-        self.canShowAvatar = canShowAvatar
-        self.canShowFailedIcon = canShowFailedIcon
-        self.showsCheckIcon = showsCheckIcon
-        self.isChecked = isChecked
-    }
+public protocol MessagesSelectorProtocol: class {
+    weak var delegate: MessagesSelectorDelegate? { get set }
+    var isActive: Bool { get set }
+    func canSelectMessage(_ message: MessageModelProtocol) -> Bool
+    func isMessageSelected(_ message: MessageModelProtocol) -> Bool
+    func selectMessage(_ message: MessageModelProtocol)
+    func deselectMessage(_ message: MessageModelProtocol)
+    func selectedMessages() -> [MessageModelProtocol]
 }
