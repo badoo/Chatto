@@ -213,6 +213,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateAvatarView(from: viewModel, with: style)
         self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     private func updateAvatarView(from viewModel: MessageViewModelProtocol,
@@ -229,13 +230,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open override func layoutSubviews() {
         super.layoutSubviews()
 
-        let layoutModel = self.calculateLayout(availableWidth: self.contentView.bounds.width)
-        self.failedButton.bma_rect = layoutModel.failedViewFrame
-        self.bubbleView.bma_rect = layoutModel.bubbleViewFrame
-        self.bubbleView.preferredMaxLayoutWidth = layoutModel.preferredMaxWidthForBubble
+        let layout = self.calculateLayout(availableWidth: self.contentView.bounds.width)
+        self.failedButton.bma_rect = layout.failedButtonFrame
+        self.bubbleView.bma_rect = layout.bubbleViewFrame
+        self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
         self.bubbleView.layoutIfNeeded()
 
-        self.avatarView.bma_rect = layoutModel.avatarViewFrame
+        self.avatarView.bma_rect = layout.avatarViewFrame
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -258,9 +259,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return self.calculateLayout(availableWidth: size.width).size
     }
 
-    private func calculateLayout(availableWidth: CGFloat) -> BaseMessageLayoutModel {
+    private func calculateLayout(availableWidth: CGFloat) -> Layout {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
-        let parameters = BaseMessageLayoutModelParameters(
+        let parameters = LayoutParameters(
             containerWidth: availableWidth,
             horizontalMargin: layoutConstants.horizontalMargin,
             horizontalInterspacing: layoutConstants.horizontalInterspacing,
@@ -272,7 +273,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             avatarSize: baseStyle.avatarSize(viewModel: messageViewModel),
             avatarVerticalAlignment: baseStyle.avatarVerticalAlignment(viewModel: messageViewModel)
         )
-        var layoutModel = BaseMessageLayoutModel()
+        var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
         return layoutModel
     }
@@ -358,14 +359,14 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 }
 
-struct BaseMessageLayoutModel {
+fileprivate struct Layout {
     private (set) var size = CGSize.zero
-    private (set) var failedViewFrame = CGRect.zero
+    private (set) var failedButtonFrame = CGRect.zero
     private (set) var bubbleViewFrame = CGRect.zero
     private (set) var avatarViewFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
-    mutating func calculateLayout(parameters: BaseMessageLayoutModelParameters) {
+    mutating func calculateLayout(parameters: LayoutParameters) {
         let containerWidth = parameters.containerWidth
         let isIncoming = parameters.isIncoming
         let isFailed = parameters.isFailed
@@ -379,9 +380,9 @@ struct BaseMessageLayoutModel {
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .greatestFiniteMagnitude))
         let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
 
-        self.bubbleViewFrame = bubbleSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)
-        self.failedViewFrame = failedButtonSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)
-        self.avatarViewFrame = avatarSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: parameters.avatarVerticalAlignment, dx: 0, dy: 0)
+        self.bubbleViewFrame = bubbleSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center)
+        self.failedButtonFrame = failedButtonSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center)
+        self.avatarViewFrame = avatarSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: parameters.avatarVerticalAlignment)
 
         // Adjust horizontal positions
 
@@ -390,27 +391,28 @@ struct BaseMessageLayoutModel {
             currentX = horizontalMargin
             self.avatarViewFrame.origin.x = currentX
             currentX += avatarSize.width
-            currentX += horizontalInterspacing
-
             if isFailed {
-                self.failedViewFrame.origin.x = currentX
+                currentX += horizontalInterspacing
+                self.failedButtonFrame.origin.x = currentX
                 currentX += failedButtonSize.width
                 currentX += horizontalInterspacing
             } else {
-                self.failedViewFrame.origin.x = -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX - failedButtonSize.width
+                currentX += horizontalInterspacing
             }
             self.bubbleViewFrame.origin.x = currentX
         } else {
             currentX = containerRect.maxX - horizontalMargin
             currentX -= avatarSize.width
             self.avatarViewFrame.origin.x = currentX
-            currentX -= horizontalInterspacing
             if isFailed {
+                currentX -= horizontalInterspacing
                 currentX -= failedButtonSize.width
-                self.failedViewFrame.origin.x = currentX
+                self.failedButtonFrame.origin.x = currentX
                 currentX -= horizontalInterspacing
             } else {
-                self.failedViewFrame.origin.x = containerRect.width - -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX
+                currentX -= horizontalInterspacing
             }
             currentX -= bubbleSize.width
             self.bubbleViewFrame.origin.x = currentX
@@ -421,7 +423,7 @@ struct BaseMessageLayoutModel {
     }
 }
 
-struct BaseMessageLayoutModelParameters {
+fileprivate struct LayoutParameters {
     let containerWidth: CGFloat
     let horizontalMargin: CGFloat
     let horizontalInterspacing: CGFloat

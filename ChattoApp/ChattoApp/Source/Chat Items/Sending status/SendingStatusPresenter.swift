@@ -27,7 +27,7 @@ import Chatto
 import ChattoAdditions
 
 // This is a dirty implementation that shows what's needed to add a new type of element
-// @see ChatItemsDemoDecorator
+// @see DemoChatItemsDecorator
 
 class SendingStatusModel: ChatItemProtocol {
     let uid: String

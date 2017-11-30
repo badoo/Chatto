@@ -26,8 +26,8 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
-    struct Constants {
+final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
+    private struct Constants {
         static let shortSeparation: CGFloat = 3
         static let normalSeparation: CGFloat = 10
         static let timeIntervalThresholdToIncreaseSeparation: TimeInterval = 120
@@ -88,7 +88,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
         return decoratedChatItems
     }
 
-    func separationAfterItem(_ current: ChatItemProtocol?, next: ChatItemProtocol?) -> CGFloat {
+    private func separationAfterItem(_ current: ChatItemProtocol?, next: ChatItemProtocol?) -> CGFloat {
         guard let nexItem = next else { return 0 }
         guard let currentMessage = current as? MessageModelProtocol else { return Constants.normalSeparation }
         guard let nextMessage = nexItem as? MessageModelProtocol else { return Constants.normalSeparation }
@@ -104,7 +104,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
         }
     }
 
-    func showsStatusForMessage(_ message: MessageModelProtocol) -> Bool {
+    private func showsStatusForMessage(_ message: MessageModelProtocol) -> Bool {
         return message.status == .failed || message.status == .sending
     }
 }
