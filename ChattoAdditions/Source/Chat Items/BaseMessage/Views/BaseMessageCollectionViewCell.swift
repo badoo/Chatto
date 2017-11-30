@@ -276,7 +276,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             maxContainerWidthPercentageForBubbleView: layoutConstants.maxContainerWidthPercentageForBubbleView,
             bubbleView: self.bubbleView,
             isIncoming: self.messageViewModel.isIncoming,
-            showFailedButton: self.shouldShowFailedIcon,
+            isShowingFailedButton: self.shouldShowFailedIcon,
             failedButtonSize: self.baseStyle.failedIcon.size,
             avatarSize: self.baseStyle.avatarSize(viewModel: self.messageViewModel),
             avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
@@ -402,7 +402,7 @@ fileprivate struct Layout {
     mutating func calculateLayout(parameters: LayoutParameters) {
         let containerWidth = parameters.containerWidth
         let isIncoming = parameters.isIncoming
-        let isFailed = parameters.showFailedButton
+        let isShowingFailedButton = parameters.isShowingFailedButton
         let failedButtonSize = parameters.failedButtonSize
         let bubbleView = parameters.bubbleView
         let horizontalMargin = parameters.horizontalMargin
@@ -454,7 +454,7 @@ fileprivate struct Layout {
             currentX += horizontalMargin
             self.avatarViewFrame.origin.x = currentX
             currentX += avatarSize.width
-            if isFailed {
+            if isShowingFailedButton {
                 currentX += horizontalInterspacing
                 self.failedButtonFrame.origin.x = currentX
                 currentX += failedButtonSize.width
@@ -468,7 +468,7 @@ fileprivate struct Layout {
             currentX = containerRect.maxX - horizontalMargin
             currentX -= avatarSize.width
             self.avatarViewFrame.origin.x = currentX
-            if isFailed {
+            if isShowingFailedButton {
                 currentX -= horizontalInterspacing
                 currentX -= failedButtonSize.width
                 self.failedButtonFrame.origin.x = currentX
@@ -493,7 +493,7 @@ fileprivate struct LayoutParameters {
     let maxContainerWidthPercentageForBubbleView: CGFloat // in [0, 1]
     let bubbleView: UIView
     let isIncoming: Bool
-    let showFailedButton: Bool
+    let isShowingFailedButton: Bool
     let failedButtonSize: CGSize
     let avatarSize: CGSize
     let avatarVerticalAlignment: VerticalAlignment
