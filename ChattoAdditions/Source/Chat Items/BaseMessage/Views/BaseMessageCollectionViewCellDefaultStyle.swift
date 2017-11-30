@@ -87,16 +87,16 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         }
     }
 
-    public struct CheckIconStyle {
+    public struct SelectionIndicatorStyle {
         let margins: UIEdgeInsets
-        let uncheckedImage: () -> UIImage
-        let checkedImage: () -> UIImage
+        let selectedIcon: () -> UIImage
+        let deselectedIcon: () -> UIImage
         public init(margins: UIEdgeInsets,
-                    uncheckedImage: @autoclosure @escaping ()-> UIImage,
-                    checkedImage: @autoclosure @escaping ()-> UIImage) {
+                    selectedIcon: @autoclosure @escaping ()-> UIImage,
+                    deselectedIcon: @autoclosure @escaping ()-> UIImage) {
             self.margins = margins
-            self.uncheckedImage = uncheckedImage
-            self.checkedImage = checkedImage
+            self.selectedIcon = selectedIcon
+            self.deselectedIcon = deselectedIcon
         }
     }
 
@@ -106,23 +106,23 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
     let dateTextStyle: DateTextStyle
     let avatarStyle: AvatarStyle
-    let checkIconStyle: CheckIconStyle
+    let selectionIndicatorStyle: SelectionIndicatorStyle
 
-    public init (
+    public init(
         colors: Colors = Class.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
         failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
         layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
         dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
         avatarStyle: AvatarStyle = AvatarStyle(),
-        checkIconStyle: CheckIconStyle = Class.createDefaultCheckIconStyle()) {
+        selectionIndicatorStyle: SelectionIndicatorStyle = Class.createDefaultSelectionIndicatorStyle()) {
             self.colors = colors
             self.bubbleBorderImages = bubbleBorderImages
             self.failedIconImages = failedIconImages
             self.layoutConstants = layoutConstants
             self.dateTextStyle = dateTextStyle
             self.avatarStyle = avatarStyle
-            self.checkIconStyle = checkIconStyle
+            self.selectionIndicatorStyle = selectionIndicatorStyle
 
             self.dateStringAttributes = [
                 NSAttributedStringKey.font: self.dateTextStyle.font(),
@@ -168,12 +168,12 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return self.avatarStyle.alignment
     }
 
-    public lazy var checkIconMargins: UIEdgeInsets = self.checkIconStyle.margins
-    private lazy var checkedImage: UIImage = self.checkIconStyle.checkedImage()
-    private lazy var uncheckedImage: UIImage = self.checkIconStyle.uncheckedImage()
+    public lazy var selectionIndicatorMargins: UIEdgeInsets = self.selectionIndicatorStyle.margins
+    private lazy var selectionIndicatorSelectedIcon: UIImage = self.selectionIndicatorStyle.selectedIcon()
+    private lazy var selectionIndicatorDeselectedIcon: UIImage = self.selectionIndicatorStyle.deselectedIcon()
 
-    public func checkIcon(for viewModel: MessageViewModelProtocol) -> UIImage {
-        return viewModel.isChecked ? self.checkedImage : self.uncheckedImage
+    public func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage {
+        return viewModel.isSelected ? self.selectionIndicatorSelectedIcon : self.selectionIndicatorDeselectedIcon
     }
 
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
@@ -220,14 +220,14 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
                                                             maxContainerWidthPercentageForBubbleView: 0.68)
     }
 
-    private static let uncheckedIcon = UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(UIColor.bma_color(rgb: 0xC6C6C6))
-    private static let checkedIcon = UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(BaseMessageCollectionViewCellDefaultStyle.defaultOutgoingColor)
+    private static let selectionIndicatorIconSelected = UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(UIColor.bma_color(rgb: 0xC6C6C6))
+    private static let selectionIndicatorIconDeselected = UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(BaseMessageCollectionViewCellDefaultStyle.defaultOutgoingColor)
 
-    static public func createDefaultCheckIconStyle() -> CheckIconStyle {
-        return CheckIconStyle(
+    static public func createDefaultSelectionIndicatorStyle() -> SelectionIndicatorStyle {
+        return SelectionIndicatorStyle(
             margins: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10),
-            uncheckedImage: self.uncheckedIcon,
-            checkedImage: self.checkedIcon
+            selectedIcon: self.selectionIndicatorIconSelected,
+            deselectedIcon: self.selectionIndicatorIconDeselected
         )
     }
 }

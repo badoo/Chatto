@@ -49,9 +49,9 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
             let bottomMargin = self.separationAfterItem(chatItem, next: next)
             var showsTail = false
             var additionalItems =  [DecoratedChatItem]()
-            var showsCheckIcon = true
-            var isChecked = false
             var addTimeSeparator = false
+            var isSelected = false
+            var isShowingSelectionIndicator = false
 
             if let currentMessage = chatItem as? MessageModelProtocol {
                 if let nextMessage = next as? MessageModelProtocol {
@@ -79,8 +79,8 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
                     decoratedChatItems.append(dateTimeStamp)
                 }
 
-                isChecked = self.messagesSelector.isMessageSelected(currentMessage)
-                showsCheckIcon = self.messagesSelector.isActive && self.messagesSelector.canSelectMessage(currentMessage)
+                isSelected = self.messagesSelector.isMessageSelected(currentMessage)
+                isShowingSelectionIndicator = self.messagesSelector.isActive && self.messagesSelector.canSelectMessage(currentMessage)
             }
 
             decoratedChatItems.append(
@@ -90,8 +90,8 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
                                                                        canShowTail: showsTail,
                                                                        canShowAvatar: showsTail,
                                                                        canShowFailedIcon: true,
-                                                                       showsCheckIcon: showsCheckIcon,
-                                                                       isChecked: isChecked)
+                                                                       isShowingSelectionIndicator: isShowingSelectionIndicator,
+                                                                       isSelected: isSelected)
                 )
             )
             decoratedChatItems.append(contentsOf: additionalItems)

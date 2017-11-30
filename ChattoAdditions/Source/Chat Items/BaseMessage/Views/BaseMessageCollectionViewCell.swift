@@ -30,8 +30,8 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }
-    var checkIconMargins: UIEdgeInsets { get }
-    func checkIcon(for viewModel: MessageViewModelProtocol) -> UIImage
+    var selectionIndicatorMargins: UIEdgeInsets { get }
+    func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
 }
@@ -172,7 +172,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.avatarView)
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
-        self.contentView.addSubview(self.checkIcon)
+        self.contentView.addSubview(self.selectionIndicator)
         self.contentView.isExclusiveTouch = true
         self.addGestureRecognizer(self.selectionTapGestureRecognizer)
         self.isExclusiveTouch = true
@@ -213,11 +213,11 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateAvatarView(from: viewModel, with: style)
-        self.updateCheckIcon(with: style)
+        self.updateSelectionIndicator(with: style)
 
-        self.allowAccessoryViewRevealing = !viewModel.showsCheckIcon
-        self.contentView.isUserInteractionEnabled = !viewModel.showsCheckIcon
-        self.selectionTapGestureRecognizer.isEnabled = viewModel.showsCheckIcon
+        self.allowAccessoryViewRevealing = !viewModel.isShowingSelectionIndicator
+        self.contentView.isUserInteractionEnabled = !viewModel.isShowingSelectionIndicator
+        self.selectionTapGestureRecognizer.isEnabled = viewModel.isShowingSelectionIndicator
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -244,7 +244,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.bubbleView.layoutIfNeeded()
 
         self.avatarView.bma_rect = layout.avatarViewFrame
-        self.checkIcon.bma_rect = layout.checkIconFrame
+        self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -280,9 +280,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             failedButtonSize: self.baseStyle.failedIcon.size,
             avatarSize: self.baseStyle.avatarSize(viewModel: self.messageViewModel),
             avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
-            showCheckIcon: self.messageViewModel.showsCheckIcon,
-            checkIconSize: self.baseStyle.checkIcon(for: self.messageViewModel).size,
-            checkIconMargins: self.baseStyle.checkIconMargins
+            isShowingSelectionIndicator: self.messageViewModel.isShowingSelectionIndicator,
+            selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
+            selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins
         )
         var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
@@ -338,10 +338,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     // MARK: Selection
 
-    private let checkIcon = UIImageView(frame: .zero)
+    private let selectionIndicator = UIImageView(frame: .zero)
 
-    private func updateCheckIcon(with style: BaseMessageCollectionViewCellStyleProtocol) {
-        self.checkIcon.image = style.checkIcon(for: self.messageViewModel)
+    private func updateSelectionIndicator(with style: BaseMessageCollectionViewCellStyleProtocol) {
+        self.selectionIndicator.image = style.selectionIndicatorIcon(for: self.messageViewModel)
     }
 
     private lazy var selectionTapGestureRecognizer: UITapGestureRecognizer = {
@@ -396,7 +396,7 @@ fileprivate struct Layout {
     private (set) var failedButtonFrame = CGRect.zero
     private (set) var bubbleViewFrame = CGRect.zero
     private (set) var avatarViewFrame = CGRect.zero
-    private (set) var checkIconFrame = CGRect.zero
+    private (set) var selectionIndicatorFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
     mutating func calculateLayout(parameters: LayoutParameters) {
@@ -408,7 +408,7 @@ fileprivate struct Layout {
         let horizontalMargin = parameters.horizontalMargin
         let horizontalInterspacing = parameters.horizontalInterspacing
         let avatarSize = parameters.avatarSize
-        let checkIconSize = parameters.checkIconSize
+        let selectionIndicatorSize = parameters.selectionIndicatorSize
 
         let preferredWidthForBubble = (containerWidth * parameters.maxContainerWidthPercentageForBubbleView).bma_round()
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .greatestFiniteMagnitude))
@@ -432,7 +432,7 @@ fileprivate struct Layout {
             yAlignment: parameters.avatarVerticalAlignment
         )
 
-        self.checkIconFrame = checkIconSize.bma_rect(
+        self.selectionIndicatorFrame = selectionIndicatorSize.bma_rect(
             inContainer: containerRect,
             xAlignament: .left,
             yAlignment: .center
@@ -442,13 +442,13 @@ fileprivate struct Layout {
 
         var currentX: CGFloat = 0
 
-        if parameters.showCheckIcon {
-            self.checkIconFrame.origin.x += parameters.checkIconMargins.left
+        if parameters.isShowingSelectionIndicator {
+            self.selectionIndicatorFrame.origin.x += parameters.selectionIndicatorMargins.left
         } else {
-            self.checkIconFrame.origin.x -= checkIconSize.width
+            self.selectionIndicatorFrame.origin.x -= selectionIndicatorSize.width
         }
 
-        currentX += self.checkIconFrame.maxX
+        currentX += self.selectionIndicatorFrame.maxX
 
         if isIncoming {
             currentX += horizontalMargin
@@ -497,7 +497,7 @@ fileprivate struct LayoutParameters {
     let failedButtonSize: CGSize
     let avatarSize: CGSize
     let avatarVerticalAlignment: VerticalAlignment
-    let showCheckIcon: Bool
-    let checkIconSize: CGSize
-    let checkIconMargins: UIEdgeInsets
+    let isShowingSelectionIndicator: Bool
+    let selectionIndicatorSize: CGSize
+    let selectionIndicatorMargins: UIEdgeInsets
 }

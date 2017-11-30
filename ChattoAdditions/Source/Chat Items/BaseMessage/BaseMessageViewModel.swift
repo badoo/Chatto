@@ -50,8 +50,8 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsFailedIcon: Bool { get }
     var canShowFailedIcon: Bool { get set }
     var showsAvatar: Bool { get set }
-    var showsCheckIcon: Bool { get set }
-    var isChecked: Bool { get set }
+    var isShowingSelectionIndicator: Bool { get set }
+    var isSelected: Bool { get set }
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { get set }
@@ -100,21 +100,21 @@ extension DecoratedMessageViewModelProtocol {
         }
     }
 
-    public var showsCheckIcon: Bool {
+    public var isShowingSelectionIndicator: Bool {
         get {
-            return self.messageViewModel.showsCheckIcon
+            return self.messageViewModel.isShowingSelectionIndicator
         }
         set {
-            self.messageViewModel.showsCheckIcon = newValue
+            self.messageViewModel.isShowingSelectionIndicator = newValue
         }
     }
 
-    public var isChecked: Bool {
+    public var isSelected: Bool {
         get {
-            return self.messageViewModel.isChecked
+            return self.messageViewModel.isSelected
         }
         set {
-            self.messageViewModel.isChecked = newValue
+            self.messageViewModel.isSelected = newValue
         }
     }
 
@@ -162,8 +162,8 @@ open class MessageViewModel: MessageViewModelProtocol {
 
     open var showsTail: Bool
     open var showsAvatar: Bool
-    open var showsCheckIcon: Bool
-    open var isChecked: Bool
+    open var isShowingSelectionIndicator: Bool
+    open var isSelected: Bool
 
     open lazy var date: String = {
         return self.dateFormatter.string(from: self.messageModel.date as Date)
@@ -175,15 +175,15 @@ open class MessageViewModel: MessageViewModelProtocol {
     public init(dateFormatter: DateFormatter,
                 showsTail: Bool,
                 showsAvatar: Bool,
-                showsCheckIcon: Bool,
-                isChecked: Bool,
+                isShowingSelectionIndicator: Bool,
+                isSelected: Bool,
                 messageModel: MessageModelProtocol,
                 avatarImage: UIImage?) {
         self.dateFormatter = dateFormatter
         self.showsTail = showsTail
         self.showsAvatar = showsAvatar
-        self.showsCheckIcon = showsCheckIcon
-        self.isChecked = isChecked
+        self.isShowingSelectionIndicator = isShowingSelectionIndicator
+        self.isSelected = isSelected
         self.messageModel = messageModel
         self.avatarImage = Observable<UIImage?>(avatarImage)
     }
@@ -213,8 +213,8 @@ public class MessageViewModelDefaultBuilder {
         return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter,
                                 showsTail: false,
                                 showsAvatar: false,
-                                showsCheckIcon: false,
-                                isChecked: false,
+                                isShowingSelectionIndicator: false,
+                                isSelected: false,
                                 messageModel: message,
                                 avatarImage: nil)
     }

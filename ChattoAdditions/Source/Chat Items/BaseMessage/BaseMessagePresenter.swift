@@ -103,8 +103,8 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.canShowTail
             self.messageViewModel.showsAvatar = decorationAttributes.canShowAvatar
-            self.messageViewModel.showsCheckIcon = decorationAttributes.showsCheckIcon
-            self.messageViewModel.isChecked = decorationAttributes.isChecked
+            self.messageViewModel.isShowingSelectionIndicator = decorationAttributes.isShowingSelectionIndicator
+            self.messageViewModel.isSelected = decorationAttributes.isSelected
             self.messageViewModel.canShowFailedIcon = decorationAttributes.canShowFailedIcon
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
@@ -209,7 +209,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     }
 
     open func onCellSelection() {
-        if self.messageViewModel.isChecked {
+        if self.messageViewModel.isSelected {
             self.interactionHandler?.userDidDeselectMessage(viewModel: self.messageViewModel)
         } else {
             self.interactionHandler?.userDidSelectMessage(viewModel: self.messageViewModel)
