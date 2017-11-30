@@ -95,22 +95,23 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
     func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
-
     }
 
     func userDidTapOnAvatar(viewModel: ViewModelT) {
-
     }
 
     func userDidTapOnBubble(viewModel: ViewModelT) {
-
     }
 
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
-
     }
 
     func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
+    }
 
+    func userDidSelectMessage(viewModel: ViewModelT) {
+    }
+
+    func userDidDeselectMessage(viewModel: ViewModelT) {
     }
 }
