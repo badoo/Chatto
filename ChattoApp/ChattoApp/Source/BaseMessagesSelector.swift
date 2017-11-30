@@ -22,12 +22,10 @@
  THE SOFTWARE.
 */
 
+import ChattoAdditions
 import Foundation
 
 public class BaseMessagesSelector: MessagesSelectorProtocol {
-
-    public init() {
-    }
 
     public weak var delegate: MessagesSelectorDelegate?
 

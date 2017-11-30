@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3907DBAF27F9A201978EDDC1 /* BaseMessageCollectionViewCellDefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */; };
-		5587303C1FCED8C1005BC2EC /* MessagesSelectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5587303B1FCED8C1005BC2EC /* MessagesSelectorProtocol.swift */; };
-		5587303F1FCED9AA005BC2EC /* BaseMessagesSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5587303E1FCED9AA005BC2EC /* BaseMessagesSelector.swift */; };
 		55ABA5541FC739C300923302 /* Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5531FC739C300923302 /* Alignment.swift */; };
 		55ABA5561FC73A3C00923302 /* CGSize+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5551FC73A3C00923302 /* CGSize+Additions.swift */; };
 		55ABA5591FC73B5600923302 /* CGSize+AdditionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5581FC73B5600923302 /* CGSize+AdditionsTests.swift */; };
@@ -112,8 +110,6 @@
 
 /* Begin PBXFileReference section */
 		3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellDefaultStyle.swift; sourceTree = "<group>"; };
-		5587303B1FCED8C1005BC2EC /* MessagesSelectorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesSelectorProtocol.swift; sourceTree = "<group>"; };
-		5587303E1FCED9AA005BC2EC /* BaseMessagesSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessagesSelector.swift; sourceTree = "<group>"; };
 		55ABA5531FC739C300923302 /* Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alignment.swift; sourceTree = "<group>"; };
 		55ABA5551FC73A3C00923302 /* CGSize+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Additions.swift"; sourceTree = "<group>"; };
 		55ABA5581FC73B5600923302 /* CGSize+AdditionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+AdditionsTests.swift"; sourceTree = "<group>"; };
@@ -227,15 +223,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5587303D1FCED98A005BC2EC /* Messages Selection */ = {
-			isa = PBXGroup;
-			children = (
-				5587303E1FCED9AA005BC2EC /* BaseMessagesSelector.swift */,
-				5587303B1FCED8C1005BC2EC /* MessagesSelectorProtocol.swift */,
-			);
-			path = "Messages Selection";
-			sourceTree = "<group>";
-		};
 		55ABA5521FC738E300923302 /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,7 +300,6 @@
 				55ABA5521FC738E300923302 /* Common */,
 				C3C0CBD51BFE496A0052747C /* Chat Items */,
 				C3C0CC031BFE496A0052747C /* Input */,
-				5587303D1FCED98A005BC2EC /* Messages Selection */,
 				C3C0CC1D1BFE496A0052747C /* UI Components */,
 			);
 			path = Source;
@@ -660,7 +646,6 @@
 				55ABA5671FC748B600923302 /* CGRect+Additions.swift in Sources */,
 				C3C0CC5D1BFE496A0052747C /* PhotosInputDataProvider.swift in Sources */,
 				C3C0CC5C1BFE496A0052747C /* PhotosInputCellProvider.swift in Sources */,
-				5587303F1FCED9AA005BC2EC /* BaseMessagesSelector.swift in Sources */,
 				C3C0CC3C1BFE496A0052747C /* TextMessageModel.swift in Sources */,
 				C3C0CC2A1BFE496A0052747C /* BaseMessageModel.swift in Sources */,
 				C3C0CC4F1BFE496A0052747C /* ChatInputBar.swift in Sources */,
@@ -678,7 +663,6 @@
 				C3C0CC431BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift in Sources */,
 				C3C0CC521BFE496A0052747C /* ChatInputBarPresenter.swift in Sources */,
 				C3C0CC401BFE496A0052747C /* TextBubbleView.swift in Sources */,
-				5587303C1FCED8C1005BC2EC /* MessagesSelectorProtocol.swift in Sources */,
 				55ABA55B1FC73EF100923302 /* UIScreen+Scale.swift in Sources */,
 				55ABA56B1FC74CB400923302 /* UIEdgeInsets+Additions.swift in Sources */,
 				C3C0CC621BFE496A0052747C /* TextChatInputItem.swift in Sources */,
