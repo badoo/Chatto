@@ -174,8 +174,11 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.failedButton)
         self.contentView.addSubview(self.selectionIndicator)
         self.contentView.isExclusiveTouch = true
-        self.addGestureRecognizer(self.selectionTapGestureRecognizer)
         self.isExclusiveTouch = true
+
+        let selectionTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap(_:)))
+        self.selectionTapGestureRecognizer = selectionTapGestureRecognizer
+        self.addGestureRecognizer(selectionTapGestureRecognizer)
     }
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -217,7 +220,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
         self.allowAccessoryViewRevealing = !viewModel.isShowingSelectionIndicator
         self.contentView.isUserInteractionEnabled = !viewModel.isShowingSelectionIndicator
-        self.selectionTapGestureRecognizer.isEnabled = viewModel.isShowingSelectionIndicator
+        self.selectionTapGestureRecognizer?.isEnabled = viewModel.isShowingSelectionIndicator
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -344,11 +347,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.selectionIndicator.image = style.selectionIndicatorIcon(for: self.messageViewModel)
     }
 
-    private lazy var selectionTapGestureRecognizer: UITapGestureRecognizer = {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap(_:)))
-        return tapGestureRecognizer
-    }()
-
+    private var selectionTapGestureRecognizer: UITapGestureRecognizer?
     public var onSelection: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
 
     @objc
