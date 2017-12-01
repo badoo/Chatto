@@ -83,15 +83,18 @@ final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
                 isShowingSelectionIndicator = self.messagesSelector.isActive && self.messagesSelector.canSelectMessage(currentMessage)
             }
 
+            let messageDecorationAttributes = BaseMessageDecorationAttributes(
+                canShowFailedIcon: true,
+                isShowingTail: showsTail,
+                isShowingAvatar: showsTail,
+                isShowingSelectionIndicator: isShowingSelectionIndicator,
+                isSelected: isSelected
+            )
+
             decoratedChatItems.append(
                 DecoratedChatItem(
                     chatItem: chatItem,
-                    decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin,
-                                                                       canShowTail: showsTail,
-                                                                       canShowAvatar: showsTail,
-                                                                       canShowFailedIcon: true,
-                                                                       isShowingSelectionIndicator: isShowingSelectionIndicator,
-                                                                       isSelected: isSelected)
+                    decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin, messageDecorationAttributes: messageDecorationAttributes)
                 )
             )
             decoratedChatItems.append(contentsOf: additionalItems)

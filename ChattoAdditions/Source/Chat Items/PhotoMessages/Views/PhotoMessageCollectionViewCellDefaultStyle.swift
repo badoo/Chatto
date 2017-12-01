@@ -117,7 +117,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     }()
 
     open func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage {
-        switch (viewModel.isIncoming, viewModel.showsTail) {
+        switch (viewModel.isIncoming, viewModel.decorationAttributes.isShowingTail) {
         case (true, true):
             return self.maskImageIncomingTail
         case (true, false):

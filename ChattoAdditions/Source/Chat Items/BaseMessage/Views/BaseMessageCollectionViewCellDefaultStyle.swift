@@ -148,7 +148,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     }
 
     open func borderImage(viewModel: MessageViewModelProtocol) -> UIImage? {
-        switch (viewModel.isIncoming, viewModel.showsTail) {
+        switch (viewModel.isIncoming, viewModel.decorationAttributes.isShowingTail) {
         case (true, true):
             return self.borderIncomingTail
         case (true, false):
@@ -173,7 +173,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     private lazy var selectionIndicatorDeselectedIcon: UIImage = self.selectionIndicatorStyle.deselectedIcon()
 
     public func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage {
-        return viewModel.isSelected ? self.selectionIndicatorSelectedIcon : self.selectionIndicatorDeselectedIcon
+        return viewModel.decorationAttributes.isSelected ? self.selectionIndicatorSelectedIcon : self.selectionIndicatorDeselectedIcon
     }
 
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {

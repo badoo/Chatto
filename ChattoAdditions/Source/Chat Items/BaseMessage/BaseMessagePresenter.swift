@@ -101,11 +101,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     public var decorationAttributes: ChatItemDecorationAttributes!
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
-            self.messageViewModel.showsTail = decorationAttributes.canShowTail
-            self.messageViewModel.showsAvatar = decorationAttributes.canShowAvatar
-            self.messageViewModel.isShowingSelectionIndicator = decorationAttributes.isShowingSelectionIndicator
-            self.messageViewModel.isSelected = decorationAttributes.isSelected
-            self.messageViewModel.canShowFailedIcon = decorationAttributes.canShowFailedIcon
+            self.messageViewModel.decorationAttributes = decorationAttributes.messageDecorationAttributes
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
             cell.baseStyle = self.cellStyle
@@ -209,7 +205,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     }
 
     open func onCellSelection() {
-        if self.messageViewModel.isSelected {
+        if self.messageViewModel.decorationAttributes.isSelected {
             self.interactionHandler?.userDidDeselectMessage(viewModel: self.messageViewModel)
         } else {
             self.interactionHandler?.userDidSelectMessage(viewModel: self.messageViewModel)

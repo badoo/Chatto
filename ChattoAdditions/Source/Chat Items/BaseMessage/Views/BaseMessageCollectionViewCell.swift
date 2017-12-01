@@ -108,7 +108,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
     }
     private var shouldShowFailedIcon: Bool {
-        return self.messageViewModel?.canShowFailedIcon == true && self.messageViewModel?.showsFailedIcon == true
+        return self.messageViewModel?.decorationAttributes.canShowFailedIcon == true && self.messageViewModel?.isShowingFailedIcon == true
     }
 
     override open var isSelected: Bool {
@@ -218,9 +218,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.updateAvatarView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
-        self.allowAccessoryViewRevealing = !viewModel.isShowingSelectionIndicator
-        self.contentView.isUserInteractionEnabled = !viewModel.isShowingSelectionIndicator
-        self.selectionTapGestureRecognizer?.isEnabled = viewModel.isShowingSelectionIndicator
+        self.allowAccessoryViewRevealing = !viewModel.decorationAttributes.isShowingSelectionIndicator
+        self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
+        self.selectionTapGestureRecognizer?.isEnabled = viewModel.decorationAttributes.isShowingSelectionIndicator
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -228,7 +228,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     private func updateAvatarView(from viewModel: MessageViewModelProtocol,
                                   with style: BaseMessageCollectionViewCellStyleProtocol) {
-        self.avatarView.isHidden = !viewModel.showsAvatar
+        self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
 
         let avatarImageSize = style.avatarSize(viewModel: viewModel)
         if avatarImageSize != .zero {
@@ -283,7 +283,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             failedButtonSize: self.baseStyle.failedIcon.size,
             avatarSize: self.baseStyle.avatarSize(viewModel: self.messageViewModel),
             avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
-            isShowingSelectionIndicator: self.messageViewModel.isShowingSelectionIndicator,
+            isShowingSelectionIndicator: self.messageViewModel.decorationAttributes.isShowingSelectionIndicator,
             selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
             selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins
         )

@@ -44,14 +44,10 @@ public extension MessageStatus {
 }
 
 public protocol MessageViewModelProtocol: class { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
+    var decorationAttributes: BaseMessageDecorationAttributes { get set }
     var isIncoming: Bool { get }
     var isUserInteractionEnabled: Bool { get set }
-    var showsTail: Bool { get set }
-    var showsFailedIcon: Bool { get }
-    var canShowFailedIcon: Bool { get set }
-    var showsAvatar: Bool { get set }
-    var isShowingSelectionIndicator: Bool { get set }
-    var isSelected: Bool { get set }
+    var isShowingFailedIcon: Bool { get }
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { get set }
@@ -69,6 +65,16 @@ public protocol DecoratedMessageViewModelProtocol: MessageViewModelProtocol {
 }
 
 extension DecoratedMessageViewModelProtocol {
+
+    public var decorationAttributes: BaseMessageDecorationAttributes {
+        get {
+            return self.messageViewModel.decorationAttributes
+        }
+        set {
+            self.messageViewModel.decorationAttributes = newValue
+        }
+    }
+
     public var isIncoming: Bool {
         return self.messageViewModel.isIncoming
     }
@@ -82,42 +88,6 @@ extension DecoratedMessageViewModelProtocol {
         }
     }
 
-    public var showsTail: Bool {
-        get {
-            return self.messageViewModel.showsTail
-        }
-        set {
-            self.messageViewModel.showsTail = newValue
-        }
-    }
-
-    public var showsAvatar: Bool {
-        get {
-            return self.messageViewModel.showsAvatar
-        }
-        set {
-            self.messageViewModel.showsAvatar = newValue
-        }
-    }
-
-    public var isShowingSelectionIndicator: Bool {
-        get {
-            return self.messageViewModel.isShowingSelectionIndicator
-        }
-        set {
-            self.messageViewModel.isShowingSelectionIndicator = newValue
-        }
-    }
-
-    public var isSelected: Bool {
-        get {
-            return self.messageViewModel.isSelected
-        }
-        set {
-            self.messageViewModel.isSelected = newValue
-        }
-    }
-
     public var date: String {
         return self.messageViewModel.date
     }
@@ -126,17 +96,8 @@ extension DecoratedMessageViewModelProtocol {
         return self.messageViewModel.status
     }
 
-    public var showsFailedIcon: Bool {
-        return self.messageViewModel.showsFailedIcon
-    }
-
-    public var canShowFailedIcon: Bool {
-        get {
-            return self.messageViewModel.canShowFailedIcon
-        }
-        set {
-            self.messageViewModel.canShowFailedIcon = newValue
-        }
+    public var isShowingFailedIcon: Bool {
+        return self.messageViewModel.isShowingFailedIcon
     }
 
     public var avatarImage: Observable<UIImage?> {
@@ -154,16 +115,12 @@ open class MessageViewModel: MessageViewModelProtocol {
         return self.messageModel.isIncoming
     }
 
+    open var decorationAttributes: BaseMessageDecorationAttributes
     open var isUserInteractionEnabled: Bool = true
 
     open var status: MessageViewModelStatus {
         return self.messageModel.status.viewModelStatus()
     }
-
-    open var showsTail: Bool
-    open var showsAvatar: Bool
-    open var isShowingSelectionIndicator: Bool
-    open var isSelected: Bool
 
     open lazy var date: String = {
         return self.dateFormatter.string(from: self.messageModel.date as Date)
@@ -173,25 +130,18 @@ open class MessageViewModel: MessageViewModelProtocol {
     public private(set) var messageModel: MessageModelProtocol
 
     public init(dateFormatter: DateFormatter,
-                showsTail: Bool,
-                showsAvatar: Bool,
-                isShowingSelectionIndicator: Bool,
-                isSelected: Bool,
                 messageModel: MessageModelProtocol,
-                avatarImage: UIImage?) {
+                avatarImage: UIImage?,
+                decorationAttributes: BaseMessageDecorationAttributes) {
         self.dateFormatter = dateFormatter
-        self.showsTail = showsTail
-        self.showsAvatar = showsAvatar
-        self.isShowingSelectionIndicator = isShowingSelectionIndicator
-        self.isSelected = isSelected
         self.messageModel = messageModel
         self.avatarImage = Observable<UIImage?>(avatarImage)
+        self.decorationAttributes = decorationAttributes
     }
 
-    open var showsFailedIcon: Bool {
+    open var isShowingFailedIcon: Bool {
         return self.status == .failed
     }
-    open var canShowFailedIcon: Bool = true
 
     public var avatarImage: Observable<UIImage?>
 }
@@ -211,11 +161,8 @@ public class MessageViewModelDefaultBuilder {
     public func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
         // Override to use default avatarImage
         return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter,
-                                showsTail: false,
-                                showsAvatar: false,
-                                isShowingSelectionIndicator: false,
-                                isSelected: false,
                                 messageModel: message,
-                                avatarImage: nil)
+                                avatarImage: nil,
+                                decorationAttributes: BaseMessageDecorationAttributes())
     }
 }
