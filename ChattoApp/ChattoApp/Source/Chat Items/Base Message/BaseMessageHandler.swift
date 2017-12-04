@@ -33,8 +33,11 @@ public protocol DemoMessageViewModelProtocol {
 class BaseMessageHandler {
 
     private let messageSender: DemoChatMessageSender
-    init (messageSender: DemoChatMessageSender) {
+    private let messagesSelector: MessagesSelectorProtocol
+
+    init(messageSender: DemoChatMessageSender, messagesSelector: MessagesSelectorProtocol) {
         self.messageSender = messageSender
+        self.messagesSelector = messagesSelector
     }
     func userDidTapOnFailIcon(viewModel: DemoMessageViewModelProtocol) {
         print("userDidTapOnFailIcon")
@@ -55,5 +58,15 @@ class BaseMessageHandler {
 
     func userDidEndLongPressOnBubble(viewModel: DemoMessageViewModelProtocol) {
         print("userDidEndLongPressOnBubble")
+    }
+
+    func userDidSelectMessage(viewModel: DemoMessageViewModelProtocol) {
+        print("userDidSelectMessage")
+        self.messagesSelector.selectMessage(viewModel.messageModel)
+    }
+
+    func userDidDeselectMessage(viewModel: DemoMessageViewModelProtocol) {
+        print("userDidDeselectMessage")
+        self.messagesSelector.deselectMessage(viewModel.messageModel)
     }
 }
