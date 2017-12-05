@@ -92,7 +92,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
                 let updateBlock = { () -> Void in
                     self?.fetchResult = changeDetails.fetchResultAfterChanges as! PHFetchResult<PHAsset>
                 }
-                sSelf.delegate?.handlePhotosInpudDataProviderUpdate(sSelf, updateBlock: updateBlock)
+                sSelf.delegate?.handlePhotosInputDataProviderUpdate(sSelf, updateBlock: updateBlock)
             }
         }
     }

@@ -261,7 +261,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
 }
 
 extension PhotosInputView: PhotosInputDataProviderDelegate {
-    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
+    func handlePhotosInputDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 
