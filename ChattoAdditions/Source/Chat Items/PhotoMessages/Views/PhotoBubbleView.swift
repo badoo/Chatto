@@ -78,8 +78,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }()
 
     public private(set) var progressIndicatorView: CircleProgressIndicatorView = {
-        let progressView = CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
-        return progressView!
+        return CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
     }()
 
     private var placeholderIconView: UIImageView = {

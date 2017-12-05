@@ -26,8 +26,7 @@
 #import "CircleProgressView.h"
 
 @interface CircleProgressIndicatorView ()
-@property(nonatomic, assign) BOOL supportsCancel;
-@property(nonatomic, strong) UIGestureRecognizer *stopLoadingTap;
+@property(nonatomic, strong) UIGestureRecognizer *tapGestureRecognizer;
 
 @property(nonatomic, assign) CGFloat progress;
 
@@ -82,34 +81,55 @@
   [self addSubview:_circleIconView];
 }
 
-#pragma mark - stop gesture recognizer
+- (void)setActionBlock:(CircleProgressActionBlock)actionBlock {
+  if (_actionBlock != actionBlock) {
+    _actionBlock = [actionBlock copy];
+    if (actionBlock) {
+      [self addTapGestureRecognizer];
+    } else {
+      [self removeTapGestureRecognizer];
+    }
+  }
+}
 
-- (void)addStopGestureRecognizer {
-  if (self.stopLoadingTap) {
+- (void)layoutSubviews {
+  [super layoutSubviews];
+  self.circleIconView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+  self.progressView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+}
+
+#pragma mark - Action gesture recognizer
+
+- (void)addTapGestureRecognizer {
+  if (self.tapGestureRecognizer) {
     return;
   }
 
-  self.stopLoadingTap = [[UITapGestureRecognizer alloc]
+  self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]
       initWithTarget:self
-              action:@selector(stopLoadingTapped)];
-  [self addGestureRecognizer:self.stopLoadingTap];
+      action:@selector(userDidTap)];
+  [self addGestureRecognizer:self.tapGestureRecognizer];
 }
 
-- (void)removeStopGestureRecognizer {
-  if (self.stopLoadingTap) {
-    [self removeGestureRecognizer:self.stopLoadingTap];
-    self.stopLoadingTap = nil;
+- (void)removeTapGestureRecognizer {
+  if (self.tapGestureRecognizer) {
+    [self removeGestureRecognizer:self.tapGestureRecognizer];
+    self.tapGestureRecognizer = nil;
   }
 }
 
-- (void)stopLoadingTapped {
-  [self removeStopGestureRecognizer];
+- (void)userDidTap {
+  [self removeTapGestureRecognizer];
+  if (self.actionBlock) {
+    self.actionBlock();
+    self.actionBlock = nil;
+  }
 }
 
 #pragma mark - Animations
 
 - (void)prepareForLoading {
-  [self removeStopGestureRecognizer];
+  [self removeTapGestureRecognizer];
   [self.progressView prepareForLoading];
 }
 
@@ -135,8 +155,8 @@
     [self prepareForLoading];
     break;
   case CircleProgressStatusInProgress:
-    if (self.supportsCancel) {
-      [self addStopGestureRecognizer];
+    if (self.actionBlock) {
+      [self addTapGestureRecognizer];
     }
     break;
   case CircleProgressStatusCompleted:
@@ -166,7 +186,7 @@
     [self.circleIconView setType:CircleIconTypeExclamation];
     break;
   case CircleProgressStatusInProgress:
-    if (self.supportsCancel) {
+    if (self.actionBlock) {
       [self.circleIconView setType:CircleIconTypeStop];
     }
     break;
