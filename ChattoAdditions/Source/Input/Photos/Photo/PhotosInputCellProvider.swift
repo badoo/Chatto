@@ -24,11 +24,13 @@
 
 import UIKit
 
-protocol PhotosInputCellProviderProtocol {
-    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell
+protocol PhotosInputCellProviderProtocol: class {
+    func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell
+    func configureFullImageLoadingIndicator(at indexPath: IndexPath,
+                                            request: PhotosInputDataProviderImageRequestProtocol)
 }
 
-class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
+final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
     private let reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
     private let dataProvider: PhotosInputDataProviderProtocol
@@ -38,35 +40,62 @@ class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         self.collectionView.register(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
-    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell {
+    func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! PhotosInputCell
-        self.configureCell(cell, atIndexPath: indexPath)
+        self.configureCell(cell, at: indexPath)
         return cell
     }
 
-    private let previewRequests = NSMapTable<PhotosInputCell, NSNumber>.weakToStrongObjects()
-    private func configureCell(_ cell: PhotosInputCell, atIndexPath indexPath: IndexPath) {
-        if let requestID = self.previewRequests.object(forKey: cell) {
-            self.previewRequests.removeObject(forKey: cell)
-            self.dataProvider.cancelPreviewImageRequest(requestID.int32Value)
-        }
+    func configureFullImageLoadingIndicator(at indexPath: IndexPath,
+                                            request: PhotosInputDataProviderImageRequestProtocol) {
+        guard let cell = self.collectionView.cellForItem(at: indexPath) as? PhotosInputCell else { return }
+        self.configureCellForFullImageLoadingIfNeeded(cell, request: request)
+    }
 
+    private var previewRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
+    private var fullImageRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
+    private func configureCell(_ cell: PhotosInputCell, at indexPath: IndexPath) {
+        if let request = self.previewRequests[cell.hash] {
+            self.previewRequests[cell.hash] = nil
+            self.dataProvider.cancelImageRequest(request)
+        }
+        self.fullImageRequests[cell.hash] = nil
+        cell.hideProgressView()
         let index = indexPath.item - 1
         let targetSize = cell.bounds.size
         var imageProvidedSynchronously = true
-        var requestID: Int32 = -1
-        requestID = self.dataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize) { [weak self, weak cell] image in
+        var requestId: Int32 = -1
+        let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] result in
             guard let sSelf = self, let sCell = cell else { return }
             // We can get here even afer calling cancelPreviewImageRequest (looks liek a race condition in PHImageManager)
             // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
-            // This can also be called before returning from requestPreviewImageAtIndex (synchronously) if the image is cached by PHImageManager
-            let imageIsForThisCell = imageProvidedSynchronously || sSelf.previewRequests.object(forKey: sCell)?.int32Value == requestID
+            // This can also be called before returning from requestPreviewImage (synchronously) if the image is cached by PHImageManager
+            let imageIsForThisCell = imageProvidedSynchronously || sSelf.previewRequests[sCell.hash]?.requestId == requestId
             if imageIsForThisCell {
-                sCell.image = image
+                sCell.image = result.image
+                sSelf.previewRequests[sCell.hash] = nil
             }
         }
+        requestId = request.requestId
         imageProvidedSynchronously = false
+        self.previewRequests[cell.hash] = request
+        if let fullImageRequest = self.dataProvider.fullImageRequest(at: index) {
+            self.configureCellForFullImageLoadingIfNeeded(cell, request: fullImageRequest)
+        }
+    }
 
-        self.previewRequests.setObject(NSNumber(value: requestID), forKey: cell)
+    private func configureCellForFullImageLoadingIfNeeded(_ cell: PhotosInputCell, request: PhotosInputDataProviderImageRequestProtocol) {
+        guard request.progress < 1 else { return }
+        cell.showProgressView()
+        cell.updateProgress(CGFloat(request.progress))
+        request.observeProgress(with: { [weak self, weak cell, weak request] progress in
+            guard let sSelf = self, let sCell = cell, sSelf.fullImageRequests[sCell.hash] === request else { return }
+            cell?.updateProgress(CGFloat(progress))
+            }, completion: { [weak self, weak cell, weak request] _ in
+                guard let sSelf = self, let sCell = cell, sSelf.fullImageRequests[sCell.hash] === request else { return }
+                sCell.hideProgressView()
+                sSelf.fullImageRequests[sCell.hash] = nil
+        })
+        self.fullImageRequests[cell.hash] = request
     }
 }

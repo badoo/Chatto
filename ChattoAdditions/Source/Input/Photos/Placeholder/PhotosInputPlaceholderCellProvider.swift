@@ -32,7 +32,11 @@ final class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol 
         self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
     
-    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell {
+    func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
         return self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath)
+    }
+
+    func configureFullImageLoadingIndicator(at indexPath: IndexPath,
+                                            request: PhotosInputDataProviderImageRequestProtocol) {
     }
 }

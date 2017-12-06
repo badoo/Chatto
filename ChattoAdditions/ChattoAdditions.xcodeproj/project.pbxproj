@@ -98,6 +98,8 @@
 		CDC610041FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC610031FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift */; };
 		CDC610061FD80C2B00C2588E /* PhotosInputPlaceholderDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC610051FD80C2B00C2588E /* PhotosInputPlaceholderDataProvider.swift */; };
 		CDC610081FD80CDA00C2588E /* PhotosInputDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC610071FD80CDA00C2588E /* PhotosInputDataProvider.swift */; };
+		CDC6100B1FD8268200C2588E /* FakePhotosInputDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */; };
+		CDC6100D1FD8376000C2588E /* PhotosInputCellProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */; };
 		F6D04BA71CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */; };
 		F6D04BA91CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */; };
 /* End PBXBuildFile section */
@@ -207,6 +209,8 @@
 		CDC610031FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderCellProvider.swift; sourceTree = "<group>"; };
 		CDC610051FD80C2B00C2588E /* PhotosInputPlaceholderDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderDataProvider.swift; sourceTree = "<group>"; };
 		CDC610071FD80CDA00C2588E /* PhotosInputDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputDataProvider.swift; sourceTree = "<group>"; };
+		CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakePhotosInputDataProvider.swift; sourceTree = "<group>"; };
+		CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCellProviderTests.swift; sourceTree = "<group>"; };
 		F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderDataProviderTests.swift; sourceTree = "<group>"; };
 		F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputWithPlaceholdersDataProviderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -485,8 +489,10 @@
 				C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */,
 				C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */,
 				C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */,
+				CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */,
 				C363C33E1D2405F800599FF5 /* LiveCameraCellPresenterTests.swift */,
 				C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */,
+				CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */,
 				F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */,
 				C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */,
 				F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */,
@@ -743,6 +749,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */,
+				CDC6100B1FD8268200C2588E /* FakePhotosInputDataProvider.swift in Sources */,
 				55ABA5771FC74F8D00923302 /* ObservableTests.swift in Sources */,
 				C3C0CC881BFE49700052747C /* ChatInputPresenterTests.swift in Sources */,
 				C3815D001C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift in Sources */,
@@ -757,6 +764,7 @@
 				C3C0CC851BFE49700052747C /* ChatInputBarTests.swift in Sources */,
 				55ABA5591FC73B5600923302 /* CGSize+AdditionsTests.swift in Sources */,
 				C3C0CC871BFE49700052747C /* ChatInputItemViewTests.swift in Sources */,
+				CDC6100D1FD8376000C2588E /* PhotosInputCellProviderTests.swift in Sources */,
 				C35FE3C81C033E7800D42980 /* PhotoMessagePresenterTests.swift in Sources */,
 				C3EFA6B01C03607A0063CE22 /* BaseMessagePresenterTests.swift in Sources */,
 				C3C0CC8C1BFE49700052747C /* TextChatInputItemTests.swift in Sources */,

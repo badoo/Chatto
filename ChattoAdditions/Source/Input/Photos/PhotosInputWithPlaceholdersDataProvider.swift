@@ -31,9 +31,38 @@ protocol PhotosInputDataProviderDelegate: class {
 protocol PhotosInputDataProviderProtocol: class {
     weak var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void)
-    func cancelPreviewImageRequest(_ requestID: Int32)
+    @discardableResult
+    func requestPreviewImage(at index: Int,
+                             targetSize: CGSize,
+                             completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol
+    @discardableResult
+    func requestFullImage(at index: Int,
+                          progressHandler: PhotosInputDataProviderProgressHandler?,
+                          completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol
+    func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol?
+    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol)
+}
+
+typealias PhotosInputDataProviderProgressHandler = (Double) -> Void
+typealias PhotosInputDataProviderCompletion = (PhotosInputDataProviderResult) -> Void
+
+enum PhotosInputDataProviderResult {
+    case success(UIImage)
+    case error(Error?)
+
+    var image: UIImage? {
+        guard case let .success(resultImage) = self else { return nil }
+        return resultImage
+    }
+}
+
+protocol PhotosInputDataProviderImageRequestProtocol: class {
+    var isFullImageRequest: Bool { get }
+    var requestId: Int32 { get }
+    var progress: Double { get }
+
+    func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
+                         completion: PhotosInputDataProviderCompletion?)
 }
 
 final class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
@@ -51,24 +80,34 @@ final class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProt
         return max(self.photosDataProvider.count, self.placeholdersDataProvider.count)
     }
 
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
+    @discardableResult
+    func requestPreviewImage(at index: Int,
+                             targetSize: CGSize,
+                             completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
         if index < self.photosDataProvider.count {
-            return self.photosDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
+            return self.photosDataProvider.requestPreviewImage(at: index, targetSize: targetSize, completion: completion)
         } else {
-            return self.placeholdersDataProvider.requestPreviewImageAtIndex(index, targetSize: targetSize, completion: completion)
+            return self.placeholdersDataProvider.requestPreviewImage(at: index, targetSize: targetSize, completion: completion)
         }
     }
 
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
+    @discardableResult
+    func requestFullImage(at index: Int,
+                          progressHandler: PhotosInputDataProviderProgressHandler?,
+                          completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
         if index < self.photosDataProvider.count {
-            return self.photosDataProvider.requestFullImageAtIndex(index, completion: completion)
+            return self.photosDataProvider.requestFullImage(at: index, progressHandler: progressHandler, completion: completion)
         } else {
-            return self.placeholdersDataProvider.requestFullImageAtIndex(index, completion: completion)
+            return self.placeholdersDataProvider.requestFullImage(at: index, progressHandler: progressHandler, completion: completion)
         }
     }
 
-    func cancelPreviewImageRequest(_ requestID: Int32) {
-        return self.photosDataProvider.cancelPreviewImageRequest(requestID)
+    func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
+        return self.photosDataProvider.fullImageRequest(at: index)
+    }
+
+    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
+        self.photosDataProvider.cancelImageRequest(request)
     }
 
     // MARK: PhotosInputDataProviderDelegate

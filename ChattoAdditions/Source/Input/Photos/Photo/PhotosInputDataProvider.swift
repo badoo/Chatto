@@ -25,11 +25,44 @@
 import PhotosUI
 import UIKit
 
+private class PhotosInputDataProviderImageRequest: PhotosInputDataProviderImageRequestProtocol {
+    let isFullImageRequest: Bool
+    fileprivate(set) var requestId: Int32 = -1
+    private(set) var progress: Double = 0
+
+    init(isFullImageRequest: Bool) {
+        self.isFullImageRequest = isFullImageRequest
+    }
+
+    private var progressHandlers = [PhotosInputDataProviderProgressHandler]()
+    private var completionHandlers = [PhotosInputDataProviderCompletion]()
+
+    func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
+                         completion: PhotosInputDataProviderCompletion?) {
+        if let progressHandler = progressHandler {
+            self.progressHandlers.append(progressHandler)
+        }
+        if let completion = completion {
+            self.completionHandlers.append(completion)
+        }
+    }
+
+    fileprivate func handleProgressChange(with progress: Double) {
+        self.progressHandlers.forEach { $0(progress) }
+        self.progress = progress
+    }
+
+    fileprivate func handleCompletion(with result: PhotosInputDataProviderResult) {
+        self.completionHandlers.forEach { $0(result) }
+    }
+}
+
 @objc
 final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?
     private var imageManager = PHCachingImageManager()
     private var fetchResult: PHFetchResult<PHAsset>!
+    private var fullImageRequests = [PHAsset: PhotosInputDataProviderImageRequestProtocol]()
     override init() {
         func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
             let options = PHFetchOptions()
@@ -37,7 +70,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             options.predicate = predicate
             return options
         }
-        
+
         if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
             self.fetchResult = PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
         } else {
@@ -55,30 +88,87 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
         return self.fetchResult.count
     }
 
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
+    func requestPreviewImage(at index: Int,
+                             targetSize: CGSize,
+                             completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index]
+        let request = PhotosInputDataProviderImageRequest(isFullImageRequest: false)
+        request.observeProgress(with: nil, completion: completion)
+        let options = self.makePreviewRequestOptions()
+        var requestId: Int32 = -1
+        requestId = self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
+            let result: PhotosInputDataProviderResult
+            if let image = image {
+                result = .success(image)
+            } else {
+                result = .error(info?[PHImageErrorKey] as? Error)
+            }
+            request.handleCompletion(with: result)
+        }
+        request.requestId = requestId
+        return request
+    }
+
+    func requestFullImage(at index: Int,
+                          progressHandler: PhotosInputDataProviderProgressHandler?,
+                          completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
+        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
+        if let existedRequest = self.fullImageRequest(at: index) {
+            return existedRequest
+        } else {
+            let asset = self.fetchResult[index]
+            let request = PhotosInputDataProviderImageRequest(isFullImageRequest: true)
+            request.observeProgress(with: progressHandler, completion: completion)
+            let options = self.makeFullImageRequestOptions()
+            options.progressHandler = { (progress, _, _, _) -> Void in
+                DispatchQueue.main.async {
+                    request.handleProgressChange(with: progress)
+                }
+            }
+            var requestId: Int32 = -1
+            self.fullImageRequests[asset] = request
+            requestId = self.imageManager.requestImageData(for: asset, options: options, resultHandler: { [weak self] (data, _, _, info) in
+                guard let sSelf = self else { return }
+                let result: PhotosInputDataProviderResult
+                if let data = data, let image = UIImage(data: data) {
+                    result = .success(image)
+                } else {
+                    result = .error(info?[PHImageErrorKey] as? Error)
+                }
+                request.handleCompletion(with: result)
+                sSelf.fullImageRequests[asset] = nil
+            })
+            request.requestId = requestId
+            return request
+        }
+    }
+
+    func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
+        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
+        let asset = self.fetchResult[index]
+        return self.fullImageRequests[asset]
+    }
+
+    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
+        self.imageManager.cancelImageRequest(request.requestId)
+        guard request.isFullImageRequest else { return }
+        if let assetAndRequestPair = self.fullImageRequests.first(where: { $0.value === request }) {
+            self.fullImageRequests[assetAndRequestPair.key] = nil
+        }
+    }
+
+    private func makePreviewRequestOptions() -> PHImageRequestOptions {
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
-        return self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, _) in
-            if let image = image {
-                completion(image)
-            }
-        }
+        options.isNetworkAccessAllowed = true
+        return options
     }
 
-    func cancelPreviewImageRequest(_ requestID: Int32) {
-        self.imageManager.cancelImageRequest(requestID)
-    }
-
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
-        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
-        let asset = self.fetchResult[index]
-        self.imageManager.requestImageData(for: asset, options: .none) { (data, _, _, _) -> Void in
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            }
-        }
+    private func makeFullImageRequestOptions() -> PHImageRequestOptions {
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        return options
     }
 
     // MARK: PHPhotoLibraryChangeObserver
