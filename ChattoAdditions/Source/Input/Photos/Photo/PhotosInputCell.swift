@@ -28,6 +28,9 @@ final class PhotosInputCell: UICollectionViewCell {
 
     private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
+        static let loadingIndicatorBackgoroundColor = UIColor.black.withAlphaComponent(0.70)
+        static let loadingIndicatorProgressColor = UIColor.white
+        static let loadingIncicatorProgressWidth: CGFloat = 1
     }
 
     override init(frame: CGRect) {
@@ -66,5 +69,32 @@ final class PhotosInputCell: UICollectionViewCell {
         set {
             self.imageView.image = newValue
         }
+    }
+
+    // MARK: - Progress indicator -
+
+    fileprivate var progressView: CircleProgressIndicatorView?
+    func showProgressView() {
+        guard self.progressView == nil else { return }
+        let progressIndicator = CircleProgressIndicatorView.default()
+        progressIndicator.progressLineColor = Constants.loadingIndicatorProgressColor
+        progressIndicator.progressLineWidth = Constants.loadingIncicatorProgressWidth
+        progressIndicator.backgroundColor = Constants.loadingIndicatorBackgoroundColor
+        progressIndicator.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(progressIndicator)
+        self.addConstraint(NSLayoutConstraint(item: progressIndicator, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: progressIndicator, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: progressIndicator, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: progressIndicator, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
+        self.progressView = progressIndicator
+    }
+
+    func updateProgress(_ progress: CGFloat) {
+        self.progressView?.setProgress(progress)
+    }
+
+    func hideProgressView() {
+        self.progressView?.removeFromSuperview()
+        self.progressView = nil
     }
 }
