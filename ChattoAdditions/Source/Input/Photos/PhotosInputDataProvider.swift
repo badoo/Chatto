@@ -36,30 +36,6 @@ protocol PhotosInputDataProviderProtocol : class {
     func cancelPreviewImageRequest(_ requestID: Int32)
 }
 
-class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
-    weak var delegate: PhotosInputDataProviderDelegate?
-
-    let numberOfPlaceholders: Int
-
-    init(numberOfPlaceholders: Int = 5) {
-        self.numberOfPlaceholders = numberOfPlaceholders
-    }
-
-    var count: Int {
-        return self.numberOfPlaceholders
-    }
-
-    func requestPreviewImageAtIndex(_ index: Int, targetSize: CGSize, completion: @escaping (UIImage) -> Void) -> Int32 {
-        return 0
-    }
-
-    func requestFullImageAtIndex(_ index: Int, completion: @escaping (UIImage) -> Void) {
-    }
-
-    func cancelPreviewImageRequest(_ requestID: Int32) {
-    }
-}
-
 @objc
 class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?

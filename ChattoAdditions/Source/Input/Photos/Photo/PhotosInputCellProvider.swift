@@ -28,19 +28,6 @@ protocol PhotosInputCellProviderProtocol {
     func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell
 }
 
-class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
-    private let reuseIdentifier = "PhotosPlaceholderCellProvider"
-    private let collectionView: UICollectionView
-    init(collectionView: UICollectionView) {
-        self.collectionView = collectionView
-        self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
-    }
-
-    func cellForItemAtIndexPath(_ indexPath: IndexPath) -> UICollectionViewCell {
-        return self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath)
-    }
-}
-
 class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
     private let reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
