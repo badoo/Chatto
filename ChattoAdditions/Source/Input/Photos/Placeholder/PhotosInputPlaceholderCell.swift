@@ -25,22 +25,22 @@
 import UIKit
 
 final class PhotosInputPlaceholderCell: UICollectionViewCell {
-    
+
     private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
         static let imageName = "lock"
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
     }
-    
+
     private var imageView: UIImageView!
     private func commonInit() {
         self.imageView = UIImageView()
@@ -49,7 +49,7 @@ final class PhotosInputPlaceholderCell: UICollectionViewCell {
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView.sizeToFit()
