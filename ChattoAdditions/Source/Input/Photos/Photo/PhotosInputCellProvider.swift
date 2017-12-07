@@ -57,7 +57,7 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
     private func configureCell(_ cell: PhotosInputCell, at indexPath: IndexPath) {
         if let request = self.previewRequests[cell.hash] {
             self.previewRequests[cell.hash] = nil
-            self.dataProvider.cancelImageRequest(request)
+            request.cancel()
         }
         self.fullImageRequests[cell.hash] = nil
         cell.hideProgressView()

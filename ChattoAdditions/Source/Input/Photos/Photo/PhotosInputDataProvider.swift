@@ -26,13 +26,9 @@ import PhotosUI
 import UIKit
 
 private class PhotosInputDataProviderImageRequest: PhotosInputDataProviderImageRequestProtocol {
-    let isFullImageRequest: Bool
     fileprivate(set) var requestId: Int32 = -1
     private(set) var progress: Double = 0
-
-    init(isFullImageRequest: Bool) {
-        self.isFullImageRequest = isFullImageRequest
-    }
+    fileprivate var cancelBlock: (() -> Void)?
 
     private var progressHandlers = [PhotosInputDataProviderProgressHandler]()
     private var completionHandlers = [PhotosInputDataProviderCompletion]()
@@ -45,6 +41,10 @@ private class PhotosInputDataProviderImageRequest: PhotosInputDataProviderImageR
         if let completion = completion {
             self.completionHandlers.append(completion)
         }
+    }
+
+    func cancel() {
+        self.cancelBlock?()
     }
 
     fileprivate func handleProgressChange(with progress: Double) {
@@ -93,7 +93,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
                              completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
         assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
         let asset = self.fetchResult[index]
-        let request = PhotosInputDataProviderImageRequest(isFullImageRequest: false)
+        let request = PhotosInputDataProviderImageRequest()
         request.observeProgress(with: nil, completion: completion)
         let options = self.makePreviewRequestOptions()
         var requestId: Int32 = -1
@@ -105,6 +105,9 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
                 result = .error(info?[PHImageErrorKey] as? Error)
             }
             request.handleCompletion(with: result)
+        }
+        request.cancelBlock = { [weak self] in
+            self?.imageManager.cancelImageRequest(requestId)
         }
         request.requestId = requestId
         return request
@@ -118,7 +121,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             return existedRequest
         } else {
             let asset = self.fetchResult[index]
-            let request = PhotosInputDataProviderImageRequest(isFullImageRequest: true)
+            let request = PhotosInputDataProviderImageRequest()
             request.observeProgress(with: progressHandler, completion: completion)
             let options = self.makeFullImageRequestOptions()
             options.progressHandler = { (progress, _, _, _) -> Void in
@@ -139,6 +142,10 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
                 request.handleCompletion(with: result)
                 sSelf.fullImageRequests[asset] = nil
             })
+            request.cancelBlock = { [weak self, weak request] in
+                guard let sSelf = self, let sRequest = request else { return }
+                sSelf.cancelFullImageRequest(sRequest)
+            }
             request.requestId = requestId
             return request
         }
@@ -150,9 +157,9 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
         return self.fullImageRequests[asset]
     }
 
-    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
+    func cancelFullImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
+        assert(Thread.isMainThread, "Cancel function is called not on Main Thread. It's not a thread-safe.")
         self.imageManager.cancelImageRequest(request.requestId)
-        guard request.isFullImageRequest else { return }
         if let assetAndRequestPair = self.fullImageRequests.first(where: { $0.value === request }) {
             self.fullImageRequests[assetAndRequestPair.key] = nil
         }

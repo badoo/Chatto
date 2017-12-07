@@ -40,7 +40,6 @@ protocol PhotosInputDataProviderProtocol: class {
                           progressHandler: PhotosInputDataProviderProgressHandler?,
                           completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol?
-    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol)
 }
 
 typealias PhotosInputDataProviderProgressHandler = (Double) -> Void
@@ -57,12 +56,12 @@ enum PhotosInputDataProviderResult {
 }
 
 protocol PhotosInputDataProviderImageRequestProtocol: class {
-    var isFullImageRequest: Bool { get }
     var requestId: Int32 { get }
     var progress: Double { get }
 
     func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
                          completion: PhotosInputDataProviderCompletion?)
+    func cancel()
 }
 
 final class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProtocol, PhotosInputDataProviderDelegate {
@@ -104,10 +103,6 @@ final class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProt
 
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
         return self.photosDataProvider.fullImageRequest(at: index)
-    }
-
-    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
-        self.photosDataProvider.cancelImageRequest(request)
     }
 
     // MARK: PhotosInputDataProviderDelegate

@@ -25,7 +25,6 @@
 @testable import ChattoAdditions
 
 final class FakePhotosInputDataProviderImageRequest: PhotosInputDataProviderImageRequestProtocol {
-    var isFullImageRequest: Bool = false
     var requestId: Int32 = 1
     var progress: Double = 0
 
@@ -33,6 +32,11 @@ final class FakePhotosInputDataProviderImageRequest: PhotosInputDataProviderImag
     func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
                          completion: PhotosInputDataProviderCompletion?) {
         self.onObserveProgress?(progressHandler, completion)
+    }
+
+    var onCancel: (() -> Void)?
+    func cancel() {
+        self.onCancel?()
     }
 }
 
@@ -57,10 +61,5 @@ final class FakePhotosInputDataProvider: PhotosInputDataProviderProtocol {
     var onFullImageRequest: ((Int) -> PhotosInputDataProviderImageRequestProtocol?)?
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
         return self.onFullImageRequest?(index)
-    }
-
-    var onCancelImageRequest: ((PhotosInputDataProviderImageRequestProtocol) -> Void)?
-    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
-        self.onCancelImageRequest?(request)
     }
 }

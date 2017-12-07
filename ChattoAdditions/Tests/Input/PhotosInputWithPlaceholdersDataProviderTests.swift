@@ -169,24 +169,6 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         XCTAssertTrue(placeholderProviderRequested)
     }
 
-    func testThat_GivenRequestToCancel_WhenSutCancelImageRequest_ThenOnlyPhotoProviderReceivesCall() {
-        let requestToCancel = FakePhotosInputDataProviderImageRequest()
-        var photoProviderRequested = false
-        var placeholderProviderRequested = false
-        self.fakePhotosProvider.onCancelImageRequest = { request in
-            photoProviderRequested = true
-            XCTAssertTrue(request === requestToCancel)
-        }
-        self.fakePlaceholderProvider.onCancelImageRequest = { request in
-            placeholderProviderRequested = true
-        }
-        // When
-        self.sut.cancelImageRequest(requestToCancel)
-        // Then
-        XCTAssertTrue(photoProviderRequested)
-        XCTAssertFalse(placeholderProviderRequested)
-    }
-
     func testThat_WhenRequestExistedFullImageRequest_ThenOnlyPhotoProviderReceivesCall() {
         let existedRequest = FakePhotosInputDataProviderImageRequest()
         let indexToRequest = 1

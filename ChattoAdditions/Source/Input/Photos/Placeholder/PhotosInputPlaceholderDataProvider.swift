@@ -28,16 +28,14 @@ final class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol 
     weak var delegate: PhotosInputDataProviderDelegate?
 
     private class PlaceholderImageDummyRequest: PhotosInputDataProviderImageRequestProtocol {
-        let isFullImageRequest: Bool
         let requestId: Int32 = -1
         let progress: Double = 1
-        
-        init(isFullImageRequest: Bool) {
-            self.isFullImageRequest = isFullImageRequest
-        }
 
         func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
                              completion: PhotosInputDataProviderCompletion?) {
+        }
+
+        func cancel() {
         }
     }
 
@@ -54,19 +52,16 @@ final class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol 
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
                              completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
-        return PlaceholderImageDummyRequest(isFullImageRequest: false)
+        return PlaceholderImageDummyRequest()
     }
 
     func requestFullImage(at index: Int,
                           progressHandler: PhotosInputDataProviderProgressHandler?,
                           completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
-        return PlaceholderImageDummyRequest(isFullImageRequest: true)
+        return PlaceholderImageDummyRequest()
     }
 
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
         return nil
-    }
-
-    func cancelImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
     }
 }
