@@ -168,12 +168,12 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return self.avatarStyle.alignment
     }
 
-    public lazy var selectionIndicatorMargins: UIEdgeInsets = self.selectionIndicatorStyle.margins
-    private lazy var selectionIndicatorSelectedIcon: UIImage = self.selectionIndicatorStyle.selectedIcon()
-    private lazy var selectionIndicatorDeselectedIcon: UIImage = self.selectionIndicatorStyle.deselectedIcon()
+    public var selectionIndicatorMargins: UIEdgeInsets {
+        return self.selectionIndicatorStyle.margins
+    }
 
     public func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage {
-        return viewModel.decorationAttributes.isSelected ? self.selectionIndicatorSelectedIcon : self.selectionIndicatorDeselectedIcon
+        return viewModel.decorationAttributes.isSelected ? self.selectionIndicatorStyle.selectedIcon() : self.selectionIndicatorStyle.deselectedIcon()
     }
 
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
