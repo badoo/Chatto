@@ -60,6 +60,7 @@ final class PhotosInputCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.image = nil
+        self.hideProgressView()
     }
 
     var image: UIImage? {

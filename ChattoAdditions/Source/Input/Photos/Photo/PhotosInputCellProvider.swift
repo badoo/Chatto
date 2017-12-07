@@ -60,7 +60,6 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
             request.cancel()
         }
         self.fullImageRequests[cell.hash] = nil
-        cell.hideProgressView()
         let index = indexPath.item - 1
         let targetSize = cell.bounds.size
         var imageProvidedSynchronously = true
