@@ -54,7 +54,7 @@ class LiveCameraCell: UICollectionViewCell {
 
     var appearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance() {
         didSet {
-            self.contentView.backgroundColor = self.appearance.backgroundColor
+            self.updateAppearance()
         }
     }
 
@@ -112,6 +112,11 @@ class LiveCameraCell: UICollectionViewCell {
         self.iconImageView = UIImageView()
         self.iconImageView.contentMode = .center
         self.contentView.addSubview(self.iconImageView)
+    }
+
+    private func updateAppearance() {
+        self.contentView.backgroundColor = self.appearance.backgroundColor
+        self.updateIcon()
     }
 
     private func updateIcon() {
