@@ -61,10 +61,12 @@ class PhotosInputCameraPicker: NSObject {
 }
 
 extension PhotosInputCameraPicker: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @objc
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String: AnyObject]?) {
         self.finishPickingImage(image, fromPicker: picker)
     }
 
+    @objc
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.finishPickingImage(nil, fromPicker: picker)
     }
