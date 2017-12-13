@@ -218,7 +218,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.updateAvatarView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
-        self.allowAccessoryViewRevealing = !viewModel.decorationAttributes.isShowingSelectionIndicator
         self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
         self.selectionTapGestureRecognizer?.isEnabled = viewModel.decorationAttributes.isShowingSelectionIndicator
 
