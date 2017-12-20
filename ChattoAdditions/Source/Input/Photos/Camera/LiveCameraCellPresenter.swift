@@ -27,11 +27,11 @@ import Photos
 
 public struct LiveCameraSettings {
     public let cameraPosition: AVCaptureDevice.Position
-    
+
     public init(cameraPosition: AVCaptureDevice.Position) {
         self.cameraPosition = cameraPosition
     }
-    
+
     public static func makeDefaultSettings() -> LiveCameraSettings {
         return LiveCameraSettings(cameraPosition: .unspecified)
     }

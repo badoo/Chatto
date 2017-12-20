@@ -41,12 +41,17 @@ typedef NS_ENUM(NSUInteger, CircleProgressStatus) {
   CircleProgressStatusFailed,
 };
 
+typedef void(^CircleProgressActionBlock)(void);
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CircleProgressIndicatorView : UIView
 
 @property(nonatomic) CircleProgressType progressType;
 @property(nonatomic) CircleProgressStatus progressStatus;
 @property(nonatomic, strong) UIColor *progressLineColor;
 @property(nonatomic, assign) CGFloat progressLineWidth;
+@property(nonatomic, copy, nullable) CircleProgressActionBlock actionBlock;
 
 + (instancetype)defaultProgressIndicatorView;
 + (instancetype)progressIndicatorViewWithSize:(CGSize)size;
@@ -55,6 +60,7 @@ typedef NS_ENUM(NSUInteger, CircleProgressStatus) {
 - (void)setTimerTitle:(NSAttributedString *)title;
 - (void)setTextTitle:(NSAttributedString *)title;
 - (void)setIconType:(CircleIconType)type;
-- (void)setSupportsCancel:(BOOL)supportsCancel;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -37,7 +37,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
 
     let settings: LiveCameraSettings
     var isInitialized: Bool = false
-    
+
     init(settings: LiveCameraSettings) {
         self.settings = settings
     }
