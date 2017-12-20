@@ -57,8 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)progressIndicatorViewWithSize:(CGSize)size;
 
 - (void)setProgress:(CGFloat)progress;
-- (void)setTimerTitle:(NSAttributedString *)title;
-- (void)setTextTitle:(NSAttributedString *)title;
+- (void)setTimerTitle:(nullable NSAttributedString *)title;
+- (void)setTextTitle:(nullable NSAttributedString *)title;
 - (void)setIconType:(CircleIconType)type;
 
 @end
