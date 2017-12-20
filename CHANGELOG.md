@@ -1,4 +1,4 @@
-### 3.2.0 (October 20, 107)
+### 3.2.0 (October 20, 2017)
 
 #### Features:
  - Added support for custom main view in BaseChatViewController #323 by @serge-star 
