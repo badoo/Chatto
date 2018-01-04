@@ -344,6 +344,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     private func updateSelectionIndicator(with style: BaseMessageCollectionViewCellStyleProtocol) {
         self.selectionIndicator.image = style.selectionIndicatorIcon(for: self.messageViewModel)
+        self.updateSelectionIndicatorAccessibilityIdentifier()
     }
 
     private var selectionTapGestureRecognizer: UITapGestureRecognizer?
@@ -352,6 +353,20 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     @objc
     private func handleSelectionTap(_ gestureRecognizer: UITapGestureRecognizer) {
         self.onSelection?(self)
+    }
+
+    private func updateSelectionIndicatorAccessibilityIdentifier() {
+        let accessibilityIdentifier: String
+        if self.messageViewModel.decorationAttributes.isShowingSelectionIndicator {
+            if self.messageViewModel.decorationAttributes.isSelected {
+                accessibilityIdentifier = "chat.message.selection_indicator.selected"
+            } else {
+                accessibilityIdentifier = "chat.message.selection_indicator.deselected"
+            }
+        } else {
+            accessibilityIdentifier = "chat.message.selection_indicator.hidden"
+        }
+        self.selectionIndicator.accessibilityIdentifier = accessibilityIdentifier
     }
 
     // MARK: User interaction
