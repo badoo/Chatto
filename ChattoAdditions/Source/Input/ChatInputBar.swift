@@ -276,9 +276,9 @@ extension ChatInputBar: UITextViewDelegate {
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
         let range = self.textView.text.bma_rangeFromNSRange(nsRange)
         if let maxCharactersCount = self.maxCharactersCount {
-            let currentCount = textView.text.characters.count
-            let rangeLength = textView.text.substring(with: range).characters.count
-            let nextCount = currentCount - rangeLength + text.characters.count
+            let currentCount = textView.text.count
+            let rangeLength = textView.text[range].count
+            let nextCount = currentCount - rangeLength + text.count
             return UInt(nextCount) <= maxCharactersCount
         }
         return true
