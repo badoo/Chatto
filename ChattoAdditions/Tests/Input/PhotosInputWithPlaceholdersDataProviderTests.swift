@@ -169,9 +169,39 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         XCTAssertTrue(placeholderProviderRequested)
     }
 
-    func testThat_WhenRequestExistedFullImageRequest_ThenOnlyPhotoProviderReceivesCall() {
+    func testThat_GivenProviderWithNumberOfPlaceholdersGreaterThenNumberOfPhotos_WhenRequestExistedFullImageRequestAtIndexGreatThenNumberOfPhotos_ThenPlaceholderProviderReceivesCall() {
         let existedRequest = FakePhotosInputDataProviderImageRequest()
-        let indexToRequest = 1
+        let numberOfPlaceholders = 10
+        let numberOfPhotos = 1
+        let indexToRequest = 5
+        self.fakePlaceholderProvider.count = numberOfPlaceholders
+        self.fakePhotosProvider.count = numberOfPhotos
+        var photoProviderRequested = false
+        var placeholderProviderRequested = false
+        self.fakePhotosProvider.onFullImageRequest = { index in
+            photoProviderRequested = true
+            XCTAssertTrue(index == indexToRequest)
+            return nil
+        }
+        self.fakePlaceholderProvider.onFullImageRequest = { _ in
+            placeholderProviderRequested = true
+            return existedRequest
+        }
+        // When
+        let request = self.sut.fullImageRequest(at: indexToRequest)
+        // Then
+        XCTAssertTrue(request === existedRequest)
+        XCTAssertFalse(photoProviderRequested)
+        XCTAssertTrue(placeholderProviderRequested)
+    }
+
+    func testThat_GivenProviderWithNumberOfPlaceholdersGreaterThenNumberOfPhotos_WhenRequestExistedFullImageRequestAtIndexLessThenNumberOfPhotos_ThenPhotosProviderReceivesCall() {
+        let existedRequest = FakePhotosInputDataProviderImageRequest()
+        let numberOfPlaceholders = 10
+        let numberOfPhotos = 5
+        let indexToRequest = 3
+        self.fakePlaceholderProvider.count = numberOfPlaceholders
+        self.fakePhotosProvider.count = numberOfPhotos
         var photoProviderRequested = false
         var placeholderProviderRequested = false
         self.fakePhotosProvider.onFullImageRequest = { index in
@@ -181,7 +211,7 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         }
         self.fakePlaceholderProvider.onFullImageRequest = { _ in
             placeholderProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return nil
         }
         // When
         let request = self.sut.fullImageRequest(at: indexToRequest)
