@@ -188,7 +188,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let layoutBlock = { [weak self] (bottomMargin: CGFloat) in
             guard let sSelf = self else { return }
             sSelf.isAdjustingInputContainer = true
-            sSelf.inputContainerBottomConstraint.constant = max(bottomMargin, sSelf.bottomLayoutGuide.length)
+            let bottomConstraint = sSelf.hidesBottomBarWhenPushed ? 0 : sSelf.bottomLayoutGuide.length
+            sSelf.inputContainerBottomConstraint.constant = max(bottomMargin, bottomConstraint)
             sSelf.view.layoutIfNeeded()
             sSelf.isAdjustingInputContainer = false
         }
