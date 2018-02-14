@@ -32,7 +32,7 @@ class SimulatorImagePicker : ImagePicker {
         weak var delegate = delegate
         self.controller = controller
         controller.didTakePhotoCallback = {
-            delegate?.imagePickerDidFinishPickingImage(UIImage(named: "pic-test-1.jpg"))
+            delegate?.imagePickerDidFinishPickingImage(UIImage.bma_imageWithColor(.green, size: CGSize(width: 1024, height: 1024)))
         }
         controller.didCancelCallback = {
             delegate?.imagePickerDidCancel()
