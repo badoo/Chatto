@@ -31,7 +31,7 @@ class SimulatorImagePickerBox : ImagePickerBox {
         let controller = SimulatorImagePickerController()
         self.controller = controller
         controller.didTakePhotoCallback = {
-            context.didFinishPickingImage?(UIImage(named: "pic-test-1"))
+            context.didFinishPickingImage?(UIImage(named: "pic-test-1.jpg"))
         }
         controller.didCancelCallback = {
             context.didCancel?()
