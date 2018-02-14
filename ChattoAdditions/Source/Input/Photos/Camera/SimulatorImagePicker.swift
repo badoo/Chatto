@@ -24,17 +24,18 @@
 
 import Foundation
 
-class SimulatorImagePickerBox : ImagePickerBox {
+class SimulatorImagePicker : ImagePicker {
     let controller: UIViewController
 
-    init(_ context: ImagePickerContext) {
+    init(_ delegate: ImagePickerDelegate) {
         let controller = SimulatorImagePickerController()
+        weak var delegate = delegate
         self.controller = controller
         controller.didTakePhotoCallback = {
-            context.didFinishPickingImage?(UIImage(named: "pic-test-1.jpg"))
+            delegate?.imagePickerDidFinishPickingImage(UIImage(named: "pic-test-1.jpg"))
         }
         controller.didCancelCallback = {
-            context.didCancel?()
+            delegate?.imagePickerDidCancel()
         }
     }
 }
@@ -80,8 +81,8 @@ class SimulatorImagePickerController : UIViewController {
     }
 }
 
-class SimulatorImagePicker : ImagePicker {
-    func pickerController(_ context: ImagePickerContext) -> ImagePickerBox? {
-        return SimulatorImagePickerBox(context)
+class SimulatorImagePickerFactory : ImagePickerFactory {
+    func pickerController(_ delegate: ImagePickerDelegate) -> ImagePicker? {
+        return SimulatorImagePicker(delegate)
     }
 }

@@ -24,9 +24,9 @@
 
 import UIKit
 
-class PhotosInputCameraPicker {
+class PhotosInputCameraPicker : ImagePickerDelegate {
     private weak var presentingController: UIViewController?
-    private var imagePickerBox: ImagePickerBox?
+    private var imagePicker: ImagePicker?
 
     init(presentingController: UIViewController?) {
         self.presentingController = presentingController
@@ -37,15 +37,8 @@ class PhotosInputCameraPicker {
     func presentCameraPicker(onImageTaken: @escaping (UIImage?) -> Void, onCameraPickerDismissed: @escaping () -> Void) {
         if let presentingController = self.presentingController {
             self.completionBlocks = (onImageTaken: onImageTaken, onCameraPickerDismissed: onCameraPickerDismissed)
-            let context = ImagePickerContext()
-            context.didFinishPickingImage = { [weak self] image in
-                self?.finishPickingImage(image, fromPicker: self?.imagePickerBox?.controller)
-            }
-            context.didCancel = { [weak self] in
-                self?.finishPickingImage(nil, fromPicker: self?.imagePickerBox?.controller)
-            }
-            self.imagePickerBox = ImagePickerStore.picker.pickerController(context)
-            if let imagePickerBox = self.imagePickerBox {
+            self.imagePicker = ImagePickerStore.factory.pickerController(self)
+            if let imagePickerBox = self.imagePicker {
                 presentingController.present(imagePickerBox.controller, animated: true, completion: nil)
             } else {
                 onImageTaken(nil)
@@ -57,11 +50,19 @@ class PhotosInputCameraPicker {
         }
     }
 
+    func imagePickerDidFinishPickingImage(_ image: UIImage?) {
+        self.finishPickingImage(image, fromPicker: self.imagePicker?.controller)
+    }
+
+    func imagePickerDidCancel() {
+        self.finishPickingImage(nil, fromPicker: self.imagePicker?.controller)
+    }
+
     private func finishPickingImage(_ image: UIImage?, fromPicker picker: UIViewController?) {
         let (onImageTaken, onCameraPickerDismissed) = self.completionBlocks ?? (nil, nil)
         picker?.dismiss(animated: true, completion: onCameraPickerDismissed)
         onImageTaken?(image)
         self.completionBlocks = nil
-        self.imagePickerBox = nil
+        self.imagePicker = nil
     }
 }

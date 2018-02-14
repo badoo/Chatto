@@ -22,14 +22,14 @@
  THE SOFTWARE.
 */
 
-class DeviceImagePickerBox : NSObject, ImagePickerBox, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class DeviceImagePicker : NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
-    private let context: ImagePickerContext
+    private weak var delegate: ImagePickerDelegate?
 
-    init(_ context: ImagePickerContext) {
+    init(_ delegate: ImagePickerDelegate) {
         let pickerController = UIImagePickerController()
         self.controller = pickerController
-        self.context = context
+        self.delegate = delegate
         super.init()
         pickerController.delegate = self
         pickerController.sourceType = .camera
@@ -37,20 +37,20 @@ class DeviceImagePickerBox : NSObject, ImagePickerBox, UIImagePickerControllerDe
 
     @objc
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String: AnyObject]?) {
-        self.context.didFinishPickingImage?(image)
+        self.delegate?.imagePickerDidFinishPickingImage(image)
     }
 
     @objc
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.context.didCancel?()
+        self.delegate?.imagePickerDidCancel()
     }
 }
 
-class DeviceImagePicker: ImagePicker {
-    func pickerController(_ context: ImagePickerContext) -> ImagePickerBox? {
+class DeviceImagePickerFactory: ImagePickerFactory {
+    func pickerController(_ delegate: ImagePickerDelegate) -> ImagePicker? {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             return nil
         }
-        return DeviceImagePickerBox(context)
+        return DeviceImagePicker(delegate)
     }
 }
