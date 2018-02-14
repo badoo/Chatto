@@ -25,7 +25,7 @@
 import UIKit
 
 public protocol ExpandableTextViewPlaceholderDelegate: class {
-    func expandableTextView(_ textView: ExpandableTextView, didShowPlaceholderWithText placeholderText: String?)
+    func expandableTextViewDidShowPlaceholder(_ textView: ExpandableTextView)
     func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView)
 }
 
@@ -65,7 +65,7 @@ open class ExpandableTextView: UITextView {
         super.didMoveToWindow()
 
         if self.isPlaceholderViewAttached {
-            self.placeholderDelegate?.expandableTextView(self, didShowPlaceholderWithText: self.placeholder.text)
+            self.placeholderDelegate?.expandableTextViewDidShowPlaceholder(self)
         } else {
             self.placeholderDelegate?.expandableTextViewDidHidePlaceholder(self)
         }
@@ -86,6 +86,15 @@ open class ExpandableTextView: UITextView {
         }
     }
 
+    open var placeholderText: String {
+        get {
+            return self.placeholder.text
+        }
+        set {
+            self.placeholder.text = newValue
+        }
+    }
+
     override open var textContainerInset: UIEdgeInsets {
         didSet {
             self.configurePlaceholder()
@@ -98,6 +107,7 @@ open class ExpandableTextView: UITextView {
         }
     }
 
+    @available(*, deprecated, message: "use placeholderText property instead")
     open func setTextPlaceholder(_ textPlaceholder: String) {
         self.placeholder.text = textPlaceholder
     }
@@ -151,7 +161,7 @@ open class ExpandableTextView: UITextView {
         self.addSubview(self.placeholder)
 
         if !wasAttachedBeforeShowing {
-            self.placeholderDelegate?.expandableTextView(self, didShowPlaceholderWithText: self.placeholder.text)
+            self.placeholderDelegate?.expandableTextViewDidShowPlaceholder(self)
         }
     }
 

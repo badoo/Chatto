@@ -31,7 +31,7 @@ class ConversationsViewController: UITableViewController {
         var initialCount = 0
         let pageSize = 50
 
-        var dataSource: FakeDataSource!
+        var dataSource: DemoChatDataSource!
         if segue.identifier == "0 messages" {
             initialCount = 0
         } else if segue.identifier == "2 messages" {
@@ -39,7 +39,9 @@ class ConversationsViewController: UITableViewController {
         } else if segue.identifier == "10000 messages" {
             initialCount = 10000
         } else if segue.identifier == "overview" {
-            dataSource = FakeDataSource(messages: TutorialMessageFactory.createMessages(), pageSize: pageSize)
+            dataSource = DemoChatDataSource(messages: DemoChatMessageFactory.makeOverviewMessages(), pageSize: pageSize)
+        } else if segue.identifier == "messages_selection" {
+            dataSource = DemoChatDataSource(messages: DemoChatMessageFactory.makeMessagesSelectionMessages(), pageSize: pageSize)
         } else {
             assert(false, "segue not handled!")
         }
@@ -56,7 +58,7 @@ class ConversationsViewController: UITableViewController {
         }()!
 
         if dataSource == nil {
-            dataSource = FakeDataSource(count: initialCount, pageSize: pageSize)
+            dataSource = DemoChatDataSource(count: initialCount, pageSize: pageSize)
         }
         chatController.dataSource = dataSource
         chatController.messageSender = dataSource.messageSender

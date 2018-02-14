@@ -29,7 +29,7 @@ import Chatto
 class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: TextMessagePresenter<TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>, TextMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, canShowTail: false, canShowAvatar: false, canShowFailedIcon: true)
+    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, messageDecorationAttributes: BaseMessageDecorationAttributes())
     override func setUp() {
         super.setUp()
         let viewModelBuilder = TextMessageViewModelDefaultBuilder<TextMessageModel<MessageModel>>()
@@ -95,22 +95,23 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
     func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
-
     }
 
     func userDidTapOnAvatar(viewModel: ViewModelT) {
-
     }
 
     func userDidTapOnBubble(viewModel: ViewModelT) {
-
     }
 
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
-
     }
 
     func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
+    }
 
+    func userDidSelectMessage(viewModel: ViewModelT) {
+    }
+
+    func userDidDeselectMessage(viewModel: ViewModelT) {
     }
 }

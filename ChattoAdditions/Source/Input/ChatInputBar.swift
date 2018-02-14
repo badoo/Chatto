@@ -32,7 +32,7 @@ public protocol ChatInputBarDelegate: class {
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
-    func inputBar(_ inputBar: ChatInputBar, didShowPlaceholderWithText placeholderText: String?)
+    func inputBarDidShowPlaceholder(_ inputBar: ChatInputBar)
     func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar)
 }
 
@@ -160,6 +160,24 @@ open class ChatInputBar: ReusableXibView {
             self.updateSendButton()
         }
     }
+    
+    public var inputSelectedRange: NSRange {
+        get {
+            return self.textView.selectedRange
+        }
+        set {
+            self.textView.selectedRange = newValue
+        }
+    }
+
+    public var placeholderText: String {
+        get {
+            return self.textView.placeholderText
+        }
+        set {
+            self.textView.placeholderText = newValue
+        }
+    }
 
     fileprivate func updateSendButton() {
         self.sendButton.isEnabled = self.shouldEnableSendButton(self)
@@ -172,10 +190,6 @@ open class ChatInputBar: ReusableXibView {
 
     public func setTextViewPlaceholderAccessibilityIdentifer(_ accessibilityIdentifer: String) {
         self.textView.setTextPlaceholderAccessibilityIdentifier(accessibilityIdentifer)
-    }
-
-    public func setTextViewPlaceholderText(_ text: String) {
-        self.textView.setTextPlaceholder(text)
     }
 }
 
@@ -203,7 +217,7 @@ extension ChatInputBar {
         self.textView.textContainerInset = appearance.textInputAppearance.textInsets
         self.textView.setTextPlaceholderFont(appearance.textInputAppearance.placeholderFont)
         self.textView.setTextPlaceholderColor(appearance.textInputAppearance.placeholderColor)
-        self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
+        self.textView.placeholderText = appearance.textInputAppearance.placeholderText
         self.textView.layer.borderColor = appearance.textInputAppearance.borderColor.cgColor
         self.textView.layer.borderWidth = appearance.textInputAppearance.borderWidth
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
@@ -273,8 +287,8 @@ extension ChatInputBar: UITextViewDelegate {
 
 // MARK: ExpandableTextViewPlaceholderDelegate
 extension ChatInputBar: ExpandableTextViewPlaceholderDelegate {
-    public func expandableTextView(_ textView: ExpandableTextView, didShowPlaceholderWithText placeholderText: String?) {
-        self.delegate?.inputBar(self, didShowPlaceholderWithText: placeholderText)
+    public func expandableTextViewDidShowPlaceholder(_ textView: ExpandableTextView) {
+        self.delegate?.inputBarDidShowPlaceholder(self)
     }
 
     public func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView) {

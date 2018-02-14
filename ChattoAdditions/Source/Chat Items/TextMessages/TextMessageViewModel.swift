@@ -29,7 +29,7 @@ public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol 
 }
 
 open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
-    public var text: String {
+    open var text: String {
         return self.textMessage.text
     }
     public let textMessage: TextMessageModelT

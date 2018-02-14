@@ -103,4 +103,10 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
     func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
         self.didHandleEndLongPressOnBubble = true
     }
+
+    func userDidSelectMessage(viewModel: ViewModelT) {
+    }
+
+    func userDidDeselectMessage(viewModel: ViewModelT) {
+    }
 }

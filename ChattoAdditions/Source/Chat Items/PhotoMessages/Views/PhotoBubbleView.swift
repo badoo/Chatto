@@ -28,7 +28,8 @@ public protocol PhotoBubbleViewStyleProtocol {
     func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
     func borderImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage?
     func placeholderBackgroundImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
-    func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> (icon: UIImage?, tintColor: UIColor?)
+    func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
+    func placeholderIconTintColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor
     func tailWidth(viewModel: PhotoMessageViewModelProtocol) -> CGFloat
     func bubbleSize(viewModel: PhotoMessageViewModelProtocol) -> CGSize
     func progressIndicatorColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor
@@ -77,8 +78,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }()
 
     public private(set) var progressIndicatorView: CircleProgressIndicatorView = {
-        let progressView = CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
-        return progressView!
+        return CircleProgressIndicatorView(size: CGSize(width: 33, height: 33))
     }()
 
     private var placeholderIconView: UIImageView = {
@@ -154,15 +154,15 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }
 
     private func updateImages() {
+        self.placeholderIconView.image = self.photoMessageStyle.placeholderIconImage(viewModel: self.photoMessageViewModel)
+        self.placeholderIconView.tintColor = self.photoMessageStyle.placeholderIconTintColor(viewModel: self.photoMessageViewModel)
+
         if let image = self.photoMessageViewModel.image.value {
             self.imageView.image = image
             self.placeholderIconView.isHidden = true
         } else {
             self.imageView.image = self.photoMessageStyle.placeholderBackgroundImage(viewModel: self.photoMessageViewModel)
-            let (icon, tintColor) = photoMessageStyle.placeholderIconImage(viewModel: self.photoMessageViewModel)
-            self.placeholderIconView.image = icon
-            self.placeholderIconView.tintColor = tintColor
-            self.placeholderIconView.isHidden = false
+            self.placeholderIconView.isHidden = self.photoMessageViewModel.transferStatus.value != .failed
         }
 
         if let overlayColor = self.photoMessageStyle.overlayColor(viewModel: self.photoMessageViewModel) {
@@ -189,7 +189,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         let layout = self.calculateTextBubbleLayout(maximumWidth: self.preferredMaxLayoutWidth)
         self.progressIndicatorView.center = layout.visualCenter
         self.placeholderIconView.center = layout.visualCenter
-        self.placeholderIconView.bounds = CGRect(origin: CGPoint.zero, size: self.placeholderIconView.image?.size ?? CGSize.zero)
+        self.placeholderIconView.bounds = CGRect(origin: .zero, size: layout.placeholderFrame.size)
         self.imageView.bma_rect = layout.photoFrame
         self.imageView.layer.mask?.frame = self.imageView.layer.bounds
         self.overlayView.bma_rect = self.imageView.bounds
@@ -210,25 +210,35 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
 }
 
 private class PhotoBubbleLayoutModel {
-    var photoFrame: CGRect = CGRect.zero
-    var visualCenter: CGPoint = CGPoint.zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
-    var size: CGSize = CGSize.zero
+    var photoFrame: CGRect = .zero
+    var placeholderFrame: CGRect = .zero
+    var visualCenter: CGPoint = .zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
+    var size: CGSize = .zero
 
     struct LayoutContext {
         let photoSize: CGSize
+        let placeholderSize: CGSize
         let preferredMaxLayoutWidth: CGFloat
         let isIncoming: Bool
         let tailWidth: CGFloat
 
-        init(photoSize: CGSize, tailWidth: CGFloat, isIncoming: Bool, preferredMaxLayoutWidth width: CGFloat) {
+        init(photoSize: CGSize,
+             placeholderSize: CGSize,
+             tailWidth: CGFloat,
+             isIncoming: Bool,
+             preferredMaxLayoutWidth width: CGFloat) {
             self.photoSize = photoSize
+            self.placeholderSize = placeholderSize
             self.tailWidth = tailWidth
             self.isIncoming = isIncoming
             self.preferredMaxLayoutWidth = width
         }
 
-        init(photoMessageViewModel model: PhotoMessageViewModelProtocol, style: PhotoBubbleViewStyleProtocol, containerWidth width: CGFloat) {
+        init(photoMessageViewModel model: PhotoMessageViewModelProtocol,
+             style: PhotoBubbleViewStyleProtocol,
+             containerWidth width: CGFloat) {
             self.init(photoSize: style.bubbleSize(viewModel: model),
+                      placeholderSize: style.placeholderIconImage(viewModel: model).size,
                       tailWidth: style.tailWidth(viewModel: model),
                       isIncoming: model.isIncoming,
                       preferredMaxLayoutWidth: width)
@@ -242,7 +252,8 @@ private class PhotoBubbleLayoutModel {
 
     func calculateLayout() {
         let photoSize = self.layoutContext.photoSize
-        self.photoFrame = CGRect(origin: CGPoint.zero, size: photoSize)
+        self.photoFrame = CGRect(origin: .zero, size: photoSize)
+        self.placeholderFrame = CGRect(origin: .zero, size: self.layoutContext.placeholderSize)
         let offsetX: CGFloat = 0.5 * self.layoutContext.tailWidth * (self.layoutContext.isIncoming ? 1.0 : -1.0)
         self.visualCenter = self.photoFrame.bma_center.bma_offsetBy(dx: offsetX, dy: 0)
         self.size = photoSize

@@ -66,15 +66,31 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        return self.createPresenter(withChatItem: chatItem,
+                                    viewModelBuilder: self.viewModelBuilder,
+                                    interactionHandler: self.interactionHandler,
+                                    sizingCell: self.sizingCell,
+                                    baseCellStyle: self.baseMessageStyle,
+                                    textCellStyle: self.textCellStyle,
+                                    layoutCache: self.layoutCache)
+    }
+
+    open func createPresenter(withChatItem chatItem: ChatItemProtocol,
+                              viewModelBuilder: ViewModelBuilderT,
+                              interactionHandler: InteractionHandlerT?,
+                              sizingCell: TextMessageCollectionViewCell,
+                              baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
+                              textCellStyle: TextMessageCollectionViewCellStyleProtocol,
+                              layoutCache: NSCache<AnyObject, AnyObject>) -> TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT> {
         assert(self.canHandleChatItem(chatItem))
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
             messageModel: chatItem as! ModelT,
-            viewModelBuilder: self.viewModelBuilder,
-            interactionHandler: self.interactionHandler,
+            viewModelBuilder: viewModelBuilder,
+            interactionHandler: interactionHandler,
             sizingCell: sizingCell,
-            baseCellStyle: self.baseMessageStyle,
-            textCellStyle: self.textCellStyle,
-            layoutCache: self.layoutCache
+            baseCellStyle: baseCellStyle,
+            textCellStyle: textCellStyle,
+            layoutCache: layoutCache
         )
     }
 
