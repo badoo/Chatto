@@ -187,15 +187,19 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open func setupKeyboardTracker() {
         let layoutBlock = { [weak self] (bottomMargin: CGFloat) in
             guard let sSelf = self else { return }
-            sSelf.isAdjustingInputContainer = true
-            sSelf.inputContainerBottomConstraint.constant = max(bottomMargin, sSelf.bottomLayoutGuide.length)
-            sSelf.view.layoutIfNeeded()
-            sSelf.isAdjustingInputContainer = false
+            sSelf.handleKeyboardPositionChange(bottomMargin: bottomMargin)
         }
         self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
 
         (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
 
+    }
+
+    open func handleKeyboardPositionChange(bottomMargin: CGFloat) {
+        self.isAdjustingInputContainer = true
+        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
+        self.view.layoutIfNeeded()
+        self.isAdjustingInputContainer = false
     }
 
     var notificationCenter = NotificationCenter.default
