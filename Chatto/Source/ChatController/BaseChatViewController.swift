@@ -28,10 +28,14 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
+    open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
+        didSet {
+            self.adjustCollectionViewInsets()
+        }
+    }
+
     public struct Constants {
         public var updatesAnimationDuration: TimeInterval = 0.33
-        public var defaultContentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-        public var defaultScrollIndicatorInsets = UIEdgeInsets.zero
         public var preferredMaxMessageCount: Int? = 500 // If not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
         public var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
         public var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
@@ -118,8 +122,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func addCollectionView() {
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout())
-        self.collectionView.contentInset = self.constants.defaultContentInsets
-        self.collectionView.scrollIndicatorInsets = self.constants.defaultScrollIndicatorInsets
+        self.collectionView.contentInset = self.layoutConfiguration.contentInsets
+        self.collectionView.scrollIndicatorInsets = self.layoutConfiguration.scrollIndicatorInsets
         self.collectionView.alwaysBounceVertical = true
         self.collectionView.backgroundColor = UIColor.clear
         self.collectionView.keyboardDismissMode = .interactive
@@ -225,9 +229,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if isBouncingAtTop { return }
 
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
-        let newInsetBottom = self.constants.defaultContentInsets.bottom + inputHeightWithKeyboard
+        let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
-        let newInsetTop = self.topLayoutGuide.length + self.constants.defaultContentInsets.top
+        let newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
 
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
         let allContentFits: Bool = {
@@ -251,8 +255,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         self.collectionView.scrollIndicatorInsets = {
             var currentInsets = self.collectionView.scrollIndicatorInsets
-            currentInsets.bottom = self.constants.defaultScrollIndicatorInsets.bottom + inputHeightWithKeyboard
-            currentInsets.top = self.topLayoutGuide.length + self.constants.defaultScrollIndicatorInsets.top
+            currentInsets.bottom = self.layoutConfiguration.scrollIndicatorInsets.bottom + inputHeightWithKeyboard
+            currentInsets.top = self.topLayoutGuide.length + self.layoutConfiguration.scrollIndicatorInsets.top
             return currentInsets
         }()
 
