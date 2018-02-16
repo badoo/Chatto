@@ -212,8 +212,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat) {
         self.isAdjustingInputContainer = true
-        let value = max(bottomMargin, self.bottomLayoutGuide.length)
-        self.inputContainerBottomConstraint.constant = value
+        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
         self.view.layoutIfNeeded()
         self.isAdjustingInputContainer = false
     }
