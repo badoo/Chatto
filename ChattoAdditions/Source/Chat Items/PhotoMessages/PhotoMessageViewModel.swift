@@ -45,10 +45,7 @@ public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol
 }
 
 open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {
-    public var photoMessage: PhotoMessageModelProtocol {
-        return self._photoMessage
-    }
-    public let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public let photoMessage: PhotoMessageModelT
     public var transferStatus: Observable<TransferStatus> = Observable(.idle)
     public var transferProgress: Observable<Double> = Observable(0)
     public var transferDirection: Observable<TransferDirection> = Observable(.download)
@@ -62,7 +59,7 @@ open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>:
     }
 
     public init(photoMessage: PhotoMessageModelT, messageViewModel: MessageViewModelProtocol) {
-        self._photoMessage = photoMessage
+        self.photoMessage = photoMessage
         self.image = Observable(photoMessage.image)
         self.messageViewModel = messageViewModel
     }
