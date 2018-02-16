@@ -167,7 +167,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
 
-    private var bottomSpaceViewHeightConstraint: NSLayoutConstraint!
     private func addBottomSpaceView() {
         self.bottomSpaceView = UIView(frame: CGRect.zero)
         self.bottomSpaceView.autoresizingMask = UIViewAutoresizing()
