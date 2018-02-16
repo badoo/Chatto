@@ -177,8 +177,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.bottomSpaceView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .leading, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .trailing, multiplier: 1, constant: 0))
-        self.bottomSpaceViewHeightConstraint = NSLayoutConstraint(item: self.bottomSpaceView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
-        self.view.addConstraint(self.bottomSpaceViewHeightConstraint)
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
     private func setupInputContainerBottomConstraint() {
@@ -194,10 +193,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
             self.inputContainerBottomConstraint.constant = 0
-            self.bottomSpaceViewHeightConstraint.constant = 0
         } else {
             self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
-            self.bottomSpaceViewHeightConstraint.constant = self.bottomLayoutGuide.length
         }
     }
 
@@ -217,7 +214,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.isAdjustingInputContainer = true
         let value = max(bottomMargin, self.bottomLayoutGuide.length)
         self.inputContainerBottomConstraint.constant = value
-        self.bottomSpaceViewHeightConstraint.constant = value
         self.view.layoutIfNeeded()
         self.isAdjustingInputContainer = false
     }
