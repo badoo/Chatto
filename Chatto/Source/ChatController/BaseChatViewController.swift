@@ -90,6 +90,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         super.viewDidLoad()
         self.addCollectionView()
         self.addInputViews()
+        self.addBottomSpaceView()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
     }
@@ -165,6 +166,21 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
+
+    private var bottomSpaceViewHeightConstraint: NSLayoutConstraint!
+    private func addBottomSpaceView() {
+        self.bottomSpaceView = UIView(frame: CGRect.zero)
+        self.bottomSpaceView.autoresizingMask = UIViewAutoresizing()
+        self.bottomSpaceView.translatesAutoresizingMaskIntoConstraints = false
+        self.bottomSpaceView.backgroundColor = UIColor.white
+        self.view.addSubview(self.bottomSpaceView)
+        self.view.addConstraint(NSLayoutConstraint(item: self.bottomSpaceView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .leading, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .trailing, multiplier: 1, constant: 0))
+        self.bottomSpaceViewHeightConstraint = NSLayoutConstraint(item: self.bottomSpaceView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
+        self.view.addConstraint(self.bottomSpaceViewHeightConstraint)
+    }
+
     private func setupInputContainerBottomConstraint() {
         // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
         // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -178,8 +194,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
             self.inputContainerBottomConstraint.constant = 0
+            self.bottomSpaceViewHeightConstraint.constant = 0
         } else {
             self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            self.bottomSpaceViewHeightConstraint.constant = self.bottomLayoutGuide.length
         }
     }
 
@@ -197,7 +215,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat) {
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
+        let value = max(bottomMargin, self.bottomLayoutGuide.length)
+        self.inputContainerBottomConstraint.constant = value
+        self.bottomSpaceViewHeightConstraint.constant = value
         self.view.layoutIfNeeded()
         self.isAdjustingInputContainer = false
     }
@@ -275,6 +295,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
+    public private(set) var bottomSpaceView: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
