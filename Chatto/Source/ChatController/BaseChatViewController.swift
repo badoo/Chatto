@@ -239,9 +239,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     public var allContentFits: Bool {
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
-        let newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
-        let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
-        let availableHeight = self.collectionView.bounds.height - (newInsetTop + newInsetBottom)
+        let insetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
+        let availableHeight = self.collectionView.bounds.height - (insetTop + insetBottom)
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
         return availableHeight >= contentSize.height
     }
@@ -281,19 +281,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         guard shouldUpdateContentOffset else { return }
 
         let inputIsAtBottom = self.view.bounds.maxY - self.inputContainer.frame.maxY <= 0
-        if allContentFits {
-            var contentOffset = self.collectionView.contentOffset
-            contentOffset.y = -self.collectionView.contentInset.top
-            self.updateContentViewOffset(contentOffset)
+        if self.allContentFits {
+            self.collectionView.contentOffset.y = -self.collectionView.contentInset.top
         } else if !isInteracting || inputIsAtBottom {
-            var contentOffset = self.collectionView.contentOffset
-            contentOffset.y = newContentOffsetY
-            self.updateContentViewOffset(contentOffset)
+            self.collectionView.contentOffset.y = newContentOffsetY
         }
-    }
-
-    open func updateContentViewOffset(_ newValue: CGPoint) {
-        self.collectionView.contentOffset = newValue
     }
 
     func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
