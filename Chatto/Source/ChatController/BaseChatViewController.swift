@@ -184,20 +184,25 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     private func setupInputContainerBottomConstraint() {
-        // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
-        // because it has incorrect value when we actually have a bottom bar (tabbar)
-        // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
-        let navigatedController: UIViewController
-        if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
-            navigatedController = parent
-        } else {
-            navigatedController = self
-        }
-
-        if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-            self.inputContainerBottomConstraint.constant = 0
-        } else {
+        if #available(iOS 11.0, *) {
             self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+        } else {
+            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
+            // because it has incorrect value when we actually have a bottom bar (tabbar)
+            // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
+            // UPD: Fixed in iOS 11.0
+            let navigatedController: UIViewController
+            if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
+                navigatedController = parent
+            } else {
+                navigatedController = self
+            }
+            
+            if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
+                self.inputContainerBottomConstraint.constant = 0
+            } else {
+                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            }
         }
     }
 

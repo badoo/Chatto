@@ -34,6 +34,7 @@ class DemoChatViewController: BaseChatViewController {
     var dataSource: DemoChatDataSource! {
         didSet {
             self.chatDataSource = self.dataSource
+            self.messageSender = self.dataSource.messageSender
         }
     }
 
@@ -44,6 +45,7 @@ class DemoChatViewController: BaseChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = "Chat"
         self.messagesSelector.delegate = self
         self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
     }
