@@ -30,6 +30,11 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 
 2. Include the following in your `Podfile`:
   ```
+  # Swift 4
+  pod 'Chatto', '= 3.3.0'
+  pod 'ChattoAdditions', '= 3.3.0' # if you want to use the cells or the input component
+  ```
+  ```
   # Swift 3
   pod 'Chatto', '= 3.2.0'
   pod 'ChattoAdditions', '= 3.2.0' # if you want to use the cells or the input component
@@ -50,7 +55,7 @@ If you like living on the bleeding edge, you can use the `master` branch with:
 
 If you’re using [Carthage](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos), simply add Chatto to your Cartfile:
 ```
-# Swift 3
+# Swift 4
 github "badoo/Chatto"
 ```
 ```

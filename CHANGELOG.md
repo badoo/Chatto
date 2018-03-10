@@ -1,15 +1,41 @@
+### 3.3.0 (March 10, 2018)
+
+#### Features
+- Added Swift 4 support #385 by [@AntonPalich](https://github.com/AntonPalich) and #345 by [@jpunz](https://github.com/jpunz)
+- Added messages selection #411 by [@AntonPalich](https://github.com/AntonPalich)
+- Added accessibility identifier to selection indicator #428 by [@AntonPalich](https://github.com/AntonPalich)
+- Added iCloud Library support to photos input #415 by [@Wisors](https://github.com/Wisors)
+- Added camera position settings for live camera cell #393 by [@Wisors](https://github.com/Wisors)
+- Allow client to set selected range of textView in ChatInputBar #402 by [@phatmann](https://github.com/phatmann)
+- Allow override of text message `text` #403 by [@phatmann](https://github.com/phatmann)
+- Added ability to change input bar placeholder #396 by [@chupakabr](https://github.com/chupakabr)
+- Allow to build TextMessagePresenter subclasses without exposing internal properties #421 by [@AntonPalich](https://github.com/AntonPalich)
+- Made UIScrollView delegates open in BaseChatViewController #438 by [@azimin](https://github.com/azimin)
+- Exposed keyboard position handling #445 by [@chupakabr](https://github.com/chupakabr)
+- Added additional state for keyboard tracker and ability to modify content insets #454 by [@azimin](https://github.com/azimin)
+- Removed Xcode 9 warnings #439 by [@irace](https://github.com/irace)
+
+#### Bugs
+- Fixed crashes that happened under some conditions in project with Swift 4 that used Chatto with Swift 3.2 #405, #414 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed issue with live camera cell when it wasnt updated after updating its appearance #404 by [@Wisors](https://github.com/Wisors)
+- Fixed issue with photo picker after migration to Swift 4 #437 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed crash that happened on devices with unaccessible camera caused by forced unwrapped optional #424 by [@Wisors](https://github.com/Wisors)
+- Removed gap under input bar on iPhone X #447 by [@azimin](https://github.com/azimin)
+- Fixed issue with wrong input bar position when hidesBottomBarWhenPushed is true on iPhone X #457 by [@AntonPalich](https://github.com/AntonPalich)
+
 ### 3.2.0 (October 20, 2017)
 
 #### Features:
- - Added support for custom main view in BaseChatViewController #323 by @serge-star 
- - Added ability to change input bar border color and width #339 by @NSEGeorge 
- - Added ability to control visibility of failed icon #359 by @turbulem
- - Added Xcode 9 and iOS 11 support #352 by @AntonPalich
- - Added support for swiftlint 0.23 #371 by @AntonPalich
+ - Added support for custom main view in BaseChatViewController #323 by [@serge-star](https://github.com/serge-star) 
+ - Added ability to change input bar border color and width #339 by [@NSEGeorge](https://github.com/NSEGeorge)
+ - Added ability to control visibility of failed icon #359 by [@turbulem](https://github.com/turbulem)
+ - Added Xcode 9 and iOS 11 support #352 by [@AntonPalich](https://github.com/AntonPalich)
+ - Added support for swiftlint 0.23 #371 by [@AntonPalich](https://github.com/AntonPalich)
+
 #### Bugs:
- - Fixed crash caused by missing optionality identifier in UIKit #310 by @raisaanjani92 
- - Fixed input container position when presenting chat as child controller #338 by @KaterinaPetrova 
- - Fixed issue with gesture recognizers that wasn't disabled for text messages on iOS 11 #366 by @AntonPalich
+ - Fixed crash caused by missing optionality identifier in UIKit #310 by [@raisaanjani92](https://github.com/raisaanjani92)
+ - Fixed input container position when presenting chat as child controller #338 by [@KaterinaPetrova](https://github.com/KaterinaPetrova)
+ - Fixed issue with gesture recognizers that wasn't disabled for text messages on iOS 11 #366 by [@AntonPalich](https://github.com/AntonPalich)
 
 ### 3.1.0 (May 29, 2017)
 
