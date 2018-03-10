@@ -102,7 +102,11 @@ final class PhotosInputWithPlaceholdersDataProvider: PhotosInputDataProviderProt
     }
 
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
-        return self.photosDataProvider.fullImageRequest(at: index)
+        if index < self.photosDataProvider.count {
+            return self.photosDataProvider.fullImageRequest(at: index)
+        } else {
+            return self.placeholdersDataProvider.fullImageRequest(at: index)
+        }
     }
 
     // MARK: PhotosInputDataProviderDelegate

@@ -24,19 +24,26 @@
 
 import UIKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+public protocol ChatLayoutConfigurationProtocol {
+    var contentInsets: UIEdgeInsets { get }
+    var scrollIndicatorInsets: UIEdgeInsets { get }
+}
 
-    var window: UIWindow?
+public struct ChatLayoutConfiguration: ChatLayoutConfigurationProtocol {
+    public let contentInsets: UIEdgeInsets
+    public let scrollIndicatorInsets: UIEdgeInsets
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let rootViewController = ChatExamplesViewController()
-        let window = UIWindow()
-        window.rootViewController = UINavigationController(rootViewController: rootViewController)
-        self.window = window
-        self.window?.makeKeyAndVisible()
-        return true
+    public init(contentInsets: UIEdgeInsets, scrollIndicatorInsets: UIEdgeInsets) {
+        self.contentInsets = contentInsets
+        self.scrollIndicatorInsets = scrollIndicatorInsets
     }
+}
 
+extension ChatLayoutConfiguration {
+    static var defaultConfiguration: ChatLayoutConfiguration {
+        let contentInsets = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        let scrollIndicatorInsets = UIEdgeInsets.zero
+        return ChatLayoutConfiguration(contentInsets: contentInsets,
+                                       scrollIndicatorInsets: scrollIndicatorInsets)
+    }
 }

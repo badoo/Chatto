@@ -24,19 +24,25 @@
 
 import UIKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+protocol ImagePickerDelegate : class {
+    func imagePickerDidFinishPickingImage(_ image: UIImage?)
+    func imagePickerDidCancel()
+}
 
-    var window: UIWindow?
+protocol ImagePicker {
+    var controller: UIViewController { get }
+}
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let rootViewController = ChatExamplesViewController()
-        let window = UIWindow()
-        window.rootViewController = UINavigationController(rootViewController: rootViewController)
-        self.window = window
-        self.window?.makeKeyAndVisible()
-        return true
-    }
+protocol ImagePickerFactory {
+    func pickerController(_ delegate: ImagePickerDelegate) -> ImagePicker?
+}
 
+struct ImagePickerStore {
+    static var factory: ImagePickerFactory = {
+#if !(arch(i386) || arch(x86_64))
+        return DeviceImagePickerFactory()
+#else
+        return SimulatorImagePickerFactory()
+#endif
+    }()
 }
