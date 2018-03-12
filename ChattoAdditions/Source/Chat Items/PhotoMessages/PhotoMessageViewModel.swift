@@ -57,8 +57,8 @@ open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>:
         return self.photoMessage.imageSize
     }
     public let messageViewModel: MessageViewModelProtocol
-    open var showsFailedIcon: Bool {
-        return self.messageViewModel.showsFailedIcon || self.transferStatus.value == .failed
+    open var isShowingFailedIcon: Bool {
+        return self.messageViewModel.isShowingFailedIcon || self.transferStatus.value == .failed
     }
 
     public init(photoMessage: PhotoMessageModelT, messageViewModel: MessageViewModelProtocol) {

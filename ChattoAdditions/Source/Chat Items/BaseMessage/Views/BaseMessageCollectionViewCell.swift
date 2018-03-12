@@ -30,6 +30,8 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }
+    var selectionIndicatorMargins: UIEdgeInsets { get }
+    func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
 }
@@ -56,16 +58,20 @@ public struct BaseMessageCollectionViewCellLayoutConstants {
 
     Provides:
 
-        - Reveleable timestamp layout logic
-        - Failed view
-        - Incoming/outcoming layout
+        - Reveleable timestamp
+        - Failed icon
+        - Incoming/outcoming styles
+        - Selection support
 
     Subclasses responsability
         - Implement createBubbleView
         - Have a BubbleViewType that responds properly to sizeThatFits:
 */
 
-open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where BubbleViewType:UIView, BubbleViewType:MaximumLayoutWidthSpecificable, BubbleViewType: BackgroundSizingQueryable {
+open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where
+    BubbleViewType: UIView,
+    BubbleViewType: MaximumLayoutWidthSpecificable,
+    BubbleViewType: BackgroundSizingQueryable {
 
     public var animationDuration: CFTimeInterval = 0.33
     open var viewContext: ViewContext = .normal
@@ -96,17 +102,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
     }
 
-    var failedIcon: UIImage!
-    var failedIconHighlighted: UIImage!
     public var baseStyle: BaseMessageCollectionViewCellStyleProtocol! {
         didSet {
-            self.failedIcon = self.baseStyle.failedIcon
-            self.failedIconHighlighted = self.baseStyle.failedIconHighlighted
             self.updateViews()
         }
     }
     private var shouldShowFailedIcon: Bool {
-        return self.messageViewModel?.canShowFailedIcon == true && self.messageViewModel?.showsFailedIcon == true
+        return self.messageViewModel?.decorationAttributes.canShowFailedIcon == true && self.messageViewModel?.isShowingFailedIcon == true
     }
 
     override open var isSelected: Bool {
@@ -170,8 +172,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.avatarView)
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
+        self.contentView.addSubview(self.selectionIndicator)
         self.contentView.isExclusiveTouch = true
         self.isExclusiveTouch = true
+
+        let selectionTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleSelectionTap(_:)))
+        self.selectionTapGestureRecognizer = selectionTapGestureRecognizer
+        self.addGestureRecognizer(selectionTapGestureRecognizer)
     }
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -201,20 +208,26 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
         self.bubbleView.isUserInteractionEnabled = viewModel.isUserInteractionEnabled
         if self.shouldShowFailedIcon {
-            self.failedButton.setImage(self.failedIcon, for: .normal)
-            self.failedButton.setImage(self.failedIconHighlighted, for: .highlighted)
+            self.failedButton.setImage(self.baseStyle.failedIcon, for: .normal)
+            self.failedButton.setImage(self.baseStyle.failedIconHighlighted, for: .highlighted)
             self.failedButton.alpha = 1
         } else {
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateAvatarView(from: viewModel, with: style)
+        self.updateSelectionIndicator(with: style)
+
+        self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
+        self.selectionTapGestureRecognizer?.isEnabled = viewModel.decorationAttributes.isShowingSelectionIndicator
+
         self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     private func updateAvatarView(from viewModel: MessageViewModelProtocol,
                                   with style: BaseMessageCollectionViewCellStyleProtocol) {
-        self.avatarView.isHidden = !viewModel.showsAvatar
+        self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
 
         let avatarImageSize = style.avatarSize(viewModel: viewModel)
         if avatarImageSize != .zero {
@@ -226,13 +239,14 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     open override func layoutSubviews() {
         super.layoutSubviews()
 
-        let layoutModel = self.calculateLayout(availableWidth: self.contentView.bounds.width)
-        self.failedButton.bma_rect = layoutModel.failedViewFrame
-        self.bubbleView.bma_rect = layoutModel.bubbleViewFrame
-        self.bubbleView.preferredMaxLayoutWidth = layoutModel.preferredMaxWidthForBubble
+        let layout = self.calculateLayout(availableWidth: self.contentView.bounds.width)
+        self.failedButton.bma_rect = layout.failedButtonFrame
+        self.bubbleView.bma_rect = layout.bubbleViewFrame
+        self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
         self.bubbleView.layoutIfNeeded()
 
-        self.avatarView.bma_rect = layoutModel.avatarViewFrame
+        self.avatarView.bma_rect = layout.avatarViewFrame
+        self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
 
         if self.accessoryTimestampView.superview != nil {
             let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -255,28 +269,31 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return self.calculateLayout(availableWidth: size.width).size
     }
 
-    private func calculateLayout(availableWidth: CGFloat) -> BaseMessageLayoutModel {
+    private func calculateLayout(availableWidth: CGFloat) -> Layout {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
-        let parameters = BaseMessageLayoutModelParameters(
+        let parameters = LayoutParameters(
             containerWidth: availableWidth,
             horizontalMargin: layoutConstants.horizontalMargin,
             horizontalInterspacing: layoutConstants.horizontalInterspacing,
-            failedButtonSize: self.failedIcon.size,
             maxContainerWidthPercentageForBubbleView: layoutConstants.maxContainerWidthPercentageForBubbleView,
             bubbleView: self.bubbleView,
             isIncoming: self.messageViewModel.isIncoming,
-            isFailed: self.shouldShowFailedIcon,
-            avatarSize: baseStyle.avatarSize(viewModel: messageViewModel),
-            avatarVerticalAlignment: baseStyle.avatarVerticalAlignment(viewModel: messageViewModel)
+            isShowingFailedButton: self.shouldShowFailedIcon,
+            failedButtonSize: self.baseStyle.failedIcon.size,
+            avatarSize: self.baseStyle.avatarSize(viewModel: self.messageViewModel),
+            avatarVerticalAlignment: self.baseStyle.avatarVerticalAlignment(viewModel: self.messageViewModel),
+            isShowingSelectionIndicator: self.messageViewModel.decorationAttributes.isShowingSelectionIndicator,
+            selectionIndicatorSize: self.baseStyle.selectionIndicatorIcon(for: self.messageViewModel).size,
+            selectionIndicatorMargins: self.baseStyle.selectionIndicatorMargins
         )
-        var layoutModel = BaseMessageLayoutModel()
+        var layoutModel = Layout()
         layoutModel.calculateLayout(parameters: parameters)
         return layoutModel
     }
 
     // MARK: timestamp revealing
 
-    var accessoryTimestampView = UILabel()
+    private let accessoryTimestampView = UILabel()
 
     var offsetToRevealAccessoryView: CGFloat = 0 {
         didSet {
@@ -321,7 +338,39 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.accessoryTimestampView.removeFromSuperview()
     }
 
+    // MARK: Selection
+
+    private let selectionIndicator = UIImageView(frame: .zero)
+
+    private func updateSelectionIndicator(with style: BaseMessageCollectionViewCellStyleProtocol) {
+        self.selectionIndicator.image = style.selectionIndicatorIcon(for: self.messageViewModel)
+        self.updateSelectionIndicatorAccessibilityIdentifier()
+    }
+
+    private var selectionTapGestureRecognizer: UITapGestureRecognizer?
+    public var onSelection: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+
+    @objc
+    private func handleSelectionTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        self.onSelection?(self)
+    }
+
+    private func updateSelectionIndicatorAccessibilityIdentifier() {
+        let accessibilityIdentifier: String
+        if self.messageViewModel.decorationAttributes.isShowingSelectionIndicator {
+            if self.messageViewModel.decorationAttributes.isSelected {
+                accessibilityIdentifier = "chat.message.selection_indicator.selected"
+            } else {
+                accessibilityIdentifier = "chat.message.selection_indicator.deselected"
+            }
+        } else {
+            accessibilityIdentifier = "chat.message.selection_indicator.hidden"
+        }
+        self.selectionIndicator.accessibilityIdentifier = accessibilityIdentifier
+    }
+
     // MARK: User interaction
+
     public var onFailedButtonTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
     @objc
     func failedButtonTapped() {
@@ -355,59 +404,91 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 }
 
-struct BaseMessageLayoutModel {
+fileprivate struct Layout {
     private (set) var size = CGSize.zero
-    private (set) var failedViewFrame = CGRect.zero
+    private (set) var failedButtonFrame = CGRect.zero
     private (set) var bubbleViewFrame = CGRect.zero
     private (set) var avatarViewFrame = CGRect.zero
+    private (set) var selectionIndicatorFrame = CGRect.zero
     private (set) var preferredMaxWidthForBubble: CGFloat = 0
 
-    mutating func calculateLayout(parameters: BaseMessageLayoutModelParameters) {
+    mutating func calculateLayout(parameters: LayoutParameters) {
         let containerWidth = parameters.containerWidth
         let isIncoming = parameters.isIncoming
-        let isFailed = parameters.isFailed
+        let isShowingFailedButton = parameters.isShowingFailedButton
         let failedButtonSize = parameters.failedButtonSize
         let bubbleView = parameters.bubbleView
         let horizontalMargin = parameters.horizontalMargin
         let horizontalInterspacing = parameters.horizontalInterspacing
         let avatarSize = parameters.avatarSize
+        let selectionIndicatorSize = parameters.selectionIndicatorSize
 
         let preferredWidthForBubble = (containerWidth * parameters.maxContainerWidthPercentageForBubbleView).bma_round()
         let bubbleSize = bubbleView.sizeThatFits(CGSize(width: preferredWidthForBubble, height: .greatestFiniteMagnitude))
         let containerRect = CGRect(origin: CGPoint.zero, size: CGSize(width: containerWidth, height: bubbleSize.height))
 
-        self.bubbleViewFrame = bubbleSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)
-        self.failedViewFrame = failedButtonSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: .center, dx: 0, dy: 0)
-        self.avatarViewFrame = avatarSize.bma_rect(inContainer: containerRect, xAlignament: .center, yAlignment: parameters.avatarVerticalAlignment, dx: 0, dy: 0)
+        self.bubbleViewFrame = bubbleSize.bma_rect(
+            inContainer: containerRect,
+            xAlignament: .center,
+            yAlignment: .center
+        )
+
+        self.failedButtonFrame = failedButtonSize.bma_rect(
+            inContainer: containerRect,
+            xAlignament: .center,
+            yAlignment: .center
+        )
+
+        self.avatarViewFrame = avatarSize.bma_rect(
+            inContainer: containerRect,
+            xAlignament: .center,
+            yAlignment: parameters.avatarVerticalAlignment
+        )
+
+        self.selectionIndicatorFrame = selectionIndicatorSize.bma_rect(
+            inContainer: containerRect,
+            xAlignament: .left,
+            yAlignment: .center
+        )
 
         // Adjust horizontal positions
 
         var currentX: CGFloat = 0
+
+        if parameters.isShowingSelectionIndicator {
+            self.selectionIndicatorFrame.origin.x += parameters.selectionIndicatorMargins.left
+        } else {
+            self.selectionIndicatorFrame.origin.x -= selectionIndicatorSize.width
+        }
+
+        currentX += self.selectionIndicatorFrame.maxX
+
         if isIncoming {
-            currentX = horizontalMargin
+            currentX += horizontalMargin
             self.avatarViewFrame.origin.x = currentX
             currentX += avatarSize.width
-            currentX += horizontalInterspacing
-
-            if isFailed {
-                self.failedViewFrame.origin.x = currentX
+            if isShowingFailedButton {
+                currentX += horizontalInterspacing
+                self.failedButtonFrame.origin.x = currentX
                 currentX += failedButtonSize.width
                 currentX += horizontalInterspacing
             } else {
-                self.failedViewFrame.origin.x = -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX - failedButtonSize.width
+                currentX += horizontalInterspacing
             }
             self.bubbleViewFrame.origin.x = currentX
         } else {
             currentX = containerRect.maxX - horizontalMargin
             currentX -= avatarSize.width
             self.avatarViewFrame.origin.x = currentX
-            currentX -= horizontalInterspacing
-            if isFailed {
+            if isShowingFailedButton {
+                currentX -= horizontalInterspacing
                 currentX -= failedButtonSize.width
-                self.failedViewFrame.origin.x = currentX
+                self.failedButtonFrame.origin.x = currentX
                 currentX -= horizontalInterspacing
             } else {
-                self.failedViewFrame.origin.x = containerRect.width - -failedButtonSize.width
+                self.failedButtonFrame.origin.x = currentX
+                currentX -= horizontalInterspacing
             }
             currentX -= bubbleSize.width
             self.bubbleViewFrame.origin.x = currentX
@@ -418,15 +499,18 @@ struct BaseMessageLayoutModel {
     }
 }
 
-struct BaseMessageLayoutModelParameters {
+fileprivate struct LayoutParameters {
     let containerWidth: CGFloat
     let horizontalMargin: CGFloat
     let horizontalInterspacing: CGFloat
-    let failedButtonSize: CGSize
     let maxContainerWidthPercentageForBubbleView: CGFloat // in [0, 1]
     let bubbleView: UIView
     let isIncoming: Bool
-    let isFailed: Bool
+    let isShowingFailedButton: Bool
+    let failedButtonSize: CGSize
     let avatarSize: CGSize
     let avatarVerticalAlignment: VerticalAlignment
+    let isShowingSelectionIndicator: Bool
+    let selectionIndicatorSize: CGSize
+    let selectionIndicatorMargins: UIEdgeInsets
 }

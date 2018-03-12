@@ -24,14 +24,14 @@
 
 import Foundation
 
+public enum KeyboardStatus {
+    case hiding
+    case hidden
+    case showing
+    case shown
+}
+
 class KeyboardTracker {
-
-    private enum KeyboardStatus {
-        case hidden
-        case showing
-        case shown
-    }
-
     private var keyboardStatus: KeyboardStatus = .hidden
     private let view: UIView
     var trackingView: UIView {
@@ -52,7 +52,7 @@ class KeyboardTracker {
     var inputContainer: UIView
     private var notificationCenter: NotificationCenter
 
-    typealias LayoutBlock = (_ bottomMargin: CGFloat) -> Void
+    typealias LayoutBlock = (_ bottomMargin: CGFloat, _ status: KeyboardStatus) -> Void
     private var layoutBlock: LayoutBlock
 
     init(viewController: UIViewController, inputContainer: UIView, layoutBlock: @escaping LayoutBlock, notificationCenter: NotificationCenter) {
@@ -63,6 +63,7 @@ class KeyboardTracker {
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidShow(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidHide(_:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
 
@@ -105,13 +106,20 @@ class KeyboardTracker {
         guard self.isTracking else { return }
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
         if bottomConstraint == 0 {
-            self.keyboardStatus = .hidden
+            self.keyboardStatus = .hiding
             self.layoutInputAtBottom()
         }
     }
 
     @objc
     private func keyboardWillHide(_ notification: Notification) {
+        guard self.isTracking else { return }
+        self.keyboardStatus = .hiding
+        self.layoutInputAtBottom()
+    }
+
+    @objc
+    private func keyboardDidHide(_ notification: Notification) {
         guard self.isTracking else { return }
         self.keyboardStatus = .hidden
         self.layoutInputAtBottom()
@@ -159,7 +167,7 @@ class KeyboardTracker {
 
     private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
         self.isPerformingForcedLayout = true
-        self.layoutBlock(constraint)
+        self.layoutBlock(constraint, self.keyboardStatus)
         self.isPerformingForcedLayout = false
     }
 }
@@ -219,7 +227,10 @@ private class KeyboardTrackingView: UIView {
         super.willMove(toSuperview: newSuperview)
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey: Any]?,
+                               context: UnsafeMutableRawPointer?) {
         guard let object = object as? UIView, let superview = self.superview else { return }
         if object === superview {
             guard let sChange = change else { return }

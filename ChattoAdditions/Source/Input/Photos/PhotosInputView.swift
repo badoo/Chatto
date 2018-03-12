@@ -58,7 +58,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     fileprivate var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
 
     var cameraAuthorizationStatus: AVAuthorizationStatus {
-        return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        return AVCaptureDevice.authorizationStatus(for: .video)
     }
 
     var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
@@ -110,7 +110,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
     private func requestAccessToVideo() {
         guard self.cameraAuthorizationStatus != .authorized else { return }
 
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { (_) -> Void in
+        AVCaptureDevice.requestAccess(for: .video) { (_) -> Void in
             DispatchQueue.main.async(execute: { () -> Void in
                 self.reloadVideoItem()
             })
@@ -201,7 +201,7 @@ extension PhotosInputView: UICollectionViewDataSource {
         if indexPath.item == Constants.liveCameraItemIndex {
             cell = self.liveCameraPresenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         } else {
-            cell = self.cellProvider.cellForItemAtIndexPath(indexPath)
+            cell = self.cellProvider.cellForItem(at: indexPath)
         }
         return cell
     }
@@ -228,9 +228,11 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
             if self.photoLibraryAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
-                self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
-                    self.delegate?.inputView(self, didSelectImage: image)
-                }
+                let request = self.dataProvider.requestFullImage(at: indexPath.item - 1, progressHandler: nil, completion: { [weak self] result in
+                    guard let sSelf = self, let image = result.image else { return }
+                    sSelf.delegate?.inputView(sSelf, didSelectImage: image)
+                })
+                self.cellProvider.configureFullImageLoadingIndicator(at: indexPath, request: request)
             }
         }
     }
@@ -261,7 +263,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
 }
 
 extension PhotosInputView: PhotosInputDataProviderDelegate {
-    func handlePhotosInpudDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
+    func handlePhotosInputDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 

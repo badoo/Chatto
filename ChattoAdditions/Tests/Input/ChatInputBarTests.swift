@@ -143,6 +143,18 @@ class ChatInputBarTests: XCTestCase {
         XCTAssertTrue(self.delegateStrong.inputBarDidChangeTextCalled)
     }
 
+    func testThat_WhenExpandableTextViewPlaceholderIsShown_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.expandableTextViewDidShowPlaceholder(self.bar.textView)
+        XCTAssertTrue(self.delegateStrong.inputBarDidShowPlaceholderCalled)
+    }
+
+    func testThat_WhenExpandableTextViewPlaceholderIsHidden_ItNotifiesDelegate() {
+        self.setupDelegate()
+        self.bar.expandableTextViewDidHidePlaceholder(self.bar.textView)
+        XCTAssertTrue(self.delegateStrong.inputBarDidHidePlaceholderCalled)
+    }
+
     func testThat_WhenSendButtonTapped_ItNotifiesDelegate() {
         self.setupDelegate()
         self.bar.buttonTapped(self.bar)
@@ -287,5 +299,15 @@ class FakeChatInputBarDelegate: ChatInputBarDelegate {
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol) {
         self.inputBarDidReceiveFocusOnItemCalled = true
         self.focusedItem = item
+    }
+
+    var inputBarDidShowPlaceholderCalled = false
+    func inputBarDidShowPlaceholder(_ inputBar: ChatInputBar) {
+        self.inputBarDidShowPlaceholderCalled = true
+    }
+
+    var inputBarDidHidePlaceholderCalled = false
+    func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar) {
+        self.inputBarDidHidePlaceholderCalled = true
     }
 }

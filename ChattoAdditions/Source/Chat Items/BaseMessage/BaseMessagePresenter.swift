@@ -39,14 +39,18 @@ public protocol BaseMessageInteractionHandlerProtocol {
     func userDidTapOnBubble(viewModel: ViewModelT)
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
     func userDidEndLongPressOnBubble(viewModel: ViewModelT)
+    func userDidSelectMessage(viewModel: ViewModelT)
+    func userDidDeselectMessage(viewModel: ViewModelT)
 }
 
 open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT>: BaseChatItemPresenter<BaseMessageCollectionViewCell<BubbleViewT>> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ViewModelT: MessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT,
-    BubbleViewT: UIView, BubbleViewT:MaximumLayoutWidthSpecificable, BubbleViewT: BackgroundSizingQueryable {
+    BubbleViewT: UIView,
+    BubbleViewT: MaximumLayoutWidthSpecificable,
+    BubbleViewT: BackgroundSizingQueryable {
+
     public typealias CellT = BaseMessageCollectionViewCell<BubbleViewT>
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
@@ -96,13 +100,13 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     public var decorationAttributes: ChatItemDecorationAttributes!
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
-            self.messageViewModel.showsTail = decorationAttributes.canShowTail
-            self.messageViewModel.showsAvatar = decorationAttributes.canShowAvatar
-            self.messageViewModel.canShowFailedIcon = decorationAttributes.canShowFailedIcon
+            self.messageViewModel.decorationAttributes = decorationAttributes.messageDecorationAttributes
             // just in case something went wrong while showing UIMenuController
             self.messageViewModel.isUserInteractionEnabled = true
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
+
+            cell.allowAccessoryViewRevealing = !decorationAttributes.messageDecorationAttributes.isShowingSelectionIndicator
             cell.onBubbleTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleTapped()
@@ -122,6 +126,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellFailedButtonTapped(cell.failedButton)
+            }
+            cell.onSelection = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellSelection()
             }
             additionalConfiguration?()
         }, animated: animated, completion: nil)
@@ -195,5 +203,13 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
         self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel, failIconView: failedButtonView)
+    }
+
+    open func onCellSelection() {
+        if self.messageViewModel.decorationAttributes.isSelected {
+            self.interactionHandler?.userDidDeselectMessage(viewModel: self.messageViewModel)
+        } else {
+            self.interactionHandler?.userDidSelectMessage(viewModel: self.messageViewModel)
+        }
     }
 }

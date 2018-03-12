@@ -28,7 +28,7 @@ import UIKit
 
     func loadViewFromNib() -> UIView {
         let bundle = Bundle(for: type(of: self))
-        let nib = UINib(nibName:type(of: self).nibName(), bundle: bundle)
+        let nib = UINib(nibName: type(of: self).nibName(), bundle: bundle)
         let view = nib.instantiate(withOwner: nil, options: nil).first as! UIView
         return view
     }
@@ -46,7 +46,7 @@ import UIKit
             for constraint in constraints {
                 let firstItem = constraint.firstItem === self ? loadedView : constraint.firstItem
                 let secondItem = constraint.secondItem === self ? loadedView : constraint.secondItem
-                loadedView.addConstraint(NSLayoutConstraint(item: firstItem, attribute: constraint.firstAttribute, relatedBy: constraint.relation, toItem: secondItem, attribute: constraint.secondAttribute, multiplier: constraint.multiplier, constant: constraint.constant))
+                loadedView.addConstraint(NSLayoutConstraint(item: firstItem as Any, attribute: constraint.firstAttribute, relatedBy: constraint.relation, toItem: secondItem, attribute: constraint.secondAttribute, multiplier: constraint.multiplier, constant: constraint.constant))
             }
             return loadedView
         } else {

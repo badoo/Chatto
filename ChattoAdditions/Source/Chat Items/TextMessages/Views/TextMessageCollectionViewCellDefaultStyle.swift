@@ -107,12 +107,12 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }
 
     open func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage {
-        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
+        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.decorationAttributes.isShowingTail, isSelected: isSelected)
 
         if let image = self.images[key] {
             return image
         } else {
-            let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
+            let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.decorationAttributes.isShowingTail)
             if let image = self.images[templateKey] {
                 let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming, status: viewModel.status, isSelected: isSelected)
                 self.images[key] = image
