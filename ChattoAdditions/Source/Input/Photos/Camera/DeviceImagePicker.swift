@@ -37,7 +37,7 @@ final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDel
 
     @objc
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
-        self.delegate?.imagePicker(self, mediaInfo: info)
+        self.delegate?.imagePickerDidFinish(self, mediaInfo: info)
     }
 
     @objc

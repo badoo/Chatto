@@ -25,7 +25,7 @@
 import UIKit
 
 public protocol ImagePickerDelegate: class {
-    func imagePicker(_ picker: ImagePicker, mediaInfo: [String: Any])
+    func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [String: Any])
     func imagePickerDidCancel(_ picker: ImagePicker)
 }
 

@@ -115,7 +115,7 @@ private class FakeImagePicker: ImagePicker {
     weak var delegate: ImagePickerDelegate?
 
     func finish(with mediaInfo: [String: Any]) {
-        self.delegate?.imagePicker(self, mediaInfo: mediaInfo)
+        self.delegate?.imagePickerDidFinish(self, mediaInfo: mediaInfo)
     }
 
     func cancel() {
