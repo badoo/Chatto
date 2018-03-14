@@ -86,7 +86,6 @@
 		B129DBB873EBB17585033BC75A427C60 /* PhotosInputPlaceholderDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42841D9D846D9781CEFA4938F59760F0 /* PhotosInputPlaceholderDataProvider.swift */; };
 		BCE0DE4E6A81CBFA97A854FEB12D5748 /* PhotoMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7B09B7BBFF294077116E789BA62D48C /* PhotoMessageAssets.xcassets */; };
 		BFF30F4F1C7C3C91BA39B53F1A62F287 /* ChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E401C6009E6CBFD1139547BA604FB9 /* ChatInputItem.swift */; };
-		C28C7557A9E4881AADAFFCA19436CBE3 /* SimulatorImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320D17D55C07803D11384BBBA2A5ACEE /* SimulatorImagePicker.swift */; };
 		C69B980A6911B033AC36CE4274FE6E46 /* CircleProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = B9CD5BEE75214684960D2D0186F18D39 /* CircleProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C89141D3D6A38A0B2522C3AAE6885F34 /* PhotoMessagePresenterBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054266A433FDCDF6CE22033EFC757A22 /* PhotoMessagePresenterBuilder.swift */; };
 		CAFE51A88BA6BA95E5FC6AF81F3CDA1A /* ChattoAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = AD9B97CEBDD8AFB58128F14ACBBBC412 /* ChattoAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,7 +160,6 @@
 		2B4EB484C6FA399B96990E1C79915E64 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DD8E4BB9487A80F70C29231EA1E6295 /* HorizontalStackScrollView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HorizontalStackScrollView.swift; sourceTree = "<group>"; };
 		2E72656362E555629AE7C98D6A4F14B3 /* CircleProgressIndicatorView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CircleProgressIndicatorView.m; sourceTree = "<group>"; };
-		320D17D55C07803D11384BBBA2A5ACEE /* SimulatorImagePicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SimulatorImagePicker.swift; sourceTree = "<group>"; };
 		3476C0B5EE071FF5997DED8B07EFA11C /* PhotosChatInputItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotosChatInputItem.swift; sourceTree = "<group>"; };
 		40C59E85FF73F4E4F180194642C7E7EC /* PhotosInputCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotosInputCell.swift; sourceTree = "<group>"; };
 		41213A169A1327F38C02D02FF4E7EAB4 /* PhotosInputCameraPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotosInputCameraPicker.swift; sourceTree = "<group>"; };
@@ -388,7 +386,6 @@
 				1487A45371AC8104BC0CE7C162FBF982 /* LiveCameraCell.swift */,
 				0BBB172ACF8D5FC99A24F909709EF0A6 /* LiveCameraCellPresenter.swift */,
 				41213A169A1327F38C02D02FF4E7EAB4 /* PhotosInputCameraPicker.swift */,
-				320D17D55C07803D11384BBBA2A5ACEE /* SimulatorImagePicker.swift */,
 			);
 			name = Camera;
 			path = Camera;
@@ -1016,7 +1013,6 @@
 				CCDFEE7929998DB07E8FB8D20E610BF8 /* PhotosInputViewItemSizeCalculator.swift in Sources */,
 				675AC2126A225E5DA52B5486BF106C4E /* PhotosInputWithPlaceholdersDataProvider.swift in Sources */,
 				ADA8733CB0BB2891CF2F5CA6D5BCD1B1 /* ReusableXibView.swift in Sources */,
-				C28C7557A9E4881AADAFFCA19436CBE3 /* SimulatorImagePicker.swift in Sources */,
 				90D09BB277BF9EC20D5C035DD35271D9 /* TabInputButton.swift in Sources */,
 				6E58A916AF862E96FE9E1E80E9CF1628 /* TextBubbleView.swift in Sources */,
 				7C3B55D2D648098E0F561A189ADAD5B9 /* TextChatInputItem.swift in Sources */,
