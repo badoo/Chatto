@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-class DeviceImagePicker : NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
     private weak var delegate: ImagePickerDelegate?
 
@@ -36,18 +36,18 @@ class DeviceImagePicker : NSObject, ImagePicker, UIImagePickerControllerDelegate
     }
 
     @objc
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String: AnyObject]?) {
-        self.delegate?.imagePickerDidFinishPickingImage(image)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+        self.delegate?.imagePickerDidFinish(self, mediaInfo: info)
     }
 
     @objc
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.delegate?.imagePickerDidCancel()
+        self.delegate?.imagePickerDidCancel(self)
     }
 }
 
-class DeviceImagePickerFactory: ImagePickerFactory {
-    func pickerController(_ delegate: ImagePickerDelegate) -> ImagePicker? {
+final class DeviceImagePickerFactory: ImagePickerFactory {
+    func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker? {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             return nil
         }
