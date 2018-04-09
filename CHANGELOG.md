@@ -1,3 +1,8 @@
+### 3.3.1 (April 9, 2018)
+
+#### Bugs
+- Fix iOS 11 text rendering issue related to carriage return symbol #364 by [@0xpablo](https://github.com/0xpablo)
+
 ### 3.3.0 (March 10, 2018)
 
 #### Features
