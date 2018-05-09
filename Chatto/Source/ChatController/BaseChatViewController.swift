@@ -238,8 +238,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            self.setupInputContainerBottomConstraint()
         }
+        self.setupInputContainerBottomConstraint()
     }
 
     public var allContentFits: Bool {
