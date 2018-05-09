@@ -182,10 +182,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .trailing, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .bottom, multiplier: 1, constant: 0))
     }
-
-    private func setupInputContainerBottomConstraint() {
+    
+    private func updateInputContainerBottomConstraint() {
         if #available(iOS 11.0, *) {
-            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            self.inputContainerBottomConstraint.constant = max(self.keyboardBottomMargin, self.bottomLayoutGuide.length)
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -199,9 +199,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             }
             
             if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-                self.inputContainerBottomConstraint.constant = 0
+                self.inputContainerBottomConstraint.constant = self.keyboardBottomMargin
             } else {
-                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+                self.inputContainerBottomConstraint.constant = max(self.keyboardBottomMargin, self.bottomLayoutGuide.length)
             }
         }
     }
@@ -220,14 +220,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
+        self.keyboardBottomMargin = bottomMargin
+        self.updateInputContainerBottomConstraint()
         self.view.layoutIfNeeded()
         self.isAdjustingInputContainer = false
     }
 
+    private var keyboardBottomMargin: CGFloat = 0
     var notificationCenter = NotificationCenter.default
     var keyboardTracker: KeyboardTracker!
-
+    
     public private(set) var isFirstLayout: Bool = true
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -239,7 +241,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.updateQueue.start()
             self.isFirstLayout = false
         }
-        self.setupInputContainerBottomConstraint()
+        self.updateInputContainerBottomConstraint()
     }
 
     public var allContentFits: Bool {
