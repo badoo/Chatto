@@ -64,7 +64,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
  
     // If set to false messages will start appearing on top and goes down
     // If true then messages will start from bottom and goes up.
-    public var placeMessagesFromBottom = true {
+    public var placeMessagesFromBottom = false {
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
