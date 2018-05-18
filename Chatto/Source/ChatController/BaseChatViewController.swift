@@ -279,11 +279,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             newInsetTop += self.collectionView.bounds.height - realContentHeight
         }
 
-        if self.needToPlaceMessagesAtBottom {
-            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
-            newInsetTop += self.collectionView.bounds.height - realContentHeight
-        }
-
         let newContentOffsetY: CGFloat = {
             let minOffset = -newInsetTop
             let maxOffset = contentSize.height - (self.collectionView.bounds.height - newInsetBottom)
