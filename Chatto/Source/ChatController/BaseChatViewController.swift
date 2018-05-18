@@ -61,7 +61,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.setChatDataSource(newValue, triggeringUpdateType: .normal)
         }
     }
-
+ 
     // If set to false messages will start appearing on top and goes down
     // If true then messages will start from bottom and goes up.
     public var placeMessagesFromBottom = false {
@@ -258,7 +258,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
         return availableHeight >= contentSize.height
     }
-
+ 
     internal var needToPlaceMessagesAtBottom: Bool {
         return self.placeMessagesFromBottom && self.allContentFits
     }
@@ -273,6 +273,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
         var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
+     
+        if self.needToPlaceMessagesAtBottom {
+            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
+            newInsetTop += self.collectionView.bounds.height - realContentHeight
+        }
 
         if self.needToPlaceMessagesAtBottom {
             let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;

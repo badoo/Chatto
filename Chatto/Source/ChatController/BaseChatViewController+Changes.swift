@@ -220,6 +220,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             let newRect = self.rectAtIndexPath(indexPath)
             self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
         }
+     
+        if self.needToPlaceMessagesAtBottom {
+            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+        }
 
         if self.needToPlaceMessagesAtBottom {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
