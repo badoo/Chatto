@@ -259,11 +259,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         return availableHeight >= contentSize.height
     }
  
-    internal var needToPlaceMessagesAtBottom: Bool {
+    var needToPlaceMessagesAtBottom: Bool {
         return self.placeMessagesFromBottom && self.allContentFits
     }
 
-    internal func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
+    func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && !self.placeMessagesFromBottom && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
         if isBouncingAtTop { return }
