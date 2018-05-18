@@ -221,6 +221,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
         }
 
+        if self.needToPlaceMessagesAtBottom {
+            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+        }
+
         if !usesBatchUpdates || self.updatesConfig.fastUpdates {
             myCompletion()
         }
