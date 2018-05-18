@@ -271,8 +271,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
-        let newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
+     
+        if self.needToPlaceMessagesAtBottom {
+            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
+            newInsetTop += self.collectionView.bounds.height - realContentHeight
+        }
 
         let newContentOffsetY: CGFloat = {
             let minOffset = -newInsetTop
