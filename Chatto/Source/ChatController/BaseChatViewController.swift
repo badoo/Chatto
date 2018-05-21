@@ -264,6 +264,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
+        let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
         let needToPlaceMessagesAtBottom = self.needToPlaceMessagesAtBottom
         let isBouncingAtTop = isInteracting && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
         if isBouncingAtTop && !needToPlaceMessagesAtBottom { return }
