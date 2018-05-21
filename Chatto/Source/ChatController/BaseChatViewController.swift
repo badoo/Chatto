@@ -279,7 +279,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
             newInsetTop += self.collectionView.bounds.height - realContentHeight
         }
-
+     
         let prevContentOffsetY = self.collectionView.contentOffset.y
 
         let newContentOffsetY: CGFloat = {
