@@ -205,16 +205,18 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
                         DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                     }
                 })
+                if self.placeMessagesFromBottom {
+                    self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+                }
             })
         } else {
             self.visibleCells = [:]
             updateModelClosure()
             self.collectionView.reloadData()
             self.collectionView.collectionViewLayout.prepare()
-        }
-
-        if self.placeMessagesFromBottom {
-            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+            if self.placeMessagesFromBottom {
+                self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+            }
         }
 
         switch scrollAction {
