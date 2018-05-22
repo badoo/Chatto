@@ -258,16 +258,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
         return availableHeight >= contentSize.height
     }
- 
-    var needToPlaceMessagesAtBottom: Bool {
-        return self.placeMessagesFromBottom && self.allContentFits
-    }
 
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
-        let needToPlaceMessagesAtBottom = self.needToPlaceMessagesAtBottom
         let isBouncingAtTop = isInteracting && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
-        if isBouncingAtTop && !needToPlaceMessagesAtBottom { return }
+        if !self.placeMessagesFromBottom && isBouncingAtTop { return }
 
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
@@ -275,20 +270,23 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
 
+        let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
         if needToPlaceMessagesAtBottom {
             let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
             newInsetTop += self.collectionView.bounds.height - realContentHeight
         }
-     
+
+        let insetTopDiff = newInsetTop - self.collectionView.contentInset.top
+        let needToUpdateContentInset = self.placeMessagesFromBottom && (insetTopDiff != 0 || insetBottomDiff != 0)
+
         let prevContentOffsetY = self.collectionView.contentOffset.y
 
         let newContentOffsetY: CGFloat = {
-            let minOffset = -(newInsetTop)
+            let minOffset = -newInsetTop
             let maxOffset = contentSize.height - (self.collectionView.bounds.height - newInsetBottom)
-            let targetOffset = self.collectionView.contentOffset.y + insetBottomDiff
+            let targetOffset = prevContentOffsetY + insetBottomDiff
             return max(min(maxOffset, targetOffset), minOffset)
         }()
-
 
         self.collectionView.contentInset = {
             var currentInsets = self.collectionView.contentInset
@@ -307,7 +305,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         guard shouldUpdateContentOffset else { return }
 
         let inputIsAtBottom = self.view.bounds.maxY - self.inputContainer.frame.maxY <= 0
-        if isInteracting && needToPlaceMessagesAtBottom {
+        if isInteracting && (needToPlaceMessagesAtBottom || needToUpdateContentInset) {
             self.collectionView.contentOffset.y = prevContentOffsetY
         } else if self.allContentFits {
             self.collectionView.contentOffset.y = -self.collectionView.contentInset.top

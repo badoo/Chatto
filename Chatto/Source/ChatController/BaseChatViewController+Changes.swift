@@ -213,20 +213,16 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             self.collectionView.collectionViewLayout.prepare()
         }
 
+        if self.placeMessagesFromBottom {
+            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+        }
+
         switch scrollAction {
         case .scrollToBottom:
             self.scrollToBottom(animated: updateType == .normal)
         case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
             let newRect = self.rectAtIndexPath(indexPath)
             self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
-        }
-     
-        if self.needToPlaceMessagesAtBottom {
-            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
-        }
-
-        if self.needToPlaceMessagesAtBottom {
-            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
 
         if !usesBatchUpdates || self.updatesConfig.fastUpdates {
