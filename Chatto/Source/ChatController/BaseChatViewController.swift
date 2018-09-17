@@ -61,6 +61,14 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.setChatDataSource(newValue, triggeringUpdateType: .normal)
         }
     }
+ 
+    // If set to false messages will start appearing on top and goes down
+    // If true then messages will start from bottom and goes up.
+    public var placeMessagesFromBottom = false {
+        didSet {
+            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
+        }
+    }
 
     // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
     // Must be set before loadView is called.
@@ -251,21 +259,32 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         return availableHeight >= contentSize.height
     }
 
-    private func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
+    func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         let isInteracting = self.collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && self.collectionView.contentOffset.y < -self.collectionView.contentInset.top
-        if isBouncingAtTop { return }
+        if !self.placeMessagesFromBottom && isBouncingAtTop { return }
 
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - self.collectionView.contentInset.bottom
-        let newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
         let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
+
+        let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
+        if needToPlaceMessagesAtBottom {
+            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
+            newInsetTop += self.collectionView.bounds.height - realContentHeight
+        }
+
+        let insetTopDiff = newInsetTop - self.collectionView.contentInset.top
+        let needToUpdateContentInset = self.placeMessagesFromBottom && (insetTopDiff != 0 || insetBottomDiff != 0)
+
+        let prevContentOffsetY = self.collectionView.contentOffset.y
 
         let newContentOffsetY: CGFloat = {
             let minOffset = -newInsetTop
             let maxOffset = contentSize.height - (self.collectionView.bounds.height - newInsetBottom)
-            let targetOffset = self.collectionView.contentOffset.y + insetBottomDiff
+            let targetOffset = prevContentOffsetY + insetBottomDiff
             return max(min(maxOffset, targetOffset), minOffset)
         }()
 
@@ -286,7 +305,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         guard shouldUpdateContentOffset else { return }
 
         let inputIsAtBottom = self.view.bounds.maxY - self.inputContainer.frame.maxY <= 0
-        if self.allContentFits {
+        if isInteracting && (needToPlaceMessagesAtBottom || needToUpdateContentInset) {
+            self.collectionView.contentOffset.y = prevContentOffsetY
+        } else if self.allContentFits {
             self.collectionView.contentOffset.y = -self.collectionView.contentInset.top
         } else if !isInteracting || inputIsAtBottom {
             self.collectionView.contentOffset.y = newContentOffsetY

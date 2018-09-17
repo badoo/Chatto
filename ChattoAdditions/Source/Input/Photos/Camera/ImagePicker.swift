@@ -24,25 +24,19 @@
 
 import UIKit
 
-protocol ImagePickerDelegate : class {
-    func imagePickerDidFinishPickingImage(_ image: UIImage?)
-    func imagePickerDidCancel()
+public protocol ImagePickerDelegate: class {
+    func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [String: Any])
+    func imagePickerDidCancel(_ picker: ImagePicker)
 }
 
-protocol ImagePicker {
+public protocol ImagePicker: class {
     var controller: UIViewController { get }
 }
 
-protocol ImagePickerFactory {
-    func pickerController(_ delegate: ImagePickerDelegate) -> ImagePicker?
+public protocol ImagePickerFactory: class {
+    func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker?
 }
 
-struct ImagePickerStore {
-    static var factory: ImagePickerFactory = {
-#if !(arch(i386) || arch(x86_64))
-        return DeviceImagePickerFactory()
-#else
-        return SimulatorImagePickerFactory()
-#endif
-    }()
+public struct ImagePickerStore {
+    public static var factory: ImagePickerFactory = DeviceImagePickerFactory()
 }
