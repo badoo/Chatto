@@ -22,11 +22,12 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public enum ChatInputItemPresentationMode: UInt {
     case keyboard
     case customView
+    case modal
     case none
 }
 
@@ -36,6 +37,17 @@ public protocol ChatInputItemProtocol: AnyObject {
     var presentationMode: ChatInputItemPresentationMode { get }
     var showsSendButton: Bool { get }
     var selected: Bool { get set }
-
+    var controllerToPresent: UIViewController? { get }
+    
     func handleInput(_ input: AnyObject)
+}
+
+extension ChatInputItemProtocol {
+    public var controllerToPresent: UIViewController? {
+        return nil
+    }
+}
+
+public protocol ChatInputItemPresentedControllerDelegate {
+    func handleViewControllerInput(_ input: AnyObject)
 }

@@ -24,7 +24,7 @@
 
 import UIKit
 
-protocol ChatInputBarPresenter: class {
+public protocol ChatInputBarPresenter: class {
     var chatInputBar: ChatInputBar { get }
     func onDidBeginEditing()
     func onDidEndEditing()
@@ -33,10 +33,12 @@ protocol ChatInputBarPresenter: class {
 }
 
 @objc
-public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+open class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
+    
+    var presentedController: UIViewController?
 
     public init(chatInputBar: ChatInputBar,
                 chatInputItems: [ChatInputItemProtocol],
@@ -144,7 +146,7 @@ extension BasicChatInputBarPresenter {
         }
     }
 
-    func onSendButtonPressed() {
+    public func onSendButtonPressed() {
         if let focusedItem = self.focusedItem {
             focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
@@ -153,13 +155,18 @@ extension BasicChatInputBarPresenter {
         self.chatInputBar.inputText = ""
     }
 
-    func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
+    public func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
         guard item.presentationMode != .none else { return }
         guard item !== self.focusedItem else { return }
 
         self.focusedItem = item
-        self.chatInputBar.showsSendButton = item.showsSendButton
-        self.chatInputBar.showsTextView = item.presentationMode == .keyboard
-        self.updateFirstResponderWithInputItem(item)
+        
+        if item.presentationMode == .modal {
+            self.presentedController = item.controllerToPresent
+        } else {
+            self.chatInputBar.showsSendButton = item.showsSendButton
+            self.chatInputBar.showsTextView = item.presentationMode == .keyboard
+            self.updateFirstResponderWithInputItem(item)
+        }
     }
 }
