@@ -37,7 +37,7 @@ public protocol PhotoBubbleViewStyleProtocol {
 }
 
 open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
-
+    
     public var viewContext: ViewContext = .normal
     public var animationDuration: CFTimeInterval = 0.33
     public var preferredMaxLayoutWidth: CGFloat = 0
@@ -209,20 +209,20 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
 
 }
 
-private class PhotoBubbleLayoutModel {
-    var photoFrame: CGRect = .zero
-    var placeholderFrame: CGRect = .zero
-    var visualCenter: CGPoint = .zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
-    var size: CGSize = .zero
+public class PhotoBubbleLayoutModel {
+    public var photoFrame: CGRect = .zero
+    public var placeholderFrame: CGRect = .zero
+    public var visualCenter: CGPoint = .zero // Because image is cropped a few points on the side of the tail, the apparent center will be a bit shifted
+    public var size: CGSize = .zero
 
-    struct LayoutContext {
+    public struct LayoutContext {
         let photoSize: CGSize
         let placeholderSize: CGSize
         let preferredMaxLayoutWidth: CGFloat
         let isIncoming: Bool
         let tailWidth: CGFloat
 
-        init(photoSize: CGSize,
+        public init(photoSize: CGSize,
              placeholderSize: CGSize,
              tailWidth: CGFloat,
              isIncoming: Bool,
@@ -234,7 +234,7 @@ private class PhotoBubbleLayoutModel {
             self.preferredMaxLayoutWidth = width
         }
 
-        init(photoMessageViewModel model: PhotoMessageViewModelProtocol,
+        public init(photoMessageViewModel model: PhotoMessageViewModelProtocol,
              style: PhotoBubbleViewStyleProtocol,
              containerWidth width: CGFloat) {
             self.init(photoSize: style.bubbleSize(viewModel: model),
@@ -246,11 +246,11 @@ private class PhotoBubbleLayoutModel {
     }
 
     let layoutContext: LayoutContext
-    init(layoutContext: LayoutContext) {
+    public init(layoutContext: LayoutContext) {
         self.layoutContext = layoutContext
     }
 
-    func calculateLayout() {
+    public func calculateLayout() {
         let photoSize = self.layoutContext.photoSize
         self.photoFrame = CGRect(origin: .zero, size: photoSize)
         self.placeholderFrame = CGRect(origin: .zero, size: self.layoutContext.placeholderSize)
