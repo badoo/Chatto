@@ -30,7 +30,7 @@ public struct LiveCameraCellAppearance {
     public var backgroundColor: UIColor
     public var cameraImageProvider: () -> UIImage?
     public var cameraLockImageProvider: () -> UIImage?
-    public let accessibilityIdentifier = "chatto.inputbar.photo.cell.livecamera"
+    public let accessibilityIdentifier = "chatto.inputbar.photos.cell.livecamera"
 
     public init(backgroundColor: UIColor,
                 cameraImage: @autoclosure @escaping () -> UIImage?,
