@@ -56,6 +56,7 @@ public final class TextMessageCollectionViewCell: BaseMessageCollectionViewCell<
 
     public var textMessageViewModel: TextMessageViewModelProtocol! {
         didSet {
+            self.accessibilityIdentifier = self.textMessageViewModel.cellAccessibilityIdentifier
             self.messageViewModel = self.textMessageViewModel
             self.bubbleView.textMessageViewModel = self.textMessageViewModel
         }

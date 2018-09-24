@@ -31,6 +31,7 @@ final class PhotosInputCell: UICollectionViewCell {
         static let loadingIndicatorBackgoroundColor = UIColor.black.withAlphaComponent(0.70)
         static let loadingIndicatorProgressColor = UIColor.white
         static let loadingIncicatorProgressWidth: CGFloat = 1
+        static let accessibilityIdentifier = "chatto.inputbar.photos.cell.photo"
     }
 
     override init(frame: CGRect) {
@@ -50,6 +51,7 @@ final class PhotosInputCell: UICollectionViewCell {
         self.imageView.contentMode = .scaleAspectFill
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
+        self.accessibilityIdentifier = Constants.accessibilityIdentifier
     }
 
     override func layoutSubviews() {

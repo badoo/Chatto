@@ -29,6 +29,7 @@ final class PhotosInputPlaceholderCell: UICollectionViewCell {
     private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
         static let imageName = "lock"
+        static let accessibilityIdentifier = "chatto.inputbar.photos.cell.placeholder"
     }
 
     override init(frame: CGRect) {
@@ -48,6 +49,7 @@ final class PhotosInputPlaceholderCell: UICollectionViewCell {
         self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
+        self.accessibilityIdentifier = Constants.accessibilityIdentifier
     }
 
     override func layoutSubviews() {

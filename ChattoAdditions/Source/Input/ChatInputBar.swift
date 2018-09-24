@@ -220,6 +220,7 @@ extension ChatInputBar {
         self.textView.placeholderText = appearance.textInputAppearance.placeholderText
         self.textView.layer.borderColor = appearance.textInputAppearance.borderColor.cgColor
         self.textView.layer.borderWidth = appearance.textInputAppearance.borderWidth
+        self.textView.accessibilityIdentifier = appearance.textInputAppearance.accessibilityIdentifier
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
@@ -228,6 +229,7 @@ extension ChatInputBar {
             self.sendButton.setTitleColor(color, for: state.controlState)
         }
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+        self.sendButton.accessibilityIdentifier = appearance.sendButtonAppearance.accessibilityIdentifier
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }

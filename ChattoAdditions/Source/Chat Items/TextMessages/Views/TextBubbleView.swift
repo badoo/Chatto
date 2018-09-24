@@ -57,6 +57,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
 
     public var textMessageViewModel: TextMessageViewModelProtocol! {
         didSet {
+            self.accessibilityIdentifier = self.textMessageViewModel.bubbleAccessibilityIdentifier
             self.updateViews()
         }
     }
