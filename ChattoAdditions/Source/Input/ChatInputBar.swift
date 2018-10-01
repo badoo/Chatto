@@ -268,7 +268,7 @@ extension ChatInputBar: UITextViewDelegate {
         self.delegate?.inputBarDidBeginEditing(self)
     }
 
-    public func textViewDidChange(_ textView: UITextView) {
+    open func textViewDidChange(_ textView: UITextView) {
         self.updateSendButton()
         self.delegate?.inputBarDidChangeText(self)
     }
