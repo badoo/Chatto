@@ -68,6 +68,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             }
         }
     }
+    
+    public var urlCallBack: ((URL) -> Bool)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -129,6 +131,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             updateAndRefreshViews()
         }
     }
+    
 
     private func updateViews() {
         if self.viewContext == .sizing { return }
@@ -154,6 +157,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
             self.textView.font = font
             needsToUpdateText = true
         }
+        
+        self.textView.delegate = self
 
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
@@ -277,6 +282,14 @@ private final class TextBubbleLayoutModel {
             NSAttributedStringKey.font: self.layoutContext.font,
             NSAttributedStringKey(rawValue: "NSOriginalFont"): self.layoutContext.font
         ])
+    }
+}
+
+
+extension TextBubbleView: UITextViewDelegate {
+    
+    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        return urlCallBack?(URL) ?? true
     }
 }
 
