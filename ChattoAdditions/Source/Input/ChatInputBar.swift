@@ -258,7 +258,7 @@ extension ChatInputBar: UITextViewDelegate {
         return self.delegate?.inputBarShouldBeginTextEditing(self) ?? true
     }
 
-    public func textViewDidEndEditing(_ textView: UITextView) {
+    open func textViewDidEndEditing(_ textView: UITextView) {
         self.presenter?.onDidEndEditing()
         self.delegate?.inputBarDidEndEditing(self)
     }
