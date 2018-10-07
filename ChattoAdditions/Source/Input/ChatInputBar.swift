@@ -160,7 +160,7 @@ open class ChatInputBar: ReusableXibView {
             self.updateSendButton()
         }
     }
-    
+
     public var inputSelectedRange: NSRange {
         get {
             return self.textView.selectedRange

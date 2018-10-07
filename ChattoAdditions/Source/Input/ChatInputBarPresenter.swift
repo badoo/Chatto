@@ -81,7 +81,7 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     }
 
     fileprivate func firstKeyboardInputItem() -> ChatInputItemProtocol? {
-        var firstKeyboardInputItem: ChatInputItemProtocol? = nil
+        var firstKeyboardInputItem: ChatInputItemProtocol?
         for inputItem in self.chatInputItems where inputItem.presentationMode == .keyboard {
             firstKeyboardInputItem = inputItem
             break

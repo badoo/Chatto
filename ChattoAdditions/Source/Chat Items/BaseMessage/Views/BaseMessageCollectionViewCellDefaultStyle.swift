@@ -92,8 +92,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         let selectedIcon: () -> UIImage
         let deselectedIcon: () -> UIImage
         public init(margins: UIEdgeInsets,
-                    selectedIcon: @autoclosure @escaping ()-> UIImage,
-                    deselectedIcon: @autoclosure @escaping ()-> UIImage) {
+                    selectedIcon: @autoclosure @escaping () -> UIImage,
+                    deselectedIcon: @autoclosure @escaping () -> UIImage) {
             self.margins = margins
             self.selectedIcon = selectedIcon
             self.deselectedIcon = deselectedIcon

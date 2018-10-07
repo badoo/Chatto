@@ -25,7 +25,7 @@
 import UIKit
 
 class ChatWithTabBarExamplesViewController: CellsViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,19 +36,19 @@ class ChatWithTabBarExamplesViewController: CellsViewController {
             self.makeChatWithVisibleTabBarCellItem()
         ]
     }
-    
+
     private func makeChatWithHiddenTabBarCellItem() -> CellItem {
         return CellItem(title: "Chat with hidden tab bar", action: { [weak self] in
             self?.pushChatViewController(hidesBottomBar: true)
         })
     }
-    
+
     private func makeChatWithVisibleTabBarCellItem() -> CellItem {
         return CellItem(title: "Chat with visible tab bar", action: { [weak self] in
             self?.pushChatViewController(hidesBottomBar: false)
         })
     }
-    
+
     private func pushChatViewController(hidesBottomBar: Bool) {
         let dataSource = DemoChatDataSource(count: 0, pageSize: 50)
         let viewController = AddRandomMessagesChatViewController()
