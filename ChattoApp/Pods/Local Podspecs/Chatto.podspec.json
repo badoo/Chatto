@@ -1,6 +1,6 @@
 {
   "name": "Chatto",
-  "version": "3.2.0",
+  "version": "3.3.1",
   "summary": "Chat framework in Swift",
   "description": "Lightweight chat framework to build Chat apps",
   "homepage": "https://github.com/badoo/Chatto",
@@ -11,13 +11,15 @@
     "ios": "8.0"
   },
   "authors": {
-    "Diego Sanchez": "diego.sanchezr@gmail.com"
+    "Diego Sanchez": "diego.sanchezr@gmail.com",
+    "Anton Schukin": "a.p.schukin@gmail.com"
   },
   "source": {
     "git": "https://github.com/badoo/Chatto.git",
-    "tag": "3.2.0"
+    "tag": "3.3.1"
   },
   "source_files": "Chatto/Source/**/*.{h,m,swift}",
   "public_header_files": "Chatto/Source/**/*.h",
-  "requires_arc": true
+  "requires_arc": true,
+  "swift_version": "4.2"
 }

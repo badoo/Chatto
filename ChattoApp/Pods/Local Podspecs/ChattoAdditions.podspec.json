@@ -1,6 +1,6 @@
 {
   "name": "ChattoAdditions",
-  "version": "3.2.0",
+  "version": "3.3.1",
   "summary": "UI componentes for Chatto",
   "description": "Text and photo bubbles\nInput bar for text and photo messages",
   "homepage": "https://github.com/badoo/Chatto",
@@ -11,15 +11,17 @@
     "ios": "8.0"
   },
   "authors": {
-    "Diego Sanchez": "diego.sanchezr@gmail.com"
+    "Diego Sanchez": "diego.sanchezr@gmail.com",
+    "Anton Schukin": "a.p.schukin@gmail.com"
   },
   "source": {
     "git": "https://github.com/badoo/Chatto.git",
-    "tag": "3.2.0"
+    "tag": "3.3.1"
   },
   "source_files": "ChattoAdditions/Source/**/*.{h,m,swift}",
   "public_header_files": "ChattoAdditions/Source/**/*.h",
   "requires_arc": true,
+  "swift_version": "4.2",
   "resources": [
     "ChattoAdditions/Source/**/*.xib",
     "ChattoAdditions/Source/**/*.storyboard",

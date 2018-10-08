@@ -89,9 +89,9 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     let colors: Colors
     let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     public init(
-        bubbleMasks: BubbleMasks = Class.createDefaultBubbleMasks(),
-        sizes: Sizes = Class.createDefaultSizes(),
-        colors: Colors = Class.createDefaultColors(),
+        bubbleMasks: BubbleMasks = PhotoMessageCollectionViewCellDefaultStyle.createDefaultBubbleMasks(),
+        sizes: Sizes = PhotoMessageCollectionViewCellDefaultStyle.createDefaultSizes(),
+        colors: Colors = PhotoMessageCollectionViewCellDefaultStyle.createDefaultColors(),
         baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle()) {
             self.bubbleMasks = bubbleMasks
             self.sizes = sizes

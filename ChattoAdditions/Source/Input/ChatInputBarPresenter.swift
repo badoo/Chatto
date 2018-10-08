@@ -50,9 +50,9 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
 
         self.chatInputBar.presenter = self
         self.chatInputBar.inputItems = self.chatInputItems
-        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardDidChangeFrame), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardDidChangeFrame), name: UIApplication.keyboardDidChangeFrameNotification, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillHide), name: UIApplication.keyboardWillHideNotification, object: nil)
+        self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillShow), name: UIApplication.keyboardWillShowNotification, object: nil)
     }
 
     deinit {
@@ -114,7 +114,7 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     @objc
     private func keyboardDidChangeFrame(_ notification: Notification) {
         guard self.allowListenToChangeFrameEvents else { return }
-        guard let value = (notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let value = (notification as NSNotification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         self.lastKnownKeyboardHeight = value.cgRectValue.height
     }
 

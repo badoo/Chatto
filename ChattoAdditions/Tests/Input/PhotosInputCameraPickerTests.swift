@@ -78,7 +78,7 @@ class PhotosInputCameraPickerTests: XCTestCase {
             XCTAssertNotNil(image)
         }, onCameraPickerDismissed: {})
         // When
-        self.fakeImagePicker.finish(with: [UIImagePickerControllerOriginalImage: UIImage()])
+        self.fakeImagePicker.finish(with: [UIImagePickerController.InfoKey.originalImage: UIImage()])
         // Then
         XCTAssertTrue(onImageTakenCalled)
     }
@@ -91,7 +91,7 @@ class PhotosInputCameraPickerTests: XCTestCase {
             XCTAssertNil(image)
         }, onCameraPickerDismissed: {})
         // When
-        self.fakeImagePicker.finish(with: [String: Any]())
+        self.fakeImagePicker.finish(with: [:])
         // Then
         XCTAssertTrue(onImageTakenCalled)
     }
@@ -114,7 +114,7 @@ private class FakeImagePicker: ImagePicker {
     let controller: UIViewController = DummyViewController()
     weak var delegate: ImagePickerDelegate?
 
-    func finish(with mediaInfo: [String: Any]) {
+    func finish(with mediaInfo: [UIImagePickerController.InfoKey: Any]) {
         self.delegate?.imagePickerDidFinish(self, mediaInfo: mediaInfo)
     }
 
