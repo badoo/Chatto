@@ -52,7 +52,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.commonInit()
     }
 
-    private func commonInit() {
+    open func commonInit() {
         self.autoresizesSubviews = false
         self.addSubview(self.imageView)
         self.addSubview(self.placeholderIconView)
@@ -70,7 +70,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         return imageView
     }()
 
-    private lazy var borderView = UIImageView()
+    public lazy var borderView = UIImageView()
 
     private lazy var overlayView: UIView = {
         let view = UIView()
@@ -196,7 +196,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.borderView.bma_rect = self.imageView.bounds
     }
 
-    private func calculateTextBubbleLayout(maximumWidth: CGFloat) -> PhotoBubbleLayoutModel {
+    open func calculateTextBubbleLayout(maximumWidth: CGFloat) -> PhotoBubbleLayoutModel {
         let layoutContext = PhotoBubbleLayoutModel.LayoutContext(photoMessageViewModel: self.photoMessageViewModel, style: self.photoMessageStyle, containerWidth: maximumWidth)
         let layoutModel = PhotoBubbleLayoutModel(layoutContext: layoutContext)
         layoutModel.calculateLayout()
