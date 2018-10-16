@@ -48,6 +48,6 @@ extension ChatInputItemProtocol {
     }
 }
 
-public protocol ChatInputItemPresentedControllerDelegate {
+public protocol ChatInputItemPresentedControllerDelegate: class {
     func handleViewControllerInput(_ input: AnyObject)
 }
