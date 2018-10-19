@@ -47,7 +47,7 @@ open class ChatInputBar: ReusableXibView {
     }
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
-    @IBOutlet weak var textView: ExpandableTextView!
+    @IBOutlet open weak var textView: ExpandableTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var topBorderHeightConstraint: NSLayoutConstraint!
 
@@ -129,7 +129,7 @@ open class ChatInputBar: ReusableXibView {
         super.layoutSubviews()
     }
 
-    var inputItems = [ChatInputItemProtocol]() {
+    open var inputItems = [ChatInputItemProtocol]() {
         didSet {
             let inputItemViews = self.inputItems.map { (item: ChatInputItemProtocol) -> ChatInputItemView in
                 let inputItemView = ChatInputItemView()
