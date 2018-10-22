@@ -48,7 +48,7 @@ open class ChatInputBar: ReusableXibView {
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet open weak var textView: ExpandableTextView!
-    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet open weak var sendButton: UIButton!
     @IBOutlet weak var topBorderHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet var constraintsForHiddenTextView: [NSLayoutConstraint]!
