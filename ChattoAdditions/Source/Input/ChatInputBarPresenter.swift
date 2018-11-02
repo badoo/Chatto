@@ -74,12 +74,10 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         if let inputView = inputItem.inputView {
             let containerView: InputContainerView = {
                 let containerView = InputContainerView()
+                containerView.allowsSelfSizing = true
                 containerView.translatesAutoresizingMaskIntoConstraints = false
                 containerView.contentView = inputView
                 self.updateHeight(for: containerView)
-                if #available(iOS 9.0, *) {
-                    containerView.allowsSelfSizing = true
-                }
                 return containerView
             }()
             responder.inputView = containerView
