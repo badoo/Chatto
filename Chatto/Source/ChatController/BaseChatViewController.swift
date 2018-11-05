@@ -50,6 +50,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     public var updatesConfig =  UpdatesConfig()
 
+    open var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
+
     public private(set) var collectionView: UICollectionView!
     public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
     private var _chatDataSource: ChatDataSourceProtocol?
@@ -151,6 +153,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
 
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
+
+        if !self.customPresentersConfigurationPoint {
+            self.confugureCollectionViewWithPresenters()
+        }
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
@@ -322,7 +328,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
     public private(set) var bottomSpaceView: UIView!
-    var presenterFactory: ChatItemPresenterFactoryProtocol!
+    public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
