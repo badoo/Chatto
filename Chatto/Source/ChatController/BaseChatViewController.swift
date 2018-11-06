@@ -24,7 +24,7 @@
 
 import UIKit
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol {
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
@@ -374,6 +374,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
+    }
+
+    // MARK: ChatDataSourceDelegateProtocol
+
+    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
+        self.enqueueModelUpdate(updateType: updateType)
+    }
+
+    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
+        self.enqueueModelUpdate(updateType: .normal)
     }
 }
 
