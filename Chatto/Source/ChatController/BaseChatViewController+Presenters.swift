@@ -117,7 +117,14 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     public func createPresenterForChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        assert(self.presenterFactory != nil, "Presenter factory is not initialized")
         return self.presenterFactory.createChatItemPresenter(chatItem)
+    }
+
+    public func confugureCollectionViewWithPresenters() {
+        assert(self.presenterFactory == nil, "Presenter factory is already initialized")
+        self.presenterFactory = self.createPresenterFactory()
+        self.presenterFactory.configure(withCollectionView: self.collectionView)
     }
 
     public func decorationAttributesForIndexPath(_ indexPath: IndexPath) -> ChatItemDecorationAttributesProtocol? {
