@@ -25,7 +25,7 @@
 import Foundation
 import UIKit
 
-public enum ScreenMetrics {
+enum ScreenMetrics {
     case undefined
 
     /// iPhone 4, 4s
@@ -86,11 +86,11 @@ extension UIScreen {
         return 1/self.scale
     }
 
-    public var pointsPerPixel: CGFloat {
+    var pointsPerPixel: CGFloat {
         return self.epsilon
     }
 
-    public var screenMetric: ScreenMetrics {
+    var screenMetric: ScreenMetrics {
         let screenHeight = self.fixedCoordinateSpace.bounds.height
         switch screenHeight {
         case ScreenMetrics.inch3_5.heightInPoints:
@@ -116,7 +116,7 @@ extension UIScreen {
         }
     }
 
-    public var defaultPortraitKeyboardHeight: CGFloat {
+    var defaultPortraitKeyboardHeight: CGFloat {
         switch self.screenMetric {
         case .inch3_5, .inch4:
             return 253
@@ -137,7 +137,7 @@ extension UIScreen {
         }
     }
 
-    public var defaultLandscapeKeyboardHeight: CGFloat {
+    var defaultLandscapeKeyboardHeight: CGFloat {
         switch self.screenMetric {
         case .inch3_5, .inch4:
             return 199
@@ -154,7 +154,7 @@ extension UIScreen {
         }
     }
 
-    public var defaultKeyboardHeightForCurrentOrientation: CGFloat {
+    var defaultKeyboardHeightForCurrentOrientation: CGFloat {
         if UIDevice.current.orientation.isPortrait {
             return self.defaultPortraitKeyboardHeight
         } else {
