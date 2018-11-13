@@ -128,15 +128,13 @@ open class ExpandableTextView: UITextView {
         self.updatePlaceholderVisibility()
         self.scrollToCaret()
 
-        if #available(iOS 9, *) {
-            // Bugfix:
-            // 1. Open keyboard
-            // 2. Paste very long text (so it snaps to nav bar and shows scroll indicators)
-            // 3. Select all and cut
-            // 4. Paste again: Texview it's smaller than it should be
-            self.isScrollEnabled = false
-            self.isScrollEnabled = true
-        }
+        // Bugfix:
+        // 1. Open keyboard
+        // 2. Paste very long text (so it snaps to nav bar and shows scroll indicators)
+        // 3. Select all and cut
+        // 4. Paste again: Texview it's smaller than it should be
+        self.isScrollEnabled = false
+        self.isScrollEnabled = true
     }
 
     private func scrollToCaret() {

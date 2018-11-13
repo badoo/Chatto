@@ -24,7 +24,7 @@
 
 import UIKit
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol {
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
@@ -49,6 +49,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     public var updatesConfig =  UpdatesConfig()
+
+    open var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
 
     public private(set) var collectionView: UICollectionView!
     public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
@@ -152,8 +154,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: self.collectionView)
 
-        self.presenterFactory = self.createPresenterFactory()
-        self.presenterFactory.configure(withCollectionView: self.collectionView)
+        if !self.customPresentersConfigurationPoint {
+            self.confugureCollectionViewWithPresenters()
+        }
     }
 
     var unfinishedBatchUpdatesCount: Int = 0
@@ -227,6 +230,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
+        guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
         self.isAdjustingInputContainer = true
         self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
         self.view.layoutIfNeeded()
@@ -325,7 +329,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
     public private(set) var bottomSpaceView: UIView!
-    var presenterFactory: ChatItemPresenterFactoryProtocol!
+    public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
@@ -371,6 +375,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
+    }
+
+    // MARK: ChatDataSourceDelegateProtocol
+
+    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
+        self.enqueueModelUpdate(updateType: updateType)
+    }
+
+    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
+        self.enqueueModelUpdate(updateType: .normal)
     }
 }
 
