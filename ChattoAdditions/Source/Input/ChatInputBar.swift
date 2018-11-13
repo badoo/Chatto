@@ -120,7 +120,6 @@ open class ChatInputBar: ReusableXibView {
         UIView.animate(withDuration: 0.25, delay: 0, options: options, animations: { () -> Void in
             self.invalidateIntrinsicContentSize()
             self.layoutIfNeeded()
-            self.superview?.layoutIfNeeded()
         }, completion: nil)
     }
 
