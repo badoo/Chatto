@@ -129,6 +129,9 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     @objc
     private func keyboardDidChangeFrame(_ notification: Notification) {
         guard self.allowListenToChangeFrameEvents else { return }
+        // When a modal controller is dismissed UIKit posts keyboard notifications before focus is returned to the previously selected item
+        // Input bar height depends on a selected item so we shouldn't remember keyboard height without having a selected item
+        guard self.focusedItem != nil else { return }
         guard let value = (notification as NSNotification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         guard value.cgRectValue.height > 0 else { return }
         self.lastKnownKeyboardHeight = value.cgRectValue.height - self.chatInputBar.bounds.height

@@ -24,7 +24,7 @@
 
 import Foundation
 
-extension BaseChatViewController {    
+extension BaseChatViewController {
 
     public func enqueueModelUpdate(updateType: UpdateType) {
         let newItems = self.chatDataSource?.chatItems ?? []
