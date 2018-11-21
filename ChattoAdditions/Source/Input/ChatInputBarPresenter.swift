@@ -109,15 +109,19 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     // MARK: Input View
 
     private weak var currentInputView: InputContainerView?
+    
+    /// Minimum size for non-keyboard input views,
+    /// so that narrow pickers are avoided when using hardware keyboards
+    open var minimumInputHeight: CGFloat { get {
+        return UIScreen.main.defaultKeyboardHeightForCurrentOrientation - 25
+    } }
 
     private func updateHeight(for inputView: InputContainerView) {
         inputView.contentHeight = {
-            let defaultHeight = UIScreen.main.defaultKeyboardHeightForCurrentOrientation
-            // height cannot be lower than a minimum amount, to avoid e.g. narrow pickers
-            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > defaultHeight - 25 {
+            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > minimumInputHeight {
                 return keyboardHeight
             } else {
-                return defaultHeight
+                return minimumInputHeight
             }
         }()
     }
