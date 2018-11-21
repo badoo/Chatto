@@ -112,14 +112,12 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
 
     private func updateHeight(for inputView: InputContainerView) {
         inputView.contentHeight = {
-            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > 0 {
+            let defaultHeight = UIScreen.main.defaultKeyboardHeightForCurrentOrientation
+            // height cannot be lower than a minimum amount, to avoid e.g. narrow pickers
+            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > defaultHeight - 25 {
                 return keyboardHeight
             } else {
-                if UIApplication.shared.statusBarOrientation.isPortrait {
-                    return UIScreen.main.defaultPortraitKeyboardHeight
-                } else {
-                    return UIScreen.main.defaultLandscapeKeyboardHeight
-                }
+                return defaultHeight
             }
         }()
     }
