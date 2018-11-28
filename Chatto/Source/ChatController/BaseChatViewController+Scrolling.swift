@@ -111,6 +111,14 @@ extension BaseChatViewController {
         if self.collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }
+        guard let view = scrollView.panGestureRecognizer.view else { return }
+        let velocity = scrollView.panGestureRecognizer.velocity(in: view)
+        let location = scrollView.panGestureRecognizer.location(in: self.inputContainer)
+        self.onScrollViewDidScrollBlock?(velocity, location, scrollView.panGestureRecognizer.state)
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.onScrollViewDidEndDraggingBlock?()
     }
 
     open func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {

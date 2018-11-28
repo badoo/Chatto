@@ -24,7 +24,7 @@
 
 import UIKit
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol {
+open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, KeyboardAwareControllerProtocol, ScrollAwareControllerProtocol {
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
@@ -84,6 +84,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.enqueueModelUpdate(updateType: updateType)
         }
     }
+
+    // Scroll View updates notifications
+    open var onScrollViewDidScrollBlock: ScrollViewUpdateBlock?
+    open var onScrollViewDidEndDraggingBlock: (() -> Void)?
 
     deinit {
         self.collectionView?.delegate = nil
@@ -162,7 +166,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var unfinishedBatchUpdatesCount: Int = 0
     var onAllBatchUpdatesFinished: (() -> Void)?
 
-    private var inputContainerBottomConstraint: NSLayoutConstraint!
+    var inputContainerBottomConstraint: NSLayoutConstraint!
     private func addInputViews() {
         self.inputContainer = UIView(frame: CGRect.zero)
         self.inputContainer.autoresizingMask = UIViewAutoresizing()
@@ -183,15 +187,15 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     private func addBottomSpaceView() {
-        self.bottomSpaceView = UIView(frame: CGRect.zero)
-        self.bottomSpaceView.autoresizingMask = UIViewAutoresizing()
-        self.bottomSpaceView.translatesAutoresizingMaskIntoConstraints = false
-        self.bottomSpaceView.backgroundColor = UIColor.white
-        self.view.addSubview(self.bottomSpaceView)
-        self.view.addConstraint(NSLayoutConstraint(item: self.bottomSpaceView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .leading, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .trailing, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .bottom, multiplier: 1, constant: 0))
+        self.contentContainer = UIView(frame: CGRect.zero)
+        self.contentContainer.autoresizingMask = UIViewAutoresizing()
+        self.contentContainer.translatesAutoresizingMaskIntoConstraints = false
+        self.contentContainer.backgroundColor = UIColor.white
+        self.view.addSubview(self.contentContainer)
+        self.view.addConstraint(NSLayoutConstraint(item: self.contentContainer, attribute: .top, relatedBy: .equal, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.contentContainer, attribute: .leading, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.contentContainer, attribute: .trailing, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.contentContainer, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
     private func setupInputContainerBottomConstraint() {
@@ -208,7 +212,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             } else {
                 navigatedController = self
             }
-            
+
             if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
                 self.inputContainerBottomConstraint.constant = 0
             } else {
@@ -218,23 +222,15 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var isAdjustingInputContainer: Bool = false
+    open var onKeyboardLayoutChangeBlock: KeyboardLayoutBlock?
     open func setupKeyboardTracker() {
         let layoutBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
-            sSelf.handleKeyboardPositionChange(bottomMargin: bottomMargin, keyboardStatus: keyboardStatus)
+            sSelf.onKeyboardLayoutChangeBlock?(bottomMargin, keyboardStatus)
         }
         self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
 
         (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
-
-    }
-
-    open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
-        guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
-        self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
-        self.view.layoutIfNeeded()
-        self.isAdjustingInputContainer = false
     }
 
     var notificationCenter = NotificationCenter.default
@@ -276,7 +272,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
         if needToPlaceMessagesAtBottom {
-            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
+            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom
             newInsetTop += self.collectionView.bounds.height - realContentHeight
         }
 
@@ -328,7 +324,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
-    public private(set) var bottomSpaceView: UIView!
+    public private(set) var contentContainer: UIView!
     public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
@@ -403,5 +399,26 @@ extension BaseChatViewController { // Rotation
                 self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
             }
         }, completion: nil)
+    }
+}
+
+// MARK: - ContainerControllerProtocol
+extension BaseChatViewController: ContainerControllerProtocol {
+    open var contentContainerBottomMargin: CGFloat {
+        return self.inputContainerBottomConstraint.constant
+    }
+
+    open func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
+        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
+        self.isAdjustingInputContainer = true
+        self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+        let layoutBlock = { self.view.layoutIfNeeded() }
+        if animated {
+            UIView.animate(withDuration: CATransaction.animationDuration(), animations: layoutBlock, completion: { _ in callback?() })
+        } else {
+            layoutBlock()
+            callback?()
+        }
+        self.isAdjustingInputContainer = false
     }
 }
