@@ -191,7 +191,7 @@ extension BasicChatInputBarPresenter {
     }
 }
 
-private class InputContainerView: UIInputView {
+open class InputContainerView: UIInputView {
 
     var contentHeight: CGFloat = 0 {
         didSet {
@@ -212,12 +212,12 @@ private class InputContainerView: UIInputView {
         }
     }
 
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         self.contentView?.frame = self.bounds
     }
 
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         return CGSize(width: UIViewNoIntrinsicMetric, height: self.contentHeight)
     }
 }
