@@ -180,6 +180,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     @objc
     private func handleOrienationDidChangeNotification(_ notification: Notification) {
         self.lastKnownKeyboardHeight = nil
+        self.currentInputView?.contentHeight = self.defaultKeyboardHeight
         self.containerController?.changeContainerBottomMargin(withNewValue: self.defaultKeyboardHeight, animated: true, callback: nil)
     }
 
@@ -193,7 +194,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
 
     private func onKeyboardLayoutChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
         guard let containerController = self.containerController else { return }
-        if let focusedItem = self.focusedItem, focusedItem.presentationMode == .keyboard {
+        if self.focusedItem == nil || self.focusedItem?.presentationMode == .keyboard {
             containerController.changeContainerBottomMargin(withNewValue: bottomMargin, animated: false, callback: nil)
         } else if let item = self.focusedItem {
             switch keyboardStatus {
@@ -284,8 +285,9 @@ extension ContentAwareChatInputBarPresenter {
     }
 
     public func onDidBeginEditing() {
-        if self.focusedItem == nil {
-            self.focusedItem = self.firstKeyboardInputItem()
+        if self.focusedItem == nil, let item = self.firstKeyboardInputItem() {
+            self.focusedItem = item
+            self.updateContentContainer(withInputItem: item)
         }
     }
 
