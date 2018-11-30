@@ -114,7 +114,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
 
     private func setupInputView(toContainerController containerController: ContainerControllerProtocol, _ inputView: UIView) {
         self.shouldIgnoreContainerBottomMarginUpdates = true
-        containerController.changeContainerBottomMargin(withNewValue: self.defaultKeyboardHeight, animated: true, callback: {
+        containerController.changeContainerBottomMargin(withNewValue: self.keyboardHeight, animated: true, callback: {
             self.shouldIgnoreContainerBottomMarginUpdates = false
         })
         let containerView: InputContainerView = {
@@ -135,6 +135,9 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     }
 
     private var lastKnownKeyboardHeight: CGFloat?
+    private var keyboardHeight: CGFloat {
+        return self.lastKnownKeyboardHeight ?? self.defaultKeyboardHeight
+    }
     private var allowListenToChangeFrameEvents = true
 
     // MARK: Input View
@@ -164,7 +167,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
         guard self.allowListenToChangeFrameEvents else { return }
         guard let value = (notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         guard value.cgRectValue.height > 0 else { return }
-        self.lastKnownKeyboardHeight = value.cgRectValue.height
+        self.lastKnownKeyboardHeight = value.cgRectValue.height - self.chatInputBar.bounds.height
     }
 
     @objc
@@ -201,28 +204,32 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
             case .shown, .showing:
                 containerController.changeContainerBottomMargin(withNewValue: self.expandedInputViewHeight(forItem: item), animated: true, callback: nil)
             case .hidden, .hiding:
-                containerController.changeContainerBottomMargin(withNewValue: self.defaultKeyboardHeight, animated: true, callback: nil)
+                containerController.changeContainerBottomMargin(withNewValue: self.keyboardHeight, animated: true, callback: nil)
             }
         }
     }
 
     private func subscribeToScrollController() {
-        self.scrollAwareController?.onScrollViewDidEndDraggingBlock = { [weak self] in
-            self?.onScrollViewDidEndDragging()
+        self.scrollAwareController?.onScrollViewDidEndDraggingBlock = { [weak self] (_ decelerate: Bool) in
+            self?.onScrollViewDidEndDragging(willDecelerate: decelerate)
         }
         self.scrollAwareController?.onScrollViewDidScrollBlock = { [weak self] (_ velocity: CGPoint, _ location: CGPoint, _ state: UIGestureRecognizer.State) in
-            guard state == .changed else { return }
-            self?.onScrollViewDidScroll(velocity: velocity, location: location)
+            switch state {
+            case .changed:
+                self?.onScrollViewDidScroll(velocity: velocity, location: location)
+            case .ended where velocity.y > 0:
+                self?.hideContentView(withVelocity: velocity)
+            default:
+                break
+            }
         }
     }
 
-    private func onScrollViewDidEndDragging() {
-        guard !self.shouldIgnoreContainerBottomMarginUpdates else { return }
+    private func onScrollViewDidEndDragging(willDecelerate decelerate: Bool) {
+        guard self.shouldProcessScrollViewUpdates() else { return }
         guard let containerController = self.containerController else { return }
-        guard let focusItem = self.focusedItem else { return }
-        guard focusItem.presentationMode != .keyboard else { return }
         self.shouldIgnoreContainerBottomMarginUpdates = true
-        if 3 * containerController.contentContainerBottomMargin < self.defaultKeyboardHeight {
+        if 3 * containerController.contentContainerBottomMargin < self.keyboardHeight {
             let callback: () -> Void = { [weak self] in
                 self?.shouldIgnoreContainerBottomMarginUpdates = false
                 self?.cleanupFocusedItem(animated: true)
@@ -230,33 +237,38 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
             containerController.changeContainerBottomMargin(withNewValue: 0, animated: true, callback: callback)
         } else {
             let callback: () -> Void = { [weak self] in self?.shouldIgnoreContainerBottomMarginUpdates = false }
-            containerController.changeContainerBottomMargin(withNewValue: self.defaultKeyboardHeight, animated: true, callback: callback)
+            containerController.changeContainerBottomMargin(withNewValue: self.keyboardHeight, animated: true, callback: callback)
         }
     }
 
     private func onScrollViewDidScroll(velocity: CGPoint, location: CGPoint) {
-        guard !self.shouldIgnoreContainerBottomMarginUpdates else { return }
-        guard let containerController = self.containerController else { return }
-        guard let focusItem = self.focusedItem else { return }
-        guard focusItem.presentationMode != .keyboard else { return }
+        guard self.shouldProcessScrollViewUpdates() else { return }
         self.currentInputView?.endEditing(false)
-        if velocity.y > 2500 {
-            self.shouldIgnoreContainerBottomMarginUpdates = true
-            let callback: () -> Void = { [weak self] in
-                self?.shouldIgnoreContainerBottomMarginUpdates = false
-                self?.cleanupFocusedItem(animated: true)
-            }
-            containerController.changeContainerBottomMargin(withNewValue: 0, animated: true, callback: callback)
-        } else {
-            if location.y > 0 {
-                containerController.changeContainerBottomMargin(withNewValue: containerController.contentContainerBottomMargin - location.y, animated: false, callback: nil)
-            } else if containerController.contentContainerBottomMargin < self.defaultKeyboardHeight && velocity.y < 0 {
-                containerController.changeContainerBottomMargin(withNewValue: min(self.defaultKeyboardHeight, containerController.contentContainerBottomMargin - location.y), animated: false, callback: nil)
-            }
-            if containerController.contentContainerBottomMargin == 0 {
-                self.cleanupFocusedItem(animated: true)
-            }
+        guard let containerController = self.containerController else { return }
+        if location.y > 0 {
+            containerController.changeContainerBottomMargin(withNewValue: containerController.contentContainerBottomMargin - location.y, animated: false, callback: nil)
+        } else if containerController.contentContainerBottomMargin < self.keyboardHeight && velocity.y < 0 {
+            containerController.changeContainerBottomMargin(withNewValue: min(self.keyboardHeight, containerController.contentContainerBottomMargin - location.y), animated: false, callback: nil)
         }
+        if containerController.contentContainerBottomMargin == 0 {
+            self.cleanupFocusedItem(animated: true)
+        }
+    }
+
+    private func shouldProcessScrollViewUpdates() -> Bool {
+        guard !self.shouldIgnoreContainerBottomMarginUpdates else { return false }
+        guard let focusItem = self.focusedItem else { return false }
+        guard focusItem.presentationMode != .keyboard else { return false }
+        return true
+    }
+
+    private func hideContentView(withVelocity velocity: CGPoint) {
+        self.shouldIgnoreContainerBottomMarginUpdates = true
+        let velocityAwareDuration = min(Double(self.keyboardHeight / velocity.y), CATransaction.animationDuration())
+        self.containerController?.changeContainerBottomMargin(withNewValue: 0, animated: true, duration: velocityAwareDuration, initialSpringVelocity: velocity.y, callback: { [weak self] in
+            self?.shouldIgnoreContainerBottomMarginUpdates = false
+            self?.cleanupFocusedItem(animated: true)
+        })
     }
 
     private func cleanupFocusedItem(animated: Bool = false) {

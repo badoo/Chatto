@@ -27,4 +27,5 @@ public protocol ContainerControllerProtocol: AnyObject {
     var contentContainerBottomMargin: CGFloat { get }
 
     func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
 }

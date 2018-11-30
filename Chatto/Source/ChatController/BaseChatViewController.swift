@@ -87,7 +87,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     // Scroll View updates notifications
     open var onScrollViewDidScrollBlock: ScrollViewUpdateBlock?
-    open var onScrollViewDidEndDraggingBlock: (() -> Void)?
+    open var onScrollViewDidEndDraggingBlock: ScrollViewDidEndDraggingBlock?
 
     deinit {
         self.collectionView?.delegate = nil
@@ -171,6 +171,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer = UIView(frame: CGRect.zero)
         self.inputContainer.autoresizingMask = UIViewAutoresizing()
         self.inputContainer.translatesAutoresizingMaskIntoConstraints = false
+        self.inputContainer.backgroundColor = .white
         self.view.addSubview(self.inputContainer)
         self.view.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.inputContainer, attribute: .leading, multiplier: 1, constant: 0))
@@ -190,7 +191,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.contentContainer = UIView(frame: CGRect.zero)
         self.contentContainer.autoresizingMask = UIViewAutoresizing()
         self.contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        self.contentContainer.backgroundColor = UIColor.white
+        self.contentContainer.backgroundColor = .white
         self.view.addSubview(self.contentContainer)
         self.view.addConstraint(NSLayoutConstraint(item: self.contentContainer, attribute: .top, relatedBy: .equal, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.contentContainer, attribute: .leading, multiplier: 1, constant: 0))
@@ -413,12 +414,26 @@ extension BaseChatViewController: ContainerControllerProtocol {
     }
 
     open func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
+        self.changeContainerBottomMargin(withNewValue: newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
+    }
+
+    open func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
-        let layoutBlock = { self.view.layoutIfNeeded() }
+        let layoutBlock = {
+            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            self.view.layoutIfNeeded()
+        }
+
         if animated {
-            UIView.animate(withDuration: CATransaction.animationDuration(), animations: layoutBlock, completion: { _ in callback?() })
+            UIView.animate(withDuration: duration,
+                           delay: 0.0,
+                           usingSpringWithDamping: 1.0,
+                           initialSpringVelocity: initialSpringVelocity,
+                           options: .curveLinear,
+                           animations: layoutBlock) { (_) in
+                callback?()
+            }
         } else {
             layoutBlock()
             callback?()
