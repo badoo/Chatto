@@ -24,8 +24,8 @@
 
 import ChattoAdditions
 
-open class InputItemWithTextField {
-    typealias Class = InputItemWithTextField
+open class ContentAwareInputItem {
+    typealias Class = ContentAwareInputItem
     public var textInputHandler: ((String) -> Void)?
 
     let buttonAppearance: TabInputButtonAppearance
@@ -38,9 +38,9 @@ open class InputItemWithTextField {
 
     public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
         let images: [UIControlStateWrapper: UIImage] = [
-            UIControlStateWrapper(state: .normal): UIImage(named: "custom-icon-unselected", in: Bundle(for: InputItemWithTextField.self), compatibleWith: nil)!,
-            UIControlStateWrapper(state: .selected): UIImage(named: "custom-icon-selected", in: Bundle(for: InputItemWithTextField.self), compatibleWith: nil)!,
-            UIControlStateWrapper(state: .highlighted): UIImage(named: "custom-icon-selected", in: Bundle(for: InputItemWithTextField.self), compatibleWith: nil)!
+            UIControlStateWrapper(state: .normal): UIImage(named: "custom-icon-unselected", in: Bundle(for: ContentAwareInputItem.self), compatibleWith: nil)!,
+            UIControlStateWrapper(state: .selected): UIImage(named: "custom-icon-selected", in: Bundle(for: ContentAwareInputItem.self), compatibleWith: nil)!,
+            UIControlStateWrapper(state: .highlighted): UIImage(named: "custom-icon-selected", in: Bundle(for: ContentAwareInputItem.self), compatibleWith: nil)!
         ]
         return TabInputButtonAppearance(images: images, size: nil)
     }
@@ -60,7 +60,7 @@ open class InputItemWithTextField {
 }
 
 // MARK: - ChatInputItemProtocol
-extension InputItemWithTextField: ChatInputItemProtocol {
+extension ContentAwareInputItem: ChatInputItemProtocol {
     public var supportsExpandableState: Bool {
         return true
     }

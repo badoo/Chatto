@@ -120,8 +120,8 @@ class DemoChatViewController: BaseChatViewController {
         return item
     }
 
-    private func customInputItem() -> InputItemWithTextField {
-        let item = InputItemWithTextField()
+    private func customInputItem() -> ContentAwareInputItem {
+        let item = ContentAwareInputItem()
         item.textInputHandler = { [weak self] text in
             self?.dataSource.addTextMessage(text)
         }
