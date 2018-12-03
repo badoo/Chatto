@@ -22,10 +22,33 @@
  THE SOFTWARE.
  */
 
-public protocol ContainerControllerProtocol: AnyObject {
-    var contentContainer: UIView! { get }
-    var contentContainerBottomMargin: CGFloat { get }
+open class InputContainerView: UIInputView {
 
-    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
-    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
+    var contentHeight: CGFloat = 0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+
+    var contentView: UIView? {
+        willSet {
+            self.contentView?.removeFromSuperview()
+        }
+        didSet {
+            if let contentView = self.contentView {
+                contentView.frame = self.bounds
+                self.addSubview(contentView)
+                self.setNeedsLayout()
+            }
+        }
+    }
+
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView?.frame = self.bounds
+    }
+
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: UIViewNoIntrinsicMetric, height: self.contentHeight)
+    }
 }

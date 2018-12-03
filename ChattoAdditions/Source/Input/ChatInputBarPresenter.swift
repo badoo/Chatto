@@ -190,34 +190,3 @@ extension BasicChatInputBarPresenter {
         self.updateFirstResponderWithInputItem(item)
     }
 }
-
-open class InputContainerView: UIInputView {
-
-    var contentHeight: CGFloat = 0 {
-        didSet {
-            self.invalidateIntrinsicContentSize()
-        }
-    }
-
-    var contentView: UIView? {
-        willSet {
-            self.contentView?.removeFromSuperview()
-        }
-        didSet {
-            if let contentView = self.contentView {
-                contentView.frame = self.bounds
-                self.addSubview(contentView)
-                self.setNeedsLayout()
-            }
-        }
-    }
-
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-        self.contentView?.frame = self.bounds
-    }
-
-    override open var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: self.contentHeight)
-    }
-}

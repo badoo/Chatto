@@ -58,7 +58,7 @@ class DemoChatViewController: BaseChatViewController {
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
         if self.shouldUserAlternativePresenter {
-            self.chatInputPresenter = ContentAwareChatInputBarPresenter(
+            self.chatInputPresenter = ExpandableChatInputBarPresenter(
                 containerController: self,
                 keyboardAwareController: self,
                 scrollAwareController: self,

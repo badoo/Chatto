@@ -35,7 +35,7 @@ class ChatExamplesViewController: CellsViewController {
             self.makeOverviewCellItem(),
             self.makeChatCellItem(title: "Empty chat", messagesCount: 0),
             self.makeChatCellItem(title: "Chat with 10000 messages", messagesCount: 10_000),
-            self.makeChatCellItem(title: "Chat with 10000 messages (content aware presenter)", messagesCount: 10_000, shouldUserAlternativePresenter: true),
+            self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUserAlternativePresenter: true),
             self.makeMessageSelectionCellItem(),
             self.makeOpenWithTabBarCellItem(),
         ]

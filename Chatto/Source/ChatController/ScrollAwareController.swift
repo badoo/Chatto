@@ -22,10 +22,10 @@
  THE SOFTWARE.
  */
 
-public typealias ScrollViewUpdateBlock = (_ velocity: CGPoint, _ location: CGPoint, _ state: UIGestureRecognizer.State) -> Void
-public typealias ScrollViewDidEndDraggingBlock = (_ decelerate: Bool) -> Void
+public typealias ScrollViewDidScrollBlock = (_ scrollView: UIScrollView) -> Void
+public typealias ScrollViewDidEndDraggingBlock = (_ scrollView: UIScrollView, _ decelerate: Bool) -> Void
 
 public protocol ScrollAwareControllerProtocol: AnyObject {
-    var onScrollViewDidScrollBlock: ScrollViewUpdateBlock? { get set }
+    var onScrollViewDidScrollBlock: ScrollViewDidScrollBlock? { get set }
     var onScrollViewDidEndDraggingBlock: ScrollViewDidEndDraggingBlock? { get set }
 }

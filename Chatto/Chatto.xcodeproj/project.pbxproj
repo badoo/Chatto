@@ -38,7 +38,7 @@
 		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE51DB4B21AECB1B006DBFAB /* KeyboardAwareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */; };
 		DE51DB4D21AECB44006DBFAB /* ScrollAwareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */; };
-		DE51DB4F21AECB7B006DBFAB /* ContainerControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4E21AECB7B006DBFAB /* ContainerControllerProtocol.swift */; };
+		DE51DB4F21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,7 +86,7 @@
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAwareController.swift; sourceTree = "<group>"; };
 		DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollAwareController.swift; sourceTree = "<group>"; };
-		DE51DB4E21AECB7B006DBFAB /* ContainerControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerControllerProtocol.swift; sourceTree = "<group>"; };
+		DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContentContainerControllerProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,7 +217,7 @@
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
 				DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */,
 				DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */,
-				DE51DB4E21AECB7B006DBFAB /* ContainerControllerProtocol.swift */,
+				DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */,
 			);
 			path = ChatController;
 			sourceTree = "<group>";
@@ -365,7 +365,7 @@
 				C38352D11CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,
 				C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */,
-				DE51DB4F21AECB7B006DBFAB /* ContainerControllerProtocol.swift in Sources */,
+				DE51DB4F21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,

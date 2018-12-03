@@ -52,11 +52,11 @@ class KeyboardTracker {
     var inputContainer: UIView
     private var notificationCenter: NotificationCenter
 
-    private var layoutBlock: KeyboardLayoutBlock
+    private var heightBlock: KeyboardHeightBlock
 
-    init(viewController: UIViewController, inputContainer: UIView, layoutBlock: @escaping KeyboardLayoutBlock, notificationCenter: NotificationCenter) {
+    init(viewController: UIViewController, inputContainer: UIView, heightBlock: @escaping KeyboardHeightBlock, notificationCenter: NotificationCenter) {
         self.view = viewController.view
-        self.layoutBlock = layoutBlock
+        self.heightBlock = heightBlock
         self.inputContainer = inputContainer
         self.notificationCenter = notificationCenter
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -166,7 +166,7 @@ class KeyboardTracker {
 
     private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
         self.isPerformingForcedLayout = true
-        self.layoutBlock(constraint, self.keyboardStatus)
+        self.heightBlock(constraint, self.keyboardStatus)
         self.isPerformingForcedLayout = false
     }
 }

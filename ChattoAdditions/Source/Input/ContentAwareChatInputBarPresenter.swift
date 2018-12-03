@@ -25,16 +25,16 @@
 import Chatto
 
 @objc
-public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
 
-    weak var containerController: ContainerControllerProtocol?
+    weak var containerController: InputContentContainerControllerProtocol?
     weak var keyboardAwareController: KeyboardAwareControllerProtocol?
     weak var scrollAwareController: ScrollAwareControllerProtocol?
 
-    public init(containerController: ContainerControllerProtocol,
+    public init(containerController: InputContentContainerControllerProtocol,
                 keyboardAwareController: KeyboardAwareControllerProtocol,
                 scrollAwareController: ScrollAwareControllerProtocol,
                 chatInputBar: ChatInputBar,
@@ -98,13 +98,11 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     private func cleanCurrentInputView(animated: Bool = false, completion: (() -> Void)? = nil) {
         self.currentInputView?.endEditing(false)
         if animated {
-            UIView.animate(withDuration: CATransaction.animationDuration(),
-                           animations: {
-                            self.currentInputView?.alpha = 0.0
-            },
-                           completion: { (_) in
-                            self.currentInputView?.removeFromSuperview()
-                            completion?()
+            UIView.animate(withDuration: CATransaction.animationDuration(), animations: {
+                self.currentInputView?.alpha = 0.0
+            }, completion: { (_) in
+                self.currentInputView?.removeFromSuperview()
+                completion?()
             })
         } else {
             self.currentInputView?.removeFromSuperview()
@@ -112,7 +110,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
         }
     }
 
-    private func setupInputView(toContainerController containerController: ContainerControllerProtocol, _ inputView: UIView) {
+    private func setupInputView(toContainerController containerController: InputContentContainerControllerProtocol, _ inputView: UIView) {
         self.shouldIgnoreContainerBottomMarginUpdates = true
         containerController.changeContainerBottomMargin(withNewValue: self.keyboardHeight, animated: true, callback: {
             self.shouldIgnoreContainerBottomMarginUpdates = false
@@ -124,13 +122,13 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
             containerView.contentView = inputView
             return containerView
         }()
-        containerController.contentContainer.addSubview(containerView)
+        containerController.inputContentContainer.addSubview(containerView)
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: containerController.contentContainer.topAnchor),
-            containerView.leftAnchor.constraint(equalTo: containerController.contentContainer.leftAnchor),
-            containerView.rightAnchor.constraint(equalTo: containerController.contentContainer.rightAnchor),
-            containerView.bottomAnchor.constraint(equalTo: containerController.contentContainer.bottomAnchor)
-            ])
+            containerView.topAnchor.constraint(equalTo: containerController.inputContentContainer.topAnchor),
+            containerView.leftAnchor.constraint(equalTo: containerController.inputContentContainer.leftAnchor),
+            containerView.rightAnchor.constraint(equalTo: containerController.inputContentContainer.rightAnchor),
+            containerView.bottomAnchor.constraint(equalTo: containerController.inputContentContainer.bottomAnchor)
+        ])
         self.currentInputView = containerView
     }
 
@@ -153,11 +151,8 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     }
 
     private func expandedInputViewHeight(forItem item: ChatInputItemProtocol) -> CGFloat {
-        if UIApplication.shared.statusBarOrientation.isPortrait {
-            return UIScreen.main.fixedCoordinateSpace.bounds.height - item.expandedStateTopMargin
-        } else {
-            return UIScreen.main.fixedCoordinateSpace.bounds.width - item.expandedStateTopMargin
-        }
+        guard let containerController = self.containerController else { return 0.0 }
+        return containerController.inputViewSize.height - item.expandedStateTopMargin
     }
 
     // MARK: Notifications handling
@@ -183,14 +178,16 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     @objc
     private func handleOrienationDidChangeNotification(_ notification: Notification) {
         self.lastKnownKeyboardHeight = nil
-        self.currentInputView?.contentHeight = self.defaultKeyboardHeight
-        self.containerController?.changeContainerBottomMargin(withNewValue: self.defaultKeyboardHeight, animated: true, callback: nil)
+        if let currentInputView = self.currentInputView {
+            currentInputView.contentHeight = self.keyboardHeight
+            self.containerController?.changeContainerBottomMargin(withNewValue: self.keyboardHeight, animated: true, callback: nil)
+        }
     }
 
     // MARK: Controllers updates handling
 
     private func subscribeToKeyboardController() {
-        self.keyboardAwareController?.onKeyboardLayoutChangeBlock = { [weak self] (_ bottomMargin: CGFloat, _ keyboardStatus: KeyboardStatus) in
+        self.keyboardAwareController?.onKeyboardHeightChangeBlock = { [weak self] (_ bottomMargin: CGFloat, _ keyboardStatus: KeyboardStatus) in
             self?.onKeyboardLayoutChange(bottomMargin: bottomMargin, keyboardStatus: keyboardStatus)
         }
     }
@@ -210,11 +207,16 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
     }
 
     private func subscribeToScrollController() {
-        self.scrollAwareController?.onScrollViewDidEndDraggingBlock = { [weak self] (_ decelerate: Bool) in
+        self.scrollAwareController?.onScrollViewDidEndDraggingBlock = { [weak self] (_ scrollView: UIScrollView, _ decelerate: Bool) in
             self?.onScrollViewDidEndDragging(willDecelerate: decelerate)
         }
-        self.scrollAwareController?.onScrollViewDidScrollBlock = { [weak self] (_ velocity: CGPoint, _ location: CGPoint, _ state: UIGestureRecognizer.State) in
-            switch state {
+        self.scrollAwareController?.onScrollViewDidScrollBlock = { [weak self] (_ scrollView: UIScrollView) in
+            guard let sSelf = self else { return }
+            guard let containerController = sSelf.containerController else { return }
+            guard let view = scrollView.panGestureRecognizer.view else { return }
+            let velocity = scrollView.panGestureRecognizer.velocity(in: view)
+            let location = scrollView.panGestureRecognizer.location(in: containerController.inputContainer)
+            switch scrollView.panGestureRecognizer.state {
             case .changed:
                 self?.onScrollViewDidScroll(velocity: velocity, location: location)
             case .ended where velocity.y > 0:
@@ -285,7 +287,7 @@ public class ContentAwareChatInputBarPresenter: NSObject, ChatInputBarPresenter 
 }
 
 // MARK: ChatInputBarPresenter
-extension ContentAwareChatInputBarPresenter {
+extension ExpandableChatInputBarPresenter {
     public func onDidEndEditing() {
         if self.focusedItem != nil {
             guard self.focusedItem?.presentationMode == .keyboard else { return }
