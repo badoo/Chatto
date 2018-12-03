@@ -225,7 +225,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var isAdjustingInputContainer: Bool = false
     open var onKeyboardHeightChangeBlock: KeyboardHeightBlock?
     open func setupKeyboardTracker() {
-        let layoutBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
+        let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
             if let onKeyboardLayoutChangeBlock = sSelf.onKeyboardHeightChangeBlock {
                 onKeyboardLayoutChangeBlock(bottomMargin, keyboardStatus)
@@ -233,7 +233,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
                 sSelf.changeContainerBottomMargin(withNewValue: bottomMargin)
             }
         }
-        self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, layoutBlock: layoutBlock, notificationCenter: self.notificationCenter)
+        self.keyboardTracker = KeyboardTracker(viewController: self, inputContainer: self.inputContainer, heightBlock: heightBlock, notificationCenter: self.notificationCenter)
 
         (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
     }
