@@ -71,13 +71,14 @@ extension BaseChatViewController {
             return 0
         }
 
-        let contentHeight = self.collectionView.contentSize.height
+        let contentHeight = self.collectionView?.contentSize.height ?? 0
         guard contentHeight > 0 else {
             return 0.5
         }
 
         // Rough estimation
-        let midContentOffset = self.collectionView.contentOffset.y + self.visibleRect().height / 2
+        let collectionViewContentYOffset = self.collectionView?.contentOffset.y ?? 0
+        let midContentOffset = collectionViewContentYOffset + self.visibleRect().height / 2
         return min(max(0, Double(midContentOffset / contentHeight)), 1.0)
     }
 
@@ -98,8 +99,8 @@ extension BaseChatViewController {
 
     private func visibleCellsFromCollectionViewApi() -> [IndexPath: UICollectionViewCell] {
         var visibleCells: [IndexPath: UICollectionViewCell] = [:]
-        self.collectionView.indexPathsForVisibleItems.forEach({ (indexPath) in
-            if let cell = self.collectionView.cellForItem(at: indexPath) {
+        self.collectionView?.indexPathsForVisibleItems.forEach({ (indexPath) in
+            if let cell = self.collectionView?.cellForItem(at: indexPath) {
                 visibleCells[indexPath] = cell
             }
         })
@@ -180,14 +181,14 @@ extension BaseChatViewController {
         if usesBatchUpdates {
             UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
-                self.collectionView.performBatchUpdates({ () -> Void in
+                self.collectionView?.performBatchUpdates({ () -> Void in
                     updateModelClosure()
                     self.updateVisibleCells(changes) // For instance, to support removal of tails
 
-                    self.collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
-                    self.collectionView.insertItems(at: Array(changes.insertedIndexPaths))
+                    self.collectionView?.deleteItems(at: Array(changes.deletedIndexPaths))
+                    self.collectionView?.insertItems(at: Array(changes.insertedIndexPaths))
                     for move in changes.movedIndexPaths {
-                        self.collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
+                        self.collectionView?.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
                 }, completion: { [weak self] (_) -> Void in
                     defer { myCompletion() }
@@ -204,8 +205,8 @@ extension BaseChatViewController {
         } else {
             self.visibleCells = [:]
             updateModelClosure()
-            self.collectionView.reloadData()
-            self.collectionView.collectionViewLayout.prepare()
+            self.collectionView?.reloadData()
+            self.collectionView?.collectionViewLayout.prepare()
             if self.placeMessagesFromBottom {
                 self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
             }
@@ -225,7 +226,7 @@ extension BaseChatViewController {
     }
 
     private func updateModels(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, updateType: UpdateType, completion: @escaping () -> Void) {
-        let collectionViewWidth = self.collectionView.bounds.width
+        let collectionViewWidth = self.collectionView?.bounds.width ?? 0
         let updateType = self.isFirstLayout ? .firstLoad : updateType
         let performInBackground = updateType != .firstLoad
 
@@ -329,8 +330,9 @@ extension BaseChatViewController {
     }
 
     public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
-        if self.layoutModel.calculatedForWidth != self.collectionView.bounds.width {
-            self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: self.collectionView.bounds.width)
+        if let collectionViewWidth = self.collectionView?.bounds.width,
+            self.layoutModel.calculatedForWidth != collectionViewWidth {
+            self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: collectionViewWidth)
         }
         return self.layoutModel
     }
