@@ -36,11 +36,8 @@ extension CGFloat {
 extension BaseChatViewController {
 
     public func isScrolledAtBottom() -> Bool {
-        guard
-            let collectionView = self.collectionView,
-            collectionView.numberOfSections > 0
-                && collectionView.numberOfItems(inSection: 0) > 0
-        else { return true }
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
         let sectionIndex = collectionView.numberOfSections - 1
         let itemIndex = collectionView.numberOfItems(inSection: sectionIndex) - 1
         let lastIndexPath = IndexPath(item: itemIndex, section: sectionIndex)
@@ -48,43 +45,34 @@ extension BaseChatViewController {
     }
 
     public func isScrolledAtTop() -> Bool {
-        guard
-            let collectionView = self.collectionView,
-            collectionView.numberOfSections > 0
-                && collectionView.numberOfItems(inSection: 0) > 0
-        else { return true }
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
         let firstIndexPath = IndexPath(item: 0, section: 0)
         return self.isIndexPathVisible(firstIndexPath, atEdge: .top)
     }
 
     public func isCloseToBottom() -> Bool {
-        guard
-            let collectionView = self.collectionView,
-            collectionView.contentSize.height > 0
-        else { return true }
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.contentSize.height > 0 else { return true }
         return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
-        guard
-            let collectionView = self.collectionView,
-            collectionView.contentSize.height > 0
-            else { return true }
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.contentSize.height > 0 else { return true }
         return (self.visibleRect().minY / collectionView.contentSize.height) < self.constants.autoloadingFractionalThreshold
     }
 
     public func isIndexPathVisible(_ indexPath: IndexPath, atEdge edge: CellVerticalEdge) -> Bool {
-        guard
-            let collectionView = self.collectionView,
-            let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)
-        else { return false }
-            let visibleRect = self.visibleRect()
-            let intersection = visibleRect.intersection(attributes.frame)
-            if edge == .top {
-                return abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
-            } else {
-                return abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
-            }
+        guard let collectionView = self.collectionView else { return true }
+        guard let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) else { return false }
+        let visibleRect = self.visibleRect()
+        let intersection = visibleRect.intersection(attributes.frame)
+        if edge == .top {
+            return abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
+        } else {
+            return abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
+        }
     }
 
     public func visibleRect() -> CGRect {
@@ -117,7 +105,8 @@ extension BaseChatViewController {
     }
 
     public func scrollToPreservePosition(oldRefRect: CGRect?, newRefRect: CGRect?) {
-        guard let collectionView = self.collectionView, let oldRefRect = oldRefRect, let newRefRect = newRefRect else {
+        guard let collectionView = self.collectionView else { return }
+        guard let oldRefRect = oldRefRect, let newRefRect = newRefRect else {
             return
         }
         let diffY = newRefRect.minY - oldRefRect.minY

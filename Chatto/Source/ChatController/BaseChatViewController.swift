@@ -63,7 +63,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.setChatDataSource(newValue, triggeringUpdateType: .normal)
         }
     }
- 
+
     // If set to false messages will start appearing on top and goes down
     // If true then messages will start from bottom and goes up.
     public var placeMessagesFromBottom = false {
@@ -154,7 +154,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
         self.collectionView = collectionView
-        
+
         if !self.customPresentersConfigurationPoint {
             self.confugureCollectionViewWithPresenters()
         }
@@ -209,7 +209,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             } else {
                 navigatedController = self
             }
-            
+
             if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
                 self.inputContainerBottomConstraint.constant = 0
             } else {
@@ -231,7 +231,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
-        guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
         self.isAdjustingInputContainer = true
         self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
         self.view.layoutIfNeeded()
@@ -256,12 +255,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     public var allContentFits: Bool {
+        guard let collectionView = self.collectionView else { return false }
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputContainer.frame.minY
         let insetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
         let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
-        let collectionViewHeight = self.collectionView?.bounds.height ?? 0
-        let availableHeight =  collectionViewHeight - (insetTop + insetBottom)
-        let contentSize = self.collectionView?.collectionViewLayout.collectionViewContentSize ?? CGSize.zero
+        let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
+        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
         return availableHeight >= contentSize.height
     }
 
@@ -279,7 +278,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
         if needToPlaceMessagesAtBottom {
-            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom;
+            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom
             newInsetTop += collectionView.bounds.height - realContentHeight
         }
 
@@ -322,10 +321,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
-        if let indexPath = indexPath {
-            return self.collectionView?.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
-        }
-        return nil
+        guard let collectionView = self.collectionView else { return nil }
+        guard let indexPath = indexPath else { return nil }
+
+        return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
     }
 
     var autoLoadingEnabled: Bool = false
@@ -394,9 +393,11 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 extension BaseChatViewController { // Rotation
 
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        guard isViewLoaded else { return }
+        guard let collectionView = self.collectionView else { return }
         super.viewWillTransition(to: size, with: coordinator)
         let shouldScrollToBottom = self.isScrolledAtBottom()
-        let referenceIndexPath = self.collectionView?.indexPathsForVisibleItems.first
+        let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
         let oldRect = self.rectAtIndexPath(referenceIndexPath)
         coordinator.animate(alongsideTransition: { (_) -> Void in
             if shouldScrollToBottom {
