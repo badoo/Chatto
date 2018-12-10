@@ -161,4 +161,10 @@ extension UIScreen {
             return self.defaultLandscapeKeyboardHeight
         }
     }
+    
+    /// iPhone 4s's keyboard height in lanscape orientation.
+    /// We assume a hardware keyboard is attached if it is shorter than this.
+    static var minimumKeyboardHeight: CGFloat { get {
+        return 162
+    } }
 }

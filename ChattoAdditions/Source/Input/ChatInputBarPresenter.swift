@@ -118,10 +118,10 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
 
     private func updateHeight(for inputView: InputContainerView) {
         inputView.contentHeight = {
-            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > minimumInputHeight {
+            if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > UIScreen.minimumKeyboardHeight {
                 return keyboardHeight
             } else {
-                return minimumInputHeight
+                return UIScreen.minimumKeyboardHeight
             }
         }()
     }
