@@ -163,13 +163,13 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             return false
         }
         cell.bubbleView.isUserInteractionEnabled = false // This is a hack for UITextView, shouldn't harm to all bubbles
-        NotificationCenter.default.addObserver(self, selector: #selector(BaseMessagePresenter.willShowMenu(_:)), name: NSNotification.Name.UIMenuControllerWillShowMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(BaseMessagePresenter.willShowMenu(_:)), name: UIMenuController.willShowMenuNotification, object: nil)
         return true
     }
 
     @objc
     func willShowMenu(_ notification: Notification) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIMenuControllerWillShowMenu, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIMenuController.willShowMenuNotification, object: nil)
         guard let cell = self.cell, let menuController = notification.object as? UIMenuController else {
             assert(false, "Investigate -> Fix or remove assert")
             return

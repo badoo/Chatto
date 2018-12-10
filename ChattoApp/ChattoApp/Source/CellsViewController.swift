@@ -25,30 +25,30 @@
 import UIKit
 
 class CellsViewController: UITableViewController {
-    
+
     struct CellItem {
         let title: String
         let action: () -> Void
     }
-    
+
     var cellItems: [CellItem] = []
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier)
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.cellItems.count
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.reuseIdentifier, for: indexPath)
         cell.textLabel?.text = self.cellItems[indexPath.row].title
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.cellItems[indexPath.row].action()
     }

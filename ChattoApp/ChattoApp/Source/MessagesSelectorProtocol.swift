@@ -31,7 +31,7 @@ public protocol MessagesSelectorDelegate: class {
 }
 
 public protocol MessagesSelectorProtocol: class {
-    weak var delegate: MessagesSelectorDelegate? { get set }
+    var delegate: MessagesSelectorDelegate? { get set }
     var isActive: Bool { get set }
     func canSelectMessage(_ message: MessageModelProtocol) -> Bool
     func isMessageSelected(_ message: MessageModelProtocol) -> Bool

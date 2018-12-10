@@ -45,8 +45,8 @@ final class PhotosInputCameraPicker: ImagePickerDelegate {
         presentingController.present(imagePicker.controller, animated: true, completion: nil)
     }
 
-    func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [String: Any]) {
-        let image = mediaInfo[UIImagePickerControllerOriginalImage] as? UIImage
+    func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [UIImagePickerController.InfoKey: Any]) {
+        let image = mediaInfo[UIImagePickerController.InfoKey.originalImage] as? UIImage
         self.finishPickingImage(image, fromPicker: picker.controller)
     }
 

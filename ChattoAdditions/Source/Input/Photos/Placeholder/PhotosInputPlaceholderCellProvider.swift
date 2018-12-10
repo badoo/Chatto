@@ -31,7 +31,7 @@ final class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol 
         self.collectionView = collectionView
         self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
-    
+
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
         return self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath)
     }

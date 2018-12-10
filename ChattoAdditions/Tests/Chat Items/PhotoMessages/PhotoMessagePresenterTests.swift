@@ -28,7 +28,17 @@ import XCTest
 class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 
     var presenter: PhotoMessagePresenter<PhotoMessageViewModelDefaultBuilder<PhotoMessageModel<MessageModel>>, PhotoMessageTestHandler>!
-    let decorationAttributes = ChatItemDecorationAttributes(bottomMargin: 0, canShowTail: false, canShowAvatar: false, canShowFailedIcon: true)
+    let decorationAttributes = ChatItemDecorationAttributes(
+        bottomMargin: 0,
+        messageDecorationAttributes: BaseMessageDecorationAttributes(
+            canShowFailedIcon: true,
+            isShowingTail: false,
+            isShowingAvatar: false,
+            isShowingSelectionIndicator: false,
+            isSelected: false
+        )
+    )
+
     let testImage = UIImage()
     override func setUp() {
         super.setUp()

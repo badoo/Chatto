@@ -64,9 +64,9 @@ public struct ChatInputBarAppearance {
 // Workaround for SR-2223
 public struct UIControlStateWrapper: Hashable {
 
-    public let controlState: UIControlState
+    public let controlState: UIControl.State
 
-    public init(state: UIControlState) {
+    public init(state: UIControl.State) {
         self.controlState = state
     }
 
