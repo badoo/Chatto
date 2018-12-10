@@ -231,6 +231,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     open func handleKeyboardPositionChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
+        guard self.inputContainerBottomConstraint.constant != bottomMargin else { return }
         self.isAdjustingInputContainer = true
         self.inputContainerBottomConstraint.constant = max(bottomMargin, self.bottomLayoutGuide.length)
         self.view.layoutIfNeeded()
@@ -393,9 +394,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 extension BaseChatViewController { // Rotation
 
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         guard isViewLoaded else { return }
         guard let collectionView = self.collectionView else { return }
-        super.viewWillTransition(to: size, with: coordinator)
         let shouldScrollToBottom = self.isScrolledAtBottom()
         let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
         let oldRect = self.rectAtIndexPath(referenceIndexPath)
