@@ -44,8 +44,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     public var constants = Constants()
 
     public struct UpdatesConfig {
-        public var fastUpdates = false // Allows another performBatchUpdates to be called before completion of a previous one (not recommended). Changing this value after viewDidLoad is not supported
-        public var coalesceUpdates = false // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
+        
+        // Allows another performBatchUpdates to be called before completion of a previous one (not recommended).
+        // Changing this value after viewDidLoad is not supported
+        public var fastUpdates = true
+
+        // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
+        public var coalesceUpdates = true
     }
 
     public var updatesConfig =  UpdatesConfig()
