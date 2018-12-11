@@ -113,6 +113,38 @@ extension BaseChatViewController {
         collectionView.contentOffset = CGPoint(x: 0, y: collectionView.contentOffset.y + diffY)
     }
 
+    public func scrollToItem(withId itemId: String, position: UICollectionView.ScrollPosition = .centeredVertically, animated: Bool = false) {
+        guard let collectionView = self.collectionView else { return }
+        guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else { return }
+
+        let indexPath = IndexPath(item: itemIndex, section: 0)
+        guard let rect = self.rectAtIndexPath(indexPath) else { return }
+
+        if animated {
+            let pageSize = collectionView.bounds.height
+            let isScrollingUp = rect.minY < collectionView.contentOffset.y
+
+            if isScrollingUp {
+                let isNeedToScrollUpMoreThenTwoPages = rect.minY < collectionView.contentOffset.y - 2 * pageSize
+                if isNeedToScrollUpMoreThenTwoPages {
+                    let lastPageOriginY = collectionView.contentSize.height - pageSize
+                    var preScrollRect = rect
+                    preScrollRect.origin.y = min(lastPageOriginY, rect.minY + pageSize)
+                    collectionView.scrollRectToVisible(preScrollRect, animated: false)
+                }
+            } else {
+                let isNeedToScrollDownMoreThenTwoPages = rect.minY > collectionView.contentOffset.y + 2 * pageSize
+                if isNeedToScrollDownMoreThenTwoPages {
+                    var preScrollRect = rect
+                    preScrollRect.origin.y = max(0, rect.minY - pageSize)
+                    collectionView.scrollRectToVisible(preScrollRect, animated: false)
+                }
+            }
+        }
+
+        collectionView.scrollToItem(at: indexPath, at: position, animated: animated)
+    }
+
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let collectionView = self.collectionView else { return }
         if collectionView.isDragging {

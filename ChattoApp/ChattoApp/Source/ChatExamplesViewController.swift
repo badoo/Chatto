@@ -36,7 +36,8 @@ class ChatExamplesViewController: CellsViewController {
             self.makeChatCellItem(title: "Empty chat", messagesCount: 0),
             self.makeChatCellItem(title: "Chat with 10000 messages", messagesCount: 10_000),
             self.makeMessageSelectionCellItem(),
-            self.makeOpenWithTabBarCellItem()
+            self.makeOpenWithTabBarCellItem(),
+            self.makeScrollToBottomCellItem()
         ]
     }
 
@@ -84,6 +85,15 @@ class ChatExamplesViewController: CellsViewController {
             let tabBarViewController = UITabBarController()
             tabBarViewController.setViewControllers([navigationController], animated: false)
             sSelf.present(tabBarViewController, animated: true, completion: nil)
+        })
+    }
+
+    private func makeScrollToBottomCellItem() -> CellItem {
+        return CellItem(title: "Scroll To Bottom Button Example", action: { [weak self] in
+            let dataSource = DemoChatDataSource(count: 10_000, pageSize: 50)
+            let viewController = ScrollToBottomButtonChatViewController()
+            viewController.dataSource = dataSource
+            self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 
