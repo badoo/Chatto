@@ -159,8 +159,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
-                NSAttributedStringKey.foregroundColor.rawValue: textColor,
-                NSAttributedStringKey.underlineStyle.rawValue: NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedString.Key.foregroundColor: textColor,
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
             ]
             needsToUpdateText = true
         }
@@ -275,8 +275,8 @@ private final class TextBubbleLayoutModel {
     private func replicateUITextViewNSTextStorage() -> NSTextStorage {
         // See https://github.com/badoo/Chatto/issues/129
         return NSTextStorage(string: self.layoutContext.text, attributes: [
-            NSAttributedStringKey.font: self.layoutContext.font,
-            NSAttributedStringKey(rawValue: "NSOriginalFont"): self.layoutContext.font
+            NSAttributedString.Key.font: self.layoutContext.font,
+            NSAttributedString.Key(rawValue: "NSOriginalFont"): self.layoutContext.font
         ])
     }
 }

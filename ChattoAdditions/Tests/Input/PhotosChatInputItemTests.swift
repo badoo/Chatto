@@ -59,7 +59,7 @@ class PhotosChatInputItemTests: XCTestCase {
     }
 
     func testThat_WhenInputViewSelectsImage_ItemPassedImageIntoPhotoHandler() {
-        var handledImage: UIImage? = nil
+        var handledImage: UIImage?
         self.inputItem.photoInputHandler = { image in
             handledImage = image
         }

@@ -185,9 +185,9 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
         DispatchQueue.main.async { [weak self]  in
             guard let sSelf = self else { return }
 
-            if let changeDetails = changeInstance.changeDetails(for: sSelf.fetchResult as! PHFetchResult<PHObject>) {
+            if let changeDetails = changeInstance.changeDetails(for: sSelf.fetchResult) {
                 let updateBlock = { () -> Void in
-                    self?.fetchResult = changeDetails.fetchResultAfterChanges as! PHFetchResult<PHAsset>
+                    self?.fetchResult = changeDetails.fetchResultAfterChanges
                 }
                 sSelf.delegate?.handlePhotosInputDataProviderUpdate(sSelf, updateBlock: updateBlock)
             }

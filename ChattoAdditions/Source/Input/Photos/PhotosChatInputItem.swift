@@ -35,8 +35,8 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     let buttonAppearance: TabInputButtonAppearance
     let inputViewAppearance: PhotosInputViewAppearance
     public init(presentingController: UIViewController?,
-                tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance(),
-                inputViewAppearance: PhotosInputViewAppearance = Class.createDefaultInputViewAppearance()) {
+                tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance(),
+                inputViewAppearance: PhotosInputViewAppearance = PhotosChatInputItem.createDefaultInputViewAppearance()) {
         self.presentingController = presentingController
         self.buttonAppearance = tabInputButtonAppearance
         self.inputViewAppearance = inputViewAppearance
