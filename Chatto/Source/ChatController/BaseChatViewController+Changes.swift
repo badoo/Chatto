@@ -26,14 +26,14 @@ import Foundation
 
 extension BaseChatViewController {
 
-    public func enqueueModelUpdate(updateType: UpdateType) {
+    public func enqueueModelUpdate(updateType: UpdateType, completion: (() -> Void)? = nil) {
         let newItems = self.chatDataSource?.chatItems ?? []
 
         if self.updatesConfig.coalesceUpdates {
             self.updateQueue.flushQueue()
         }
 
-        self.updateQueue.addTask({ [weak self] (completion) -> Void in
+        self.updateQueue.addTask({ [weak self] (runNextTask) -> Void in
             guard let sSelf = self else { return }
 
             let oldItems = sSelf.chatItemCompanionCollection
@@ -42,7 +42,8 @@ extension BaseChatViewController {
                 if sSelf.updateQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
-                completion()
+                completion?()
+                runNextTask()
             })
         })
     }
