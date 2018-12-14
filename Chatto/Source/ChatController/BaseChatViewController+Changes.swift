@@ -43,7 +43,10 @@ extension BaseChatViewController {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
                 completion?()
-                runNextTask()
+                DispatchQueue.main.async(execute: { () -> Void in
+                    // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
+                    runNextTask()
+                })
             })
         })
     }
@@ -170,20 +173,6 @@ extension BaseChatViewController {
             }
         }
 
-        let myCompletion: () -> Void
-        do { // Completion
-            var myCompletionExecuted = false
-            myCompletion = {
-                if myCompletionExecuted { return }
-                myCompletionExecuted = true
-
-                DispatchQueue.main.async(execute: { () -> Void in
-                    // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
-                    completion()
-                })
-            }
-        }
-
         if usesBatchUpdates {
             UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
@@ -197,7 +186,7 @@ extension BaseChatViewController {
                         collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
                 }, completion: { [weak self] (_) -> Void in
-                    defer { myCompletion() }
+                    defer { completion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
                     if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
@@ -227,7 +216,7 @@ extension BaseChatViewController {
         }
 
         if !usesBatchUpdates || self.updatesConfig.fastUpdates {
-            myCompletion()
+            completion()
         }
     }
 
