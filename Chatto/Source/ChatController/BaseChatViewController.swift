@@ -44,7 +44,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     public var constants = Constants()
 
     public struct UpdatesConfig {
-        
+
         // Allows another performBatchUpdates to be called before completion of a previous one (not recommended).
         // Changing this value after viewDidLoad is not supported
         public var fastUpdates = true
