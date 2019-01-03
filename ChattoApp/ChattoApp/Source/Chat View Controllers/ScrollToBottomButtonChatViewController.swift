@@ -39,6 +39,10 @@ final class ScrollToBottomButtonChatViewController: DemoChatViewController {
 
     @objc
     private func handleTapOnScrollToBottomButton() {
-        self.scrollToItem(withId: self.chatItemCompanionCollection[self.chatItemCompanionCollection.count - 1].uid, position: .bottom, animated: true)
+        guard self.chatItemCompanionCollection.count > 0 else { return }
+
+        let endIndex = self.chatItemCompanionCollection.endIndex
+        let lastItemIndex = self.chatItemCompanionCollection.index(endIndex, offsetBy: -1)
+        self.scrollToItem(withId: self.chatItemCompanionCollection[lastItemIndex].uid, position: .bottom, animated: true)
     }
 }

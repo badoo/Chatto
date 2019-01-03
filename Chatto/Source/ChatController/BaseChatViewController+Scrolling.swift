@@ -121,22 +121,23 @@ extension BaseChatViewController {
         guard let rect = self.rectAtIndexPath(indexPath) else { return }
 
         if animated {
-            let pageSize = collectionView.bounds.height
+            let pageHeight = collectionView.bounds.height
+            let twoPagesHeight = pageHeight * 2
             let isScrollingUp = rect.minY < collectionView.contentOffset.y
 
             if isScrollingUp {
-                let isNeedToScrollUpMoreThenTwoPages = rect.minY < collectionView.contentOffset.y - 2 * pageSize
+                let isNeedToScrollUpMoreThenTwoPages = rect.minY < collectionView.contentOffset.y - twoPagesHeight
                 if isNeedToScrollUpMoreThenTwoPages {
-                    let lastPageOriginY = collectionView.contentSize.height - pageSize
+                    let lastPageOriginY = collectionView.contentSize.height - pageHeight
                     var preScrollRect = rect
-                    preScrollRect.origin.y = min(lastPageOriginY, rect.minY + pageSize)
+                    preScrollRect.origin.y = min(lastPageOriginY, rect.minY + pageHeight)
                     collectionView.scrollRectToVisible(preScrollRect, animated: false)
                 }
             } else {
-                let isNeedToScrollDownMoreThenTwoPages = rect.minY > collectionView.contentOffset.y + 2 * pageSize
+                let isNeedToScrollDownMoreThenTwoPages = rect.minY > collectionView.contentOffset.y + twoPagesHeight
                 if isNeedToScrollDownMoreThenTwoPages {
                     var preScrollRect = rect
-                    preScrollRect.origin.y = max(0, rect.minY - pageSize)
+                    preScrollRect.origin.y = max(0, rect.minY - pageHeight)
                     collectionView.scrollRectToVisible(preScrollRect, animated: false)
                 }
             }
