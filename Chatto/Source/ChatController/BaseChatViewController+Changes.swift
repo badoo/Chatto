@@ -173,6 +173,16 @@ extension BaseChatViewController {
             }
         }
 
+        let myCompletion: () -> Void
+        do { // Completion
+            var myCompletionExecuted = false
+            myCompletion = {
+                if myCompletionExecuted { return }
+                myCompletionExecuted = true
+                completion()
+            }
+        }
+
         if usesBatchUpdates {
             UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
@@ -186,7 +196,7 @@ extension BaseChatViewController {
                         collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
                 }, completion: { [weak self] (_) -> Void in
-                    defer { completion() }
+                    defer { myCompletion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
                     if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
@@ -216,7 +226,7 @@ extension BaseChatViewController {
         }
 
         if !usesBatchUpdates || self.updatesConfig.fastUpdates {
-            completion()
+            myCompletion()
         }
     }
 
