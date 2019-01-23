@@ -25,24 +25,25 @@
 import UIKit
 
 class ChatExamplesViewController: CellsViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.title = "Examples"
-        
+
         self.cellItems = [
             self.makeOverviewCellItem(),
             self.makeChatCellItem(title: "Empty chat", messagesCount: 0),
             self.makeChatCellItem(title: "Chat with 10000 messages", messagesCount: 10_000),
             self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUseAlternativePresenter: true),
             self.makeMessageSelectionCellItem(),
-            self.makeOpenWithTabBarCellItem()
+            self.makeOpenWithTabBarCellItem(),
+            self.makeScrollToBottomCellItem()
         ]
     }
 
     // MARK: - Cells
-    
+
     private func makeOverviewCellItem() -> CellItem {
         return CellItem(title: "Overview", action: { [weak self] in
             let dataSource = DemoChatDataSource(messages: DemoChatMessageFactory.makeOverviewMessages(), pageSize: 50)
@@ -86,6 +87,15 @@ class ChatExamplesViewController: CellsViewController {
             let tabBarViewController = UITabBarController()
             tabBarViewController.setViewControllers([navigationController], animated: false)
             sSelf.present(tabBarViewController, animated: true, completion: nil)
+        })
+    }
+
+    private func makeScrollToBottomCellItem() -> CellItem {
+        return CellItem(title: "Scroll To Bottom Button Example", action: { [weak self] in
+            let dataSource = DemoChatDataSource(count: 10_000, pageSize: 50)
+            let viewController = ScrollToBottomButtonChatViewController()
+            viewController.dataSource = dataSource
+            self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 

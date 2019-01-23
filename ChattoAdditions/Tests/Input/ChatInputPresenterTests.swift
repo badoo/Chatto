@@ -37,7 +37,7 @@ class ChatInputPresenterTests: XCTestCase {
     func testThat_WhenSendButtonPressed_InputTextBecomesEmpty() {
         self.bar.inputText = "text"
         self.presenter.onSendButtonPressed()
-        XCTAssertEqual(self.bar.inputText.characters.count, 0)
+        XCTAssertTrue(self.bar.inputText.isEmpty)
     }
 
     // MARK: - Focused item tests

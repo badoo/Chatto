@@ -49,6 +49,6 @@ open class InputContainerView: UIInputView {
     }
 
     override open var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: self.contentHeight)
+        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentHeight)
     }
 }

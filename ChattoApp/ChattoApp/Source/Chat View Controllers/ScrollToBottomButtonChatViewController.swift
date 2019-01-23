@@ -24,38 +24,25 @@
 
 import UIKit
 
-class CellsViewController: UITableViewController {
-
-    struct CellItem {
-        let title: String
-        let action: () -> Void
-    }
-
-    var cellItems: [CellItem] = []
-
+final class ScrollToBottomButtonChatViewController: DemoChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier)
+        let button = UIBarButtonItem(
+            title: "Scroll To Bottom",
+            style: .plain,
+            target: self,
+            action: #selector(handleTapOnScrollToBottomButton)
+        )
+        self.navigationItem.rightBarButtonItem = button
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.cellItems.count
-    }
+    @objc
+    private func handleTapOnScrollToBottomButton() {
+        guard self.chatItemCompanionCollection.count > 0 else { return }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.reuseIdentifier, for: indexPath)
-        cell.textLabel?.text = self.cellItems[indexPath.row].title
-        return cell
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.cellItems[indexPath.row].action()
-    }
-}
-
-extension UITableViewCell {
-    static var reuseIdentifier: String {
-        return String(describing: self)
+        let endIndex = self.chatItemCompanionCollection.endIndex
+        let lastItemIndex = self.chatItemCompanionCollection.index(endIndex, offsetBy: -1)
+        self.scrollToItem(withId: self.chatItemCompanionCollection[lastItemIndex].uid, position: .bottom, animated: true)
     }
 }

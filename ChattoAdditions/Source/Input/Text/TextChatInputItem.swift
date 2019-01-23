@@ -29,7 +29,7 @@ open class TextChatInputItem {
     public var textInputHandler: ((String) -> Void)?
 
     let buttonAppearance: TabInputButtonAppearance
-    public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+    public init(tabInputButtonAppearance: TabInputButtonAppearance = TextChatInputItem.createDefaultButtonAppearance()) {
         self.buttonAppearance = tabInputButtonAppearance
     }
 
