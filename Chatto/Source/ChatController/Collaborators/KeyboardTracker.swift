@@ -51,15 +51,15 @@ class KeyboardTracker {
     }()
 
     var isTracking = false
-    var inputContainer: UIView
+    var inputBarContainer: UIView
     private var notificationCenter: NotificationCenter
 
     private var heightBlock: KeyboardHeightBlock
 
-    init(viewController: UIViewController, inputContainer: UIView, heightBlock: @escaping KeyboardHeightBlock, notificationCenter: NotificationCenter) {
+    init(viewController: UIViewController, inputBarContainer: UIView, heightBlock: @escaping KeyboardHeightBlock, notificationCenter: NotificationCenter) {
         self.view = viewController.view
         self.heightBlock = heightBlock
-        self.inputContainer = inputContainer
+        self.inputBarContainer = inputBarContainer
         self.notificationCenter = notificationCenter
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidShow(_:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
@@ -146,7 +146,7 @@ class KeyboardTracker {
     }
 
     private func adjustTrackingViewSize() {
-        let inputContainerHeight = self.inputContainer.bounds.height
+        let inputContainerHeight = self.inputBarContainer.bounds.height
         if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
             self.isPerformingForcedLayout = true

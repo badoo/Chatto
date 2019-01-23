@@ -59,7 +59,7 @@ class DemoChatViewController: BaseChatViewController {
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
         if self.shouldUseAlternativePresenter {
             let chatInputPresenter = ExpandableChatInputBarPresenter(
-                inputContainerController: self,
+                inputPositionController: self,
                 chatInputBar: chatInputView,
                 chatInputItems: self.createChatInputItems(),
                 chatInputBarAppearance: appearance)

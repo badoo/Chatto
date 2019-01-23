@@ -21,14 +21,16 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
+import UIKit
 
-public protocol InputContainerControlling: AnyObject {
+public protocol InputPositionControlling: AnyObject {
 
-    var inputContainer: UIView! { get }
+    var inputBarContainer: UIView! { get }
+    var maximumInputSize: CGSize { get }
+
     var inputContentContainer: UIView! { get }
-    var contentContainerBottomMargin: CGFloat { get }
-    var inputViewSize: CGSize { get }
+    var inputContentBottomMargin: CGFloat { get }
 
-    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
-    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
 }
