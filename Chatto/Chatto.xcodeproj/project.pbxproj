@@ -36,9 +36,7 @@
 		C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */; };
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
 		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DE51DB4B21AECB1B006DBFAB /* KeyboardAwareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */; };
-		DE51DB4D21AECB44006DBFAB /* ScrollAwareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */; };
-		DE51DB4F21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */; };
+		EA24F40721F8B495007735DD /* InputContainerControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40621F8B495007735DD /* InputContainerControlling.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,9 +82,7 @@
 		C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
 		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
-		DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAwareController.swift; sourceTree = "<group>"; };
-		DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollAwareController.swift; sourceTree = "<group>"; };
-		DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContentContainerControllerProtocol.swift; sourceTree = "<group>"; };
+		EA24F40621F8B495007735DD /* InputContainerControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerControlling.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,9 +211,7 @@
 				C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */,
 				C38352D01CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift */,
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
-				DE51DB4A21AECB1B006DBFAB /* KeyboardAwareController.swift */,
-				DE51DB4C21AECB44006DBFAB /* ScrollAwareController.swift */,
-				DE51DB4E21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift */,
+				EA24F40621F8B495007735DD /* InputContainerControlling.swift */,
 			);
 			path = ChatController;
 			sourceTree = "<group>";
@@ -354,18 +348,16 @@
 				C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */,
 				C3C7C3971CAC4BAC00A49929 /* AccessoryViewRevealer.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
-				DE51DB4D21AECB44006DBFAB /* ScrollAwareController.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
 				C321DDA91BE9649F00DE88CC /* BaseChatItemPresenter.swift in Sources */,
 				C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
-				DE51DB4B21AECB1B006DBFAB /* KeyboardAwareController.swift in Sources */,
 				C36281E51BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift in Sources */,
 				C38352D11CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,
 				C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */,
-				DE51DB4F21AECB7B006DBFAB /* InputContentContainerControllerProtocol.swift in Sources */,
+				EA24F40721F8B495007735DD /* InputContainerControlling.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
