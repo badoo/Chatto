@@ -104,7 +104,6 @@
 		E388CDA01F6D7AE041D10AC4AE4C1ED0 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F865526B535C40AA043DF3C40157EBB /* Utils.swift */; };
 		E485E5CDABB6A2E2E23DF7872333158D /* PhotosInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63AF6F8580070DFD2DF9A9DE3D75A8 /* PhotosInputCell.swift */; };
 		E843F5B79A2B9E7A2577BD5133C2CEDA /* PhotoMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76D68DAF2CC59B5CD3D5B8F7A73B3612 /* PhotoMessageModel.swift */; };
-		EA4D1BFB21F8D0A00007A3CF /* BaseChatViewController+InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D1BF921F8D0A00007A3CF /* BaseChatViewController+InputPositionControlling.swift */; };
 		EA4D1BFC21F8D0A00007A3CF /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D1BFA21F8D0A00007A3CF /* InputPositionControlling.swift */; };
 		EA4D1C0121F8D2710007A3CF /* ExpandableChatInputBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D1BFD21F8D0E90007A3CF /* ExpandableChatInputBarPresenter.swift */; };
 		EA4D1C0221F8D2810007A3CF /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D1BFE21F8D0E90007A3CF /* InputContainerView.swift */; };
@@ -256,7 +255,6 @@
 		E5DB80495DEC9A7A3F171F2C8144F441 /* ChatItemProtocolDefinitions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatItemProtocolDefinitions.swift; sourceTree = "<group>"; };
 		E6E414FA5AE66A6E8074D4AAED7C914E /* Pods-ChattoApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChattoApp-frameworks.sh"; sourceTree = "<group>"; };
 		E808F9219039C3040B65928EE949423A /* CircleProgressView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CircleProgressView.m; sourceTree = "<group>"; };
-		EA4D1BF921F8D0A00007A3CF /* BaseChatViewController+InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+InputPositionControlling.swift"; sourceTree = "<group>"; };
 		EA4D1BFA21F8D0A00007A3CF /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
 		EA4D1BFD21F8D0E90007A3CF /* ExpandableChatInputBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableChatInputBarPresenter.swift; sourceTree = "<group>"; };
 		EA4D1BFE21F8D0E90007A3CF /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
@@ -509,7 +507,6 @@
 				8EC50CE002F4C3E5F8C47AA3D6B63CA5 /* BaseChatViewController.swift */,
 				26FA5B1C9839F216FBAC1C8381EA6620 /* BaseChatViewController+AccessoryViewRevealer.swift */,
 				5263B9973D3B6EC8CA1C8402347E902B /* BaseChatViewController+Changes.swift */,
-				EA4D1BF921F8D0A00007A3CF /* BaseChatViewController+InputPositionControlling.swift */,
 				D7FA81C32043964F72CC0BD5E1AF4FEA /* BaseChatViewController+Presenters.swift */,
 				92D473620C87E8EF86FC76C5A564AC69 /* BaseChatViewController+Scrolling.swift */,
 				1D34645FF568A8A90706512A58824527 /* ChatLayoutConfiguration.swift */,
@@ -1026,7 +1023,6 @@
 				20C80D2798A1007DC3644524BB9F6BA7 /* BaseChatViewController+AccessoryViewRevealer.swift in Sources */,
 				11D71F24E8F2BC342A5E92003026E5D9 /* BaseChatViewController+Changes.swift in Sources */,
 				12004CAB9222E2F571C149E723A5ACE7 /* BaseChatViewController+Presenters.swift in Sources */,
-				EA4D1BFB21F8D0A00007A3CF /* BaseChatViewController+InputPositionControlling.swift in Sources */,
 				3242B74FFFE7DF212371D7D7CAA16628 /* BaseChatViewController+Scrolling.swift in Sources */,
 				D78319CE8A81E139E3666F56CB6DA280 /* BaseChatViewController.swift in Sources */,
 				DE1037F25D3A1BCB2B896AB2D80155DB /* BaseChatViewControllerView.swift in Sources */,

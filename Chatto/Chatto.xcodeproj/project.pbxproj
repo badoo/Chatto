@@ -37,7 +37,6 @@
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
 		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
-		EA24F40D21F8BF0D007735DD /* BaseChatViewController+InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40B21F8BF0D007735DD /* BaseChatViewController+InputPositionControlling.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +83,6 @@
 		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
-		EA24F40B21F8BF0D007735DD /* BaseChatViewController+InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+InputPositionControlling.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,7 +207,6 @@
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
 				C38352D01CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift */,
 				C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */,
-				EA24F40B21F8BF0D007735DD /* BaseChatViewController+InputPositionControlling.swift */,
 				C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */,
 				C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */,
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
@@ -350,7 +347,6 @@
 				C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */,
 				C3C7C3971CAC4BAC00A49929 /* AccessoryViewRevealer.swift in Sources */,
 				EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */,
-				EA24F40D21F8BF0D007735DD /* BaseChatViewController+InputPositionControlling.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
