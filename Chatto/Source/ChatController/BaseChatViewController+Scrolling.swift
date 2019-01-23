@@ -111,11 +111,11 @@ extension BaseChatViewController {
         if self.collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }
-        self.onScrollViewDidScrollBlock?(scrollView)
+        self.scrollViewEventsHandler?.onScrollViewDidScroll(scrollView)
     }
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        self.onScrollViewDidEndDraggingBlock?(scrollView, decelerate)
+        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
     }
 
     open func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {

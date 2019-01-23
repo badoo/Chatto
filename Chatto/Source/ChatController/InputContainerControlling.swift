@@ -22,8 +22,13 @@
  THE SOFTWARE.
  */
 
-public typealias KeyboardHeightBlock = (_ height: CGFloat, _ status: KeyboardStatus) -> Void
+public protocol InputContainerControlling: AnyObject {
 
-public protocol KeyboardAwareControllerProtocol: AnyObject {
-    var onKeyboardHeightChangeBlock: KeyboardHeightBlock? { get set }
+    var inputContainer: UIView! { get }
+    var inputContentContainer: UIView! { get }
+    var contentContainerBottomMargin: CGFloat { get }
+    var inputViewSize: CGSize { get }
+
+    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeContainerBottomMargin(withNewValue newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
 }

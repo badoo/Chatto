@@ -28,19 +28,19 @@ class ChatExamplesViewController: CellsViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.title = "Examples"
         
         self.cellItems = [
             self.makeOverviewCellItem(),
             self.makeChatCellItem(title: "Empty chat", messagesCount: 0),
             self.makeChatCellItem(title: "Chat with 10000 messages", messagesCount: 10_000),
-            self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUserAlternativePresenter: true),
+            self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUseAlternativePresenter: true),
             self.makeMessageSelectionCellItem(),
-            self.makeOpenWithTabBarCellItem(),
+            self.makeOpenWithTabBarCellItem()
         ]
     }
-    
+
     // MARK: - Cells
     
     private func makeOverviewCellItem() -> CellItem {
@@ -51,13 +51,13 @@ class ChatExamplesViewController: CellsViewController {
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
-    
-    private func makeChatCellItem(title: String, messagesCount: Int, shouldUserAlternativePresenter: Bool = false) -> CellItem {
+
+    private func makeChatCellItem(title: String, messagesCount: Int, shouldUseAlternativePresenter: Bool = false) -> CellItem {
         return CellItem(title: title, action: { [weak self] in
             let dataSource = DemoChatDataSource(count: messagesCount, pageSize: 50)
             let viewController = AddRandomMessagesChatViewController()
             viewController.dataSource = dataSource
-            viewController.shouldUserAlternativePresenter = shouldUserAlternativePresenter
+            viewController.shouldUseAlternativePresenter = shouldUseAlternativePresenter
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
@@ -71,7 +71,7 @@ class ChatExamplesViewController: CellsViewController {
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }
-    
+
     private func makeOpenWithTabBarCellItem() -> CellItem {
         return CellItem(title: "UITabBarController examples", action: { [weak self] in
             guard let sSelf = self else { return }
@@ -88,7 +88,7 @@ class ChatExamplesViewController: CellsViewController {
             sSelf.present(tabBarViewController, animated: true, completion: nil)
         })
     }
-    
+
     @objc
     private func dismissPresentedController() {
         self.dismiss(animated: true, completion: nil)

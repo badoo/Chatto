@@ -27,7 +27,7 @@ import Chatto
 import ChattoAdditions
 
 class DemoChatViewController: BaseChatViewController {
-    var shouldUserAlternativePresenter: Bool = false
+    var shouldUseAlternativePresenter: Bool = false
 
     var messageSender: DemoChatMessageSender!
     let messagesSelector = BaseMessagesSelector()
@@ -57,14 +57,15 @@ class DemoChatViewController: BaseChatViewController {
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
-        if self.shouldUserAlternativePresenter {
-            self.chatInputPresenter = ExpandableChatInputBarPresenter(
-                containerController: self,
-                keyboardAwareController: self,
-                scrollAwareController: self,
+        if self.shouldUseAlternativePresenter {
+            let chatInputPresenter = ExpandableChatInputBarPresenter(
+                inputContainerController: self,
                 chatInputBar: chatInputView,
                 chatInputItems: self.createChatInputItems(),
                 chatInputBarAppearance: appearance)
+            self.chatInputPresenter = chatInputPresenter
+            self.keyboardEventsHandler = chatInputPresenter
+            self.scrollViewEventsHandler = chatInputPresenter
         } else {
             self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
         }
@@ -98,7 +99,7 @@ class DemoChatViewController: BaseChatViewController {
         var items = [ChatInputItemProtocol]()
         items.append(self.createTextInputItem())
         items.append(self.createPhotoInputItem())
-        if self.shouldUserAlternativePresenter {
+        if self.shouldUseAlternativePresenter {
             items.append(self.customInputItem())
         }
         return items

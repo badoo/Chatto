@@ -24,7 +24,19 @@
 
 import UIKit
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, KeyboardAwareControllerProtocol, ScrollAwareControllerProtocol {
+public protocol KeyboardEventsHandling: AnyObject {
+    func onKeyboardLayoutChange(_ height: CGFloat, _ status: KeyboardStatus)
+}
+
+public protocol ScrollViewEventsHandling: AnyObject {
+    func onScrollViewDidScroll(_ scrollView: UIScrollView)
+    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
+}
+
+open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol {
+
+    public weak var keyboardEventsHandler: KeyboardEventsHandling?
+    public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
@@ -85,10 +97,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         }
     }
 
-    // MARK: - Scroll View updates notifications
-    open var onScrollViewDidScrollBlock: ScrollViewDidScrollBlock?
-    open var onScrollViewDidEndDraggingBlock: ScrollViewDidEndDraggingBlock?
-
     deinit {
         self.collectionView?.delegate = nil
         self.collectionView?.dataSource = nil
@@ -107,8 +115,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     override open func viewDidLoad() {
         super.viewDidLoad()
         self.addCollectionView()
-        self.addInputViews()
-        self.addBottomSpaceView()
+        self.addInputContainer()
+        self.addInputView()
+        self.addInputContentContainer()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
     }
@@ -167,7 +176,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var onAllBatchUpdatesFinished: (() -> Void)?
 
     var inputContainerBottomConstraint: NSLayoutConstraint!
-    private func addInputViews() {
+    private func addInputContainer() {
         self.inputContainer = UIView(frame: CGRect.zero)
         self.inputContainer.autoresizingMask = UIViewAutoresizing()
         self.inputContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -178,7 +187,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.inputContainer, attribute: .trailing, multiplier: 1, constant: 0))
         self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0)
         self.view.addConstraint(self.inputContainerBottomConstraint)
+    }
 
+    private func addInputView() {
         let inputView = self.createChatInputView()
         self.inputContainer.addSubview(inputView)
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .top, relatedBy: .equal, toItem: inputView, attribute: .top, multiplier: 1, constant: 0))
@@ -187,7 +198,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContainer.addConstraint(NSLayoutConstraint(item: self.inputContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
 
-    private func addBottomSpaceView() {
+    private func addInputContentContainer() {
         self.inputContentContainer = UIView(frame: CGRect.zero)
         self.inputContentContainer.autoresizingMask = UIViewAutoresizing()
         self.inputContentContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -223,12 +234,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var isAdjustingInputContainer: Bool = false
-    open var onKeyboardHeightChangeBlock: KeyboardHeightBlock?
+
     open func setupKeyboardTracker() {
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
-            if let onKeyboardLayoutChangeBlock = sSelf.onKeyboardHeightChangeBlock {
-                onKeyboardLayoutChangeBlock(bottomMargin, keyboardStatus)
+            if let keyboardObservingDelegate = sSelf.keyboardEventsHandler {
+                keyboardObservingDelegate.onKeyboardLayoutChange(bottomMargin, keyboardStatus)
             } else {
                 sSelf.changeContainerBottomMargin(withNewValue: bottomMargin)
             }
@@ -407,8 +418,8 @@ extension BaseChatViewController { // Rotation
     }
 }
 
-// MARK: - InputContentContainerControllerProtocol
-extension BaseChatViewController: InputContentContainerControllerProtocol {
+// MARK: - InputContainerControlling
+extension BaseChatViewController: InputContainerControlling {
     public var inputViewSize: CGSize {
         return self.view.bounds.size
     }
