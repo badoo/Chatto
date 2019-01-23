@@ -154,7 +154,7 @@ extension BaseChatViewController {
         self.scrollViewEventsHandler?.onScrollViewDidScroll(scrollView)
     }
 
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
     }
 
