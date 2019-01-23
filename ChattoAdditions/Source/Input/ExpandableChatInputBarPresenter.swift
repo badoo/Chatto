@@ -178,7 +178,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
 
     // MARK: Controllers updates handling
 
-    private func onKeyboardLayoutChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
+    private func onKeyboardStateDidChange(bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) {
         guard let containerController = self.inputContainerController else { return }
         if self.focusedItem == nil || self.focusedItem?.presentationMode == .keyboard {
             containerController.changeContainerBottomMargin(withNewValue: bottomMargin, animated: false, callback: nil)
@@ -289,8 +289,8 @@ extension ExpandableChatInputBarPresenter {
 // MARK: KeyboardObservingDelegate
 extension ExpandableChatInputBarPresenter: KeyboardEventsHandling {
 
-    public func onKeyboardLayoutChange(_ height: CGFloat, _ status: KeyboardStatus) {
-        self.onKeyboardLayoutChange(bottomMargin: height, keyboardStatus: status)
+    public func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {
+        self.onKeyboardStateDidChange(bottomMargin: height, keyboardStatus: status)
     }
 }
 

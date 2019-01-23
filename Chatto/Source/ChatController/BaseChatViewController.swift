@@ -25,7 +25,7 @@
 import UIKit
 
 public protocol KeyboardEventsHandling: AnyObject {
-    func onKeyboardLayoutChange(_ height: CGFloat, _ status: KeyboardStatus)
+    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
 }
 
 public protocol ScrollViewEventsHandling: AnyObject {
@@ -239,7 +239,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
             if let keyboardObservingDelegate = sSelf.keyboardEventsHandler {
-                keyboardObservingDelegate.onKeyboardLayoutChange(bottomMargin, keyboardStatus)
+                keyboardObservingDelegate.onKeyboardStateDidChange(bottomMargin, keyboardStatus)
             } else {
                 sSelf.changeContainerBottomMargin(withNewValue: bottomMargin)
             }
