@@ -35,8 +35,8 @@ public protocol ScrollViewEventsHandling: AnyObject {
 
 open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, InputPositionControlling {
 
-    public weak var keyboardEventsHandler: KeyboardEventsHandling?
-    public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
+    open weak var keyboardEventsHandler: KeyboardEventsHandling?
+    open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
 
     public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
 
