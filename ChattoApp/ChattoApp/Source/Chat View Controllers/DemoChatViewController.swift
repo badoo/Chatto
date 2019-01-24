@@ -65,13 +65,13 @@ class DemoChatViewController: BaseChatViewController {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: DemoTextMessageViewModelBuilder(),
-            interactionHandler: DemoTextMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: DemoPhotoMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
