@@ -92,8 +92,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         let selectedIcon: () -> UIImage
         let deselectedIcon: () -> UIImage
         public init(margins: UIEdgeInsets,
-                    selectedIcon: @autoclosure @escaping ()-> UIImage,
-                    deselectedIcon: @autoclosure @escaping ()-> UIImage) {
+                    selectedIcon: @autoclosure @escaping () -> UIImage,
+                    deselectedIcon: @autoclosure @escaping () -> UIImage) {
             self.margins = margins
             self.selectedIcon = selectedIcon
             self.deselectedIcon = deselectedIcon
@@ -109,13 +109,13 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let selectionIndicatorStyle: SelectionIndicatorStyle
 
     public init(
-        colors: Colors = Class.createDefaultColors(),
-        bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
-        failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
-        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
-        dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
+        colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
+        bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
+        failedIconImages: FailedIconImages = BaseMessageCollectionViewCellDefaultStyle.createDefaultFailedIconImages(),
+        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = BaseMessageCollectionViewCellDefaultStyle.createDefaultLayoutConstants(),
+        dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
         avatarStyle: AvatarStyle = AvatarStyle(),
-        selectionIndicatorStyle: SelectionIndicatorStyle = Class.createDefaultSelectionIndicatorStyle()) {
+        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()) {
             self.colors = colors
             self.bubbleBorderImages = bubbleBorderImages
             self.failedIconImages = failedIconImages
@@ -125,8 +125,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
             self.selectionIndicatorStyle = selectionIndicatorStyle
 
             self.dateStringAttributes = [
-                NSAttributedStringKey.font: self.dateTextStyle.font(),
-                NSAttributedStringKey.foregroundColor: self.dateTextStyle.color()
+                NSAttributedString.Key.font: self.dateTextStyle.font(),
+                NSAttributedString.Key.foregroundColor: self.dateTextStyle.color()
             ]
     }
 
@@ -141,7 +141,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
 
-    private let dateStringAttributes: [NSAttributedStringKey: AnyObject]
+    private let dateStringAttributes: [NSAttributedString.Key: AnyObject]
 
     open func attributedStringForDate(_ date: String) -> NSAttributedString {
         return NSAttributedString(string: date, attributes: self.dateStringAttributes)

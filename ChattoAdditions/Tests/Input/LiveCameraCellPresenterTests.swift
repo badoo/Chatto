@@ -111,7 +111,7 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.cameraAuthorizationStatus = .authorized
         self.presenter.cellWillBeShown(self.cell)
 
-        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+        self.presenter.notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
 
         XCTAssertFalse(mockCaptureSession.isCapturing)
     }
@@ -124,8 +124,8 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.cameraAuthorizationStatus = .authorized
         self.presenter.cellWillBeShown(self.cell)
 
-        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        self.presenter.notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
+        self.presenter.notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
         XCTAssertTrue(mockCaptureSession.isCapturing)
     }
@@ -139,8 +139,8 @@ class LiveCameraCellPresenterTests: XCTestCase {
         self.presenter.cellWillBeShown(self.cell)
         self.presenter.cellWasHidden(self.cell)
 
-        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        self.presenter.notificationCenter.post(name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        self.presenter.notificationCenter.post(name: UIApplication.willResignActiveNotification, object: nil)
+        self.presenter.notificationCenter.post(name: UIApplication.didBecomeActiveNotification, object: nil)
 
         XCTAssertFalse(mockCaptureSession.isCapturing)
     }

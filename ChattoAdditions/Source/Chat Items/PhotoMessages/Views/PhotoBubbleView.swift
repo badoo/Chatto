@@ -61,10 +61,9 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
 
     public private(set) lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.autoresizingMask = UIViewAutoresizing()
+        imageView.autoresizingMask = []
         imageView.clipsToBounds = true
         imageView.autoresizesSubviews = false
-        imageView.autoresizingMask = UIViewAutoresizing()
         imageView.contentMode = .scaleAspectFill
         imageView.addSubview(self.borderView)
         return imageView
@@ -83,12 +82,13 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
 
     private var placeholderIconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.autoresizingMask = UIViewAutoresizing()
+        imageView.autoresizingMask = []
         return imageView
     }()
 
     public var photoMessageViewModel: PhotoMessageViewModelProtocol! {
         didSet {
+            self.accessibilityIdentifier = self.photoMessageViewModel.bubbleAccessibilityIdentifier
             self.updateViews()
         }
     }

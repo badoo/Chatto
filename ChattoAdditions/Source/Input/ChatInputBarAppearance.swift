@@ -32,6 +32,7 @@ public struct ChatInputBarAppearance {
             UIControlStateWrapper(state: .normal): UIColor.bma_color(rgb: 0x007AFF),
             UIControlStateWrapper(state: .highlighted): UIColor.bma_color(rgb: 0x007AFF).bma_blendWithColor(UIColor.white.withAlphaComponent(0.4))
         ]
+        public let accessibilityIdentifier = "chatto.inputbar.button.send"
     }
 
     public struct TabBarAppearance {
@@ -50,6 +51,7 @@ public struct ChatInputBarAppearance {
         public var placeholderColor = UIColor.gray
         public var placeholderText = ""
         public var textInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        public let accessibilityIdentifier = "chatto.inputbar.inputfield.text"
     }
 
     public var sendButtonAppearance = SendButtonAppearance()
@@ -62,9 +64,9 @@ public struct ChatInputBarAppearance {
 // Workaround for SR-2223
 public struct UIControlStateWrapper: Hashable {
 
-    public let controlState: UIControlState
+    public let controlState: UIControl.State
 
-    public init(state: UIControlState) {
+    public init(state: UIControl.State) {
         self.controlState = state
     }
 

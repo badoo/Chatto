@@ -106,7 +106,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
 
     private func revealAccessoryView(atOffset offset: CGFloat) {
         // Find max offset (cells can have slighlty different timestamp size ( 3.00 am vs 11.37 pm )
-        let cells: [AccessoryViewRevealable] = self.collectionView.visibleCells.flatMap({ $0 as? AccessoryViewRevealable })
+        let cells: [AccessoryViewRevealable] = self.collectionView.visibleCells.compactMap({ $0 as? AccessoryViewRevealable })
         let offset = min(offset, cells.reduce(0) { (current, cell) -> CGFloat in
             return max(current, cell.preferredOffsetToRevealAccessoryView() ?? 0)
         })

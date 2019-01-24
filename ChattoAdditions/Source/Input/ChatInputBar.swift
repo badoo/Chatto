@@ -116,11 +116,10 @@ open class ChatInputBar: ReusableXibView {
     public var maxCharactersCount: UInt? // nil -> unlimited
 
     private func updateIntrinsicContentSizeAnimated() {
-        let options: UIViewAnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
+        let options: UIView.AnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
         UIView.animate(withDuration: 0.25, delay: 0, options: options, animations: { () -> Void in
             self.invalidateIntrinsicContentSize()
             self.layoutIfNeeded()
-            self.superview?.layoutIfNeeded()
         }, completion: nil)
     }
 
@@ -160,7 +159,7 @@ open class ChatInputBar: ReusableXibView {
             self.updateSendButton()
         }
     }
-    
+
     public var inputSelectedRange: NSRange {
         get {
             return self.textView.selectedRange
@@ -220,6 +219,7 @@ extension ChatInputBar {
         self.textView.placeholderText = appearance.textInputAppearance.placeholderText
         self.textView.layer.borderColor = appearance.textInputAppearance.borderColor.cgColor
         self.textView.layer.borderWidth = appearance.textInputAppearance.borderWidth
+        self.textView.accessibilityIdentifier = appearance.textInputAppearance.accessibilityIdentifier
         self.tabBarInterItemSpacing = appearance.tabBarAppearance.interItemSpacing
         self.tabBarContentInsets = appearance.tabBarAppearance.contentInsets
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
@@ -228,6 +228,7 @@ extension ChatInputBar {
             self.sendButton.setTitleColor(color, for: state.controlState)
         }
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font
+        self.sendButton.accessibilityIdentifier = appearance.sendButtonAppearance.accessibilityIdentifier
         self.tabBarContainerHeightConstraint.constant = appearance.tabBarAppearance.height
     }
 }
