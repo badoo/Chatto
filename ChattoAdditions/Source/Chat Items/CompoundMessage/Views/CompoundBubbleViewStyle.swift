@@ -28,3 +28,69 @@ public protocol CompoundBubbleViewStyleProtocol {
     func maskingImage(forViewModel viewModel: ViewModel) -> UIImage
     func borderImage(forViewModel viewModel: ViewModel) -> UIImage
 }
+
+public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
+    public struct BubbleMasks {
+        public let incomingTail: () -> UIImage
+        public let incomingNoTail: () -> UIImage
+        public let outgoingTail: () -> UIImage
+        public let outgoingNoTail: () -> UIImage
+        public let tailWidth: CGFloat
+
+        public init(incomingTail: @autoclosure @escaping () -> UIImage,
+                    incomingNoTail: @autoclosure @escaping () -> UIImage,
+                    outgoingTail: @autoclosure @escaping () -> UIImage,
+                    outgoingNoTail: @autoclosure @escaping () -> UIImage,
+                    tailWidth: CGFloat) {
+            self.incomingTail = incomingTail
+            self.incomingNoTail = incomingNoTail
+            self.outgoingTail = outgoingTail
+            self.outgoingNoTail = outgoingNoTail
+            self.tailWidth = tailWidth
+        }
+    }
+
+    private let baseStyle: BaseMessageCollectionViewCellDefaultStyle
+    private let bubbleMasks: BubbleMasks
+
+    public init(baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle(),
+                bubbleMasks: BubbleMasks = .default) {
+        self.baseStyle = baseStyle
+        self.bubbleMasks = bubbleMasks
+    }
+
+    public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage {
+        return self.bubbleMasks.image(incoming: viewModel.isIncoming,
+                                      showTail: viewModel.decorationAttributes.isShowingTail)
+    }
+
+    public func borderImage(forViewModel viewModel: ViewModel) -> UIImage {
+        return self.baseStyle.borderImage(viewModel: viewModel)!
+    }
+}
+
+extension DefaultCompoundBubbleViewStyle.BubbleMasks {
+    fileprivate func image(incoming: Bool, showTail: Bool) -> UIImage {
+        switch (incoming, showTail) {
+        case (true, true):
+            return self.incomingTail()
+        case (true, false):
+            return self.incomingNoTail()
+        case (false, true):
+            return self.outgoingTail()
+        case (false, false):
+            return self.outgoingNoTail()
+        }
+    }
+
+    public static var `default`: DefaultCompoundBubbleViewStyle.BubbleMasks {
+        let bundle = Bundle(for: DefaultCompoundBubbleViewStyle.self)
+        return DefaultCompoundBubbleViewStyle.BubbleMasks(
+            incomingTail: UIImage(named: "bubble-incoming-tail", in: bundle, compatibleWith: nil)!,
+            incomingNoTail: UIImage(named: "bubble-incoming", in: bundle, compatibleWith: nil)!,
+            outgoingTail: UIImage(named: "bubble-outgoing-tail", in: bundle, compatibleWith: nil)!,
+            outgoingNoTail: UIImage(named: "bubble-outgoing", in: bundle, compatibleWith: nil)!,
+            tailWidth: 6
+        )
+    }
+}
