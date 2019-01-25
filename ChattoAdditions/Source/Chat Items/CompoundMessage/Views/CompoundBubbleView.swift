@@ -77,7 +77,9 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         for (view, frame) in zip(subviews, layout.subviewsFrames) {
             view.frame = frame
         }
-        self.borderImageView.frame = CGRect(origin: .zero, size: layout.size)
+        let frame = CGRect(origin: .zero, size: layout.size)
+        self.borderImageView.frame = frame
+        self.layer.mask?.frame = frame
     }
 
     // MARK: - Other
@@ -85,7 +87,8 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     private func updateViews() {
         guard let viewModel = self.viewModel, let style = self.style else { return }
         self.borderImageView.image = style.borderImage(forViewModel: viewModel)
-
+        let maskImage = style.maskingImage(forViewModel: viewModel)
+        self.layer.mask = UIImageView(image: maskImage).layer
     }
 
     private func setupSubviews() {
