@@ -75,11 +75,18 @@ class DemoChatViewController: BaseChatViewController {
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
+        let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
+            viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+        )
+        compoundPresenterBuilder.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
+
         return [
             DemoTextMessageModel.chatItemType: [textMessagePresenter],
             DemoPhotoMessageModel.chatItemType: [photoMessagePresenter],
             SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
-            TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
+            TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()],
+            ChatItemType.compoundItemType: [compoundPresenterBuilder]
         ]
     }
 
