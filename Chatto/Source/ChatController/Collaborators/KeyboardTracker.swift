@@ -34,7 +34,7 @@ public enum KeyboardStatus {
 public typealias KeyboardHeightBlock = (_ height: CGFloat, _ status: KeyboardStatus) -> Void
 
 class KeyboardTracker {
-    private var keyboardStatus: KeyboardStatus = .hidden
+    private(set) var keyboardStatus: KeyboardStatus = .hidden
     private let view: UIView
     var trackingView: UIView {
         return self.keyboardTrackerView

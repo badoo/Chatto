@@ -25,6 +25,8 @@ import UIKit
 
 public protocol InputPositionControlling: AnyObject {
 
+    var keyboardStatus: KeyboardStatus { get }
+
     var inputBarContainer: UIView! { get }
     var maximumInputSize: CGSize { get }
 
