@@ -20,25 +20,19 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
+import UIKit
 
-import Foundation
+public protocol InputPositionControlling: AnyObject {
 
-public enum ChatInputItemPresentationMode: UInt {
-    case keyboard
-    case customView
-    case none
-}
+    var keyboardStatus: KeyboardStatus { get }
 
-public protocol ChatInputItemProtocol: AnyObject {
-    var tabView: UIView { get }
-    var inputView: UIView? { get }
-    var presentationMode: ChatInputItemPresentationMode { get }
-    var showsSendButton: Bool { get }
-    var selected: Bool { get set }
-    
-    var supportsExpandableState: Bool { get }
-    var expandedStateTopMargin: CGFloat { get }
+    var inputBarContainer: UIView! { get }
+    var maximumInputSize: CGSize { get }
 
-    func handleInput(_ input: AnyObject)
+    var inputContentContainer: UIView! { get }
+    var inputContentBottomMargin: CGFloat { get }
+
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
 }

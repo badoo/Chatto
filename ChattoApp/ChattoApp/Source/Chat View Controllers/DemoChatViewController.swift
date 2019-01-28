@@ -27,6 +27,7 @@ import Chatto
 import ChattoAdditions
 
 class DemoChatViewController: BaseChatViewController {
+    var shouldUseAlternativePresenter: Bool = false
 
     var messageSender: DemoChatMessageSender!
     let messagesSelector = BaseMessagesSelector()
@@ -50,13 +51,24 @@ class DemoChatViewController: BaseChatViewController {
         self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
     }
 
-    var chatInputPresenter: BasicChatInputBarPresenter!
+    var chatInputPresenter: AnyObject!
     override func createChatInputView() -> UIView {
         let chatInputView = ChatInputBar.loadNib()
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
-        self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
+        if self.shouldUseAlternativePresenter {
+            let chatInputPresenter = ExpandableChatInputBarPresenter(
+                inputPositionController: self,
+                chatInputBar: chatInputView,
+                chatInputItems: self.createChatInputItems(),
+                chatInputBarAppearance: appearance)
+            self.chatInputPresenter = chatInputPresenter
+            self.keyboardEventsHandler = chatInputPresenter
+            self.scrollViewEventsHandler = chatInputPresenter
+        } else {
+            self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
+        }
         chatInputView.maxCharactersCount = 1000
         return chatInputView
     }
@@ -87,6 +99,9 @@ class DemoChatViewController: BaseChatViewController {
         var items = [ChatInputItemProtocol]()
         items.append(self.createTextInputItem())
         items.append(self.createPhotoInputItem())
+        if self.shouldUseAlternativePresenter {
+            items.append(self.customInputItem())
+        }
         return items
     }
 
@@ -102,6 +117,14 @@ class DemoChatViewController: BaseChatViewController {
         let item = PhotosChatInputItem(presentingController: self)
         item.photoInputHandler = { [weak self] image in
             self?.dataSource.addPhotoMessage(image)
+        }
+        return item
+    }
+
+    private func customInputItem() -> ContentAwareInputItem {
+        let item = ContentAwareInputItem()
+        item.textInputHandler = { [weak self] text in
+            self?.dataSource.addTextMessage(text)
         }
         return item
     }
