@@ -25,9 +25,6 @@
 import Foundation
 
 open class PhotosChatInputItem: ChatInputItemProtocol {
-    public private(set) var supportsExpandableState: Bool = false
-    public private(set) var expandedStateTopMargin: CGFloat = 0.0
-    
     typealias Class = PhotosChatInputItem
 
     public var photoInputHandler: ((UIImage) -> Void)?

@@ -36,9 +36,6 @@ public protocol ChatInputItemProtocol: AnyObject {
     var presentationMode: ChatInputItemPresentationMode { get }
     var showsSendButton: Bool { get }
     var selected: Bool { get set }
-    
-    var supportsExpandableState: Bool { get }
-    var expandedStateTopMargin: CGFloat { get }
 
     func handleInput(_ input: AnyObject)
 }

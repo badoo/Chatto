@@ -31,10 +31,8 @@ public enum KeyboardStatus {
     case shown
 }
 
-public typealias KeyboardHeightBlock = (_ height: CGFloat, _ status: KeyboardStatus) -> Void
-
 class KeyboardTracker {
-    private(set) var keyboardStatus: KeyboardStatus = .hidden
+    private var keyboardStatus: KeyboardStatus = .hidden
     private let view: UIView
     var trackingView: UIView {
         return self.keyboardTrackerView
@@ -51,15 +49,16 @@ class KeyboardTracker {
     }()
 
     var isTracking = false
-    var inputBarContainer: UIView
+    var inputContainer: UIView
     private var notificationCenter: NotificationCenter
 
-    private var heightBlock: KeyboardHeightBlock
+    typealias LayoutBlock = (_ bottomMargin: CGFloat, _ status: KeyboardStatus) -> Void
+    private var layoutBlock: LayoutBlock
 
-    init(viewController: UIViewController, inputBarContainer: UIView, heightBlock: @escaping KeyboardHeightBlock, notificationCenter: NotificationCenter) {
+    init(viewController: UIViewController, inputContainer: UIView, layoutBlock: @escaping LayoutBlock, notificationCenter: NotificationCenter) {
         self.view = viewController.view
-        self.heightBlock = heightBlock
-        self.inputBarContainer = inputBarContainer
+        self.layoutBlock = layoutBlock
+        self.inputContainer = inputContainer
         self.notificationCenter = notificationCenter
         self.notificationCenter.addObserver(
             self,
@@ -171,7 +170,7 @@ class KeyboardTracker {
     }
 
     private func adjustTrackingViewSize() {
-        let inputContainerHeight = self.inputBarContainer.bounds.height
+        let inputContainerHeight = self.inputContainer.bounds.height
         if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
             self.isPerformingForcedLayout = true
@@ -193,7 +192,7 @@ class KeyboardTracker {
 
     private func layoutInputContainer(withBottomConstraint constraint: CGFloat) {
         self.isPerformingForcedLayout = true
-        self.heightBlock(constraint, self.keyboardStatus)
+        self.layoutBlock(constraint, self.keyboardStatus)
         self.isPerformingForcedLayout = false
     }
 }
