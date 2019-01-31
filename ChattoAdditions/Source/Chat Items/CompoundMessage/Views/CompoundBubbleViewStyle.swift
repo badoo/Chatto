@@ -27,6 +27,7 @@ public protocol CompoundBubbleViewStyleProtocol {
     typealias ViewModel = MessageViewModelProtocol
     func maskingImage(forViewModel viewModel: ViewModel) -> UIImage
     func borderImage(forViewModel viewModel: ViewModel) -> UIImage
+    func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat
 }
 
 public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
@@ -66,6 +67,10 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
 
     public func borderImage(forViewModel viewModel: ViewModel) -> UIImage {
         return self.baseStyle.borderImage(viewModel: viewModel)!
+    }
+
+    public func tailWidth(forViewModel _: ViewModel) -> CGFloat {
+        return self.bubbleMasks.tailWidth
     }
 }
 
