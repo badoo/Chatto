@@ -66,7 +66,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - BackgroundSizingQueryable
 
-    public let canCalculateSizeInBackground = true
+    public let canCalculateSizeInBackground = false
 
     // MARK: - Layout
 
