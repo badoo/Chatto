@@ -30,16 +30,24 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
     }
 
     func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
-        let label = UILabel()
+        let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+        let label = LabelWithInsets()
         label.numberOfLines = 0
         label.text = model.text
-
+        label.textInsets = textInsets
         let layoutProvider = TextMessageLayoutProvider(text: model.text,
-                                                     font: label.font,
-                                                     textInsets: .zero)
+                                                       font: label.font,
+                                                       textInsets: textInsets)
 
         return MessageContentModule(view: label,
                                     layoutProvider: layoutProvider,
                                     presenter: ())
+    }
+}
+
+private final class LabelWithInsets: UILabel {
+    var textInsets: UIEdgeInsets = .zero
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: self.textInsets))
     }
 }
