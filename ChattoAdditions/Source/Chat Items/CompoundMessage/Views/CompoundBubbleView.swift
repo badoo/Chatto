@@ -137,7 +137,7 @@ private struct CompoundBubbleLayout {
         for layoutProvider in context.layoutProviders {
             let size = layoutProvider.sizeThatFits(size: sizeToFit)
             let viewWidth = max(size.width, resultWidth)
-            resultWidth = min(viewWidth, context.maxWidth)
+            resultWidth = min(viewWidth + context.tailWidth, context.maxWidth)
             let frame = CGRect(x: xOffset, y: maxY, width: viewWidth, height: size.height)
             subviewsFrames.append(frame)
             maxY = frame.maxY
