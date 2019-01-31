@@ -42,12 +42,12 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Public properties
 
-    public typealias ViewWithSize = (UIView, SizeThatFitsProviderProtocol)
+    public typealias ViewWithLayout = (UIView, MessageManualLayoutProviderProtocol)
 
-    public var contentViewsWithSizes: [ViewWithSize] = [] {
+    public var contentViewsWithLayout: [ViewWithLayout] = [] {
         didSet {
             oldValue.forEach { view, _ in view.removeFromSuperview() }
-            self.contentViewsWithSizes.forEach { view, _ in self.addSubview(view) }
+            self.contentViewsWithLayout.forEach { view, _ in self.addSubview(view) }
         }
     }
 
@@ -70,15 +70,15 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     // MARK: - Layout
 
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return self.layout(subviewsWithSizes: self.contentViewsWithSizes, maxWidth: size.width).size
+        return self.layout(subviewsWithLayout: self.contentViewsWithLayout, maxWidth: size.width).size
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let subviewsWithSizes = self.contentViewsWithSizes
-        let layout = self.layout(subviewsWithSizes: subviewsWithSizes, maxWidth: self.preferredMaxLayoutWidth)
-        for (viewWithSize, frame) in zip(subviewsWithSizes, layout.subviewsFrames) {
-            let (view, _) = viewWithSize
+        let subviewsWithLayout = self.contentViewsWithLayout
+        let layout = self.layout(subviewsWithLayout: subviewsWithLayout, maxWidth: self.preferredMaxLayoutWidth)
+        for (viewWithLayout, frame) in zip(subviewsWithLayout, layout.subviewsFrames) {
+            let (view, _) = viewWithLayout
             view.frame = frame
         }
         let frame = CGRect(origin: .zero, size: layout.size)
@@ -88,14 +88,14 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Other
 
-    private func layout(subviewsWithSizes: [ViewWithSize], maxWidth: CGFloat) -> CompoundBubbleLayout {
+    private func layout(subviewsWithLayout: [ViewWithLayout], maxWidth: CGFloat) -> CompoundBubbleLayout {
         var isIncoming = false
         var tailWidth: CGFloat = 0
         if let viewModel = self.viewModel, let style = self.style {
             isIncoming = viewModel.isIncoming
             tailWidth = style.tailWidth(forViewModel: viewModel)
         }
-        let context = CompoundBubbleLayout.Context(sizeProviders: subviewsWithSizes.map { _, sizeProvider in sizeProvider },
+        let context = CompoundBubbleLayout.Context(layoutProviders: subviewsWithLayout.map { _, layout in layout },
                                                    maxWidth: maxWidth,
                                                    tailWidth: tailWidth,
                                                    isIncoming: isIncoming)
@@ -120,7 +120,7 @@ private struct CompoundBubbleLayout {
     let subviewsFrames: [CGRect]
 
     struct Context {
-        let sizeProviders: [SizeThatFitsProviderProtocol]
+        let layoutProviders: [MessageManualLayoutProviderProtocol]
         let maxWidth: CGFloat
         let tailWidth: CGFloat
         let isIncoming: Bool
@@ -128,14 +128,14 @@ private struct CompoundBubbleLayout {
 
     static func layout(forContext context: Context) -> CompoundBubbleLayout {
         var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(context.sizeProviders.count)
+        subviewsFrames.reserveCapacity(context.layoutProviders.count)
         var maxY: CGFloat = 0
         var resultWidth: CGFloat = 0
         let xOffset = context.isIncoming ? context.tailWidth : 0
         let sizeToFit = CGSize(width: context.maxWidth - context.tailWidth,
                                height: .greatestFiniteMagnitude)
-        for sizeProvider in context.sizeProviders {
-            let size = sizeProvider.sizeThatFits(size: sizeToFit)
+        for layoutProvider in context.layoutProviders {
+            let size = layoutProvider.sizeThatFits(size: sizeToFit)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, context.maxWidth)
             let frame = CGRect(x: xOffset, y: maxY, width: viewWidth, height: size.height)

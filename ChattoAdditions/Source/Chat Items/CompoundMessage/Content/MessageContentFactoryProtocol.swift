@@ -24,14 +24,14 @@
 public final class MessageContentModule {
     public typealias Presenter = Any
     public let view: UIView
-    public let sizeProvider: SizeThatFitsProviderProtocol
+    public let layoutProvider: MessageManualLayoutProviderProtocol
     public let presenter: Presenter
 
     public init(view: UIView,
-                sizeProvider: SizeThatFitsProviderProtocol,
+                layoutProvider: MessageManualLayoutProviderProtocol,
                 presenter: Presenter) {
         self.view = view
-        self.sizeProvider = sizeProvider
+        self.layoutProvider = layoutProvider
         self.presenter = presenter
     }
 }

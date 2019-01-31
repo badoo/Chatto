@@ -23,13 +23,13 @@
 
 import UIKit
 
-public protocol SizeThatFitsProviderProtocol {
+public protocol MessageManualLayoutProviderProtocol {
     func sizeThatFits(size: CGSize) -> CGSize
 }
 
 // MARK: - Text
 
-public struct TextSizeThatFitsProvider: SizeThatFitsProviderProtocol {
+public struct TextMessageLayoutProvider: MessageManualLayoutProviderProtocol {
 
     private let text: String
     private let font: UIFont
@@ -63,7 +63,7 @@ public struct TextSizeThatFitsProvider: SizeThatFitsProviderProtocol {
 
 // MARK: - Image
 
-public struct ImageSizeThatFitsProvider: SizeThatFitsProviderProtocol {
+public struct ImageMessageLayoutProvider: MessageManualLayoutProviderProtocol {
 
     private let imageSize: CGSize
 

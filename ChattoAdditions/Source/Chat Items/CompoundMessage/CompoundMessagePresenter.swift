@@ -74,11 +74,11 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         super.configureCell(cell, decorationAttributes: decorationAttributes, animated: animated) {
             compoundCell.bubbleView.viewModel = self.messageViewModel
             compoundCell.bubbleView.style = self.compoundCellStyle
-            compoundCell.bubbleView.contentViewsWithSizes = self.contentFactories
+            compoundCell.bubbleView.contentViewsWithLayout = self.contentFactories
                 .filter { $0.canCreateMessage(forModel: self.messageModel) }
                 .map {
                     let module = $0.createMessageModule(forModel: self.messageModel)
-                    return (module.view, module.sizeProvider)
+                    return (module.view, module.layoutProvider)
                 }
         }
     }
