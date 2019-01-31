@@ -24,7 +24,13 @@
 import UIKit
 
 public protocol MessageManualLayoutProviderProtocol {
+    /// false by default
+    var layoutInsideTail: Bool { get }
     func sizeThatFits(size: CGSize) -> CGSize
+}
+
+extension MessageManualLayoutProviderProtocol {
+    public var layoutInsideTail: Bool { return false }
 }
 
 // MARK: - Text
@@ -70,6 +76,8 @@ public struct ImageMessageLayoutProvider: MessageManualLayoutProviderProtocol {
     public init(imageSize: CGSize) {
         self.imageSize = imageSize
     }
+
+    public let layoutInsideTail = true
 
     public func sizeThatFits(size: CGSize) -> CGSize {
         let ratio = self.imageSize.width / self.imageSize.height

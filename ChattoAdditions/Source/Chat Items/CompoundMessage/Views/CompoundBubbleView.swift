@@ -131,13 +131,14 @@ private struct CompoundBubbleLayout {
         subviewsFrames.reserveCapacity(context.layoutProviders.count)
         var maxY: CGFloat = 0
         var resultWidth: CGFloat = 0
-        let xOffset = context.isIncoming ? context.tailWidth : 0
-        let sizeToFit = CGSize(width: context.maxWidth - context.tailWidth,
-                               height: .greatestFiniteMagnitude)
         for layoutProvider in context.layoutProviders {
+            let tailWidth = layoutProvider.layoutInsideTail ? 0 : context.tailWidth
+            let sizeToFit = CGSize(width: context.maxWidth - tailWidth,
+                                   height: .greatestFiniteMagnitude)
+            let xOffset = context.isIncoming ? tailWidth : 0
             let size = layoutProvider.sizeThatFits(size: sizeToFit)
             let viewWidth = max(size.width, resultWidth)
-            resultWidth = min(viewWidth + context.tailWidth, context.maxWidth)
+            resultWidth = min(viewWidth + tailWidth, context.maxWidth)
             let frame = CGRect(x: xOffset, y: maxY, width: viewWidth, height: size.height)
             subviewsFrames.append(frame)
             maxY = frame.maxY
