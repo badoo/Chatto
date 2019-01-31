@@ -21,28 +21,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+public final class MessageContentModule {
+    public typealias Presenter = Any
+    public let view: UIView
+    public let sizeProvider: SizeThatFitsProviderProtocol
+    public let presenter: Presenter
+
+    public init(view: UIView,
+                sizeProvider: SizeThatFitsProviderProtocol,
+                presenter: Presenter) {
+        self.view = view
+        self.sizeProvider = sizeProvider
+        self.presenter = presenter
+    }
+}
+
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
     typealias ChildPresenter = Any
     func canCreateMessage(forModel model: Model) -> Bool
-    func createMessage(forModel model: Model) -> (UIView, ChildPresenter)
+    func createMessageModule(forModel model: Model) -> MessageContentModule
 }
 
 public struct AnyMessageContentFactory<T>: MessageContentFactoryProtocol {
 
     private let _canCreateMessage: (T) -> Bool
-    private let _createMessage: (T) -> (UIView, ChildPresenter)
+    private let _createMessageModule: (T) -> MessageContentModule
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == T {
         self._canCreateMessage = base.canCreateMessage
-        self._createMessage = base.createMessage
+        self._createMessageModule = base.createMessageModule
     }
 
     public func canCreateMessage(forModel model: T) -> Bool {
         return self._canCreateMessage(model)
     }
 
-    public func createMessage(forModel model: T) -> (UIView, ChildPresenter) {
-        return self._createMessage(model)
+    public func createMessageModule(forModel model: T) -> MessageContentModule {
+        return self._createMessageModule(model)
     }
 }

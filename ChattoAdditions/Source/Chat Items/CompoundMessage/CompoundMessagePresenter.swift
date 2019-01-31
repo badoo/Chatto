@@ -76,7 +76,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             compoundCell.bubbleView.style = self.compoundCellStyle
             compoundCell.bubbleView.contentViews = self.contentFactories
                 .filter { $0.canCreateMessage(forModel: self.messageModel) }
-                .map { $0.createMessage(forModel: self.messageModel).0 }
+                .map { $0.createMessageModule(forModel: self.messageModel).view }
         }
     }
 }
