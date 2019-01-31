@@ -21,30 +21,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import UIKit
 import ChattoAdditions
 
-final class DemoCompoundMessageModel: DecoratedMessageModelProtocol, DemoMessageModelProtocol {
-
-    // MARK: - Instantiation
-
-    init(text: String, image: UIImage?, messageModel: MessageModelProtocol) {
-        self.text = text
-        self.image = image
-        self.messageModel = messageModel
-        self.status = messageModel.status
+struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
+    func canCreateMessage(forModel model: DemoCompoundMessageModel) -> Bool {
+        return true
     }
 
-    // MARK: - Public properties
-
-    let text: String
-    let image: UIImage?
-
-    // MARK: - DecoratedMessageModelProtocol
-
-    let messageModel: MessageModelProtocol
-
-    // MARK: - DemoMessageModelProtocol
-
-    var status: MessageStatus
-
+    func createMessage(forModel model: DemoCompoundMessageModel) -> (UIView, ChildPresenter) {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.text = model.text
+        return (label, ())
+    }
 }

@@ -13,6 +13,8 @@
 		268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */; };
 		268CD56F21FA485500DEE2C2 /* GenericMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */; };
 		268CD57121FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */; };
+		268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */; };
+		268CD57A22034A9900DEE2C2 /* DemoImageMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */; };
 		5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5587302D1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift */; };
 		558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */; };
 		55A77B4A1FCC5EE70040C77E /* MessagesSelectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A77B491FCC5EE70040C77E /* MessagesSelectorProtocol.swift */; };
@@ -75,6 +77,8 @@
 		268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageModel.swift; sourceTree = "<group>"; };
 		268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericMessageHandler.swift; sourceTree = "<group>"; };
 		268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageViewModel.swift; sourceTree = "<group>"; };
+		268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTextMessageContentFactory.swift; sourceTree = "<group>"; };
+		268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoImageMessageContentFactory.swift; sourceTree = "<group>"; };
 		2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5587302D1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesSelectionChatViewController.swift; sourceTree = "<group>"; };
 		558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRandomMessageChatViewController.swift; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 			children = (
 				268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */,
 				268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */,
+				268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */,
+				268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */,
 			);
 			path = "Compound Messages";
 			sourceTree = "<group>";
@@ -489,12 +495,14 @@
 				C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */,
 				C3F91DBD1C75EF9E00D461D2 /* DemoChatDataSource.swift in Sources */,
 				C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */,
+				268CD57A22034A9900DEE2C2 /* DemoImageMessageContentFactory.swift in Sources */,
 				268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */,
 				C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */,
 				C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */,
 				C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */,
 				55EE230821BFFD6600D50A1C /* ScrollToBottomButtonChatViewController.swift in Sources */,
 				5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */,
+				268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
 				C3F91DB71C75EF9E00D461D2 /* DemoChatItemsDecorator.swift in Sources */,
 				0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */,

@@ -59,7 +59,12 @@ class DemoChatMessageFactory {
         let messageModel = self.makeMessageModel(isIncoming ? "1" : "2",
                                                  isIncoming: isIncoming,
                                                  type: .compoundItemType)
-        return DemoCompoundMessageModel(messageModel: messageModel)
+        let text = isIncoming ? "Hello, how are you" : "I'm good, thanks, how about yourself?"
+        let imageName = isIncoming ? "pic-test-1" : "pic-test-2"
+        let image = UIImage(named: imageName)!
+        return DemoCompoundMessageModel(text: text,
+                                        image: image,
+                                        messageModel: messageModel)
     }
 
     private class func makeRandomTextMessage(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
