@@ -29,10 +29,17 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return true
     }
 
-    func createMessage(forModel model: DemoCompoundMessageModel) -> (UIView, ChildPresenter) {
+    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
         let label = UILabel()
         label.numberOfLines = 0
         label.text = model.text
-        return (label, ())
+
+        let sizeProvider = TextSizeThatFitsProvider(text: model.text,
+                                                    font: label.font,
+                                                    textInsets: .zero)
+
+        return MessageContentModule(view: label,
+                                    sizeProvider: sizeProvider,
+                                    presenter: ())
     }
 }
