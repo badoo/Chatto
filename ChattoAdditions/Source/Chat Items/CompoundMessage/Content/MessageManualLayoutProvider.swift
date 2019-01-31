@@ -24,13 +24,7 @@
 import UIKit
 
 public protocol MessageManualLayoutProviderProtocol {
-    /// false by default
-    var layoutInsideTail: Bool { get }
-    func sizeThatFits(size: CGSize) -> CGSize
-}
-
-extension MessageManualLayoutProviderProtocol {
-    public var layoutInsideTail: Bool { return false }
+    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
 }
 
 // MARK: - Text
@@ -47,8 +41,11 @@ public struct TextMessageLayoutProvider: MessageManualLayoutProviderProtocol {
         self.textInsets = textInsets
     }
 
-    public func sizeThatFits(size: CGSize) -> CGSize {
-        let textContainer = NSTextContainer(size: size)
+    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
+        var sizeWithInset = size
+        sizeWithInset.substract(insets: safeAreaInsets)
+        sizeWithInset.substract(insets: self.textInsets)
+        let textContainer = NSTextContainer(size: sizeWithInset)
         textContainer.lineFragmentPadding = 0
 
         // See https://github.com/badoo/Chatto/issues/129
@@ -60,10 +57,10 @@ public struct TextMessageLayoutProvider: MessageManualLayoutProviderProtocol {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
         textStorage.addLayoutManager(layoutManager)
-
-        var size = layoutManager.usedRect(for: textContainer).size
-        size.apply(insets: self.textInsets)
-        return size.bma_round()
+        var resultSize = layoutManager.usedRect(for: textContainer).size.bma_round()
+        resultSize.add(insets: safeAreaInsets)
+        resultSize.add(insets: self.textInsets)
+        return resultSize
     }
 }
 
@@ -77,9 +74,7 @@ public struct ImageMessageLayoutProvider: MessageManualLayoutProviderProtocol {
         self.imageSize = imageSize
     }
 
-    public let layoutInsideTail = true
-
-    public func sizeThatFits(size: CGSize) -> CGSize {
+    public func sizeThatFits(size: CGSize, safeAreaInsets _: UIEdgeInsets) -> CGSize {
         let ratio = self.imageSize.width / self.imageSize.height
         return CGSize(width: size.width, height: size.width / ratio).bma_round()
     }
@@ -88,8 +83,12 @@ public struct ImageMessageLayoutProvider: MessageManualLayoutProviderProtocol {
 // MARK: - Private extensions
 
 private extension CGSize {
-    mutating func apply(insets: UIEdgeInsets) {
+    mutating func add(insets: UIEdgeInsets) {
         self.width += insets.left + insets.right
         self.height += insets.top + insets.bottom
+    }
+    mutating func substract(insets: UIEdgeInsets) {
+        self.width -= insets.left + insets.right
+        self.height -= insets.top + insets.bottom
     }
 }

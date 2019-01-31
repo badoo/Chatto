@@ -49,6 +49,13 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
 private final class LabelWithInsets: UILabel {
     var textInsets: UIEdgeInsets = .zero
     override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: self.textInsets))
+        super.drawText(in: rect.inset(by: self.textInsets + self.safeAreaInsets))
     }
+}
+
+private func + (lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {
+    return UIEdgeInsets(top: lhs.top + rhs.top,
+                        left: lhs.left + rhs.left,
+                        bottom: lhs.bottom + rhs.bottom,
+                        right: lhs.right + rhs.right)
 }
