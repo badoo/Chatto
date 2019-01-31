@@ -107,6 +107,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         self.borderImageView.image = style.borderImage(forViewModel: viewModel)
         let maskImage = style.maskingImage(forViewModel: viewModel)
         self.layer.mask = UIImageView(image: maskImage).layer
+        self.backgroundColor = style.backgroundColor(forViewModel: viewModel)
     }
 
     private func setupSubviews() {

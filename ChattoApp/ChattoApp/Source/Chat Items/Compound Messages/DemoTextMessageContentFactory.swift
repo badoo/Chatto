@@ -35,6 +35,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         label.numberOfLines = 0
         label.text = model.text
         label.textInsets = textInsets
+        label.textColor = model.isIncoming ? .black : .white
         let layoutProvider = TextMessageLayoutProvider(text: model.text,
                                                        font: label.font,
                                                        textInsets: textInsets)

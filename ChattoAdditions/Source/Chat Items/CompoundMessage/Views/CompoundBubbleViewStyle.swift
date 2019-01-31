@@ -25,6 +25,7 @@ import UIKit
 
 public protocol CompoundBubbleViewStyleProtocol {
     typealias ViewModel = MessageViewModelProtocol
+    func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor
     func maskingImage(forViewModel viewModel: ViewModel) -> UIImage
     func borderImage(forViewModel viewModel: ViewModel) -> UIImage
     func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat
@@ -58,6 +59,11 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
                 bubbleMasks: BubbleMasks = .default) {
         self.baseStyle = baseStyle
         self.bubbleMasks = bubbleMasks
+    }
+
+
+    public func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor {
+        return viewModel.isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
     }
 
     public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage {
