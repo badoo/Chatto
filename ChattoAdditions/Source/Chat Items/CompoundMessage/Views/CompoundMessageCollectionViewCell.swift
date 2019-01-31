@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+@available(iOS 11, *)
 public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
     public override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()

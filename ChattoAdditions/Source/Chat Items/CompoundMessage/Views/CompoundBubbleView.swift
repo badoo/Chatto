@@ -23,6 +23,7 @@
 
 import UIKit
 
+@available(iOS 11, *)
 public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
     // MARK: - Private properties

@@ -23,6 +23,7 @@
 
 import Chatto
 
+@available(iOS 11, *)
 public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
