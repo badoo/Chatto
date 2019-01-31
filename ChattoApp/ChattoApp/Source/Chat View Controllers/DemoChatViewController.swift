@@ -77,7 +77,8 @@ class DemoChatViewController: BaseChatViewController {
 
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            contentFactories: []
         )
         compoundPresenterBuilder.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 

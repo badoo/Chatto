@@ -27,12 +27,6 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Private properties
 
-    private var contentViews: [UIView] = [] {
-        didSet {
-            oldValue.forEach { $0.removeFromSuperview() }
-            self.contentViews.forEach(self.addSubview)
-        }
-    }
     private let borderImageView = UIImageView()
 
     // MARK: - Instantiation
@@ -47,6 +41,13 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     }
 
     // MARK: - Public properties
+
+    public var contentViews: [UIView] = [] {
+        didSet {
+            oldValue.forEach { $0.removeFromSuperview() }
+            self.contentViews.forEach(self.addSubview)
+        }
+    }
 
     public var style: CompoundBubbleViewStyleProtocol? {
         didSet { self.updateViews() }

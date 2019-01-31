@@ -32,13 +32,16 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
 
     public init(
         viewModelBuilder: ViewModelBuilderT,
-        interactionHandler: InteractionHandlerT?) {
+        interactionHandler: InteractionHandlerT?,
+        contentFactories: [AnyMessageContentFactory<ModelT>]) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
+        self.contentFactories = contentFactories
     }
 
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
+    private let contentFactories: [AnyMessageContentFactory<ModelT>]
     public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
     public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
     public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
@@ -53,6 +56,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             messageModel: chatItem as! ModelT,
             viewModelBuilder: self.viewModelBuilder,
             interactionHandler: self.interactionHandler,
+            contentFactories: self.contentFactories,
             sizingCell: self.sizingCell,
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle
