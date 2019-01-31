@@ -27,3 +27,22 @@ public protocol MessageContentFactoryProtocol {
     func canCreateMessage(forModel model: Model) -> Bool
     func createMessage(forModel model: Model) -> (UIView, ChildPresenter)
 }
+
+public struct AnyMessageContentFactory<T>: MessageContentFactoryProtocol {
+
+    private let _canCreateMessage: (T) -> Bool
+    private let _createMessage: (T) -> (UIView, ChildPresenter)
+
+    public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == T {
+        self._canCreateMessage = base.canCreateMessage
+        self._createMessage = base.createMessage
+    }
+
+    public func canCreateMessage(forModel model: T) -> Bool {
+        return self._canCreateMessage(model)
+    }
+
+    public func createMessage(forModel model: T) -> (UIView, ChildPresenter) {
+        return self._createMessage(model)
+    }
+}
