@@ -80,7 +80,8 @@ class DemoChatViewController: BaseChatViewController {
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
-                .init(DemoImageMessageContentFactory())
+                .init(DemoImageMessageContentFactory()),
+                .init(DemoDateMessageContentFactory())
             ]
         )
         compoundPresenterBuilder.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
