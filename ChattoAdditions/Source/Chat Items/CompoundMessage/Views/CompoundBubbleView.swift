@@ -48,7 +48,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     public var contentViewsWithLayout: [ViewWithLayout] = [] {
         didSet {
             oldValue.forEach { view, _ in view.removeFromSuperview() }
-            self.contentViewsWithLayout.forEach { view, _ in self.addSubview(view) }
+            self.contentViewsWithLayout.forEach { view, _ in self.insertSubview(view, belowSubview: self.borderImageView) }
         }
     }
 
