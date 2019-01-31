@@ -42,10 +42,12 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Public properties
 
-    public var contentViews: [UIView] = [] {
+    public typealias ViewWithSize = (UIView, SizeThatFitsProviderProtocol)
+
+    public var contentViewsWithSizes: [ViewWithSize] = [] {
         didSet {
-            oldValue.forEach { $0.removeFromSuperview() }
-            self.contentViews.forEach(self.addSubview)
+            oldValue.forEach { view, _ in view.removeFromSuperview() }
+            self.contentViewsWithSizes.forEach { view, _ in self.addSubview(view) }
         }
     }
 
@@ -68,14 +70,15 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     // MARK: - Layout
 
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return self.layout(subviews: self.contentViews, maxWidth: size.width).size
+        return self.layout(subviewsWithSizes: self.contentViewsWithSizes, maxWidth: size.width).size
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let subviews = self.contentViews
-        let layout = self.layout(subviews: subviews, maxWidth: self.preferredMaxLayoutWidth)
-        for (view, frame) in zip(subviews, layout.subviewsFrames) {
+        let subviewsWithSizes = self.contentViewsWithSizes
+        let layout = self.layout(subviewsWithSizes: subviewsWithSizes, maxWidth: self.preferredMaxLayoutWidth)
+        for (viewWithSize, frame) in zip(subviewsWithSizes, layout.subviewsFrames) {
+            let (view, _) = viewWithSize
             view.frame = frame
         }
         let frame = CGRect(origin: .zero, size: layout.size)
@@ -85,14 +88,14 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Other
 
-    private func layout(subviews: [UIView], maxWidth: CGFloat) -> CompoundBubbleLayout {
+    private func layout(subviewsWithSizes: [ViewWithSize], maxWidth: CGFloat) -> CompoundBubbleLayout {
         var isIncoming = false
         var tailWidth: CGFloat = 0
         if let viewModel = self.viewModel, let style = self.style {
             isIncoming = viewModel.isIncoming
             tailWidth = style.tailWidth(forViewModel: viewModel)
         }
-        let context = CompoundBubbleLayout.Context(subviews: subviews,
+        let context = CompoundBubbleLayout.Context(sizeProviders: subviewsWithSizes.map { _, sizeProvider in sizeProvider },
                                                    maxWidth: maxWidth,
                                                    tailWidth: tailWidth,
                                                    isIncoming: isIncoming)
@@ -117,7 +120,7 @@ private struct CompoundBubbleLayout {
     let subviewsFrames: [CGRect]
 
     struct Context {
-        let subviews: [UIView]
+        let sizeProviders: [SizeThatFitsProviderProtocol]
         let maxWidth: CGFloat
         let tailWidth: CGFloat
         let isIncoming: Bool
@@ -125,14 +128,14 @@ private struct CompoundBubbleLayout {
 
     static func layout(forContext context: Context) -> CompoundBubbleLayout {
         var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(context.subviews.count)
+        subviewsFrames.reserveCapacity(context.sizeProviders.count)
         var maxY: CGFloat = 0
         var resultWidth: CGFloat = 0
         let xOffset = context.isIncoming ? context.tailWidth : 0
         let sizeToFit = CGSize(width: context.maxWidth - context.tailWidth,
                                height: .greatestFiniteMagnitude)
-        for view in context.subviews {
-            let size = view.sizeThatFits(sizeToFit)
+        for sizeProvider in context.sizeProviders {
+            let size = sizeProvider.sizeThatFits(size: sizeToFit)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, context.maxWidth)
             let frame = CGRect(x: xOffset, y: maxY, width: viewWidth, height: size.height)

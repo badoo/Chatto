@@ -27,6 +27,8 @@ public protocol SizeThatFitsProviderProtocol {
     func sizeThatFits(size: CGSize) -> CGSize
 }
 
+// MARK: - Text
+
 public struct TextSizeThatFitsProvider: SizeThatFitsProviderProtocol {
 
     private let text: String
@@ -39,11 +41,27 @@ public struct TextSizeThatFitsProvider: SizeThatFitsProviderProtocol {
         self.textInsets = textInsets
     }
 
-    // TODO: Implement me
     public func sizeThatFits(size: CGSize) -> CGSize {
-        return size
+        let textContainer = NSTextContainer(size: size)
+        textContainer.lineFragmentPadding = 0
+
+        // See https://github.com/badoo/Chatto/issues/129
+        let textStorage = NSTextStorage(string: self.text, attributes: [
+            NSAttributedString.Key.font: self.font,
+            NSAttributedString.Key(rawValue: "NSOriginalFont"): self.font
+        ])
+
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        var size = layoutManager.usedRect(for: textContainer).size
+        size.apply(insets: self.textInsets)
+        return size.bma_round()
     }
 }
+
+// MARK: - Image
 
 public struct ImageSizeThatFitsProvider: SizeThatFitsProviderProtocol {
 
@@ -53,8 +71,17 @@ public struct ImageSizeThatFitsProvider: SizeThatFitsProviderProtocol {
         self.imageSize = imageSize
     }
 
-    // TODO: Implement me
     public func sizeThatFits(size: CGSize) -> CGSize {
-        return size
+        let ratio = self.imageSize.width / self.imageSize.height
+        return CGSize(width: size.width, height: size.width / ratio).bma_round()
+    }
+}
+
+// MARK: - Private extensions
+
+private extension CGSize {
+    mutating func apply(insets: UIEdgeInsets) {
+        self.width += insets.left + insets.right
+        self.height += insets.top + insets.bottom
     }
 }
