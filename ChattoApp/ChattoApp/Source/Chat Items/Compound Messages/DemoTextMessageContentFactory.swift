@@ -34,12 +34,12 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         label.numberOfLines = 0
         label.text = model.text
 
-        let sizeProvider = TextSizeThatFitsProvider(text: model.text,
-                                                    font: label.font,
-                                                    textInsets: .zero)
+        let layoutProvider = TextMessageLayoutProvider(text: model.text,
+                                                     font: label.font,
+                                                     textInsets: .zero)
 
         return MessageContentModule(view: label,
-                                    sizeProvider: sizeProvider,
+                                    layoutProvider: layoutProvider,
                                     presenter: ())
     }
 }

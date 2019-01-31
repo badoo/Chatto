@@ -34,9 +34,9 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.image = image
-        let sizeProvider = ImageSizeThatFitsProvider(imageSize: image.size)
+        let layoutProvider = ImageMessageLayoutProvider(imageSize: image.size)
         return MessageContentModule(view: imageView,
-                                    sizeProvider: sizeProvider,
+                                    layoutProvider: layoutProvider,
                                     presenter: ())
     }
 }
