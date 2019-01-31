@@ -55,8 +55,10 @@ class DemoChatMessageFactory {
         return photoMessageModel
     }
 
-    static func makeCompoundMessage() -> DemoCompoundMessageModel {
-        let messageModel = self.makeMessageModel("1", isIncoming: true, type: .compoundItemType)
+    static func makeCompoundMessage(isIncoming: Bool) -> DemoCompoundMessageModel {
+        let messageModel = self.makeMessageModel(isIncoming ? "1" : "2",
+                                                 isIncoming: isIncoming,
+                                                 type: .compoundItemType)
         return DemoCompoundMessageModel(messageModel: messageModel)
     }
 
@@ -156,8 +158,8 @@ extension DemoChatMessageFactory {
 
     static func makeCompoundMessages() -> [MessageModelProtocol] {
         return [
-            self.makeCompoundMessage(),
-            self.makeCompoundMessage()
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false)
         ]
     }
 
