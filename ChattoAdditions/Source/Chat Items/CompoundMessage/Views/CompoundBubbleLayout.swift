@@ -24,16 +24,21 @@
 public struct CompoundBubbleLayout {
     public let size: CGSize
     public let subviewsFrames: [CGRect]
+    public let safeAreaInsets: UIEdgeInsets
 }
 
 public struct CompoundBubbleLayoutProvider {
 
     private let layoutProviders: [MessageManualLayoutProviderProtocol]
-    private let safeAreaInsets: UIEdgeInsets
+    private let tailWidth: CGFloat
+    private let isIncoming: Bool
 
-    public init(layoutProviders: [MessageManualLayoutProviderProtocol], safeAreaInsets: UIEdgeInsets) {
+    public init(layoutProviders: [MessageManualLayoutProviderProtocol],
+                tailWidth: CGFloat,
+                isIncoming: Bool) {
         self.layoutProviders = layoutProviders
-        self.safeAreaInsets = safeAreaInsets
+        self.tailWidth = tailWidth
+        self.isIncoming = isIncoming
     }
 
     public func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
@@ -43,8 +48,9 @@ public struct CompoundBubbleLayoutProvider {
         var resultWidth: CGFloat = 0
         let sizeToFit = CGSize(width: width,
                                height: .greatestFiniteMagnitude)
+        let safeAreaInsets = self.safeAreaInsets()
         for layoutProvider in self.layoutProviders {
-            let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: self.safeAreaInsets)
+            let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, width)
             let frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
@@ -53,7 +59,19 @@ public struct CompoundBubbleLayoutProvider {
         }
         return CompoundBubbleLayout(
             size: CGSize(width: resultWidth, height: maxY),
-            subviewsFrames: subviewsFrames
+            subviewsFrames: subviewsFrames,
+            safeAreaInsets: safeAreaInsets
         )
+    }
+
+    private func safeAreaInsets() -> UIEdgeInsets {
+        var left: CGFloat = 0
+        var right: CGFloat = 0
+        if self.isIncoming {
+            left = self.tailWidth
+        } else {
+            right = self.tailWidth
+        }
+        return UIEdgeInsets(top: 0, left: left, bottom: 0, right: right)
     }
 }

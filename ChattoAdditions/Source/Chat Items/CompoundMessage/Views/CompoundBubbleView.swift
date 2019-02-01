@@ -71,16 +71,8 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     // MARK: - Layout
 
     public override var safeAreaInsets: UIEdgeInsets {
-        guard let viewModel = self.viewModel, let style = self.style else { return .zero }
-        let tailWidth = style.tailWidth(forViewModel: viewModel)
-        var left: CGFloat = 0
-        var right: CGFloat = 0
-        if viewModel.isIncoming {
-            left = tailWidth
-        } else {
-            right = tailWidth
-        }
-        return UIEdgeInsets(top: 0, left: left, bottom: 0, right: right)
+        guard let layoutProvider = self.layoutProvider else { return .zero }
+        return layoutProvider.makeLayout(forMaxWidth: self.preferredMaxLayoutWidth).safeAreaInsets
     }
 
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
