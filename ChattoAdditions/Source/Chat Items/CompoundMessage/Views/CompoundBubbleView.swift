@@ -34,7 +34,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     public override init(frame: CGRect) {
         super.init(frame: .zero)
-        self.setupSubviews()
+        self.addSubview(self.borderImageView)
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -101,9 +101,5 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         let maskImage = style.maskingImage(forViewModel: viewModel)
         self.layer.mask = UIImageView(image: maskImage).layer
         self.backgroundColor = style.backgroundColor(forViewModel: viewModel)
-    }
-
-    private func setupSubviews() {
-        self.addSubview(self.borderImageView)
     }
 }
