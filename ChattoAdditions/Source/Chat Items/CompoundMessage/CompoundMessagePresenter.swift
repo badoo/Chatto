@@ -85,7 +85,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
                                        animated: Bool,
                                        additionalConfiguration: (() -> Void)?) {
         guard let compoundCell = cell as? CompoundMessageCollectionViewCell else {
-            assertionFailure("\(cell) is not PhotoMessageCollectionViewCell")
+            assertionFailure("\(cell) is not CompoundMessageCollectionViewCell")
             return
         }
 
