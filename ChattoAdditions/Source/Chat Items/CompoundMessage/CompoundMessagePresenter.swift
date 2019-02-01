@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Chatto
+
 @available(iOS 11, *)
 public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -33,6 +35,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
 
     public let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
+    private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
 
     public init(
         messageModel: ModelT,
@@ -43,7 +46,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         compoundCellStyle: CompoundBubbleViewStyleProtocol) {
         self.compoundCellStyle = compoundCellStyle
-        self.contentFactories = contentFactories
+        self.contentFactories = contentFactories.filter { $0.canCreateMessage(forModel: messageModel) }
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -51,6 +54,13 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             sizingCell: sizingCell,
             cellStyle: baseCellStyle
         )
+    }
+
+    public override var canCalculateHeightInBackground: Bool {
+        get {
+            return true
+        }
+        set {}
     }
 
     public override class func registerCells(_ collectionView: UICollectionView) {
@@ -63,6 +73,13 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
                                                   for: indexPath)
     }
 
+    public override func heightForCell(maximumWidth width: CGFloat,
+                                       decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
+        let layoutConstants = self.cellStyle.layoutConstants(viewModel: self.messageViewModel)
+        let maxWidth = (width * layoutConstants.maxContainerWidthPercentageForBubbleView)
+        return self.layoutProvider.makeLayout(forMaxWidth: maxWidth).size.height
+    }
+
     public override func configureCell(_ cell: BaseMessageCollectionViewCell<CompoundBubbleView>,
                                        decorationAttributes: ChatItemDecorationAttributes,
                                        animated: Bool,
@@ -73,20 +90,22 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         }
 
         super.configureCell(cell, decorationAttributes: decorationAttributes, animated: animated) {
-            let factories = self.contentFactories.filter { $0.canCreateMessage(forModel: self.messageModel) }
-            let modules = factories.map { $0.createMessageModule(forModel: self.messageModel) }
-            let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: self.messageViewModel)
-            let layoutProvider = CompoundBubbleLayoutProvider(
-                layoutProviders: factories.map { $0.createLayout(forModel: self.messageModel) },
-                tailWidth: tailWidth,
-                isIncoming: self.messageViewModel.isIncoming
-            )
+            let modules = self.contentFactories.map { $0.createMessageModule(forModel: self.messageModel) }
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = self.messageViewModel
             bubbleView.style = self.compoundCellStyle
             bubbleView.contentViews = modules.map { $0.view }
-            bubbleView.layoutProvider = layoutProvider
+            bubbleView.layoutProvider = self.layoutProvider
         }
+    }
+
+    private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
+        let contentLayoutProviders = self.contentFactories.map { $0.createLayout(forModel: self.messageModel) }
+        let viewModel = self.messageViewModel
+        let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
+        return CompoundBubbleLayoutProvider(layoutProviders: contentLayoutProviders,
+                                            tailWidth: tailWidth,
+                                            isIncoming: viewModel.isIncoming)
     }
 }
 
