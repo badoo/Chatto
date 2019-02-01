@@ -33,24 +33,27 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return formatter
     }()
 
+    private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+    private let font = UIFont.systemFont(ofSize: 17)
+
     func canCreateMessage(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
     func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
-        let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
         let label = UILabel()
         label.textAlignment = .right
         label.text = text
-        let infoView = DateInfoView(label: label, insets: textInsets)
-        let layoutProvider = TextMessageLayoutProvider(text: text,
-                                                       font: label.font,
-                                                       textInsets: textInsets)
+        let infoView = DateInfoView(label: label, insets: self.textInsets)
+        return MessageContentModule(view: infoView, presenter: ())
+    }
 
-        return MessageContentModule(view: infoView,
-                                    layoutProvider: layoutProvider,
-                                    presenter: ())
+    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+        let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
+        return TextMessageLayoutProvider(text: text,
+                                         font: self.font,
+                                         textInsets: self.textInsets)
     }
 }
 

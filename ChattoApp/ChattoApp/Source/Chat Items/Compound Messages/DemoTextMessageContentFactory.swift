@@ -25,24 +25,28 @@ import UIKit
 import ChattoAdditions
 
 struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
+
+    private let font = UIFont.systemFont(ofSize: 17)
+    private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+
     func canCreateMessage(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
     func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
-        let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         let label = LabelWithInsets()
         label.numberOfLines = 0
         label.text = model.text
-        label.textInsets = textInsets
+        label.font = self.font
+        label.textInsets = self.textInsets
         label.textColor = model.isIncoming ? .black : .white
-        let layoutProvider = TextMessageLayoutProvider(text: model.text,
-                                                       font: label.font,
-                                                       textInsets: textInsets)
+        return MessageContentModule(view: label, presenter: ())
+    }
 
-        return MessageContentModule(view: label,
-                                    layoutProvider: layoutProvider,
-                                    presenter: ())
+    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+        return TextMessageLayoutProvider(text: model.text,
+                                         font: self.font,
+                                         textInsets: self.textInsets)
     }
 }
 
