@@ -23,13 +23,36 @@
 
 import UIKit
 
-public protocol MessageManualLayoutProviderProtocol {
+public protocol MessageManualLayoutProviderProtocol: Hashable {
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
+}
+
+public struct AnyMessageManualLayoutProvider: MessageManualLayoutProviderProtocol {
+
+    private let _sizeThatFits: (CGSize, UIEdgeInsets) -> CGSize
+    private let hashable: AnyHashable
+
+    public init<T: MessageManualLayoutProviderProtocol>(_ base: T) {
+        self._sizeThatFits = base.sizeThatFits
+        self.hashable = AnyHashable(base)
+    }
+
+    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
+        return self._sizeThatFits(size, safeAreaInsets)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        self.hashable.hash(into: &hasher)
+    }
+
+    public static func == (lhs: AnyMessageManualLayoutProvider, rhs: AnyMessageManualLayoutProvider) -> Bool {
+        return lhs.hashable == rhs.hashable
+    }
 }
 
 // MARK: - Text
 
-public struct TextMessageLayoutProvider: MessageManualLayoutProviderProtocol {
+public struct TextMessageLayoutProvider: Hashable, MessageManualLayoutProviderProtocol {
 
     private let text: String
     private let font: UIFont
@@ -66,7 +89,7 @@ public struct TextMessageLayoutProvider: MessageManualLayoutProviderProtocol {
 
 // MARK: - Image
 
-public struct ImageMessageLayoutProvider: MessageManualLayoutProviderProtocol {
+public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderProtocol {
 
     private let imageSize: CGSize
 

@@ -38,14 +38,14 @@ public protocol MessageContentFactoryProtocol {
     typealias ChildPresenter = Any
     func canCreateMessage(forModel model: Model) -> Bool
     func createMessageModule(forModel model: Model) -> MessageContentModule
-    func createLayout(forModel model: Model) -> MessageManualLayoutProviderProtocol
+    func createLayout(forModel model: Model) -> AnyMessageManualLayoutProvider
 }
 
 public final class AnyMessageContentFactory<T>: MessageContentFactoryProtocol {
 
     private let _canCreateMessage: (T) -> Bool
     private let _createMessageModule: (T) -> MessageContentModule
-    private let _createLayout: (T) -> MessageManualLayoutProviderProtocol
+    private let _createLayout: (T) -> AnyMessageManualLayoutProvider
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == T {
         self._canCreateMessage = base.canCreateMessage
@@ -61,7 +61,7 @@ public final class AnyMessageContentFactory<T>: MessageContentFactoryProtocol {
         return self._createMessageModule(model)
     }
 
-    public func createLayout(forModel model: T) -> MessageManualLayoutProviderProtocol {
+    public func createLayout(forModel model: T) -> AnyMessageManualLayoutProvider {
         return self._createLayout(model)
     }
 }

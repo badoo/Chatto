@@ -29,11 +29,11 @@ public struct CompoundBubbleLayout {
 
 public struct CompoundBubbleLayoutProvider {
 
-    private let layoutProviders: [MessageManualLayoutProviderProtocol]
+    private let layoutProviders: [AnyMessageManualLayoutProvider]
     private let tailWidth: CGFloat
     private let isIncoming: Bool
 
-    public init(layoutProviders: [MessageManualLayoutProviderProtocol],
+    public init(layoutProviders: [AnyMessageManualLayoutProvider],
                 tailWidth: CGFloat,
                 isIncoming: Bool) {
         self.layoutProviders = layoutProviders

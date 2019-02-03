@@ -49,11 +49,12 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return MessageContentModule(view: infoView, presenter: ())
     }
 
-    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+    func createLayout(forModel model: DemoCompoundMessageModel) -> AnyMessageManualLayoutProvider {
         let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
-        return TextMessageLayoutProvider(text: text,
-                                         font: self.font,
-                                         textInsets: self.textInsets)
+        let provider = TextMessageLayoutProvider(text: text,
+                                                 font: self.font,
+                                                 textInsets: self.textInsets)
+        return AnyMessageManualLayoutProvider(provider)
     }
 }
 
