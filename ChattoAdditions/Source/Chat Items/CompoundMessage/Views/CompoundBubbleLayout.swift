@@ -29,27 +29,35 @@ public struct CompoundBubbleLayout {
 
 public struct CompoundBubbleLayoutProvider {
 
-    private let layoutProviders: [AnyMessageManualLayoutProvider]
-    private let tailWidth: CGFloat
-    private let isIncoming: Bool
+    public struct Configuration: Hashable {
+        fileprivate let layoutProviders: [AnyMessageManualLayoutProvider]
+        fileprivate let tailWidth: CGFloat
+        fileprivate let isIncoming: Bool
 
-    public init(layoutProviders: [AnyMessageManualLayoutProvider],
-                tailWidth: CGFloat,
-                isIncoming: Bool) {
-        self.layoutProviders = layoutProviders
-        self.tailWidth = tailWidth
-        self.isIncoming = isIncoming
+        public init(layoutProviders: [AnyMessageManualLayoutProvider],
+                    tailWidth: CGFloat,
+                    isIncoming: Bool) {
+            self.layoutProviders = layoutProviders
+            self.tailWidth = tailWidth
+            self.isIncoming = isIncoming
+        }
+    }
+
+    private let configuration: Configuration
+
+    public init(configuration: Configuration) {
+        self.configuration = configuration
     }
 
     public func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
         var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(self.layoutProviders.count)
+        subviewsFrames.reserveCapacity(self.configuration.layoutProviders.count)
         var maxY: CGFloat = 0
         var resultWidth: CGFloat = 0
         let sizeToFit = CGSize(width: width,
                                height: .greatestFiniteMagnitude)
         let safeAreaInsets = self.safeAreaInsets()
-        for layoutProvider in self.layoutProviders {
+        for layoutProvider in self.configuration.layoutProviders {
             let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, width)
@@ -67,10 +75,10 @@ public struct CompoundBubbleLayoutProvider {
     private func safeAreaInsets() -> UIEdgeInsets {
         var left: CGFloat = 0
         var right: CGFloat = 0
-        if self.isIncoming {
-            left = self.tailWidth
+        if self.configuration.isIncoming {
+            left = self.configuration.tailWidth
         } else {
-            right = self.tailWidth
+            right = self.configuration.tailWidth
         }
         return UIEdgeInsets(top: 0, left: left, bottom: 0, right: right)
     }

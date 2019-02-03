@@ -103,9 +103,12 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         let contentLayoutProviders = self.contentFactories.map { $0.createLayout(forModel: self.messageModel) }
         let viewModel = self.messageViewModel
         let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
-        return CompoundBubbleLayoutProvider(layoutProviders: contentLayoutProviders,
-                                            tailWidth: tailWidth,
-                                            isIncoming: viewModel.isIncoming)
+        let configuration = CompoundBubbleLayoutProvider.Configuration(
+            layoutProviders: contentLayoutProviders,
+            tailWidth: tailWidth,
+            isIncoming: viewModel.isIncoming
+        )
+        return CompoundBubbleLayoutProvider(configuration: configuration)
     }
 }
 
