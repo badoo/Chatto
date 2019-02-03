@@ -67,3 +67,10 @@ public extension CGSize {
         return CGRect(origin: CGPoint(x: originX, y: originY).bma_offsetBy(dx: dx, dy: dy), size: self)
     }
 }
+
+extension CGSize: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.width)
+        hasher.combine(self.height)
+    }
+}
