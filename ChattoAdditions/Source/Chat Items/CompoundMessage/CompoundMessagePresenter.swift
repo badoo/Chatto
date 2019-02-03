@@ -36,6 +36,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     public let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
     private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
+    private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
 
     public init(
         messageModel: ModelT,
@@ -44,9 +45,12 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         contentFactories: [AnyMessageContentFactory<ModelT>],
         sizingCell: CompoundMessageCollectionViewCell,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
-        compoundCellStyle: CompoundBubbleViewStyleProtocol) {
+        compoundCellStyle: CompoundBubbleViewStyleProtocol,
+        cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
+    ) {
         self.compoundCellStyle = compoundCellStyle
         self.contentFactories = contentFactories.filter { $0.canCreateMessage(forModel: messageModel) }
+        self.cache = cache
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -108,7 +112,12 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             tailWidth: tailWidth,
             isIncoming: viewModel.isIncoming
         )
-        return CompoundBubbleLayoutProvider(configuration: configuration)
+        guard let provider = self.cache[configuration] else {
+            let provider = CompoundBubbleLayoutProvider(configuration: configuration)
+            self.cache[configuration] = provider
+            return provider
+        }
+        return provider
     }
 }
 

@@ -46,6 +46,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
     public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
     public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
+    private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()
 
     public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
@@ -60,7 +61,8 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             contentFactories: self.contentFactories,
             sizingCell: self.sizingCell,
             baseCellStyle: self.baseCellStyle,
-            compoundCellStyle: self.compoundCellStyle
+            compoundCellStyle: self.compoundCellStyle,
+            cache: self.cache
         )
     }
 
