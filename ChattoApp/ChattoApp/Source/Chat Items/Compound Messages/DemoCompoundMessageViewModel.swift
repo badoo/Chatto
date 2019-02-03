@@ -43,6 +43,7 @@ struct DemoCompoundMessageViewModelBuilder: ViewModelBuilderProtocol {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(message)
         let compoundViewModel = DemoCompoundMessageViewModel(message: message,
                                                              messageViewModel: messageViewModel)
+        compoundViewModel.avatarImage.value = UIImage(named: "userAvatar")
         return compoundViewModel
     }
 
