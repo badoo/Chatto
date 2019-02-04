@@ -38,7 +38,6 @@ public final class MessageContentModule {
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
-    typealias ChildPresenter = Any
     func canCreateMessage(forModel model: Model) -> Bool
     func createMessageModule(forModel model: Model) -> MessageContentModule
     func createLayout(forModel model: Model) -> AnyMessageManualLayoutProvider
