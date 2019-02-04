@@ -30,16 +30,30 @@ public struct CompoundBubbleLayout {
 public struct CompoundBubbleLayoutProvider {
 
     public struct Configuration: Hashable {
-        fileprivate let layoutProviders: [AnyMessageManualLayoutProvider]
+
+        fileprivate let layoutProviders: [MessageManualLayoutProviderProtocol]
         fileprivate let tailWidth: CGFloat
         fileprivate let isIncoming: Bool
 
-        public init(layoutProviders: [AnyMessageManualLayoutProvider],
+        public init(layoutProviders: [MessageManualLayoutProviderProtocol],
                     tailWidth: CGFloat,
                     isIncoming: Bool) {
             self.layoutProviders = layoutProviders
             self.tailWidth = tailWidth
             self.isIncoming = isIncoming
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.layoutProviders.map { $0.asHashable })
+            hasher.combine(self.tailWidth)
+            hasher.combine(self.isIncoming)
+        }
+
+        public static func == (lhs: CompoundBubbleLayoutProvider.Configuration,
+                               rhs: CompoundBubbleLayoutProvider.Configuration) -> Bool {
+            return lhs.layoutProviders.map { $0.asHashable } == rhs.layoutProviders.map { $0.asHashable }
+                && lhs.tailWidth == rhs.tailWidth
+                && lhs.isIncoming == rhs.isIncoming
         }
     }
 

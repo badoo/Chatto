@@ -23,31 +23,18 @@
 
 import UIKit
 
-public protocol MessageManualLayoutProviderProtocol: Hashable {
-    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
+public protocol HashableRepresentible {
+    var asHashable: AnyHashable { get }
 }
 
-public struct AnyMessageManualLayoutProvider: MessageManualLayoutProviderProtocol {
-
-    private let _sizeThatFits: (CGSize, UIEdgeInsets) -> CGSize
-    private let hashable: AnyHashable
-
-    public init<T: MessageManualLayoutProviderProtocol>(_ base: T) {
-        self._sizeThatFits = base.sizeThatFits
-        self.hashable = AnyHashable(base)
+public extension HashableRepresentible where Self: Hashable {
+    var asHashable: AnyHashable {
+        return AnyHashable(self)
     }
+}
 
-    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
-        return self._sizeThatFits(size, safeAreaInsets)
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        self.hashable.hash(into: &hasher)
-    }
-
-    public static func == (lhs: AnyMessageManualLayoutProvider, rhs: AnyMessageManualLayoutProvider) -> Bool {
-        return lhs.hashable == rhs.hashable
-    }
+public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
+    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
 }
 
 // MARK: - Text

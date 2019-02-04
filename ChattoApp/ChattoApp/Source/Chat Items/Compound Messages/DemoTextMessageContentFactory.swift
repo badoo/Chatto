@@ -43,11 +43,10 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return MessageContentModule(view: label, presenter: ())
     }
 
-    func createLayout(forModel model: DemoCompoundMessageModel) -> AnyMessageManualLayoutProvider {
-        let provider = TextMessageLayoutProvider(text: model.text,
-                                                 font: self.font,
-                                                 textInsets: self.textInsets)
-        return AnyMessageManualLayoutProvider(provider)
+    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+        return TextMessageLayoutProvider(text: model.text,
+                                         font: self.font,
+                                         textInsets: self.textInsets)
     }
 }
 

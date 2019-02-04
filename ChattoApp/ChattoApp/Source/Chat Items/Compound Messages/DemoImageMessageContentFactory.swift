@@ -37,9 +37,8 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         return MessageContentModule(view: imageView, presenter: ())
     }
 
-    func createLayout(forModel model: DemoCompoundMessageModel) -> AnyMessageManualLayoutProvider {
+    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         guard let image = model.image else { preconditionFailure() }
-        let provider = ImageMessageLayoutProvider(imageSize: image.size)
-        return AnyMessageManualLayoutProvider(provider)
+        return ImageMessageLayoutProvider(imageSize: image.size)
     }
 }
