@@ -24,11 +24,14 @@
 public final class MessageContentModule {
     public typealias Presenter = Any
     public let view: UIView
+    public let showBorder: Bool
     public let presenter: Presenter
 
     public init(view: UIView,
-                presenter: Presenter) {
+                presenter: Presenter,
+                showBorder: Bool = false) {
         self.view = view
+        self.showBorder = showBorder
         self.presenter = presenter
     }
 }

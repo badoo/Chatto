@@ -96,10 +96,14 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         super.configureCell(cell, decorationAttributes: decorationAttributes, animated: animated) {
             let modules = self.contentFactories.map { $0.createMessageModule(forModel: self.messageModel) }
             let bubbleView = compoundCell.bubbleView!
+            let borderedViewIndexes = modules.enumerated().compactMap { index, module in
+                module.showBorder ? index : nil
+            }
             bubbleView.viewModel = self.messageViewModel
             bubbleView.style = self.compoundCellStyle
             bubbleView.contentViews = modules.map { $0.view }
             bubbleView.layoutProvider = self.layoutProvider
+            bubbleView.showBordersForViews(at: Set(borderedViewIndexes))
         }
     }
 

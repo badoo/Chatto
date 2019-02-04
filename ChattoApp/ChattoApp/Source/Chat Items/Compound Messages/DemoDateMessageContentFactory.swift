@@ -46,7 +46,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         label.textAlignment = .right
         label.text = text
         let infoView = DateInfoView(label: label, insets: self.textInsets)
-        return MessageContentModule(view: infoView, presenter: ())
+        return MessageContentModule(view: infoView, presenter: (), showBorder: true)
     }
 
     func createLayout(forModel model: DemoCompoundMessageModel) -> AnyMessageManualLayoutProvider {
