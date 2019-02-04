@@ -102,7 +102,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Compound message examples") { [unowned self] in
             let messages = DemoChatMessageFactory.makeCompoundMessages()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = DemoCompoundMessageViewController()
+            let viewController = DemoChatViewController()
             viewController.dataSource = dataSource
             self.navigationController?.pushViewController(viewController, animated: true)
         }
