@@ -23,16 +23,6 @@
 
 import UIKit
 
-public protocol HashableRepresentible {
-    var asHashable: AnyHashable { get }
-}
-
-public extension HashableRepresentible where Self: Hashable {
-    var asHashable: AnyHashable {
-        return AnyHashable(self)
-    }
-}
-
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
 }
