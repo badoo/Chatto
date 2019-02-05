@@ -20,25 +20,35 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
-import Foundation
+open class InputContainerView: UIInputView {
 
-public enum ChatInputItemPresentationMode: UInt {
-    case keyboard
-    case customView
-    case none
-}
+    var contentHeight: CGFloat = 0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
 
-public protocol ChatInputItemProtocol: AnyObject {
-    var tabView: UIView { get }
-    var inputView: UIView? { get }
-    var presentationMode: ChatInputItemPresentationMode { get }
-    var showsSendButton: Bool { get }
-    var selected: Bool { get set }
-    
-    var supportsExpandableState: Bool { get }
-    var expandedStateTopMargin: CGFloat { get }
+    var contentView: UIView? {
+        willSet {
+            self.contentView?.removeFromSuperview()
+        }
+        didSet {
+            if let contentView = self.contentView {
+                contentView.frame = self.bounds
+                self.addSubview(contentView)
+                self.setNeedsLayout()
+            }
+        }
+    }
 
-    func handleInput(_ input: AnyObject)
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView?.frame = self.bounds
+    }
+
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentHeight)
+    }
 }
