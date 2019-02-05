@@ -22,7 +22,8 @@
 // THE SOFTWARE.
 
 @available(iOS 11, *)
-public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
+public final class CompoundMessageCollectionViewCell<Model: Equatable>: BaseMessageCollectionViewCell<CompoundBubbleView> {
+    var lastDisplayedModel: Model?
     public override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()
     }

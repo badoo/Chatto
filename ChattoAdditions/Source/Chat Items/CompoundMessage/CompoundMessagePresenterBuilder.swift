@@ -26,6 +26,7 @@ import Chatto
 @available(iOS 11, *)
 public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
+    ViewModelBuilderT.ModelT: Equatable,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
@@ -43,7 +44,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
+    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell<ModelT>()
     public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
     public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()

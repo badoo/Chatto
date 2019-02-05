@@ -23,7 +23,7 @@
 
 import ChattoAdditions
 
-final class DemoCompoundMessageModel: DecoratedMessageModelProtocol, DemoMessageModelProtocol {
+final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, DemoMessageModelProtocol {
 
     // MARK: - Instantiation
 
@@ -47,4 +47,12 @@ final class DemoCompoundMessageModel: DecoratedMessageModelProtocol, DemoMessage
 
     var status: MessageStatus
 
+    // MARK: - Equatable
+
+    static func == (lhs: DemoCompoundMessageModel, rhs: DemoCompoundMessageModel) -> Bool {
+        return lhs.text == rhs.text
+            && lhs.image == rhs.image
+            && lhs.messageModel.uid == rhs.messageModel.uid
+            && lhs.status == rhs.status
+    }
 }

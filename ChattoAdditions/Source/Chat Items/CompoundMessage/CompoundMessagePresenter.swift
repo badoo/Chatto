@@ -27,6 +27,7 @@ import Chatto
 public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
+    ViewModelBuilderT.ModelT: Equatable,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
 
@@ -43,7 +44,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         contentFactories: [AnyMessageContentFactory<ModelT>],
-        sizingCell: CompoundMessageCollectionViewCell,
+        sizingCell: CompoundMessageCollectionViewCell<ModelT>,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
@@ -65,7 +66,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     }
 
     public override class func registerCells(_ collectionView: UICollectionView) {
-        collectionView.register(CompoundMessageCollectionViewCell.self,
+        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self,
                                 forCellWithReuseIdentifier: .compoundCellReuseId)
     }
 
@@ -85,12 +86,14 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
                                        decorationAttributes: ChatItemDecorationAttributes,
                                        animated: Bool,
                                        additionalConfiguration: (() -> Void)?) {
-        guard let compoundCell = cell as? CompoundMessageCollectionViewCell else {
-            assertionFailure("\(cell) is not CompoundMessageCollectionViewCell")
+        guard let compoundCell = cell as? CompoundMessageCollectionViewCell<ModelT> else {
+            assertionFailure("\(cell) is not CompoundMessageCollectionViewCell<\(ModelT.self)>")
             return
         }
 
-        super.configureCell(cell, decorationAttributes: decorationAttributes, animated: animated) {
+        super.configureCell(compoundCell, decorationAttributes: decorationAttributes, animated: animated) {
+            guard compoundCell.lastDisplayedModel != self.messageModel else { return }
+            compoundCell.lastDisplayedModel = self.messageModel
             let modules = self.contentFactories.map { $0.createMessageModule(forModel: self.messageModel) }
             let bubbleView = compoundCell.bubbleView!
             let borderedViewIndexes = modules.enumerated().compactMap { index, module in
