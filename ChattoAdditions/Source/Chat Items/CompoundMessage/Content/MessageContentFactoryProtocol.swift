@@ -43,27 +43,27 @@ public protocol MessageContentFactoryProtocol {
     func createLayout(forModel model: Model) -> MessageManualLayoutProviderProtocol
 }
 
-public final class AnyMessageContentFactory<T>: MessageContentFactoryProtocol {
+public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
 
-    private let _canCreateMessage: (T) -> Bool
-    private let _createMessageModule: (T) -> MessageContentModule
-    private let _createLayout: (T) -> MessageManualLayoutProviderProtocol
+    private let _canCreateMessage: (Model) -> Bool
+    private let _createMessageModule: (Model) -> MessageContentModule
+    private let _createLayout: (Model) -> MessageManualLayoutProviderProtocol
 
-    public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == T {
+    public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self._canCreateMessage = base.canCreateMessage
         self._createMessageModule = base.createMessageModule
         self._createLayout = base.createLayout
     }
 
-    public func canCreateMessage(forModel model: T) -> Bool {
+    public func canCreateMessage(forModel model: Model) -> Bool {
         return self._canCreateMessage(model)
     }
 
-    public func createMessageModule(forModel model: T) -> MessageContentModule {
+    public func createMessageModule(forModel model: Model) -> MessageContentModule {
         return self._createMessageModule(model)
     }
 
-    public func createLayout(forModel model: T) -> MessageManualLayoutProviderProtocol {
+    public func createLayout(forModel model: Model) -> MessageManualLayoutProviderProtocol {
         return self._createLayout(model)
     }
 }
