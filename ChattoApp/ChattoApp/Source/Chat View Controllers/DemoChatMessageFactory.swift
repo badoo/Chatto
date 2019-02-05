@@ -56,7 +56,7 @@ class DemoChatMessageFactory {
     }
 
     static func makeCompoundMessage(isIncoming: Bool) -> DemoCompoundMessageModel {
-        let messageModel = self.makeMessageModel(isIncoming ? "1" : "2",
+        let messageModel = self.makeMessageModel(UUID().uuidString,
                                                  isIncoming: isIncoming,
                                                  type: .compoundItemType)
         let text = isIncoming ? "Hello, how are you" : "I'm good, thanks, how about yourself?"
