@@ -34,11 +34,13 @@ public struct TextMessageLayoutProvider: Hashable, MessageManualLayoutProviderPr
     private let text: String
     private let font: UIFont
     private let textInsets: UIEdgeInsets
+    private let numberOfLines: Int
 
-    public init(text: String, font: UIFont, textInsets: UIEdgeInsets) {
+    public init(text: String, font: UIFont, textInsets: UIEdgeInsets, numberOfLines: Int = 0) {
         self.text = text
         self.font = font
         self.textInsets = textInsets
+        self.numberOfLines = numberOfLines
     }
 
     public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
@@ -47,6 +49,7 @@ public struct TextMessageLayoutProvider: Hashable, MessageManualLayoutProviderPr
         sizeWithInset.substract(insets: self.textInsets)
         let textContainer = NSTextContainer(size: sizeWithInset)
         textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = self.numberOfLines
 
         // See https://github.com/badoo/Chatto/issues/129
         let textStorage = NSTextStorage(string: self.text, attributes: [
