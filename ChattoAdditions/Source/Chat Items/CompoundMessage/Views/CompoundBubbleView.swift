@@ -61,9 +61,9 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
             self.borderMaskLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
             for decoratedView in self.decoratedContentViews {
                 self.insertSubview(decoratedView.view, belowSubview: self.borderImageView)
+                guard decoratedView.showBorder else { continue }
                 let sublayer = CALayer()
-                let color: UIColor = decoratedView.showBorder ? .black : .clear
-                sublayer.backgroundColor = color.cgColor
+                sublayer.backgroundColor = UIColor.black.cgColor
                 self.borderMaskLayer.addSublayer(sublayer)
             }
         }
@@ -106,13 +106,15 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         super.layoutSubviews()
         guard let layoutProvider = self.layoutProvider else { return }
         let layout = layoutProvider.makeLayout(forMaxWidth: self.preferredMaxLayoutWidth)
-        zip(self.decoratedContentViews, layout.subviewsFrames).forEach { $0.view.frame = $1 }
+        let decoratedViewsWithFrames = zip(self.decoratedContentViews, layout.subviewsFrames)
+        decoratedViewsWithFrames.forEach { $0.view.frame = $1 }
         let frame = CGRect(origin: .zero, size: layout.size)
         self.borderImageView.frame = frame
         self.layer.mask?.frame = frame
 
-        guard let sublayers = self.borderMaskLayer.sublayers else { assertionFailure(); return }
-        for (layer, var frame) in zip(sublayers, layout.subviewsFrames) {
+        guard let sublayers = self.borderMaskLayer.sublayers else { return }
+        let framesOfBorderedViews = decoratedViewsWithFrames.compactMap { $0.showBorder ? $1 : nil }
+        for (layer, var frame) in zip(sublayers, framesOfBorderedViews) {
             frame.size.width = layout.size.width
             layer.frame = frame
         }
