@@ -49,7 +49,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     ) {
         self.compoundCellStyle = compoundCellStyle
-        self.contentFactories = contentFactories.filter { $0.canCreateMessage(forModel: messageModel) }
+        self.contentFactories = contentFactories.filter { $0.canCreateMessageModule(forModel: messageModel) }
         self.cache = cache
         super.init(
             messageModel: messageModel,
@@ -105,7 +105,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     }
 
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
-        let contentLayoutProviders = self.contentFactories.map { $0.createLayout(forModel: self.messageModel) }
+        let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
         let viewModel = self.messageViewModel
         let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
         let configuration = CompoundBubbleLayoutProvider.Configuration(
