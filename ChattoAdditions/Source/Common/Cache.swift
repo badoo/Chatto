@@ -29,7 +29,7 @@ public struct Cache<Key: Hashable, Value> {
 
     public init() {}
 
-    subscript(key: Key) -> Value? {
+    public subscript(key: Key) -> Value? {
         get {
             return self.cache.object(forKey: key as AnyObject) as! Value?
         }
