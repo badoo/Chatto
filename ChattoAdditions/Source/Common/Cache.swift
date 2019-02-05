@@ -23,7 +23,7 @@
 
 import Foundation
 
-public final class Cache<Key: Hashable, Value> {
+public struct Cache<Key: Hashable, Value> {
 
     private let cache = NSCache<AnyObject, AnyObject>()
 
@@ -33,7 +33,7 @@ public final class Cache<Key: Hashable, Value> {
         get {
             return self.cache.object(forKey: key as AnyObject) as! Value?
         }
-        set {
+        nonmutating set {
             if let value = newValue {
                 self.cache.setObject(value as AnyObject, forKey: key as AnyObject)
             } else {
