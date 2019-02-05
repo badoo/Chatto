@@ -26,6 +26,17 @@ import UIKit
 @available(iOS 11, *)
 public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
+    // MARK: - Type declarations
+
+    public struct DecoratedView {
+        let view: UIView
+        let showBorder: Bool
+        public init(view: UIView, showBorder: Bool) {
+            self.view = view
+            self.showBorder = showBorder
+        }
+    }
+
     // MARK: - Private properties
 
     private let borderImageView = UIImageView()
@@ -44,13 +55,16 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Public API
 
-    public var contentViews: [UIView] = [] {
+    public var decoratedContentViews: [DecoratedView] = [] {
         didSet {
-            oldValue.forEach { $0.removeFromSuperview() }
+            oldValue.forEach { $0.view.removeFromSuperview() }
             self.borderMaskLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
-            self.contentViews.forEach {
-                self.insertSubview($0, belowSubview: self.borderImageView)
-                self.borderMaskLayer.addSublayer(CALayer())
+            for decoratedView in self.decoratedContentViews {
+                self.insertSubview(decoratedView.view, belowSubview: self.borderImageView)
+                let sublayer = CALayer()
+                let color: UIColor = decoratedView.showBorder ? .black : .clear
+                sublayer.backgroundColor = color.cgColor
+                self.borderMaskLayer.addSublayer(sublayer)
             }
         }
     }
@@ -64,14 +78,6 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     }
 
     public var layoutProvider: CompoundBubbleLayoutProvider?
-
-    public func showBordersForViews(at indexes: Set<Int>) {
-        guard let sublayers = self.borderMaskLayer.sublayers else { assertionFailure(); return }
-        for (index, layer) in sublayers.enumerated() {
-            let color: UIColor = indexes.contains(index) ? .black : .clear
-            layer.backgroundColor = color.cgColor
-        }
-    }
 
     // MARK: - MaximumLayoutWidthSpecificable
 
@@ -100,7 +106,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         super.layoutSubviews()
         guard let layoutProvider = self.layoutProvider else { return }
         let layout = layoutProvider.makeLayout(forMaxWidth: self.preferredMaxLayoutWidth)
-        zip(self.contentViews, layout.subviewsFrames).forEach { $0.frame = $1 }
+        zip(self.decoratedContentViews, layout.subviewsFrames).forEach { $0.view.frame = $1 }
         let frame = CGRect(origin: .zero, size: layout.size)
         self.borderImageView.frame = frame
         self.layer.mask?.frame = frame

@@ -96,14 +96,10 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             compoundCell.lastDisplayedModel = self.messageModel
             let modules = self.contentFactories.map { $0.createMessageModule(forModel: self.messageModel) }
             let bubbleView = compoundCell.bubbleView!
-            let borderedViewIndexes = modules.enumerated().compactMap { index, module in
-                module.showBorder ? index : nil
-            }
             bubbleView.viewModel = self.messageViewModel
             bubbleView.style = self.compoundCellStyle
-            bubbleView.contentViews = modules.map { $0.view }
+            bubbleView.decoratedContentViews = modules.map { .init(module: $0) }
             bubbleView.layoutProvider = self.layoutProvider
-            bubbleView.showBordersForViews(at: Set(borderedViewIndexes))
         }
     }
 
@@ -122,6 +118,14 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             return provider
         }
         return provider
+    }
+}
+
+@available(iOS 11, *)
+private extension CompoundBubbleView.DecoratedView {
+    init(module: MessageContentModule) {
+        self.init(view: module.view,
+                  showBorder: module.showBorder)
     }
 }
 
