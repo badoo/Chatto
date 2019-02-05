@@ -61,10 +61,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     }
 
     public override var canCalculateHeightInBackground: Bool {
-        get {
-            return true
-        }
-        set {}
+        return true
     }
 
     public override class func registerCells(_ collectionView: UICollectionView) {
