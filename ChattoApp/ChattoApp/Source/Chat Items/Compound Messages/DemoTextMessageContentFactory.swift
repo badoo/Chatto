@@ -29,7 +29,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
     private let font = UIFont.systemFont(ofSize: 17)
     private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
 
-    func canCreateMessage(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
@@ -43,7 +43,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return MessageContentModule(view: label, presenter: ())
     }
 
-    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+    func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         return TextMessageLayoutProvider(text: model.text,
                                          font: self.font,
                                          textInsets: self.textInsets)

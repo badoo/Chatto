@@ -25,7 +25,7 @@ import UIKit
 import ChattoAdditions
 
 struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
-    func canCreateMessage(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
         return model.image != nil
     }
 
@@ -37,7 +37,7 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         return MessageContentModule(view: imageView, presenter: ())
     }
 
-    func createLayout(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
+    func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         guard let image = model.image else { preconditionFailure() }
         return ImageMessageLayoutProvider(imageSize: image.size)
     }
