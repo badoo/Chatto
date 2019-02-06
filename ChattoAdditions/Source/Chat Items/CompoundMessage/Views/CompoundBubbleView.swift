@@ -94,18 +94,18 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     public override var safeAreaInsets: UIEdgeInsets {
         guard let layoutProvider = self.layoutProvider else { return .zero }
-        return layoutProvider.makeLayout(forMaxWidth: self.preferredMaxLayoutWidth).safeAreaInsets
+        return layoutProvider.layout(forMaxWidth: self.preferredMaxLayoutWidth).safeAreaInsets
     }
 
     public override func sizeThatFits(_ size: CGSize) -> CGSize {
         guard let layoutProvider = self.layoutProvider else { return .zero }
-        return layoutProvider.makeLayout(forMaxWidth: size.width).size
+        return layoutProvider.layout(forMaxWidth: size.width).size
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
         guard let layoutProvider = self.layoutProvider else { return }
-        let layout = layoutProvider.makeLayout(forMaxWidth: self.preferredMaxLayoutWidth)
+        let layout = layoutProvider.layout(forMaxWidth: self.preferredMaxLayoutWidth)
         let decoratedViewsWithFrames = zip(self.decoratedContentViews, layout.subviewsFrames)
         decoratedViewsWithFrames.forEach { $0.view.frame = $1 }
         let frame = CGRect(origin: .zero, size: layout.size)

@@ -79,7 +79,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
                                        decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         let layoutConstants = self.cellStyle.layoutConstants(viewModel: self.messageViewModel)
         let maxWidth = (width * layoutConstants.maxContainerWidthPercentageForBubbleView)
-        return self.layoutProvider.makeLayout(forMaxWidth: maxWidth).size.height
+        return self.layoutProvider.layout(forMaxWidth: maxWidth).size.height
     }
 
     public override func configureCell(_ cell: BaseMessageCollectionViewCell<CompoundBubbleView>,

@@ -64,10 +64,16 @@ public struct CompoundBubbleLayoutProvider {
         self.configuration = configuration
     }
 
-    public func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
+    public func layout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
         if let layout = self.cache[width] {
             return layout
         }
+        let layout = self.makeLayout(forMaxWidth: width)
+        self.cache[width] = layout
+        return layout
+    }
+
+    private func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
         var subviewsFrames: [CGRect] = []
         subviewsFrames.reserveCapacity(self.configuration.layoutProviders.count)
         var maxY: CGFloat = 0
@@ -83,13 +89,11 @@ public struct CompoundBubbleLayoutProvider {
             subviewsFrames.append(frame)
             maxY = frame.maxY
         }
-        let layout = CompoundBubbleLayout(
+        return CompoundBubbleLayout(
             size: CGSize(width: resultWidth, height: maxY),
             subviewsFrames: subviewsFrames,
             safeAreaInsets: safeAreaInsets
         )
-        self.cache[width] = layout
-        return layout
     }
 
     private func safeAreaInsets() -> UIEdgeInsets {
