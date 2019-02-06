@@ -92,6 +92,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         }
 
         super.configureCell(compoundCell, decorationAttributes: decorationAttributes, animated: animated) { [weak self] in
+            defer { additionalConfiguration?() }
             guard let self = self else { return }
             guard compoundCell.lastDisplayedModel != self.messageModel else { return }
             compoundCell.lastDisplayedModel = self.messageModel
@@ -101,7 +102,6 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
             bubbleView.style = self.compoundCellStyle
             bubbleView.decoratedContentViews = modules.map { .init(module: $0) }
             bubbleView.layoutProvider = self.layoutProvider
-            additionalConfiguration?()
         }
     }
 
