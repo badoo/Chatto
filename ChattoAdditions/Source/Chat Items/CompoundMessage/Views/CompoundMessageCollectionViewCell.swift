@@ -22,8 +22,10 @@
 // THE SOFTWARE.
 
 @available(iOS 11, *)
-public final class CompoundMessageCollectionViewCell<Model: Equatable>: BaseMessageCollectionViewCell<CompoundBubbleView> {
-    var lastDisplayedModel: Model?
+public final class CompoundMessageCollectionViewCell<Configuration: Equatable>: BaseMessageCollectionViewCell<CompoundBubbleView> {
+    // This is required to check in presenter wether we need to update content views.
+    // If configuration didn't change, content views will be the same
+    var lastAppliedConfiguration: Configuration?
     public override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()
     }

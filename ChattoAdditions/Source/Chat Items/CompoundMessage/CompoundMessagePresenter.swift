@@ -94,8 +94,8 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         super.configureCell(compoundCell, decorationAttributes: decorationAttributes, animated: animated) { [weak self] in
             defer { additionalConfiguration?() }
             guard let self = self else { return }
-            guard compoundCell.lastDisplayedModel != self.messageModel else { return }
-            compoundCell.lastDisplayedModel = self.messageModel
+            guard compoundCell.lastAppliedConfiguration != self.messageModel else { return }
+            compoundCell.lastAppliedConfiguration = self.messageModel
             let modules = self.contentFactories.map { $0.createMessageModule(forModel: self.messageModel) }
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = self.messageViewModel
