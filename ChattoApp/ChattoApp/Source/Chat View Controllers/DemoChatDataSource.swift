@@ -106,4 +106,10 @@ class DemoChatDataSource: ChatDataSourceProtocol {
         let didAdjust = self.slidingWindow.adjustWindow(focusPosition: focusPosition, maxWindowSize: preferredMaxCount ?? self.preferredMaxWindowSize)
         completion(didAdjust)
     }
+
+    func replaceMessage(withUID uid: String, withNewMessage newMessage: ChatItemProtocol) {
+        let didUpdate = self.slidingWindow.replaceItem(withNewItem: newMessage) { $0.uid == uid }
+        guard didUpdate else { return }
+        self.delegate?.chatDataSourceDidUpdate(self)
+    }
 }
