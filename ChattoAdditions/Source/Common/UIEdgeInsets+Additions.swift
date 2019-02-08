@@ -37,3 +37,12 @@ public extension UIEdgeInsets {
         return self.top.hashValue ^ self.left.hashValue ^ self.bottom.hashValue ^ self.right.hashValue
     }
 }
+
+extension UIEdgeInsets: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.top)
+        hasher.combine(self.left)
+        hasher.combine(self.bottom)
+        hasher.combine(self.right)
+    }
+}

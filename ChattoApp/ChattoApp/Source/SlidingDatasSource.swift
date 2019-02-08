@@ -52,10 +52,8 @@ public class SlidingDataSource<Element> {
     }
 
     public convenience init(items: [Element], pageSize: Int) {
-        self.init(count: 0, pageSize: pageSize, itemGenerator: nil)
-        for item in items {
-            self.insertItem(item, position: .bottom)
-        }
+        var iterator = items.makeIterator()
+        self.init(count: items.count, pageSize: pageSize) { iterator.next()! }
     }
 
     private func generateItems(_ count: Int, position: InsertPosition) {

@@ -270,7 +270,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     private func calculateLayout(availableWidth: CGFloat) -> Layout {
-        let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
+        let layoutConstants = self.baseStyle.layoutConstants(viewModel: self.messageViewModel)
         let parameters = LayoutParameters(
             containerWidth: availableWidth,
             horizontalMargin: layoutConstants.horizontalMargin,

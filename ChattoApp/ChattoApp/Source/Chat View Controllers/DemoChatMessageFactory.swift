@@ -55,6 +55,18 @@ class DemoChatMessageFactory {
         return photoMessageModel
     }
 
+    static func makeCompoundMessage(isIncoming: Bool) -> DemoCompoundMessageModel {
+        let messageModel = self.makeMessageModel(UUID().uuidString,
+                                                 isIncoming: isIncoming,
+                                                 type: .compoundItemType)
+        let text = isIncoming ? "Hello, how are you" : "I'm good, thanks, how about yourself?"
+        let imageName = isIncoming ? "pic-test-1" : "pic-test-2"
+        let image = UIImage(named: imageName)!
+        return DemoCompoundMessageModel(text: text,
+                                        image: image,
+                                        messageModel: messageModel)
+    }
+
     private class func makeRandomTextMessage(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoText
@@ -105,6 +117,10 @@ extension PhotoMessageModel {
     }
 }
 
+extension ChatItemType {
+    static var compoundItemType = "compound"
+}
+
 extension DemoChatMessageFactory {
 
     private enum DemoMessage {
@@ -143,6 +159,13 @@ extension DemoChatMessageFactory {
 
     static func makeOverviewMessages() -> [MessageModelProtocol] {
         return self.messages(fromDemoMessages: self.overviewMessages)
+    }
+
+    static func makeCompoundMessages() -> [MessageModelProtocol] {
+        return [
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false)
+        ]
     }
 
     private static let messagesSelectionMessages: [DemoMessage] = [

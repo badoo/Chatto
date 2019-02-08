@@ -46,11 +46,11 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }
 
     public struct TextStyle {
-        let font: () -> UIFont
-        let incomingColor: () -> UIColor
-        let outgoingColor: () -> UIColor
-        let incomingInsets: UIEdgeInsets
-        let outgoingInsets: UIEdgeInsets
+        public let font: () -> UIFont
+        public let incomingColor: () -> UIColor
+        public let outgoingColor: () -> UIColor
+        public let incomingInsets: UIEdgeInsets
+        public let outgoingInsets: UIEdgeInsets
         public init(
             font: @autoclosure @escaping () -> UIFont,
             incomingColor: @autoclosure @escaping () -> UIColor,
