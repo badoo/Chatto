@@ -30,6 +30,8 @@ class ChatInputItemTests: XCTestCase {
 
 @objc
 class MockInputItem: NSObject, ChatInputItemProtocol {
+    var supportsExpandableState: Bool = false
+    var expandedStateTopMargin: CGFloat = 0.0
     var selected = false
     var presentationMode: ChatInputItemPresentationMode = .keyboard
     var showsSendButton = false

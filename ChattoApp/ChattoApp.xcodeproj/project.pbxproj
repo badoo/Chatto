@@ -39,6 +39,8 @@
 		C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */; };
 		C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */; };
 		DD49AA1095C478DD42524839 /* Pods_ChattoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */; };
+		DECD501A21AEEAF100988729 /* ContentAwareInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD501921AEEAF100988729 /* ContentAwareInputItem.swift */; };
+		DECD501C21AEEC5A00988729 /* CustomInput.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECD501B21AEEC5A00988729 /* CustomInput.xcassets */; };
 		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
 /* End PBXBuildFile section */
 
@@ -105,6 +107,8 @@
 		C3F91DC91C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F91DCA1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendingStatusCollectionViewCell.xib; sourceTree = "<group>"; };
 		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
+		DECD501921AEEAF100988729 /* ContentAwareInputItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentAwareInputItem.swift; sourceTree = "<group>"; };
+		DECD501B21AEEC5A00988729 /* CustomInput.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CustomInput.xcassets; sourceTree = "<group>"; };
 		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellAvatarStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,6 +143,7 @@
 		55A77B471FCC41CC0040C77E /* Chat Items */ = {
 			isa = PBXGroup;
 			children = (
+				DECD501821AEEABF00988729 /* Content Aware Input  */,
 				55A77B481FCC42250040C77E /* Base Message */,
 				C3F91DAC1C75EF9E00D461D2 /* Photo Messages */,
 				C3F91DC81C75EFE300D461D2 /* Sending status */,
@@ -278,6 +283,15 @@
 			path = "Sending status";
 			sourceTree = "<group>";
 		};
+		DECD501821AEEABF00988729 /* Content Aware Input  */ = {
+			isa = PBXGroup;
+			children = (
+				DECD501921AEEAF100988729 /* ContentAwareInputItem.swift */,
+				DECD501B21AEEC5A00988729 /* CustomInput.xcassets */,
+			);
+			path = "Content Aware Input ";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -369,6 +383,7 @@
 				C33FBFB31BDE441C008E3545 /* LaunchScreen.storyboard in Resources */,
 				C3F91DCD1C75EFE300D461D2 /* SendingStatusCollectionViewCell.xib in Resources */,
 				C33FBFB01BDE441C008E3545 /* Assets.xcassets in Resources */,
+				DECD501C21AEEC5A00988729 /* CustomInput.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +479,7 @@
 				0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */,
 				0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */,
 				558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */,
+				DECD501A21AEEAF100988729 /* ContentAwareInputItem.swift in Sources */,
 				C3F91DC11C75EF9E00D461D2 /* DemoPhotoMessageModel.swift in Sources */,
 				C3F91DC21C75EF9E00D461D2 /* DemoPhotoMessageViewModel.swift in Sources */,
 				C3F91DBE1C75EF9E00D461D2 /* DemoChatMessageFactory.swift in Sources */,
