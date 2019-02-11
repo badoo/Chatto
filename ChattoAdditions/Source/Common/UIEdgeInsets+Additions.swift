@@ -32,10 +32,6 @@ public extension UIEdgeInsets {
     public var bma_verticalInset: CGFloat {
         return self.top + self.bottom
     }
-
-    public var bma_hashValue: Int {
-        return self.top.hashValue ^ self.left.hashValue ^ self.bottom.hashValue ^ self.right.hashValue
-    }
 }
 
 extension UIEdgeInsets: Hashable {

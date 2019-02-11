@@ -39,7 +39,8 @@ class ChatExamplesViewController: CellsViewController {
             self.makeMessageSelectionCellItem(),
             self.makeOpenWithTabBarCellItem(),
             self.makeScrollToBottomCellItem(),
-            self.makeCompoundDemoViewController()
+            self.makeCompoundDemoViewController(),
+            self.makeUpdateItemTypeViewController()
         ]
     }
 
@@ -98,6 +99,12 @@ class ChatExamplesViewController: CellsViewController {
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
+    }
+
+    private func makeUpdateItemTypeViewController() -> CellItem {
+        return CellItem(title: "Dynamically change item type") { [unowned self] in
+            self.navigationController?.pushViewController(UpdateItemTypeViewController(), animated: true)
+        }
     }
 
     private func makeCompoundDemoViewController() -> CellItem {

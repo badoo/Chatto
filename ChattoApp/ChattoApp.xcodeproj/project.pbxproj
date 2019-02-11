@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */; };
 		0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */; };
+		26D6D524220CAAE2006232B4 /* UpdateItemTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */; };
 		268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */; };
 		268CD56F21FA485500DEE2C2 /* GenericMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */; };
 		268CD57121FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */; };
@@ -75,6 +76,7 @@
 		0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellsViewController.swift; sourceTree = "<group>"; };
 		0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWithTabBarExamplesViewController.swift; sourceTree = "<group>"; };
 		13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChattoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateItemTypeViewController.swift; sourceTree = "<group>"; };
 		268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageModel.swift; sourceTree = "<group>"; };
 		268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericMessageHandler.swift; sourceTree = "<group>"; };
 		268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageViewModel.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				C3F91DAA1C75EF9E00D461D2 /* DemoChatMessageFactory.swift */,
 				C3F91DAB1C75EF9E00D461D2 /* DemoChatMessageSender.swift */,
 				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
+				26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */,
 			);
 			path = "Chat View Controllers";
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				268CD56F21FA485500DEE2C2 /* GenericMessageHandler.swift in Sources */,
 				55A77B4A1FCC5EE70040C77E /* MessagesSelectorProtocol.swift in Sources */,
 				FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */,
+				26D6D524220CAAE2006232B4 /* UpdateItemTypeViewController.swift in Sources */,
 				C3F91DBF1C75EF9E00D461D2 /* DemoChatMessageSender.swift in Sources */,
 				268CD57121FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift in Sources */,
 				C3F91DB81C75EF9E00D461D2 /* ChatExamplesViewController.swift in Sources */,
