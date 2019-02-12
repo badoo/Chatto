@@ -38,7 +38,9 @@ class ChatExamplesViewController: CellsViewController {
             self.makeChatCellItem(title: "Chat with expandable input", messagesCount: 10_000, shouldUseAlternativePresenter: true),
             self.makeMessageSelectionCellItem(),
             self.makeOpenWithTabBarCellItem(),
-            self.makeScrollToBottomCellItem()
+            self.makeScrollToBottomCellItem(),
+            self.makeCompoundDemoViewController(),
+            self.makeUpdateItemTypeViewController()
         ]
     }
 
@@ -97,6 +99,22 @@ class ChatExamplesViewController: CellsViewController {
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
+    }
+
+    private func makeUpdateItemTypeViewController() -> CellItem {
+        return CellItem(title: "Dynamically change item type") { [unowned self] in
+            self.navigationController?.pushViewController(UpdateItemTypeViewController(), animated: true)
+        }
+    }
+
+    private func makeCompoundDemoViewController() -> CellItem {
+        return CellItem(title: "Compound message examples") { [unowned self] in
+            let messages = DemoChatMessageFactory.makeCompoundMessages()
+            let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
+            let viewController = DemoChatViewController()
+            viewController.dataSource = dataSource
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
     }
 
     @objc

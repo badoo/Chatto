@@ -28,7 +28,9 @@ import XCTest
 class CollectionChangesTests: XCTestCase {
 
     func testThatDoesNotGenerateChangesForEmptyCollections() {
-        let changes = generateChanges(oldCollection: [], newCollection: [])
+        let oldCollection: [Item] = []
+        let newCollection: [Item] = []
+        let changes = generateChanges(oldCollection: oldCollection, newCollection: newCollection)
         XCTAssertEqual(changes.insertedIndexPaths, [])
         XCTAssertEqual(changes.deletedIndexPaths, [])
         XCTAssertEqual(changes.movedIndexPaths, [])
@@ -125,17 +127,10 @@ class CollectionChangesTests: XCTestCase {
     }
 }
 
-func Item(uid: String) -> UniqueIdentificable {
-    return UniqueIdentificableItem(uid: uid)
-}
-
 func Move(_ from: Int, to: Int) -> CollectionChangeMove {
     return CollectionChangeMove(indexPathOld: IndexPath(item: from, section: 0), indexPathNew: IndexPath(item: to, section: 0))
 }
 
-struct UniqueIdentificableItem: UniqueIdentificable {
+struct Item: Hashable {
     let uid: String
-    init(uid: String) {
-        self.uid = uid
-    }
 }

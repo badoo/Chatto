@@ -35,8 +35,6 @@ public struct CollectionChangeMove: Equatable, Hashable {
         self.indexPathOld = indexPathOld
         self.indexPathNew = indexPathNew
     }
-
-    public var hashValue: Int { return Chatto.bma_combine(hashes: [indexPathOld.hashValue, indexPathNew.hashValue]) }
 }
 
 public func == (lhs: CollectionChangeMove, rhs: CollectionChangeMove) -> Bool {
@@ -55,38 +53,40 @@ public struct CollectionChanges {
     }
 }
 
-func generateChanges(oldCollection: [UniqueIdentificable], newCollection: [UniqueIdentificable]) -> CollectionChanges {
-    func generateIndexesById(_ uids: [String]) -> [String: Int] {
-        var map = [String: Int](minimumCapacity: uids.count)
-        for (index, uid) in uids.enumerated() {
-            map[uid] = index
+func generateChanges<T: Hashable>(oldCollection: [T], newCollection: [T]) -> CollectionChanges {
+    func indexed(_ values: [T]) -> [T: Int] {
+        var map: [T: Int] = .init(minimumCapacity: values.count)
+        for (index, value) in values.enumerated() {
+            map[value] = index
         }
         return map
     }
 
-    let oldIds = oldCollection.map { $0.uid }
-    let newIds = newCollection.map { $0.uid }
-    let oldIndexsById = generateIndexesById(oldIds)
-    let newIndexsById = generateIndexesById(newIds)
+    let oldIndexedCollection = indexed(oldCollection)
+    let newIndexedCollection = indexed(newCollection)
     var deletedIndexPaths = Set<IndexPath>()
     var insertedIndexPaths = Set<IndexPath>()
     var movedIndexPaths = [CollectionChangeMove]()
 
     // Deletetions
-    for oldId in oldIds {
-        let isDeleted = newIndexsById[oldId] == nil
+    for element in oldCollection {
+        let isDeleted = newIndexedCollection[element] == nil
         if isDeleted {
-            deletedIndexPaths.insert(IndexPath(item: oldIndexsById[oldId]!, section: 0))
+            deletedIndexPaths.insert(IndexPath(item: oldIndexedCollection[element]!, section: 0))
         }
     }
 
     // Insertions and movements
-    for newId in newIds {
-        let newIndex = newIndexsById[newId]!
+    for element in newCollection {
+        let newIndex = newIndexedCollection[element]!
         let newIndexPath = IndexPath(item: newIndex, section: 0)
-        if let oldIndex = oldIndexsById[newId] {
+        if let oldIndex = oldIndexedCollection[element] {
             if oldIndex != newIndex {
-                movedIndexPaths.append(CollectionChangeMove(indexPathOld: IndexPath(item: oldIndex, section: 0), indexPathNew: newIndexPath))
+                let move = CollectionChangeMove(
+                    indexPathOld: IndexPath(item: oldIndex, section: 0),
+                    indexPathNew: newIndexPath
+                )
+                movedIndexPaths.append(move)
             }
         } else {
             // It's new
@@ -94,7 +94,9 @@ func generateChanges(oldCollection: [UniqueIdentificable], newCollection: [Uniqu
         }
     }
 
-    return CollectionChanges(insertedIndexPaths: insertedIndexPaths, deletedIndexPaths: deletedIndexPaths, movedIndexPaths: movedIndexPaths)
+    return CollectionChanges(insertedIndexPaths: insertedIndexPaths,
+                             deletedIndexPaths: deletedIndexPaths,
+                             movedIndexPaths: movedIndexPaths)
 }
 
 func updated<T: Any>(collection: [IndexPath: T], withChanges changes: CollectionChanges) -> [IndexPath: T] {

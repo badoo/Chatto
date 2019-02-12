@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import Chatto
 
 public enum InsertPosition {
     case top
@@ -52,10 +53,8 @@ public class SlidingDataSource<Element> {
     }
 
     public convenience init(items: [Element], pageSize: Int) {
-        self.init(count: 0, pageSize: pageSize, itemGenerator: nil)
-        for item in items {
-            self.insertItem(item, position: .bottom)
-        }
+        var iterator = items.makeIterator()
+        self.init(count: items.count, pageSize: pageSize) { iterator.next()! }
     }
 
     private func generateItems(_ count: Int, position: InsertPosition) {
@@ -124,6 +123,13 @@ public class SlidingDataSource<Element> {
         guard sizeDiff > 0 else { return false }
         self.windowOffset +=  Int(focusPosition * Double(sizeDiff))
         self.windowCount = maxWindowSize
+        return true
+    }
+
+    @discardableResult
+    func replaceItem(withNewItem item: Element, where predicate: (Element) -> Bool) -> Bool {
+        guard let index = self.items.firstIndex(where: predicate) else { return false }
+        self.items[index] = item
         return true
     }
 }
