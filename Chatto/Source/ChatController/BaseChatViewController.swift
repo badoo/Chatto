@@ -425,26 +425,47 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
-        self.isAdjustingInputContainer = true
-        let layoutBlock = {
-            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
-            self.view.layoutIfNeeded()
-        }
-
         if animated {
-            UIView.animate(withDuration: duration,
-                           delay: 0.0,
-                           usingSpringWithDamping: 1.0,
-                           initialSpringVelocity: initialSpringVelocity,
-                           options: .curveLinear,
-                           animations: layoutBlock,
-                           completion: { (_) in
-                            callback?()
-            })
+            self.isAdjustingInputContainer = true
+            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            UIView.animate(
+                withDuration: duration,
+                delay: 0.0,
+                usingSpringWithDamping: 1.0,
+                initialSpringVelocity: initialSpringVelocity,
+                options: .curveLinear,
+                animations: { self.view.layoutIfNeeded() },
+                completion: { (_) in callback?() })
+            self.isAdjustingInputContainer = false
         } else {
-            layoutBlock()
-            callback?()
+            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
         }
+    }
+
+    open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
+        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
+        if animated {
+            self.isAdjustingInputContainer = true
+            CATransaction.begin()
+            CATransaction.setAnimationTimingFunction(timingFunction)
+            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            UIView.animate(
+                withDuration: duration,
+                animations: { self.view.layoutIfNeeded() },
+                completion: { (_) in callback?() }
+            )
+            CATransaction.commit()
+            self.isAdjustingInputContainer = false
+        } else {
+            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
+        }
+    }
+
+    private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
+        self.isAdjustingInputContainer = true
+        self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+        self.view.layoutIfNeeded()
+        callback?()
         self.isAdjustingInputContainer = false
     }
 }
