@@ -65,7 +65,7 @@ public class PhotosInputView: UIView, PhotosInputViewProtocol {
         return PHPhotoLibrary.authorizationStatus()
     }
 
-    weak var delegate: PhotosInputViewDelegate?
+    public weak var delegate: PhotosInputViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
@@ -76,7 +76,7 @@ public class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.commonInit()
     }
 
-    weak var presentingController: UIViewController?
+    public weak var presentingController: UIViewController?
     var appearance: PhotosInputViewAppearance?
     public init(presentingController: UIViewController?, appearance: PhotosInputViewAppearance) {
         super.init(frame: CGRect.zero)
@@ -192,11 +192,11 @@ extension PhotosInputView: UICollectionViewDataSource {
         self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.dataProvider.count + 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var cell: UICollectionViewCell
         if indexPath.item == Constants.liveCameraItemIndex {
             cell = self.liveCameraPresenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
