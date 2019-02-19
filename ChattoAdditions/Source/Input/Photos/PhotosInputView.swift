@@ -33,18 +33,18 @@ public struct PhotosInputViewAppearance {
     }
 }
 
-protocol PhotosInputViewProtocol {
+public protocol PhotosInputViewProtocol {
     var delegate: PhotosInputViewDelegate? { get set }
     var presentingController: UIViewController? { get }
 }
 
-protocol PhotosInputViewDelegate: class {
+public protocol PhotosInputViewDelegate: class {
     func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
 }
 
-class PhotosInputView: UIView, PhotosInputViewProtocol {
+public class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     fileprivate struct Constants {
         static let liveCameraItemIndex = 0
@@ -78,7 +78,7 @@ class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     weak var presentingController: UIViewController?
     var appearance: PhotosInputViewAppearance?
-    init(presentingController: UIViewController?, appearance: PhotosInputViewAppearance) {
+    public init(presentingController: UIViewController?, appearance: PhotosInputViewAppearance) {
         super.init(frame: CGRect.zero)
         self.presentingController = presentingController
         self.appearance = appearance
