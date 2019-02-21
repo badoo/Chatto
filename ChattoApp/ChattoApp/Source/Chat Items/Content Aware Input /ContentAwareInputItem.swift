@@ -25,11 +25,10 @@
 import ChattoAdditions
 
 open class ContentAwareInputItem {
-    typealias Class = ContentAwareInputItem
     public var textInputHandler: ((String) -> Void)?
 
     let buttonAppearance: TabInputButtonAppearance
-    public init(tabInputButtonAppearance: TabInputButtonAppearance = Class.createDefaultButtonAppearance()) {
+    public init(tabInputButtonAppearance: TabInputButtonAppearance = ContentAwareInputItem.createDefaultButtonAppearance()) {
         self.buttonAppearance = tabInputButtonAppearance
         self.customInputView.onAction = { [weak self] (text) in
             self?.textInputHandler?(text)

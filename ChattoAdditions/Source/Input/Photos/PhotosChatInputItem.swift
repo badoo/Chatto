@@ -101,15 +101,15 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
 
 // MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
+    public func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
         self.photoInputHandler?(image)
     }
 
-    func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
         self.cameraPermissionHandler?()
     }
 
-    func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
         self.photosPermissionHandler?()
     }
 }
