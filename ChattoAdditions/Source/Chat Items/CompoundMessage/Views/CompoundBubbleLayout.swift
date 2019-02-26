@@ -90,7 +90,7 @@ public struct CompoundBubbleLayoutProvider {
             maxY = frame.maxY
         }
         return CompoundBubbleLayout(
-            size: CGSize(width: resultWidth, height: maxY),
+            size: CGSize(width: resultWidth, height: maxY).bma_round(),
             subviewsFrames: subviewsFrames,
             safeAreaInsets: safeAreaInsets
         )
