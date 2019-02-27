@@ -33,7 +33,7 @@ protocol ChatInputBarPresenter: class {
 }
 
 @objc
-public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+open class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
@@ -154,10 +154,8 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
             self.updateHeight(for: currentInputView)
         }
     }
-}
 
-// MARK: ChatInputBarPresenter
-extension BasicChatInputBarPresenter {
+    // MARK: ChatInputBarPresenter
     public func onDidEndEditing() {
         self.focusedItem = nil
         self.chatInputBar.textView.inputView = nil
@@ -180,7 +178,7 @@ extension BasicChatInputBarPresenter {
         self.chatInputBar.inputText = ""
     }
 
-    func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
+    open func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
         guard item.presentationMode != .none else { return }
         guard item !== self.focusedItem else { return }
 
