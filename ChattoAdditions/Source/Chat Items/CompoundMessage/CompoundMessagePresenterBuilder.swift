@@ -35,10 +35,12 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public init(
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
+        accessibilityIdentifier: String?,
         contentFactories: [AnyMessageContentFactory<ModelT>]) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
         self.contentFactories = contentFactories
+        self.accessibilityIdentifier = accessibilityIdentifier
     }
 
     public let viewModelBuilder: ViewModelBuilderT
@@ -48,6 +50,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
     public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()
+    private let accessibilityIdentifier: String?
 
     public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
@@ -63,7 +66,8 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             sizingCell: self.sizingCell,
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
-            cache: self.cache
+            cache: self.cache,
+            accessibilityIdentifier: self.accessibilityIdentifier
         )
     }
 
