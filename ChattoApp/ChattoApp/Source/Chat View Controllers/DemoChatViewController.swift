@@ -90,6 +90,7 @@ class DemoChatViewController: BaseChatViewController {
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
                 .init(DemoImageMessageContentFactory()),
