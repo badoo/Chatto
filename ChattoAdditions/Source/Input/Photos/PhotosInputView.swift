@@ -44,7 +44,7 @@ public protocol PhotosInputViewDelegate: class {
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
 }
 
-public class PhotosInputView: UIView, PhotosInputViewProtocol {
+public final class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     fileprivate struct Constants {
         static let liveCameraItemIndex = 0
@@ -76,13 +76,26 @@ public class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.commonInit()
     }
 
-    public weak var presentingController: UIViewController?
+    public var presentingControllerProvider: () -> UIViewController? = { nil }
+
+    public var presentingController: UIViewController? {
+        return self.presentingControllerProvider()
+    }
+
     var appearance: PhotosInputViewAppearance?
-    public init(presentingController: UIViewController?, appearance: PhotosInputViewAppearance) {
+
+    public init(presentingControllerProvider: @escaping () -> UIViewController?,
+                appearance: PhotosInputViewAppearance) {
+        self.presentingControllerProvider = presentingControllerProvider
         super.init(frame: CGRect.zero)
-        self.presentingController = presentingController
         self.appearance = appearance
         self.commonInit()
+    }
+
+    public convenience init(presentingController: UIViewController?,
+                            appearance: PhotosInputViewAppearance) {
+        self.init(presentingControllerProvider: { [weak presentingController] in presentingController },
+                  appearance: appearance)
     }
 
     deinit {
