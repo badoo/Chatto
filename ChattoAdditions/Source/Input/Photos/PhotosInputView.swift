@@ -178,7 +178,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     fileprivate lazy var cameraPicker: PhotosInputCameraPicker = {
-        return PhotosInputCameraPicker(presentingController: self.presentingController)
+        return PhotosInputCameraPicker(presentingControllerProvider: self.presentingControllerProvider)
     }()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenter = {
