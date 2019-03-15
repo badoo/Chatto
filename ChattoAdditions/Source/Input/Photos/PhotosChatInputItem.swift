@@ -26,7 +26,7 @@ import UIKit
 
 open class PhotosChatInputItem: ChatInputItemProtocol {
 
-    private let presentingControllerProvider: () -> UIViewController?
+    public let presentingControllerProvider: () -> UIViewController?
 
     public private(set) var supportsExpandableState: Bool = false
     public private(set) var expandedStateTopMargin: CGFloat = 0.0
