@@ -22,9 +22,12 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 open class PhotosChatInputItem: ChatInputItemProtocol {
+
+    private let presentingControllerProvider: () -> UIViewController?
+
     public private(set) var supportsExpandableState: Bool = false
     public private(set) var expandedStateTopMargin: CGFloat = 0.0
     
@@ -33,16 +36,24 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     public var photoInputHandler: ((UIImage) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
-    public weak var presentingController: UIViewController?
 
     let buttonAppearance: TabInputButtonAppearance
     let inputViewAppearance: PhotosInputViewAppearance
-    public init(presentingController: UIViewController?,
+
+    public init(presentingControllerProvider: @escaping () -> UIViewController?,
                 tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance(),
                 inputViewAppearance: PhotosInputViewAppearance = PhotosChatInputItem.createDefaultInputViewAppearance()) {
-        self.presentingController = presentingController
+        self.presentingControllerProvider = presentingControllerProvider
         self.buttonAppearance = tabInputButtonAppearance
         self.inputViewAppearance = inputViewAppearance
+    }
+
+    public convenience init(presentingController: UIViewController?,
+                            tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance(),
+                            inputViewAppearance: PhotosInputViewAppearance = PhotosChatInputItem.createDefaultInputViewAppearance()) {
+        self.init(presentingControllerProvider: { [weak presentingController] in presentingController },
+                  tabInputButtonAppearance: tabInputButtonAppearance,
+                  inputViewAppearance: inputViewAppearance)
     }
 
     public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
@@ -63,7 +74,8 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
-        let photosInputView = PhotosInputView(presentingController: self.presentingController, appearance: self.inputViewAppearance)
+        let photosInputView = PhotosInputView(presentingControllerProvider: self.presentingControllerProvider,
+                                              appearance: self.inputViewAppearance)
         photosInputView.delegate = self
         return photosInputView
     }()
