@@ -34,6 +34,8 @@ open class ExpandableTextView: UITextView {
     private let placeholder: UITextView = UITextView()
     public weak var placeholderDelegate: ExpandableTextViewPlaceholderDelegate?
 
+    public var pasteActionInterceptor: PasteActionInterceptor?
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
@@ -136,6 +138,26 @@ open class ExpandableTextView: UITextView {
         self.isScrollEnabled = false
         self.isScrollEnabled = true
     }
+
+    // MARK: - UIResponder
+
+    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        guard action == #selector(paste(_:)),
+              let interceptor = self.pasteActionInterceptor,
+              interceptor.canPerformPaste(withSender: sender) else {
+            return super.canPerformAction(action, withSender: sender)
+        }
+        return true
+    }
+
+    open override func paste(_ sender: Any?) {
+        let handeledByInterceptor = self.pasteActionInterceptor?.handlePaste() == true
+        if !handeledByInterceptor && super.canPerformAction(#selector(paste(_:)), withSender: sender) {
+            super.paste(sender)
+        }
+    }
+
+    // MARK: - Private methods
 
     private func scrollToCaret() {
         if let textRange = self.selectedTextRange {
