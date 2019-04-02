@@ -77,7 +77,6 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             self.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions(nil))
         }
         super.init()
-        PHPhotoLibrary.shared().register(self)
     }
 
     deinit {
@@ -86,6 +85,13 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
 
     var count: Int {
         return self.fetchResult.count
+    }
+
+    func prepare() {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            PHPhotoLibrary.shared().register(self)
+        }
     }
 
     func requestPreviewImage(at index: Int,
