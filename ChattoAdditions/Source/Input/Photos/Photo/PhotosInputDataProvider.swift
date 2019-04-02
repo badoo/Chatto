@@ -93,14 +93,8 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             PHPhotoLibrary.shared().register(self)
 
             DispatchQueue.main.async(execute: { [weak self] in
-                guard let self = self else {
-                    DispatchQueue.main.async(execute: completion)
-                    return
-                }
-
-                self.fetchResult = fetchResult
-                self.imageManager = imageManager
-
+                self?.fetchResult = fetchResult
+                self?.imageManager = imageManager
                 completion()
             })
         }
@@ -132,8 +126,8 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             }
             request.handleCompletion(with: result)
         }
-        request.cancelBlock = { [weak self] in
-            self?.imageManager?.cancelImageRequest(requestId)
+        request.cancelBlock = { [weak imageManager] in
+            imageManager?.cancelImageRequest(requestId)
         }
         request.requestId = requestId
         return request
