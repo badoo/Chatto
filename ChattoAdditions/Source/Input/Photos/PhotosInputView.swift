@@ -159,17 +159,19 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     private func replacePlaceholderItemsWithPhotoItems() {
         let photosDataProvider = PhotosInputDataProvider()
-        photosDataProvider.prepare()
-
-        self.collectionViewQueue.addTask { [weak self] (completion) in
+        photosDataProvider.prepare { [weak self] in
             guard let sSelf = self else { return }
 
-            let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: photosDataProvider, placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
-            newDataProvider.delegate = sSelf
-            sSelf.dataProvider = newDataProvider
-            sSelf.cellProvider = PhotosInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
-            sSelf.collectionView.reloadData()
-            DispatchQueue.main.async(execute: completion)
+            sSelf.collectionViewQueue.addTask { [weak self] (completion) in
+                guard let sSelf = self else { return }
+
+                let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: photosDataProvider, placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
+                newDataProvider.delegate = sSelf
+                sSelf.dataProvider = newDataProvider
+                sSelf.cellProvider = PhotosInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
+                sSelf.collectionView.reloadData()
+                DispatchQueue.main.async(execute: completion)
+            }
         }
     }
 
