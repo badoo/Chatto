@@ -151,7 +151,7 @@ open class ExpandableTextView: UITextView {
     }
 
     open override func paste(_ sender: Any?) {
-        let handeledByInterceptor = self.pasteActionInterceptor?.handlePaste() == true
+        let handeledByInterceptor = self.pasteActionInterceptor?.performPaste() == true
         if !handeledByInterceptor && super.canPerformAction(#selector(paste(_:)), withSender: sender) {
             super.paste(sender)
         }
