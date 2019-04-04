@@ -70,6 +70,22 @@ class PhotosChatInputItemTests: XCTestCase {
         XCTAssertEqual(handledImage!, image)
     }
 
+    func testThat_WhenInputViewSelectsImageWithSource_ThenItemPassedImageAndSourceIntoPhotoWithSourceHandler() {
+        var handledImage: UIImage?
+        var handledSource: PhotosInputViewPhotoSource?
+        self.inputItem.photoWithSourceInputHandler = { image, source in
+            handledImage = image
+            handledSource = source
+        }
+        let image = UIImage()
+        let source = PhotosInputViewPhotoSource.camera
+        let inputView = MockPhotosInputView()
+        self.inputItem.inputView(inputView, didSelectImage: image, source: source)
+
+        XCTAssertEqual(handledImage!, image)
+        XCTAssertEqual(handledSource!, source)
+    }
+
     func testThat_GivenItemIsSelected_WhenItemIsSelected_ItDoesntReloadInputView() {
         self.inputItem.selected = true
         let mockPhotosInputView = MockPhotosInputView()

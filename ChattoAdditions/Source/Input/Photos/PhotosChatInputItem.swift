@@ -102,6 +102,10 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
 
 // MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
+    public func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
+        self.photoInputHandler?(image)
+    }
+
     public func inputView(_ inputView: PhotosInputViewProtocol,
                           didSelectImage image: UIImage,
                           source: PhotosInputViewPhotoSource) {
