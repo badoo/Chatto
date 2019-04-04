@@ -38,10 +38,29 @@ public protocol PhotosInputViewProtocol {
     var presentingController: UIViewController? { get }
 }
 
+public enum PhotosInputViewPhotoSource {
+    case camera
+    case gallery
+}
+
 public protocol PhotosInputViewDelegate: class {
+    @available(*, deprecated, renamed: "inputView(_:didSelectImage:source:)")
     func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
+    /// If you implement this method, deprecated one will not be called
+    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage, source: PhotosInputViewPhotoSource)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
+}
+
+extension PhotosInputViewDelegate {
+    public func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
+        fatalError("Please implement inputView(_:didSelectImage:source:)")
+    }
+    public func inputView(_ inputView: PhotosInputViewProtocol,
+                          didSelectImage image: UIImage,
+                          source: PhotosInputViewPhotoSource) {
+        self.inputView(inputView, didSelectImage: image)
+    }
 }
 
 public final class PhotosInputView: UIView, PhotosInputViewProtocol {
@@ -231,7 +250,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
                     guard let sSelf = self else { return }
 
                     if let image = image {
-                        sSelf.delegate?.inputView(sSelf, didSelectImage: image)
+                        sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .camera)
                     }
                 }, onCameraPickerDismissed: { [weak self] in
                     self?.liveCameraPresenter.cameraPickerDidDisappear()
@@ -243,7 +262,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
             } else {
                 let request = self.dataProvider.requestFullImage(at: indexPath.item - 1, progressHandler: nil, completion: { [weak self] result in
                     guard let sSelf = self, let image = result.image else { return }
-                    sSelf.delegate?.inputView(sSelf, didSelectImage: image)
+                    sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .gallery)
                 })
                 self.cellProvider.configureFullImageLoadingIndicator(at: indexPath, request: request)
             }
