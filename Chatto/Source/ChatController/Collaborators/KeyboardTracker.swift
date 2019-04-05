@@ -176,10 +176,10 @@ class KeyboardTracker {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
             self.isPerformingForcedLayout = true
 
-            // Sometimes, autolayout system don't finish layout inside an input bar container at this point.
-            // In this case input bar may have a different height with an input bar container.
-            // We need to insure that their heights are the same, otherwise it would lead to incorrect calculations that will affect lastKnownKeyboardHeight.
-            // Tracking view adjustment changes a keyboard height and trigers an update of lastKnownKeyboardHeight.
+            // Sometimes, the autolayout system doesn't finish the layout inside of the input bar container at this point.
+            // If it happens, then the input bar may have a height different than an input bar container.
+            // We need to ensure that their heights are the same; otherwise, it would lead to incorrect calculations that in turn affects lastKnownKeyboardHeight.
+            // Tracking view adjustment changes a keyboard height and triggers an update of lastKnownKeyboardHeight.
             self.inputBarContainer.layoutIfNeeded()
             self.keyboardTrackerView.window?.layoutIfNeeded()
 
