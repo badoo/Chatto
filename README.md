@@ -1,4 +1,4 @@
-# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master) [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Chatto.svg)](https://img.shields.io/cocoapods/v/Chatto.svg) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# Chatto [![Build Status](https://travis-ci.org/badoo/Chatto.svg?branch=master)](https://travis-ci.org/badoo/Chatto) [![codecov.io](https://codecov.io/github/badoo/Chatto/coverage.svg?branch=master)](https://codecov.io/github/badoo/Chatto?branch=master) [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Chatto.svg)](https://img.shields.io/cocoapods/v/Chatto.svg) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![Accio supported](https://img.shields.io/badge/Accio-supported-0A7CF5.svg?style=flat)](https://github.com/JamitLabs/Accio)
 
 
 `Chatto` is a Swift lightweight framework to build chat applications. It's been designed to be extensible and performant. Along with `Chatto` there is `ChattoAdditions`, a companion framework which includes cells for messages and an extensible input component. You can find more details about how it was implemented in our [blog](https://techblog.badoo.com/blog/2015/12/04/how-we-made-chatto/). See them in action!
@@ -62,6 +62,28 @@ github "badoo/Chatto"
 # Swift 2.x
 github "badoo/Chatto" "swift-2"
 ```
+
+### Accio
+
+If you're using [Accio](https://github.com/JamitLabs/Accio), add the following to your `Package.swift`:
+
+```swift
+.package(url: "https://github.com/badoo/Chatto.git", .upToNextMajor(from: "3.3.1")),
+```
+
+Next, add `Chatto` and/or `ChattoAdditions` to your App targets dependencies like so:
+
+```swift
+.target(
+    name: "App",
+    dependencies: [
+        "Chatto",
+        "ChattoAdditions"
+    ]
+),
+```
+
+Then run `accio update`.
 
 ### Manually
 
