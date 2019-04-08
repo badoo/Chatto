@@ -43,24 +43,12 @@ public enum PhotosInputViewPhotoSource {
     case gallery
 }
 
-public protocol PhotosInputViewDelegate: class {
-    @available(*, deprecated, renamed: "inputView(_:didSelectImage:source:)")
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
-    /// If you implement this method, deprecated one will not be called
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage, source: PhotosInputViewPhotoSource)
+public protocol PhotosInputViewDelegate: AnyObject {
+    func inputView(_ inputView: PhotosInputViewProtocol,
+                   didSelectImage image: UIImage,
+                   source: PhotosInputViewPhotoSource)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
-}
-
-extension PhotosInputViewDelegate {
-    public func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
-        fatalError("Please implement inputView(_:didSelectImage:source:)")
-    }
-    public func inputView(_ inputView: PhotosInputViewProtocol,
-                          didSelectImage image: UIImage,
-                          source: PhotosInputViewPhotoSource) {
-        self.inputView(inputView, didSelectImage: image)
-    }
 }
 
 public final class PhotosInputView: UIView, PhotosInputViewProtocol {
