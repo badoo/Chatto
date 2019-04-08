@@ -16,7 +16,8 @@ let package = Package(
         .target(
             name: "ChattoAdditions",
             dependencies: ["Chatto"],
-            path: "ChattoAdditions/Source"
+            path: "ChattoAdditions/Source",
+            exclude: ["UI Components/CircleProgressIndicatorView"]
         )
     ]
 )
