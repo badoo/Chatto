@@ -30,7 +30,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     
     typealias Class = PhotosChatInputItem
 
-    public var photoInputHandler: ((UIImage) -> Void)?
+    public var photoInputHandler: ((UIImage, PhotosInputViewPhotoSource) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
@@ -92,17 +92,15 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return self.internalTabView
     }
 
-    open func handleInput(_ input: AnyObject) {
-        if let image = input as? UIImage {
-            self.photoInputHandler?(image)
-        }
-    }
+    open func handleInput(_ input: AnyObject) {}
 }
 
 // MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
-    public func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
-        self.photoInputHandler?(image)
+    public func inputView(_ inputView: PhotosInputViewProtocol,
+                          didSelectImage image: UIImage,
+                          source: PhotosInputViewPhotoSource) {
+        self.photoInputHandler?(image, source)
     }
 
     public func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
