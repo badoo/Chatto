@@ -30,11 +30,17 @@ public protocol BaseChatViewControllerViewProtocol: class {
 }
 
 // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
+// https://forums.developer.apple.com/thread/99743
 final class BaseChatViewControllerView: UIView, BaseChatViewControllerViewProtocol {
 
     var bmaInputAccessoryView: UIView?
 
     override var inputAccessoryView: UIView? {
-        return self.bmaInputAccessoryView
+        get {
+            return self.bmaInputAccessoryView
+        }
+        set {
+            self.bmaInputAccessoryView = newValue
+        }
     }
 }
