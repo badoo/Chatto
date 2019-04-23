@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import Chatto
 
 open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -50,8 +51,10 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 sizingCell: sizingCell,
                 cellStyle: baseCellStyle
             )
+            self.menuPresenter = TextMessageMenuItemPresenter { [weak self] in self?.messageViewModel.text ?? "" }
     }
 
+    private var menuPresenter: ChatItemMenuPresenterProtocol!
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
@@ -106,20 +109,14 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func canShowMenu() -> Bool {
-        return true
+        return self.menuPresenter.shouldShowMenu()
     }
 
     open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
-        let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        return action == selector
+        return self.menuPresenter.canPerformMenuControllerAction(action)
     }
 
     open override func performMenuControllerAction(_ action: Selector) {
-        let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        if action == selector {
-            UIPasteboard.general.string = self.messageViewModel.text
-        } else {
-            assert(false, "Unexpected action")
-        }
+        self.menuPresenter.performMenuControllerAction(action)
     }
 }
