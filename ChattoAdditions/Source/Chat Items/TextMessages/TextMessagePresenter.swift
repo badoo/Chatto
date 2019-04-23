@@ -54,7 +54,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             self.menuPresenter = TextMessageMenuItemPresenter { [weak self] in self?.messageViewModel.text ?? "" }
     }
 
-    private var menuPresenter: ChatItemMenuPresenterProtocol!
+    private var menuPresenter: ChatItemMenuPresenterProtocol?
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
@@ -109,14 +109,14 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func canShowMenu() -> Bool {
-        return self.menuPresenter.shouldShowMenu()
+        return self.menuPresenter?.shouldShowMenu() ?? false
     }
 
     open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
-        return self.menuPresenter.canPerformMenuControllerAction(action)
+        return self.menuPresenter?.canPerformMenuControllerAction(action) ?? false
     }
 
     open override func performMenuControllerAction(_ action: Selector) {
-        self.menuPresenter.performMenuControllerAction(action)
+        self.menuPresenter?.performMenuControllerAction(action)
     }
 }
