@@ -88,6 +88,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private lazy var bubbleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.addSubview(self.borderImageView)
+        imageView.accessibilityIdentifier = "chatto.message.text.image.bubble"
         return imageView
     }()
 
