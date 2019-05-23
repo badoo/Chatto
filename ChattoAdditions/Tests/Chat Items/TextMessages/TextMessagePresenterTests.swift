@@ -38,7 +38,16 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
         let baseStyle = BaseMessageCollectionViewCellDefaultStyle()
         let messageModel = MessageModel(uid: "uid", senderId: "senderId", type: "text-message", isIncoming: true, date: NSDate() as Date, status: .success)
         let textMessageModel = TextMessageModel(messageModel: messageModel, text: "Some text")
-        self.presenter = TextMessagePresenter(messageModel: textMessageModel, viewModelBuilder: viewModelBuilder, interactionHandler: TextMessageTestHandler(), sizingCell: sizingCell, baseCellStyle: baseStyle, textCellStyle: textStyle, layoutCache: NSCache())
+        self.presenter = TextMessagePresenter(
+            messageModel: textMessageModel,
+            viewModelBuilder: viewModelBuilder,
+            interactionHandler: TextMessageTestHandler(),
+            sizingCell: sizingCell,
+            baseCellStyle: baseStyle,
+            textCellStyle: textStyle,
+            layoutCache: NSCache(),
+            menuPresenter: TextMessageMenuItemPresenter()
+        )
     }
 
     func testThat_RegistersAndDequeuesCells() {
