@@ -50,10 +50,13 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
+        self.identifier = "\(type(of: base as Any))"
         self._canCreateMessageModule = base.canCreateMessageModule
         self._createMessageModule = base.createMessageModule
         self._createLayoutProvider = base.createLayoutProvider
     }
+
+    public let identifier: String
 
     public func canCreateMessageModule(forModel model: Model) -> Bool {
         return self._canCreateMessageModule(model)

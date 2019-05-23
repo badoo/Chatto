@@ -72,13 +72,12 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     }
 
     public override class func registerCells(_ collectionView: UICollectionView) {
-        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self,
-                                forCellWithReuseIdentifier: .compoundCellReuseId)
+        // Cell registration is happening lazily, right before the moment when a cell is dequeued.
     }
 
     public override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCell(withReuseIdentifier: .compoundCellReuseId,
-                                                  for: indexPath)
+        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: self.compoundCellReuseId())
+        return collectionView.dequeueReusableCell(withReuseIdentifier: self.compoundCellReuseId(), for: indexPath)
     }
 
     public override func heightForCell(maximumWidth width: CGFloat,
@@ -129,6 +128,10 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         return provider
     }
 
+    private func compoundCellReuseId() -> String {
+        return "compound-message-[\(self.contentFactories.map { $0.identifier }.joined(separator: "-"))]"
+    }
+
     // MARK: - ChatItemMenuPresenterProtocol
 
     public override func canShowMenu() -> Bool {
@@ -150,8 +153,4 @@ private extension CompoundBubbleView.DecoratedView {
         self.init(view: module.view,
                   showBorder: module.showBorder)
     }
-}
-
-private extension String {
-    static let compoundCellReuseId = "compound-message"
 }
