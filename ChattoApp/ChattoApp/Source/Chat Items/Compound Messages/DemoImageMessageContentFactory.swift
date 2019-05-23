@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 import ChattoAdditions
 
 struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
@@ -40,5 +41,9 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         guard let image = model.image else { preconditionFailure() }
         return ImageMessageLayoutProvider(imageSize: image.size)
+    }
+
+    func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
+        return nil
     }
 }

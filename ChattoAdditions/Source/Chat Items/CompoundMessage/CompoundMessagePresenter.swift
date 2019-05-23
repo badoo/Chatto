@@ -50,14 +50,13 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
-        accessibilityIdentifier: String?,
-        menuPresenter: ChatItemMenuPresenterProtocol?
+        accessibilityIdentifier: String?
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.contentFactories = contentFactories.filter { $0.canCreateMessageModule(forModel: messageModel) }
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
-        self.menuPresenter = menuPresenter
+        self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: messageModel) }.first
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,

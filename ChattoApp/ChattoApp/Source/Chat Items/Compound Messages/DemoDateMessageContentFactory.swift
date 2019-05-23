@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 import ChattoAdditions
 
 struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
@@ -54,6 +55,10 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return TextMessageLayoutProvider(text: text,
                                          font: self.font,
                                          textInsets: self.textInsets)
+    }
+
+    func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
+        return nil
     }
 }
 

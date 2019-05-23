@@ -67,8 +67,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
             cache: self.cache,
-            accessibilityIdentifier: self.accessibilityIdentifier,
-            menuPresenter: nil
+            accessibilityIdentifier: self.accessibilityIdentifier
         )
     }
 

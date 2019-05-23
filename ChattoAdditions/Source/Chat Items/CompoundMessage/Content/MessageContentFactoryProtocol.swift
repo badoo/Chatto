@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Chatto
+
 public final class MessageContentModule {
     public typealias Presenter = Any
     public let view: UIView
@@ -41,6 +43,7 @@ public protocol MessageContentFactoryProtocol {
     func canCreateMessageModule(forModel model: Model) -> Bool
     func createMessageModule(forModel model: Model) -> MessageContentModule
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
+    func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
 }
 
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
@@ -48,12 +51,14 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
     private let _canCreateMessageModule: (Model) -> Bool
     private let _createMessageModule: (Model) -> MessageContentModule
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
+    private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self.identifier = "\(type(of: base as Any))"
         self._canCreateMessageModule = base.canCreateMessageModule
         self._createMessageModule = base.createMessageModule
         self._createLayoutProvider = base.createLayoutProvider
+        self._createMenuPresenter = base.createMenuPresenter
     }
 
     public let identifier: String
@@ -68,5 +73,9 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
 
     public func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol {
         return self._createLayoutProvider(model)
+    }
+
+    public func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol? {
+        return self._createMenuPresenter(model)
     }
 }
