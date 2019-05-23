@@ -75,8 +75,8 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
     }
 
     public override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
-        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: self.compoundCellReuseId())
-        return collectionView.dequeueReusableCell(withReuseIdentifier: self.compoundCellReuseId(), for: indexPath)
+        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: self.compoundCellReuseId)
+        return collectionView.dequeueReusableCell(withReuseIdentifier: self.compoundCellReuseId, for: indexPath)
     }
 
     public override func heightForCell(maximumWidth width: CGFloat,
@@ -127,9 +127,7 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         return provider
     }
 
-    private func compoundCellReuseId() -> String {
-        return "compound-message-[\(self.contentFactories.map { $0.identifier }.joined(separator: "-"))]"
-    }
+    private lazy var compoundCellReuseId = "compound-message-[\(self.contentFactories.map { $0.identifier }.joined(separator: "-"))]"
 
     // MARK: - ChatItemMenuPresenterProtocol
 
