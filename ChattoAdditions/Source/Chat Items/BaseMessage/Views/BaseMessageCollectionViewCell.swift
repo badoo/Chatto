@@ -153,6 +153,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     public private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
         let longpressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleLongPressed(_:)))
+        longpressGestureRecognizer.cancelsTouchesInView = true
         longpressGestureRecognizer.delegate = self
         return longpressGestureRecognizer
     }()
