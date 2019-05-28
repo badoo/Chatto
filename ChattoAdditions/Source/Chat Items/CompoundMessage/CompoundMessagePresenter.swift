@@ -24,7 +24,7 @@
 import Chatto
 
 @available(iOS 11, *)
-public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
+open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ModelT: Equatable,
@@ -66,27 +66,27 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
         )
     }
 
-    public override var canCalculateHeightInBackground: Bool {
+    open override var canCalculateHeightInBackground: Bool {
         return true
     }
 
-    public override class func registerCells(_ collectionView: UICollectionView) {
+    open override class func registerCells(_ collectionView: UICollectionView) {
         // Cell registration is happening lazily, right before the moment when a cell is dequeued.
     }
 
-    public override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+    open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: self.compoundCellReuseId)
         return collectionView.dequeueReusableCell(withReuseIdentifier: self.compoundCellReuseId, for: indexPath)
     }
 
-    public override func heightForCell(maximumWidth width: CGFloat,
+    open override func heightForCell(maximumWidth width: CGFloat,
                                        decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         let layoutConstants = self.cellStyle.layoutConstants(viewModel: self.messageViewModel)
         let maxWidth = (width * layoutConstants.maxContainerWidthPercentageForBubbleView)
         return self.layoutProvider.layout(forMaxWidth: maxWidth).size.height
     }
 
-    public override func configureCell(_ cell: BaseMessageCollectionViewCell<CompoundBubbleView>,
+    open override func configureCell(_ cell: BaseMessageCollectionViewCell<CompoundBubbleView>,
                                        decorationAttributes: ChatItemDecorationAttributes,
                                        animated: Bool,
                                        additionalConfiguration: (() -> Void)?) {
@@ -131,15 +131,15 @@ public final class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandle
 
     // MARK: - ChatItemMenuPresenterProtocol
 
-    public override func canShowMenu() -> Bool {
+    open override func canShowMenu() -> Bool {
         return self.menuPresenter?.shouldShowMenu() ?? false
     }
 
-    public override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
+    open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
         return self.menuPresenter?.canPerformMenuControllerAction(action) ?? false
     }
 
-    public override func performMenuControllerAction(_ action: Selector) {
+    open override func performMenuControllerAction(_ action: Selector) {
         self.menuPresenter?.performMenuControllerAction(action)
     }
 }
