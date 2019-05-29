@@ -75,8 +75,9 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
-        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: self.compoundCellReuseId)
-        return collectionView.dequeueReusableCell(withReuseIdentifier: self.compoundCellReuseId, for: indexPath)
+        let cellReuseIdentifier = self.compoundCellReuseId
+        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        return collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath)
     }
 
     open override func heightForCell(maximumWidth width: CGFloat,
