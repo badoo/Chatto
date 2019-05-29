@@ -40,10 +40,15 @@ public final class MessageContentModule {
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
+    var identifier: String { get }
     func canCreateMessageModule(forModel model: Model) -> Bool
     func createMessageModule(forModel model: Model) -> MessageContentModule
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
     func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
+}
+
+public extension MessageContentFactoryProtocol {
+    var identifier: String { return "\(type(of: self as Any))" }
 }
 
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
@@ -54,7 +59,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
     private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
-        self.identifier = "\(type(of: base as Any))"
+        self.identifier = base.identifier
         self._canCreateMessageModule = base.canCreateMessageModule
         self._createMessageModule = base.createMessageModule
         self._createLayoutProvider = base.createLayoutProvider
