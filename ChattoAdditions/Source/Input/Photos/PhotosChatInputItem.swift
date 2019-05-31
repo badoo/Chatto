@@ -93,6 +93,10 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     open func handleInput(_ input: AnyObject) {}
+
+    open var shouldSaveDraftMessage: Bool {
+        return false
+    }
 }
 
 // MARK: - PhotosInputViewDelegate
