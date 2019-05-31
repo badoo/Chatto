@@ -88,6 +88,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private lazy var bubbleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.addSubview(self.borderImageView)
+        imageView.accessibilityIdentifier = "chatto.message.text.image.bubble"
         return imageView
     }()
 
@@ -230,16 +231,6 @@ private final class TextBubbleLayoutModel {
         let font: UIFont
         let textInsets: UIEdgeInsets
         let preferredMaxLayoutWidth: CGFloat
-
-        var hashValue: Int {
-            return Chatto.bma_combine(hashes: [self.text.hashValue, self.textInsets.bma_hashValue, self.preferredMaxLayoutWidth.hashValue, self.font.hashValue])
-        }
-
-        static func == (lhs: TextBubbleLayoutModel.LayoutContext, rhs: TextBubbleLayoutModel.LayoutContext) -> Bool {
-            let lhsValues = (lhs.text, lhs.textInsets, lhs.font, lhs.preferredMaxLayoutWidth)
-            let rhsValues = (rhs.text, rhs.textInsets, rhs.font, rhs.preferredMaxLayoutWidth)
-            return lhsValues == rhsValues
-        }
     }
 
     func calculateLayout() {

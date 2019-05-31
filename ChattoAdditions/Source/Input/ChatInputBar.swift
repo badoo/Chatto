@@ -39,6 +39,11 @@ public protocol ChatInputBarDelegate: class {
 @objc
 open class ChatInputBar: ReusableXibView {
 
+    public var pasteActionInterceptor: PasteActionInterceptor? {
+        get { return self.textView.pasteActionInterceptor }
+        set { self.textView.pasteActionInterceptor = newValue }
+    }
+
     public weak var delegate: ChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 

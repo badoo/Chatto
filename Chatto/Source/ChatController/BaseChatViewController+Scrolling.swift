@@ -36,81 +36,126 @@ extension CGFloat {
 extension BaseChatViewController {
 
     public func isScrolledAtBottom() -> Bool {
-        guard self.collectionView.numberOfSections > 0 && self.collectionView.numberOfItems(inSection: 0) > 0 else { return true }
-        let sectionIndex = self.collectionView.numberOfSections - 1
-        let itemIndex = self.collectionView.numberOfItems(inSection: sectionIndex) - 1
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
+        let sectionIndex = collectionView.numberOfSections - 1
+        let itemIndex = collectionView.numberOfItems(inSection: sectionIndex) - 1
         let lastIndexPath = IndexPath(item: itemIndex, section: sectionIndex)
         return self.isIndexPathVisible(lastIndexPath, atEdge: .bottom)
     }
 
     public func isScrolledAtTop() -> Bool {
-        guard self.collectionView.numberOfSections > 0 && self.collectionView.numberOfItems(inSection: 0) > 0 else { return true }
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
         let firstIndexPath = IndexPath(item: 0, section: 0)
         return self.isIndexPathVisible(firstIndexPath, atEdge: .top)
     }
 
     public func isCloseToBottom() -> Bool {
-        guard self.collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().maxY / self.collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.contentSize.height > 0 else { return true }
+        return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
-        guard self.collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().minY / self.collectionView.contentSize.height) < self.constants.autoloadingFractionalThreshold
+        guard let collectionView = self.collectionView else { return true }
+        guard collectionView.contentSize.height > 0 else { return true }
+        return (self.visibleRect().minY / collectionView.contentSize.height) < self.constants.autoloadingFractionalThreshold
     }
 
     public func isIndexPathVisible(_ indexPath: IndexPath, atEdge edge: CellVerticalEdge) -> Bool {
-        if let attributes = self.collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) {
-            let visibleRect = self.visibleRect()
-            let intersection = visibleRect.intersection(attributes.frame)
-            if edge == .top {
-                return abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
-            } else {
-                return abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
-            }
+        guard let collectionView = self.collectionView else { return true }
+        guard let attributes = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) else { return false }
+        let visibleRect = self.visibleRect()
+        let intersection = visibleRect.intersection(attributes.frame)
+        if edge == .top {
+            return abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
+        } else {
+            return abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
         }
-        return false
     }
 
     public func visibleRect() -> CGRect {
-        let contentInset = self.collectionView.contentInset
-        let collectionViewBounds = self.collectionView.bounds
-        let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
-        return CGRect(x: CGFloat(0), y: self.collectionView.contentOffset.y + contentInset.top, width: collectionViewBounds.width, height: min(contentSize.height, collectionViewBounds.height - contentInset.top - contentInset.bottom))
+        guard let collectionView = self.collectionView else { return CGRect.zero }
+        let contentInset = collectionView.contentInset
+        let collectionViewBounds = collectionView.bounds
+        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
+        return CGRect(x: CGFloat(0), y: collectionView.contentOffset.y + contentInset.top, width: collectionViewBounds.width, height: min(contentSize.height, collectionViewBounds.height - contentInset.top - contentInset.bottom))
     }
 
     @objc
     open func scrollToBottom(animated: Bool) {
+        guard let collectionView = self.collectionView else { return }
         // Cancel current scrolling
-        self.collectionView.setContentOffset(self.collectionView.contentOffset, animated: false)
+        collectionView.setContentOffset(collectionView.contentOffset, animated: false)
 
         // Note that we don't rely on collectionView's contentSize. This is because it won't be valid after performBatchUpdates or reloadData
         // After reload data, collectionViewLayout.collectionViewContentSize won't be even valid, so you may want to refresh the layout manually
-        let offsetY = max(-self.collectionView.contentInset.top, self.collectionView.collectionViewLayout.collectionViewContentSize.height - self.collectionView.bounds.height + self.collectionView.contentInset.bottom)
+        let offsetY = max(-collectionView.contentInset.top, collectionView.collectionViewLayout.collectionViewContentSize.height - collectionView.bounds.height + collectionView.contentInset.bottom)
 
         // Don't use setContentOffset(:animated). If animated, contentOffset property will be updated along with the animation for each frame update
         // If a message is inserted while scrolling is happening (as in very fast typing), we want to take the "final" content offset (not the "real time" one) to check if we should scroll to bottom again
         if animated {
             UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
-                self.collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
+                collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
             })
         } else {
-            self.collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
+            collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
         }
     }
 
     public func scrollToPreservePosition(oldRefRect: CGRect?, newRefRect: CGRect?) {
+        guard let collectionView = self.collectionView else { return }
         guard let oldRefRect = oldRefRect, let newRefRect = newRefRect else {
             return
         }
         let diffY = newRefRect.minY - oldRefRect.minY
-        self.collectionView.contentOffset = CGPoint(x: 0, y: self.collectionView.contentOffset.y + diffY)
+        collectionView.contentOffset = CGPoint(x: 0, y: collectionView.contentOffset.y + diffY)
+    }
+
+    public func scrollToItem(withId itemId: String, position: UICollectionView.ScrollPosition = .centeredVertically, animated: Bool = false) {
+        guard let collectionView = self.collectionView else { return }
+        guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else { return }
+
+        let indexPath = IndexPath(item: itemIndex, section: 0)
+        guard let rect = self.rectAtIndexPath(indexPath) else { return }
+
+        if animated {
+            let pageHeight = collectionView.bounds.height
+            let twoPagesHeight = pageHeight * 2
+            let isScrollingUp = rect.minY < collectionView.contentOffset.y
+
+            if isScrollingUp {
+                let isNeedToScrollUpMoreThenTwoPages = rect.minY < collectionView.contentOffset.y - twoPagesHeight
+                if isNeedToScrollUpMoreThenTwoPages {
+                    let lastPageOriginY = collectionView.contentSize.height - pageHeight
+                    var preScrollRect = rect
+                    preScrollRect.origin.y = min(lastPageOriginY, rect.minY + pageHeight)
+                    collectionView.scrollRectToVisible(preScrollRect, animated: false)
+                }
+            } else {
+                let isNeedToScrollDownMoreThenTwoPages = rect.minY > collectionView.contentOffset.y + twoPagesHeight
+                if isNeedToScrollDownMoreThenTwoPages {
+                    var preScrollRect = rect
+                    preScrollRect.origin.y = max(0, rect.minY - pageHeight)
+                    collectionView.scrollRectToVisible(preScrollRect, animated: false)
+                }
+            }
+        }
+
+        collectionView.scrollToItem(at: indexPath, at: position, animated: animated)
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if self.collectionView.isDragging {
+        guard let collectionView = self.collectionView else { return }
+        if collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }
+        self.scrollViewEventsHandler?.onScrollViewDidScroll(scrollView)
+    }
+
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
     }
 
     open func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {

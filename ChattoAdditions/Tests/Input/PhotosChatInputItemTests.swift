@@ -40,18 +40,9 @@ class PhotosChatInputItemTests: XCTestCase {
         XCTAssertFalse(self.inputItem.showsSendButton)
     }
 
-    func testThat_GivenItemHasPhotoInputHandler_WhenInputIsImage_ItemHandlesInput() {
-        var handled = false
-        self.inputItem.photoInputHandler = { image in
-            handled = true
-        }
-        self.inputItem.handleInput(UIImage())
-        XCTAssertTrue(handled)
-    }
-
     func testThat_GivenItemHasPhotoInputHandler_WhenInputIsNotImage_ItemDoesntHandleInput() {
         var handled = false
-        self.inputItem.photoInputHandler = { image in
+        self.inputItem.photoInputHandler = { image, _ in
             handled = true
         }
         self.inputItem.handleInput(5 as AnyObject)
@@ -60,14 +51,18 @@ class PhotosChatInputItemTests: XCTestCase {
 
     func testThat_WhenInputViewSelectsImage_ItemPassedImageIntoPhotoHandler() {
         var handledImage: UIImage?
-        self.inputItem.photoInputHandler = { image in
+        var handledSource: PhotosInputViewPhotoSource?
+        self.inputItem.photoInputHandler = { image, source in
             handledImage = image
+            handledSource = source
         }
         let image = UIImage()
+        let source = PhotosInputViewPhotoSource.camera
         let inputView = MockPhotosInputView()
-        self.inputItem.inputView(inputView, didSelectImage: image)
+        self.inputItem.inputView(inputView, didSelectImage: image, source: source)
 
         XCTAssertEqual(handledImage!, image)
+        XCTAssertEqual(handledSource!, source)
     }
 
     func testThat_GivenItemIsSelected_WhenItemIsSelected_ItDoesntReloadInputView() {

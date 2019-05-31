@@ -46,11 +46,11 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }
 
     public struct TextStyle {
-        let font: () -> UIFont
-        let incomingColor: () -> UIColor
-        let outgoingColor: () -> UIColor
-        let incomingInsets: UIEdgeInsets
-        let outgoingInsets: UIEdgeInsets
+        public let font: () -> UIFont
+        public let incomingColor: () -> UIColor
+        public let outgoingColor: () -> UIColor
+        public let incomingInsets: UIEdgeInsets
+        public let outgoingInsets: UIEdgeInsets
         public init(
             font: @autoclosure @escaping () -> UIFont,
             incomingColor: @autoclosure @escaping () -> UIColor,
@@ -144,26 +144,6 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     private enum ImageKey: Hashable {
         case template(isIncoming: Bool, showsTail: Bool)
         case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool)
-
-        var hashValue: Int {
-            switch self {
-            case let .template(isIncoming: isIncoming, showsTail: showsTail):
-                return Chatto.bma_combine(hashes: [1 /*template*/, isIncoming.hashValue, showsTail.hashValue])
-            case let .normal(isIncoming: isIncoming, status: status, showsTail: showsTail, isSelected: isSelected):
-                return Chatto.bma_combine(hashes: [2 /*normal*/, isIncoming.hashValue, status.hashValue, showsTail.hashValue, isSelected.hashValue])
-            }
-        }
-
-        static func == (lhs: TextMessageCollectionViewCellDefaultStyle.ImageKey, rhs: TextMessageCollectionViewCellDefaultStyle.ImageKey) -> Bool {
-            switch (lhs, rhs) {
-            case let (.template(lhsValues), .template(rhsValues)):
-                return lhsValues == rhsValues
-            case let (.normal(lhsValues), .normal(rhsValues)):
-                return lhsValues == rhsValues
-            default:
-                return false
-            }
-        }
     }
 }
 

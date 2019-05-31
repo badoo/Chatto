@@ -27,10 +27,17 @@ import XCTest
 
 class ChatViewControllerTests: XCTestCase {
 
+    func testThat_WhenChatViewControllerInitated_ThenViewsIsNotLoaded() {
+        let controller = TesteableChatViewController()
+        XCTAssertFalse(controller.isViewLoaded)
+        XCTAssertNil(controller.collectionView)
+    }
+
     func testThat_GivenNoDataSource_ThenChatViewControllerLoadsCorrectly() {
         let controller = TesteableChatViewController()
         self.fakeDidAppearAndLayout(controller: controller)
         XCTAssertNotNil(controller.view)
+        XCTAssertNotNil(controller.collectionView)
     }
 
     func testThat_GivenEmptyDataSource_ThenChatViewControllerLoadsCorrectly() {
@@ -38,6 +45,7 @@ class ChatViewControllerTests: XCTestCase {
         controller.chatDataSource = FakeDataSource()
         self.fakeDidAppearAndLayout(controller: controller)
         XCTAssertNotNil(controller.view)
+        XCTAssertNotNil(controller.collectionView)
     }
 
     func testThat_GivenDataSourceWithItemsAndNoPresenters_ThenChatViewControllerLoadsCorrectly() {
@@ -47,7 +55,9 @@ class ChatViewControllerTests: XCTestCase {
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
         XCTAssertNotNil(controller.view)
-        XCTAssertEqual(2, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
+        XCTAssertNotNil(controller.collectionView)
+        let collectionView = controller.collectionView!
+        XCTAssertEqual(2, controller.collectionView(collectionView, numberOfItemsInSection: 0))
     }
 
     func testThat_PresentersAreCreated () {
@@ -68,6 +78,8 @@ class ChatViewControllerTests: XCTestCase {
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
+        XCTAssertNotNil(controller.collectionView)
+        let collectionView = controller.collectionView!
         fakeDataSource.chatItems = createFakeChatItems(count: 3)
         fakeDataSource.delegate?.chatDataSourceDidUpdate(fakeDataSource)
         controller.updateQueue.addTask { (completion) -> Void in
@@ -75,7 +87,7 @@ class ChatViewControllerTests: XCTestCase {
             completion()
         }
         self.waitForExpectations(timeout: 1) { (_) -> Void in
-            XCTAssertEqual(3, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
+            XCTAssertEqual(3, controller.collectionView(collectionView, numberOfItemsInSection: 0))
         }
     }
 
@@ -98,10 +110,11 @@ class ChatViewControllerTests: XCTestCase {
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
+        let collectionView = controller.collectionView!
         controller.updateQueue.addTask { (completion) -> Void in
             fakeDataSource.hasMorePrevious = true
-            controller.collectionView.contentOffset = CGPoint.zero
-            controller.scrollViewDidScrollToTop(controller.collectionView)
+            collectionView.contentOffset = CGPoint.zero
+            controller.scrollViewDidScrollToTop(collectionView)
             completion()
             asyncExpectation.fulfill()
         }
@@ -118,7 +131,8 @@ class ChatViewControllerTests: XCTestCase {
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
-        let contentOffset = controller.collectionView.contentOffset
+        let collectionView = controller.collectionView!
+        let contentOffset = collectionView.contentOffset
         fakeDataSource.hasMoreNext = true
         fakeDataSource.chatItemsForLoadNext = createFakeChatItems(count: 3000)
         controller.autoLoadingEnabled = true // It will be false until first update finishes, let's fake it
@@ -130,8 +144,8 @@ class ChatViewControllerTests: XCTestCase {
         }
 
         self.waitForExpectations(timeout: 1) { (_) -> Void in
-            XCTAssertEqual(3000, controller.collectionView(controller.collectionView, numberOfItemsInSection: 0))
-            XCTAssertEqual(contentOffset, controller.collectionView.contentOffset)
+            XCTAssertEqual(3000, controller.collectionView(collectionView, numberOfItemsInSection: 0))
+            XCTAssertEqual(contentOffset, collectionView.contentOffset)
         }
     }
 
@@ -236,6 +250,7 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_GivenCoalescingIsDisabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreQueued() {
         let controller = TesteableChatViewController()
+        controller.updatesConfig.coalesceUpdates = false
         self.fakeDidAppearAndLayout(controller: controller)
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()
