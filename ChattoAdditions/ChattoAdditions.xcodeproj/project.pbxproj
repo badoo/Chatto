@@ -90,12 +90,6 @@
 		C3C0CC611BFE496A0052747C /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC181BFE496A0052747C /* Text.xcassets */; };
 		C3C0CC621BFE496A0052747C /* TextChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */; };
 		C3C0CC641BFE496A0052747C /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC1B1BFE496A0052747C /* Observable.swift */; };
-		C3C0CC661BFE496A0052747C /* CircleIconView.h in Headers */ = {isa = PBXBuildFile; fileRef = C3C0CC1F1BFE496A0052747C /* CircleIconView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C3C0CC671BFE496A0052747C /* CircleIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC201BFE496A0052747C /* CircleIconView.m */; };
-		C3C0CC681BFE496A0052747C /* CircleProgressIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = C3C0CC211BFE496A0052747C /* CircleProgressIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C3C0CC691BFE496A0052747C /* CircleProgressIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC221BFE496A0052747C /* CircleProgressIndicatorView.m */; };
-		C3C0CC6A1BFE496A0052747C /* CircleProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = C3C0CC231BFE496A0052747C /* CircleProgressView.h */; };
-		C3C0CC6B1BFE496A0052747C /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC241BFE496A0052747C /* CircleProgressView.m */; };
 		C3C0CC6C1BFE496A0052747C /* CircleProgressIndicator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */; };
 		C3C0CC851BFE49700052747C /* ChatInputBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */; };
 		C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */; };
@@ -117,6 +111,9 @@
 		CDC6100D1FD8376000C2588E /* PhotosInputCellProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */; };
 		CDE15F43205993FB005D86DD /* PhotosInputCameraPickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */; };
 		DE51010D21B5670A009BC61C /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51010C21B5670A009BC61C /* InputContainerView.swift */; };
+		EA13CAF2229EE8C8009340C5 /* CircleIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */; };
+		EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF3229EE985009340C5 /* CircleProgressView.swift */; };
+		EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */; };
 		F6D04BA71CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */; };
 		F6D04BA91CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */; };
 /* End PBXBuildFile section */
@@ -217,12 +214,6 @@
 		C3C0CC181BFE496A0052747C /* Text.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Text.xcassets; sourceTree = "<group>"; };
 		C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChatInputItem.swift; sourceTree = "<group>"; };
 		C3C0CC1B1BFE496A0052747C /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
-		C3C0CC1F1BFE496A0052747C /* CircleIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleIconView.h; sourceTree = "<group>"; };
-		C3C0CC201BFE496A0052747C /* CircleIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleIconView.m; sourceTree = "<group>"; };
-		C3C0CC211BFE496A0052747C /* CircleProgressIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleProgressIndicatorView.h; sourceTree = "<group>"; };
-		C3C0CC221BFE496A0052747C /* CircleProgressIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleProgressIndicatorView.m; sourceTree = "<group>"; };
-		C3C0CC231BFE496A0052747C /* CircleProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleProgressView.h; sourceTree = "<group>"; };
-		C3C0CC241BFE496A0052747C /* CircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleProgressView.m; sourceTree = "<group>"; };
 		C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CircleProgressIndicator.xcassets; sourceTree = "<group>"; };
 		C3C0CC751BFE49700052747C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputBarTests.swift; sourceTree = "<group>"; };
@@ -245,6 +236,9 @@
 		CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCellProviderTests.swift; sourceTree = "<group>"; };
 		CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCameraPickerTests.swift; sourceTree = "<group>"; };
 		DE51010C21B5670A009BC61C /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
+		EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconView.swift; sourceTree = "<group>"; };
+		EA13CAF3229EE985009340C5 /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
+		EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressIndicatorView.swift; sourceTree = "<group>"; };
 		F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderDataProviderTests.swift; sourceTree = "<group>"; };
 		F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputWithPlaceholdersDataProviderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -522,12 +516,9 @@
 		C3C0CC1E1BFE496A0052747C /* CircleProgressIndicatorView */ = {
 			isa = PBXGroup;
 			children = (
-				C3C0CC1F1BFE496A0052747C /* CircleIconView.h */,
-				C3C0CC201BFE496A0052747C /* CircleIconView.m */,
-				C3C0CC211BFE496A0052747C /* CircleProgressIndicatorView.h */,
-				C3C0CC221BFE496A0052747C /* CircleProgressIndicatorView.m */,
-				C3C0CC231BFE496A0052747C /* CircleProgressView.h */,
-				C3C0CC241BFE496A0052747C /* CircleProgressView.m */,
+				EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */,
+				EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */,
+				EA13CAF3229EE985009340C5 /* CircleProgressView.swift */,
 				C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */,
 			);
 			path = CircleProgressIndicatorView;
@@ -629,10 +620,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3C0CC6A1BFE496A0052747C /* CircleProgressView.h in Headers */,
-				C3C0CC661BFE496A0052747C /* CircleIconView.h in Headers */,
 				C36F9C4B1BFE4A89001E9D8F /* ChattoAdditions.h in Headers */,
-				C3C0CC681BFE496A0052747C /* CircleProgressIndicatorView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,12 +757,12 @@
 				C3C0CC591BFE496A0052747C /* PhotosChatInputItem.swift in Sources */,
 				C3C0CC3A1BFE496A0052747C /* PhotoMessageCollectionViewCell.swift in Sources */,
 				26D07FA4220791AE007C1534 /* Cache.swift in Sources */,
-				C3C0CC691BFE496A0052747C /* CircleProgressIndicatorView.m in Sources */,
 				55ABA5671FC748B600923302 /* CGRect+Additions.swift in Sources */,
 				C3C0CC5D1BFE496A0052747C /* PhotosInputWithPlaceholdersDataProvider.swift in Sources */,
 				C3C0CC5C1BFE496A0052747C /* PhotosInputCellProvider.swift in Sources */,
 				C3C0CC3C1BFE496A0052747C /* TextMessageModel.swift in Sources */,
 				2645F90D2209C11C004CB829 /* HashableRepresentible.swift in Sources */,
+				EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */,
 				C3C0CC2A1BFE496A0052747C /* BaseMessageModel.swift in Sources */,
 				C3C0CC4F1BFE496A0052747C /* ChatInputBar.swift in Sources */,
 				C3C0CC361BFE496A0052747C /* PhotoMessagePresenterBuilder.swift in Sources */,
@@ -795,6 +783,7 @@
 				CDC60FFD1FD7259200C2588E /* PhotosInputPlaceholderCell.swift in Sources */,
 				55ABA5541FC739C300923302 /* Alignment.swift in Sources */,
 				C3C0CC431BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift in Sources */,
+				EA13CAF2229EE8C8009340C5 /* CircleIconView.swift in Sources */,
 				C3C0CC521BFE496A0052747C /* ChatInputBarPresenter.swift in Sources */,
 				C3C0CC401BFE496A0052747C /* TextBubbleView.swift in Sources */,
 				CDC60FFE1FD727A200C2588E /* ChatItemDecorationAttributes.swift in Sources */,
@@ -816,16 +805,15 @@
 				26DA3358226F140500EF38A6 /* TextMessageMenuItemPresenter.swift in Sources */,
 				C3C0CC551BFE496A0052747C /* ExpandableTextView.swift in Sources */,
 				C33DEA451D23F825002AAD26 /* LiveCameraCellPresenter.swift in Sources */,
-				C3C0CC6B1BFE496A0052747C /* CircleProgressView.m in Sources */,
 				55ABA56D1FC74D0400923302 /* UIImage+Additions.swift in Sources */,
 				C3C0CC371BFE496A0052747C /* PhotoMessageViewModel.swift in Sources */,
+				EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */,
 				268CD56221F9F92C00DEE2C2 /* CompoundMessageCollectionViewCell.swift in Sources */,
 				C3C0CC5B1BFE496A0052747C /* PhotosInputCell.swift in Sources */,
 				C3C0CC561BFE496A0052747C /* HorizontalStackScrollView.swift in Sources */,
 				C3C0CC5F1BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift in Sources */,
 				C33DEA471D23F8C8002AAD26 /* LiveCameraCaptureSession.swift in Sources */,
 				CDC610041FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift in Sources */,
-				C3C0CC671BFE496A0052747C /* CircleIconView.m in Sources */,
 				C3C0CC301BFE496A0052747C /* ViewDefinitions.swift in Sources */,
 				265E22EB2256398E005330E4 /* PasteActionInterceptor.swift in Sources */,
 				C3C0CC531BFE496A0052747C /* ChatInputItem.swift in Sources */,
