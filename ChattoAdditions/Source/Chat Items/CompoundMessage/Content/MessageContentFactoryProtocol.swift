@@ -36,6 +36,17 @@ public final class MessageContentModule {
         self.showBorder = showBorder
         self.presenter = presenter
     }
+
+    public var onWillBeShown: (() -> Void)?
+    public var onWasHidden: (() -> Void)?
+
+    func willBeShown() {
+        self.onWillBeShown?()
+    }
+
+    func wasHidden() {
+        self.onWasHidden?()
+    }
 }
 
 public protocol MessageContentFactoryProtocol {

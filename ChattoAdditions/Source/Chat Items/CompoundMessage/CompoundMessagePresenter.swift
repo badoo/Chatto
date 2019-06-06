@@ -40,6 +40,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     private let accessibilityIdentifier: String?
     private let menuPresenter: ChatItemMenuPresenterProtocol?
+    private var modules: [MessageContentModule]?
 
     public init(
         messageModel: ModelT,
@@ -102,6 +103,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             guard compoundCell.lastAppliedConfiguration != sSelf.messageModel else { return }
             compoundCell.lastAppliedConfiguration = sSelf.messageModel
             let modules = sSelf.contentFactories.map { $0.createMessageModule(forModel: sSelf.messageModel) }
+            sSelf.modules = modules
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = sSelf.messageViewModel
             bubbleView.style = sSelf.compoundCellStyle
@@ -109,6 +111,16 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             bubbleView.layoutProvider = sSelf.layoutProvider
             bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
         }
+    }
+
+    open override func cellWillBeShown() {
+        super.cellWillBeShown()
+        self.modules?.forEach { $0.willBeShown() }
+    }
+
+    open override func cellWasHidden() {
+        super.cellWasHidden()
+        self.modules?.forEach { $0.wasHidden() }
     }
 
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
