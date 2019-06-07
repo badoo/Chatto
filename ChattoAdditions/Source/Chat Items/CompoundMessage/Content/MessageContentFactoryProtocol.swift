@@ -39,6 +39,7 @@ public final class MessageContentModule {
 
     public var onWillBeShown: (() -> Void)?
     public var onWasHidden: (() -> Void)?
+    public var onWasTapped: (() -> Void)?
 
     func willBeShown() {
         self.onWillBeShown?()
@@ -46,6 +47,10 @@ public final class MessageContentModule {
 
     func wasHidden() {
         self.onWasHidden?()
+    }
+
+    func wasTapped() {
+        self.onWasTapped?()
     }
 }
 

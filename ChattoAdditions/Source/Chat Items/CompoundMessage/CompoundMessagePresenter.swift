@@ -123,6 +123,11 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.modules?.forEach { $0.wasHidden() }
     }
 
+    open override func onCellBubbleTapped() {
+        super.onCellBubbleTapped()
+        self.modules?.forEach { $0.wasTapped() }
+    }
+
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
         let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
         let viewModel = self.messageViewModel
