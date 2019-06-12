@@ -84,4 +84,8 @@ extension TextChatInputItem: ChatInputItemProtocol {
             self.textInputHandler?(text)
         }
     }
+
+    public var shouldSaveDraftMessage: Bool {
+        return false
+    }
 }

@@ -51,6 +51,10 @@ open class ChatInputBar: ReusableXibView {
         return !inputBar.textView.text.isEmpty
     }
 
+    public var inputTextView: UITextView? {
+        return self.textView
+    }
+
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
     @IBOutlet weak var textView: ExpandableTextView!
     @IBOutlet weak var sendButton: UIButton!
