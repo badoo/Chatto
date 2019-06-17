@@ -100,16 +100,26 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         super.configureCell(compoundCell, decorationAttributes: decorationAttributes, animated: animated) { [weak self] in
             defer { additionalConfiguration?() }
             guard let sSelf = self else { return }
-            sSelf.modules = sSelf.contentFactories.map { $0.createMessageModule(forModel: sSelf.messageModel) }
 
-            guard compoundCell.lastAppliedConfiguration != sSelf.messageModel else { return }
-            compoundCell.lastAppliedConfiguration = sSelf.messageModel
             let bubbleView = compoundCell.bubbleView!
-            bubbleView.viewModel = sSelf.messageViewModel
-            bubbleView.style = sSelf.compoundCellStyle
-            bubbleView.decoratedContentViews = sSelf.modules?.map { .init(module: $0) } ?? []
-            bubbleView.layoutProvider = sSelf.layoutProvider
-            bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
+
+            if compoundCell.lastAppliedConfiguration == sSelf.messageModel {
+                let existingViews = bubbleView.decoratedContentViews.map { $0.view }
+                sSelf.modules = zip(sSelf.contentFactories, existingViews).map { factory, existingView in
+                    return factory.createMessageModule(forModel: sSelf.messageModel, withView: existingView)
+                }
+            } else {
+                compoundCell.lastAppliedConfiguration = sSelf.messageModel
+                sSelf.modules = sSelf.contentFactories.map { factory in
+                    let view = factory.createNewMessageView(forModel: sSelf.messageModel)
+                    return factory.createMessageModule(forModel: sSelf.messageModel, withView: view)
+                }
+                bubbleView.viewModel = sSelf.messageViewModel
+                bubbleView.style = sSelf.compoundCellStyle
+                bubbleView.decoratedContentViews = sSelf.modules?.map { .init(module: $0) } ?? []
+                bubbleView.layoutProvider = sSelf.layoutProvider
+                bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
+            }
         }
     }
 

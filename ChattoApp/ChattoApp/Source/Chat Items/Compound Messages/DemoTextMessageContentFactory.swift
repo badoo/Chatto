@@ -34,14 +34,18 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return true
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
+    func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
         let label = LabelWithInsets()
         label.numberOfLines = 0
         label.text = model.text
         label.font = self.font
         label.textInsets = self.textInsets
         label.textColor = model.isIncoming ? .black : .white
-        return MessageContentModule(view: label, presenter: ())
+        return label
+    }
+
+    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
+        return MessageContentModule(view: view, presenter: ())
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {

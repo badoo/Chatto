@@ -58,7 +58,8 @@ public protocol MessageContentFactoryProtocol {
     associatedtype Model
     var identifier: String { get }
     func canCreateMessageModule(forModel model: Model) -> Bool
-    func createMessageModule(forModel model: Model) -> MessageContentModule
+    func createNewMessageView(forModel model: Model) -> UIView
+    func createMessageModule(forModel model: Model, withView view: UIView) -> MessageContentModule
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
     func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
 }
@@ -70,13 +71,15 @@ public extension MessageContentFactoryProtocol {
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
 
     private let _canCreateMessageModule: (Model) -> Bool
-    private let _createMessageModule: (Model) -> MessageContentModule
+    private let _createNewMessageView: (Model) -> UIView
+    private let _createMessageModule: (Model, UIView) -> MessageContentModule
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
     private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self.identifier = base.identifier
         self._canCreateMessageModule = base.canCreateMessageModule
+        self._createNewMessageView = base.createNewMessageView
         self._createMessageModule = base.createMessageModule
         self._createLayoutProvider = base.createLayoutProvider
         self._createMenuPresenter = base.createMenuPresenter
@@ -88,8 +91,12 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
         return self._canCreateMessageModule(model)
     }
 
-    public func createMessageModule(forModel model: Model) -> MessageContentModule {
-        return self._createMessageModule(model)
+    public func createNewMessageView(forModel model: Model) -> UIView {
+        return self._createNewMessageView(model)
+    }
+
+    public func createMessageModule(forModel model: Model, withView view: UIView) -> MessageContentModule {
+        return self._createMessageModule(model, view)
     }
 
     public func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol {

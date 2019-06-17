@@ -30,12 +30,16 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         return model.image != nil
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
+    func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
         guard let image = model.image else { preconditionFailure() }
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.image = image
-        return MessageContentModule(view: imageView, presenter: ())
+        return imageView
+    }
+
+    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
+        return MessageContentModule(view: view, presenter: ())
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {

@@ -41,13 +41,16 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return true
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
+    func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
         let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
         let label = UILabel()
         label.textAlignment = .right
         label.text = text
-        let infoView = DateInfoView(label: label, insets: self.textInsets)
-        return MessageContentModule(view: infoView, presenter: (), showBorder: true)
+        return DateInfoView(label: label, insets: self.textInsets)
+    }
+
+    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
+        return MessageContentModule(view: view, presenter: (), showBorder: true)
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
