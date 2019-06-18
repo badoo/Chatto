@@ -23,43 +23,36 @@
 
 import Chatto
 
-public final class MessageContentModule {
-    public typealias Presenter = Any
-    public let view: UIView
-    public let showBorder: Bool
-    public let presenter: Presenter
+public protocol MessageContentPresenterProtocol {
 
-    public init(view: UIView,
-                presenter: Presenter,
-                showBorder: Bool = false) {
-        self.view = view
+    var showBorder: Bool { get }
+
+    func contentWillBeShown()
+    func contentWasHidden()
+    func contentWasTapped()
+}
+
+public final class DefaultMessageContentPresenter: MessageContentPresenterProtocol {
+
+    public init(showBorder: Bool) {
         self.showBorder = showBorder
-        self.presenter = presenter
     }
 
-    public var onWillBeShown: (() -> Void)?
-    public var onWasHidden: (() -> Void)?
-    public var onWasTapped: (() -> Void)?
+    public let showBorder: Bool
 
-    func willBeShown() {
-        self.onWillBeShown?()
-    }
-
-    func wasHidden() {
-        self.onWasHidden?()
-    }
-
-    func wasTapped() {
-        self.onWasTapped?()
-    }
+    public func contentWillBeShown() {}
+    public func contentWasHidden() {}
+    public func contentWasTapped() {}
 }
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
     var identifier: String { get }
-    func canCreateMessageModule(forModel model: Model) -> Bool
-    func createNewMessageView(forModel model: Model) -> UIView
-    func createMessageModule(forModel model: Model, withView view: UIView) -> MessageContentModule
+    func canCreateMessageContent(forModel model: Model) -> Bool
+    func createNewMessageView() -> UIView
+    func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol
+    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol)
+    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: Model)
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
     func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
 }
@@ -70,33 +63,45 @@ public extension MessageContentFactoryProtocol {
 
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
 
-    private let _canCreateMessageModule: (Model) -> Bool
-    private let _createNewMessageView: (Model) -> UIView
-    private let _createMessageModule: (Model, UIView) -> MessageContentModule
+    private let _canCreateMessageContent: (Model) -> Bool
+    private let _createNewMessageView: () -> UIView
+    private let _createContentPresenter: (Model) -> MessageContentPresenterProtocol
+    private let _unbindContentPresenter: (MessageContentPresenterProtocol) -> Void
+    private let _bindContentPresenter: (MessageContentPresenterProtocol, UIView, Model) -> Void
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
     private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self.identifier = base.identifier
-        self._canCreateMessageModule = base.canCreateMessageModule
+        self._canCreateMessageContent = base.canCreateMessageContent
         self._createNewMessageView = base.createNewMessageView
-        self._createMessageModule = base.createMessageModule
+        self._createContentPresenter = base.createContentPresenter
+        self._unbindContentPresenter = base.unbindContentPresenter
+        self._bindContentPresenter = base.bindContentPresenter
         self._createLayoutProvider = base.createLayoutProvider
         self._createMenuPresenter = base.createMenuPresenter
     }
 
     public let identifier: String
 
-    public func canCreateMessageModule(forModel model: Model) -> Bool {
-        return self._canCreateMessageModule(model)
+    public func canCreateMessageContent(forModel model: Model) -> Bool {
+        return self._canCreateMessageContent(model)
     }
 
-    public func createNewMessageView(forModel model: Model) -> UIView {
-        return self._createNewMessageView(model)
+    public func createNewMessageView() -> UIView {
+        return self._createNewMessageView()
     }
 
-    public func createMessageModule(forModel model: Model, withView view: UIView) -> MessageContentModule {
-        return self._createMessageModule(model, view)
+    public func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol {
+        return self._createContentPresenter(model)
+    }
+
+    public func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {
+        return self._unbindContentPresenter(presenter)
+    }
+
+    public func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: Model) {
+        return self._bindContentPresenter(presenter, view, model)
     }
 
     public func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol {

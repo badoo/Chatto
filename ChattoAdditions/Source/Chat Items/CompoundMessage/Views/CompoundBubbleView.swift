@@ -55,13 +55,13 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
     // MARK: - Public API
 
-    public var decoratedContentViews: [DecoratedView] = [] {
+    public var decoratedContentViews: [DecoratedView]? {
         didSet {
-            oldValue.forEach { $0.view.removeFromSuperview() }
+            oldValue?.forEach { $0.view.removeFromSuperview() }
             self.borderMaskLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
-            for decoratedView in self.decoratedContentViews {
+            self.decoratedContentViews?.forEach { decoratedView in
                 self.insertSubview(decoratedView.view, belowSubview: self.borderImageView)
-                guard decoratedView.showBorder else { continue }
+                guard decoratedView.showBorder else { return }
                 let sublayer = CALayer()
                 sublayer.backgroundColor = UIColor.black.cgColor
                 self.borderMaskLayer.addSublayer(sublayer)
@@ -106,7 +106,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         super.layoutSubviews()
         guard let layoutProvider = self.layoutProvider else { return }
         let layout = layoutProvider.layout(forMaxWidth: self.preferredMaxLayoutWidth)
-        let decoratedViewsWithFrames = zip(self.decoratedContentViews, layout.subviewsFrames)
+        let decoratedViewsWithFrames = zip(self.decoratedContentViews ?? [], layout.subviewsFrames)
         decoratedViewsWithFrames.forEach { $0.view.frame = $1 }
         let frame = CGRect(origin: .zero, size: layout.size)
         self.borderImageView.frame = frame

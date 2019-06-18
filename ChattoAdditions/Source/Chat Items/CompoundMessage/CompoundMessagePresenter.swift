@@ -36,11 +36,13 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     public let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
+
     private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     private let accessibilityIdentifier: String?
     private let menuPresenter: ChatItemMenuPresenterProtocol?
-    private var modules: [MessageContentModule]?
+
+    private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
+    private lazy var contentPresenters: [MessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
 
     public init(
         messageModel: ModelT,
@@ -54,7 +56,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         accessibilityIdentifier: String?
     ) {
         self.compoundCellStyle = compoundCellStyle
-        self.contentFactories = contentFactories.filter { $0.canCreateMessageModule(forModel: messageModel) }
+        self.contentFactories = contentFactories.filter { $0.canCreateMessageContent(forModel: messageModel) }
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: messageModel) }.first
@@ -102,51 +104,52 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             guard let sSelf = self else { return }
 
             let bubbleView = compoundCell.bubbleView!
+            bubbleView.viewModel = sSelf.messageViewModel
+            bubbleView.layoutProvider = sSelf.layoutProvider
+            bubbleView.setNeedsLayout()
 
-            if compoundCell.lastAppliedConfiguration == sSelf.messageModel {
-                let existingViews = bubbleView.decoratedContentViews.map { $0.view }
-                sSelf.modules = zip(sSelf.contentFactories, existingViews).map { factory, existingView in
-                    return factory.createMessageModule(forModel: sSelf.messageModel, withView: existingView)
-                }
-            } else {
-                compoundCell.lastAppliedConfiguration = sSelf.messageModel
-                sSelf.modules = sSelf.contentFactories.map { factory in
-                    let view = factory.createNewMessageView(forModel: sSelf.messageModel)
-                    return factory.createMessageModule(forModel: sSelf.messageModel, withView: view)
-                }
-                bubbleView.viewModel = sSelf.messageViewModel
+            if bubbleView.decoratedContentViews == nil {
                 bubbleView.style = sSelf.compoundCellStyle
-                bubbleView.decoratedContentViews = sSelf.modules?.map { .init(module: $0) } ?? []
-                bubbleView.layoutProvider = sSelf.layoutProvider
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
+
+                bubbleView.decoratedContentViews = zip(sSelf.contentFactories, sSelf.contentPresenters).map { factory, presenter in
+                    return CompoundBubbleView.DecoratedView(view: factory.createNewMessageView(), showBorder: presenter.showBorder)
+                }
+            }
+
+            zip(sSelf.contentFactories, zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view }))).forEach {
+                let (factory, (presenter, view)) = $0
+                factory.bindContentPresenter(presenter, withView: view, forModel: sSelf.messageModel)
             }
         }
     }
 
     open override func cellWillBeShown() {
         super.cellWillBeShown()
-        self.modules?.forEach { $0.willBeShown() }
+        self.contentPresenters.forEach { $0.contentWillBeShown() }
     }
 
     open override func cellWasHidden() {
         super.cellWasHidden()
-        self.modules?.forEach { $0.wasHidden() }
+        self.contentPresenters.forEach { $0.contentWasHidden() }
     }
 
     open override func onCellBubbleTapped() {
         super.onCellBubbleTapped()
-        self.modules?.forEach { $0.wasTapped() }
+        self.contentPresenters.forEach { $0.contentWasTapped() }
     }
 
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
-        let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
-        let viewModel = self.messageViewModel
-        let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
-        let configuration = CompoundBubbleLayoutProvider.Configuration(
-            layoutProviders: contentLayoutProviders,
-            tailWidth: tailWidth,
-            isIncoming: viewModel.isIncoming
-        )
+        let configuration: CompoundBubbleLayoutProvider.Configuration = {
+            let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
+            let viewModel = self.messageViewModel
+            let tailWidth = self.compoundCellStyle.tailWidth(forViewModel: viewModel)
+            return CompoundBubbleLayoutProvider.Configuration(
+                layoutProviders: contentLayoutProviders,
+                tailWidth: tailWidth,
+                isIncoming: viewModel.isIncoming
+            )
+        }()
         guard let provider = self.cache[configuration] else {
             let provider = CompoundBubbleLayoutProvider(configuration: configuration)
             self.cache[configuration] = provider
@@ -169,13 +172,5 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func performMenuControllerAction(_ action: Selector) {
         self.menuPresenter?.performMenuControllerAction(action)
-    }
-}
-
-@available(iOS 11, *)
-private extension CompoundBubbleView.DecoratedView {
-    init(module: MessageContentModule) {
-        self.init(view: module.view,
-                  showBorder: module.showBorder)
     }
 }

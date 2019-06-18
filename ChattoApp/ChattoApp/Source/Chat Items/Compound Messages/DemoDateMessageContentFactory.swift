@@ -37,20 +37,25 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
     private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
     private let font = UIFont.systemFont(ofSize: 17)
 
-    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
-    func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
-        let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
+    func createNewMessageView() -> UIView {
         let label = UILabel()
         label.textAlignment = .right
-        label.text = text
         return DateInfoView(label: label, insets: self.textInsets)
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
-        return MessageContentModule(view: view, presenter: (), showBorder: true)
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter(showBorder: true)
+    }
+
+    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {}
+
+    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: DemoCompoundMessageModel) {
+        guard let dateInfoView = view as? DateInfoView else { fatalError("Unexpected view type.") }
+        dateInfoView.text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
@@ -84,5 +89,10 @@ private final class DateInfoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.label.frame = self.bounds.inset(by: self.insets).inset(by: self.safeAreaInsets)
+    }
+
+    var text: String? {
+        get { return self.label.text }
+        set { self.label.text = newValue }
     }
 }

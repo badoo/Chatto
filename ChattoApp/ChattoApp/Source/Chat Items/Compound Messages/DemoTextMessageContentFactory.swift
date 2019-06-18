@@ -30,22 +30,28 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
     private let font = UIFont.systemFont(ofSize: 17)
     private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
 
-    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
-    func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
+    func createNewMessageView() -> UIView {
         let label = LabelWithInsets()
         label.numberOfLines = 0
-        label.text = model.text
         label.font = self.font
         label.textInsets = self.textInsets
-        label.textColor = model.isIncoming ? .black : .white
         return label
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
-        return MessageContentModule(view: view, presenter: ())
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter(showBorder: false)
+    }
+
+    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {}
+
+    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: DemoCompoundMessageModel) {
+        guard let label = view as? LabelWithInsets else { fatalError("Unexpected view type.") }
+        label.text = model.text
+        label.textColor = model.isIncoming ? .black : .white
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {

@@ -26,8 +26,26 @@ import Chatto
 import ChattoAdditions
 
 struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
-    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
+
+    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return model.image != nil
+    }
+
+    func createNewMessageView() -> UIView {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleToFill
+        return imageView
+    }
+
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter(showBorder: false)
+    }
+
+    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {}
+
+    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: DemoCompoundMessageModel) {
+        guard let imageView = view as? UIImageView else { fatalError("Unexpected view type.") }
+        imageView.image = model.image
     }
 
     func createNewMessageView(forModel model: DemoCompoundMessageModel) -> UIView {
@@ -36,10 +54,6 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         imageView.contentMode = .scaleToFill
         imageView.image = image
         return imageView
-    }
-
-    func createMessageModule(forModel model: DemoCompoundMessageModel, withView view: UIView) -> MessageContentModule {
-        return MessageContentModule(view: view, presenter: ())
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
