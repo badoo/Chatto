@@ -106,12 +106,11 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = sSelf.messageViewModel
             bubbleView.layoutProvider = sSelf.layoutProvider
+            bubbleView.style = sSelf.compoundCellStyle
             bubbleView.setNeedsLayout()
 
             if bubbleView.decoratedContentViews == nil {
-                bubbleView.style = sSelf.compoundCellStyle
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
-
                 bubbleView.decoratedContentViews = zip(sSelf.contentFactories, sSelf.contentPresenters).map { factory, presenter in
                     return CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
                 }
