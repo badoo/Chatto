@@ -41,7 +41,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return true
     }
 
-    func createNewMessageView() -> UIView {
+    func createContentView() -> UIView {
         let label = UILabel()
         label.textAlignment = .right
         return DateInfoView(label: label, insets: self.textInsets)

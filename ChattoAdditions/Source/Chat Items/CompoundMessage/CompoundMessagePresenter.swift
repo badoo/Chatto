@@ -49,7 +49,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         contentFactories: [AnyMessageContentFactory<ModelT>],
-        sizingCell: CompoundMessageCollectionViewCell<ModelT>,
+        sizingCell: CompoundMessageCollectionViewCell,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
@@ -79,7 +79,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let cellReuseIdentifier = self.compoundCellReuseId
-        collectionView.register(CompoundMessageCollectionViewCell<ModelT>.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        collectionView.register(CompoundMessageCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         return collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath)
     }
 
@@ -94,8 +94,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                                        decorationAttributes: ChatItemDecorationAttributes,
                                        animated: Bool,
                                        additionalConfiguration: (() -> Void)?) {
-        guard let compoundCell = cell as? CompoundMessageCollectionViewCell<ModelT> else {
-            assertionFailure("\(cell) is not CompoundMessageCollectionViewCell<\(ModelT.self)>")
+        guard let compoundCell = cell as? CompoundMessageCollectionViewCell else {
+            assertionFailure("\(cell) is not CompoundMessageCollectionViewCell")
             return
         }
 
@@ -113,7 +113,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
 
                 bubbleView.decoratedContentViews = zip(sSelf.contentFactories, sSelf.contentPresenters).map { factory, presenter in
-                    return CompoundBubbleView.DecoratedView(view: factory.createNewMessageView(), showBorder: presenter.showBorder)
+                    return CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
                 }
             }
 

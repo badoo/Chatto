@@ -50,7 +50,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell<ModelT>()
+    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
     private let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let baseCellStyle: BaseMessageCollectionViewCellStyleProtocol
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()

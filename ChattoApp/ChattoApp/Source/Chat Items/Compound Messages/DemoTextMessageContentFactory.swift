@@ -34,7 +34,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return true
     }
 
-    func createNewMessageView() -> UIView {
+    func createContentView() -> UIView {
         let label = LabelWithInsets()
         label.numberOfLines = 0
         label.font = self.font

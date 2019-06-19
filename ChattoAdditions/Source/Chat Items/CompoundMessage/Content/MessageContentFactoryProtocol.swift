@@ -49,7 +49,7 @@ public protocol MessageContentFactoryProtocol {
     associatedtype Model
     var identifier: String { get }
     func canCreateMessageContent(forModel model: Model) -> Bool
-    func createNewMessageView() -> UIView
+    func createContentView() -> UIView
     func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol
     func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol)
     func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: Model)
@@ -58,13 +58,15 @@ public protocol MessageContentFactoryProtocol {
 }
 
 public extension MessageContentFactoryProtocol {
-    var identifier: String { return "\(type(of: self as Any))" }
+    var identifier: String {
+        return String(describing: type(of: self))
+    }
 }
 
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
 
     private let _canCreateMessageContent: (Model) -> Bool
-    private let _createNewMessageView: () -> UIView
+    private let _createContentView: () -> UIView
     private let _createContentPresenter: (Model) -> MessageContentPresenterProtocol
     private let _unbindContentPresenter: (MessageContentPresenterProtocol) -> Void
     private let _bindContentPresenter: (MessageContentPresenterProtocol, UIView, Model) -> Void
@@ -74,7 +76,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self.identifier = base.identifier
         self._canCreateMessageContent = base.canCreateMessageContent
-        self._createNewMessageView = base.createNewMessageView
+        self._createContentView = base.createContentView
         self._createContentPresenter = base.createContentPresenter
         self._unbindContentPresenter = base.unbindContentPresenter
         self._bindContentPresenter = base.bindContentPresenter
@@ -88,8 +90,8 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
         return self._canCreateMessageContent(model)
     }
 
-    public func createNewMessageView() -> UIView {
-        return self._createNewMessageView()
+    public func createContentView() -> UIView {
+        return self._createContentView()
     }
 
     public func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol {

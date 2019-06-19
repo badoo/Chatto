@@ -31,7 +31,7 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         return model.image != nil
     }
 
-    func createNewMessageView() -> UIView {
+    func createContentView() -> UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         return imageView
