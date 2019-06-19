@@ -126,10 +126,6 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         guard let viewModel = self.viewModel, let style = self.style else { return }
 
         self.borderImageView.image = style.borderImage(forViewModel: viewModel)
-            self.borderImageView.image = borderImage
-        } else {
-            self.borderImageView.image = nil
-        }
 
         if let maskImage = style.maskingImage(forViewModel: viewModel) {
             self.borderImageView.layer.mask = self.borderMaskLayer
