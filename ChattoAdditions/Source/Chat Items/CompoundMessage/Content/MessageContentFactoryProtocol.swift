@@ -34,15 +34,36 @@ public protocol MessageContentPresenterProtocol {
 
 public final class DefaultMessageContentPresenter: MessageContentPresenterProtocol {
 
-    public init(showBorder: Bool) {
+    public typealias ActionHandler = (UIView?) -> Void
+
+    public init(showBorder: Bool,
+                onContentWillBeShown: ActionHandler? = nil,
+                onContentWasHidden: ActionHandler? = nil,
+                onContentWasTapped: ActionHandler? = nil) {
         self.showBorder = showBorder
+        self.onContentWillBeShown = onContentWillBeShown
+        self.onContentWasHidden = onContentWasHidden
+        self.onContentWasTapped = onContentWasTapped
     }
 
-    public let showBorder: Bool
+    private weak var view: UIView?
 
-    public func contentWillBeShown() {}
-    public func contentWasHidden() {}
-    public func contentWasTapped() {}
+    public let showBorder: Bool
+    private let onContentWillBeShown: ActionHandler?
+    private let onContentWasHidden: ActionHandler?
+    private let onContentWasTapped: ActionHandler?
+
+    public func contentWillBeShown() { self.onContentWillBeShown?(self.view) }
+    public func contentWasHidden() { self.onContentWasHidden?(self.view) }
+    public func contentWasTapped() { self.onContentWasTapped?(self.view) }
+
+    public func bindTo(view: UIView) {
+        self.view = view
+    }
+
+    public func unbindFromView() {
+        self.view = nil
+    }
 }
 
 public protocol MessageContentFactoryProtocol {
