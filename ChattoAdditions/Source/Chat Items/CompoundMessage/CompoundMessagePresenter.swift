@@ -118,6 +118,11 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
             zip(sSelf.contentFactories, zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view }))).forEach {
                 let (factory, (presenter, view)) = $0
+
+                compoundCell.addActionOnPrepareForReuse {
+                    factory.unbindContentPresenter(presenter)
+                }
+
                 factory.bindContentPresenter(presenter, withView: view, forModel: sSelf.messageModel)
             }
         }
