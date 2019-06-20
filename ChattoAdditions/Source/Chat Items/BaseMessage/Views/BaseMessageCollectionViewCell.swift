@@ -189,6 +189,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return gestureRecognizer === self.longPressGestureRecognizer
     }
 
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer === self.longPressGestureRecognizer && otherGestureRecognizer is UILongPressGestureRecognizer
+    }
+
     open override func prepareForReuse() {
         super.prepareForReuse()
         self.removeAccessoryView()
