@@ -42,16 +42,15 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return label
     }
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
-        return DefaultMessageContentPresenter(showBorder: false)
-    }
-
-    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {}
-
-    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: DemoCompoundMessageModel) {
-        guard let label = view as? LabelWithInsets else { fatalError("Unexpected view type.") }
-        label.text = model.text
-        label.textColor = model.isIncoming ? .black : .white
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter<DemoCompoundMessageModel, LabelWithInsets>(
+            message: model,
+            showBorder: false,
+            onBinding: { message, label in
+                label?.text = message.text
+                label?.textColor = message.isIncoming ? .black : .white
+            }
+        )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {

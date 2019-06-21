@@ -22,37 +22,38 @@
 // THE SOFTWARE.
 
 import UIKit
-import Chatto
-import ChattoAdditions
 
-struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
+public final class ViewReference<View: UIView> {
 
-    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
-        return model.image != nil
+    public weak var view: View?
+
+    public init(to view: View?) {
+        self.view = view
     }
+}
 
-    func createContentView() -> UIView {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
-        return imageView
-    }
+public protocol BaseMessageContentPresenterProtocol {
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
-        return DefaultMessageContentPresenter<DemoCompoundMessageModel, UIImageView>(
-            message: model,
-            showBorder: false,
-            onBinding: { message, imageView in
-                imageView?.image = message.image
-            }
-        )
-    }
+    /// Very likely it should be moved to other place but we didn't decide yet where.
+    var showBorder: Bool { get }
 
-    func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
-        guard let image = model.image else { preconditionFailure() }
-        return ImageMessageLayoutProvider(imageSize: image.size)
-    }
+    func contentWillBeShown()
+    func contentWasHidden()
 
-    func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
-        return nil
-    }
+    /// It will be removed in the future. View taps should be handled by presenters themselves.
+    func contentWasTapped_deprecated()
+
+    func unbindFromView()
+}
+
+public protocol MessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
+    associatedtype MessageType: Any
+    associatedtype ViewType: UIView
+
+    func bindToView(with viewReference: ViewReference<ViewType>)
+}
+
+public protocol TypeErasedMessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
+
+    func bindToView(with viewReference: AnyObject)
 }

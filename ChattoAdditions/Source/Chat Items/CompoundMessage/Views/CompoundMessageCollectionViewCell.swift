@@ -27,16 +27,4 @@ public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewC
     public override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()
     }
-
-    public override func prepareForReuse() {
-        super.prepareForReuse()
-        self.actionsOnPrepareForReuse.forEach { $0() }
-        self.actionsOnPrepareForReuse.removeAll()
-    }
-
-    public func addActionOnPrepareForReuse(_ action: @escaping () -> Void) {
-        self.actionsOnPrepareForReuse.append(action)
-    }
-
-    private var actionsOnPrepareForReuse: [() -> Void] = []
 }

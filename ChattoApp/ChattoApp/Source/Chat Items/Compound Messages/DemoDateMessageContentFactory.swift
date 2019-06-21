@@ -47,15 +47,14 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return DateInfoView(label: label, insets: self.textInsets)
     }
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
-        return DefaultMessageContentPresenter(showBorder: true)
-    }
-
-    func unbindContentPresenter(_ presenter: MessageContentPresenterProtocol) {}
-
-    func bindContentPresenter(_ presenter: MessageContentPresenterProtocol, withView view: UIView, forModel model: DemoCompoundMessageModel) {
-        guard let dateInfoView = view as? DateInfoView else { fatalError("Unexpected view type.") }
-        dateInfoView.text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter<DemoCompoundMessageModel, DateInfoView>(
+            message: model,
+            showBorder: true,
+            onBinding: { message, dateInfoView in
+                dateInfoView?.text = DemoDateMessageContentFactory.dateFormatter.string(from: message.date)
+            }
+        )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {

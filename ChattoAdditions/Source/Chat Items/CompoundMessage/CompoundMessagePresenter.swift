@@ -42,7 +42,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let menuPresenter: ChatItemMenuPresenterProtocol?
 
     private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
-    private lazy var contentPresenters: [MessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
+    private lazy var contentPresenters: [TypeErasedMessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
+    private var viewReferences: [ViewReference<UIView>] = []
 
     public init(
         messageModel: ModelT,
@@ -116,14 +117,19 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 }
             }
 
-            zip(sSelf.contentFactories, zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view }))).forEach {
-                let (factory, (presenter, view)) = $0
+            /*
+             There is a current algorithm of binding (and unbinding, as well) compoundCell's views to their presenters:
+             1. Already bound presenters are unbound from views: each presenter is responsible for cleaning up its view.
+             2. All the view references are destroyed to break a connection between compoundCell's views and their previous presenters. These presenters will lose the opportunity to affect compoundCell's views.
+             3. CompoundCell's views bound with a current compound message presenters.
+             */
 
-                compoundCell.addActionOnPrepareForReuse {
-                    factory.unbindContentPresenter(presenter)
-                }
+            sSelf.contentPresenters.forEach { $0.unbindFromView() }
 
-                factory.bindContentPresenter(presenter, withView: view, forModel: sSelf.messageModel)
+            sSelf.viewReferences = zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
+                let viewReference = ViewReference(to: view)
+                presenter.bindToView(with: viewReference)
+                return viewReference
             }
         }
     }
@@ -140,7 +146,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func onCellBubbleTapped() {
         super.onCellBubbleTapped()
-        self.contentPresenters.forEach { $0.contentWasTapped() }
+        self.contentPresenters.forEach { $0.contentWasTapped_deprecated() }
     }
 
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
