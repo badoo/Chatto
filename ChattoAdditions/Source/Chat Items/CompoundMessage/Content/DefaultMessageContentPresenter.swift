@@ -48,7 +48,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     }
 
     private var message: MessageType
-    private weak var viewReference: ViewReference<ViewType>?
+    private weak var viewReference: ViewReference?
+    private var view: ViewType? { return self.viewReference?.view as? ViewType }
 
     private let onBinding: BindingClosure?
     private let onUnbinding: UnbindingClosure?
@@ -61,22 +62,16 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     public let showBorder: Bool
 
-    public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.viewReference?.view) }
-    public func contentWasHidden() { self.onContentWasHidden?(self.message, self.viewReference?.view) }
-    public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.message, self.viewReference?.view) }
+    public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.view) }
+    public func contentWasHidden() { self.onContentWasHidden?(self.message, self.view) }
+    public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.message, self.view) }
 
-    public func bindToView(with viewReference: ViewReference<ViewType>) {
+    public func bindToView(with viewReference: ViewReference) {
         self.viewReference = viewReference
-        self.onBinding?(self.message, self.viewReference?.view)
+        self.onBinding?(self.message, self.view)
     }
 
     public func unbindFromView() {
-        self.onUnbinding?(self.viewReference?.view)
-    }
-
-    // MARK: - SimplifiedMessageContentPresenterProtocol
-
-    public func bindToView(with viewReference: AnyObject) {
-        self.bindToView(with: viewReference as! ViewReference<ViewType>)
+        self.onUnbinding?(self.view)
     }
 }

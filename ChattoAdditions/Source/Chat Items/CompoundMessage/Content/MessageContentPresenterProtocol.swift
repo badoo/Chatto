@@ -23,11 +23,11 @@
 
 import UIKit
 
-public final class ViewReference<View: UIView> {
+public final class ViewReference {
 
-    public weak var view: View?
+    public weak var view: UIView?
 
-    public init(to view: View?) {
+    public init(to view: UIView?) {
         self.view = view
     }
 }
@@ -43,17 +43,14 @@ public protocol BaseMessageContentPresenterProtocol {
     /// It will be removed in the future. View taps should be handled by presenters themselves.
     func contentWasTapped_deprecated()
 
+    func bindToView(with viewReference: ViewReference)
     func unbindFromView()
 }
 
 public protocol MessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
     associatedtype MessageType: Any
     associatedtype ViewType: UIView
-
-    func bindToView(with viewReference: ViewReference<ViewType>)
 }
 
 public protocol TypeErasedMessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
-
-    func bindToView(with viewReference: AnyObject)
 }

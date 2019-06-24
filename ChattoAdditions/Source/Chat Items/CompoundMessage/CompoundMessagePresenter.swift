@@ -43,7 +43,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
     private lazy var contentPresenters: [TypeErasedMessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
-    private var viewReferences: [ViewReference<UIView>] = []
+    private var viewReferences: [ViewReference] = []
 
     public init(
         messageModel: ModelT,
