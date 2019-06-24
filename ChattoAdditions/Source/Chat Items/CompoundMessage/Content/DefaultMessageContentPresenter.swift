@@ -25,7 +25,7 @@ import UIKit
 
 public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol, TypeErasedMessageContentPresenterProtocol {
 
-    public typealias ActionHandler = (ViewType?) -> Void
+    public typealias ActionHandler = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias BindingClosure = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias UnbindingClosure = (_ view: ViewType?) -> Void
 
@@ -61,9 +61,9 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     public let showBorder: Bool
 
-    public func contentWillBeShown() { self.onContentWillBeShown?(self.viewReference?.view) }
-    public func contentWasHidden() { self.onContentWasHidden?(self.viewReference?.view) }
-    public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.viewReference?.view) }
+    public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.viewReference?.view) }
+    public func contentWasHidden() { self.onContentWasHidden?(self.message, self.viewReference?.view) }
+    public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.message, self.viewReference?.view) }
 
     public func bindToView(with viewReference: ViewReference<ViewType>) {
         self.viewReference = viewReference
