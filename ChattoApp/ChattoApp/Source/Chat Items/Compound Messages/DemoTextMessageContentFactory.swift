@@ -42,7 +42,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
         return label
     }
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
         return DefaultMessageContentPresenter<DemoCompoundMessageModel, LabelWithInsets>(
             message: model,
             showBorder: false,

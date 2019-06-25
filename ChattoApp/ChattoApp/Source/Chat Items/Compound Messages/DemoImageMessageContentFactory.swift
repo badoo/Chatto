@@ -37,7 +37,7 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
         return imageView
     }
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
         return DefaultMessageContentPresenter<DemoCompoundMessageModel, UIImageView>(
             message: model,
             showBorder: false,

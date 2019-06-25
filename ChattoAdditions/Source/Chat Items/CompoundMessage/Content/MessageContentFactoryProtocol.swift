@@ -30,7 +30,7 @@ public protocol MessageContentFactoryProtocol {
 
     func canCreateMessageContent(forModel model: Model) -> Bool
     func createContentView() -> UIView
-    func createContentPresenter(forModel model: Model) -> TypeErasedMessageContentPresenterProtocol
+    func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
     func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
 }
@@ -45,7 +45,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
 
     private let _canCreateMessageContent: (Model) -> Bool
     private let _createContentView: () -> UIView
-    private let _createContentPresenter: (Model) -> TypeErasedMessageContentPresenterProtocol
+    private let _createContentPresenter: (Model) -> MessageContentPresenterProtocol
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
     private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
@@ -68,7 +68,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
         return self._createContentView()
     }
 
-    public func createContentPresenter(forModel model: Model) -> TypeErasedMessageContentPresenterProtocol {
+    public func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol {
         return self._createContentPresenter(model)
     }
 

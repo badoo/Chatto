@@ -47,7 +47,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return DateInfoView(label: label, insets: self.textInsets)
     }
 
-    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> TypeErasedMessageContentPresenterProtocol {
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
         return DefaultMessageContentPresenter<DemoCompoundMessageModel, DateInfoView>(
             message: model,
             showBorder: true,

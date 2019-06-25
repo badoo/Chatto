@@ -32,7 +32,7 @@ public final class ViewReference {
     }
 }
 
-public protocol BaseMessageContentPresenterProtocol {
+public protocol MessageContentPresenterProtocol {
 
     /// Very likely it should be moved to other place but we didn't decide yet where.
     var showBorder: Bool { get }
@@ -45,12 +45,4 @@ public protocol BaseMessageContentPresenterProtocol {
 
     func bindToView(with viewReference: ViewReference)
     func unbindFromView()
-}
-
-public protocol MessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
-    associatedtype MessageType: Any
-    associatedtype ViewType: UIView
-}
-
-public protocol TypeErasedMessageContentPresenterProtocol: AnyObject, BaseMessageContentPresenterProtocol {
 }

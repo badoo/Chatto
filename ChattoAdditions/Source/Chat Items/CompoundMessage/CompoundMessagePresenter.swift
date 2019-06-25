@@ -42,7 +42,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let menuPresenter: ChatItemMenuPresenterProtocol?
 
     private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
-    private lazy var contentPresenters: [TypeErasedMessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
+    private lazy var contentPresenters: [MessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
     private var viewReferences: [ViewReference] = []
 
     public init(

@@ -23,7 +23,7 @@
 
 import UIKit
 
-public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol, TypeErasedMessageContentPresenterProtocol {
+public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol {
 
     public typealias ActionHandler = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias BindingClosure = (_ message: MessageType, _ view: ViewType?) -> Void
