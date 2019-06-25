@@ -27,9 +27,15 @@ import Foundation
 private struct HashableItem: Hashable {
     private let uid: String
     private let type: String
-    init(chatItem: ChatItemProtocol) {
-        self.uid = chatItem.uid
-        self.type = chatItem.type
+
+    init(_ decoratedChatItem: DecoratedChatItem) {
+        self.uid = decoratedChatItem.uid
+        self.type = decoratedChatItem.chatItem.type
+    }
+
+    init(_ chatItemCompanion: ChatItemCompanion) {
+        self.uid = chatItemCompanion.uid
+        self.type = chatItemCompanion.chatItem.type
     }
 }
 
@@ -282,8 +288,8 @@ extension BaseChatViewController {
 
     private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
         let newDecoratedItems = self.chatItemsDecorator?.decorateItems(newItems) ?? newItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
-        let changes = Chatto.generateChanges(oldCollection: oldItems.map { HashableItem(chatItem: $0.chatItem) },
-                                             newCollection: newDecoratedItems.map { HashableItem(chatItem: $0.chatItem) })
+        let changes = Chatto.generateChanges(oldCollection: oldItems.map(HashableItem.init),
+                                             newCollection: newDecoratedItems.map(HashableItem.init))
         let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
         let layoutModel = self.createLayoutModel(itemCompanionCollection, collectionViewWidth: collectionViewWidth)
         let updateModelClosure : () -> Void = { [weak self] in
