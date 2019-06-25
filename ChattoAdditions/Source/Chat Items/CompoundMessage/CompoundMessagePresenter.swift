@@ -107,8 +107,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = sSelf.messageViewModel
             bubbleView.layoutProvider = sSelf.layoutProvider
-            bubbleView.style = sSelf.compoundCellStyle
-            bubbleView.setNeedsLayout()
+            bubbleView.style = sSelf.compoundCellStyle            
 
             if bubbleView.decoratedContentViews == nil {
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier

@@ -77,7 +77,9 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         didSet { self.updateViews() }
     }
 
-    public var layoutProvider: CompoundBubbleLayoutProvider?
+    public var layoutProvider: CompoundBubbleLayoutProvider? {
+        didSet { self.setNeedsLayout() }
+    }
 
     // MARK: - MaximumLayoutWidthSpecificable
 
