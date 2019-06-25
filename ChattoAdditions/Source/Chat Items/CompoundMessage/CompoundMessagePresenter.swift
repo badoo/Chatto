@@ -43,7 +43,6 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
     private lazy var contentPresenters: [MessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
-    private var viewReferences: [ViewReference] = []
 
     public init(
         messageModel: ModelT,
@@ -107,7 +106,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             let bubbleView = compoundCell.bubbleView!
             bubbleView.viewModel = sSelf.messageViewModel
             bubbleView.layoutProvider = sSelf.layoutProvider
-            bubbleView.style = sSelf.compoundCellStyle            
+            bubbleView.style = sSelf.compoundCellStyle
 
             if bubbleView.decoratedContentViews == nil {
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
@@ -124,8 +123,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
              */
 
             sSelf.contentPresenters.forEach { $0.unbindFromView() }
-
-            sSelf.viewReferences = zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
+            compoundCell.viewReferences = zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
                 let viewReference = ViewReference(to: view)
                 presenter.bindToView(with: viewReference)
                 return viewReference

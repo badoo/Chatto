@@ -27,4 +27,6 @@ public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewC
     public override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()
     }
+
+    public var viewReferences: [ViewReference]?
 }
