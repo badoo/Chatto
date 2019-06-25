@@ -60,6 +60,10 @@ open class ContentAwareInputItem {
 
 // MARK: - ChatInputItemProtocol
 extension ContentAwareInputItem: ChatInputItemProtocol {
+    public var shouldSaveDraftMessage: Bool {
+        return false
+    }
+
     public var supportsExpandableState: Bool {
         return true
     }

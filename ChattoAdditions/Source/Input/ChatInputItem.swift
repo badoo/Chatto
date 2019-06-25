@@ -39,6 +39,7 @@ public protocol ChatInputItemProtocol: AnyObject {
     
     var supportsExpandableState: Bool { get }
     var expandedStateTopMargin: CGFloat { get }
+    var shouldSaveDraftMessage: Bool { get }
 
     func handleInput(_ input: AnyObject)
 }

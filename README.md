@@ -30,6 +30,11 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 
 2. Include the following in your `Podfile`:
   ```
+  # Swift 4.2
+  pod 'Chatto', '= 3.4.0'
+  pod 'ChattoAdditions', '= 3.4.0' # if you want to use the cells or the input component
+  ```
+  ```
   # Swift 4
   pod 'Chatto', '= 3.3.1'
   pod 'ChattoAdditions', '= 3.3.1' # if you want to use the cells or the input component

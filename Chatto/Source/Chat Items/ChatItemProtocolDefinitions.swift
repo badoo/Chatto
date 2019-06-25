@@ -26,7 +26,7 @@ import Foundation
 
 public typealias ChatItemType = String
 
-public protocol ChatItemProtocol: class, UniqueIdentificable {
+public protocol ChatItemProtocol: AnyObject, UniqueIdentificable {
     var type: ChatItemType { get }
 }
 
@@ -34,7 +34,13 @@ public protocol ChatItemDecorationAttributesProtocol {
     var bottomMargin: CGFloat { get }
 }
 
-public protocol ChatItemPresenterProtocol: class {
+public protocol ChatItemMenuPresenterProtocol {
+    func shouldShowMenu() -> Bool
+    func canPerformMenuControllerAction(_ action: Selector) -> Bool
+    func performMenuControllerAction(_ action: Selector)
+}
+
+public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol {
     static func registerCells(_ collectionView: UICollectionView)
     var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
@@ -42,9 +48,6 @@ public protocol ChatItemPresenterProtocol: class {
     func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
     func cellWillBeShown(_ cell: UICollectionViewCell) // optional
     func cellWasHidden(_ cell: UICollectionViewCell) // optional
-    func shouldShowMenu() -> Bool // optional. Default is false
-    func canPerformMenuControllerAction(_ action: Selector) -> Bool // optional. Default is false
-    func performMenuControllerAction(_ action: Selector) // optional
 }
 
 public extension ChatItemPresenterProtocol { // Optionals
