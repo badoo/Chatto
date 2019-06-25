@@ -85,16 +85,16 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func heightForCell(maximumWidth width: CGFloat,
-                                       decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
+                                     decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
         let layoutConstants = self.cellStyle.layoutConstants(viewModel: self.messageViewModel)
         let maxWidth = (width * layoutConstants.maxContainerWidthPercentageForBubbleView)
         return self.layoutProvider.layout(forMaxWidth: maxWidth).size.height
     }
 
     open override func configureCell(_ cell: BaseMessageCollectionViewCell<CompoundBubbleView>,
-                                       decorationAttributes: ChatItemDecorationAttributes,
-                                       animated: Bool,
-                                       additionalConfiguration: (() -> Void)?) {
+                                     decorationAttributes: ChatItemDecorationAttributes,
+                                     animated: Bool,
+                                     additionalConfiguration: (() -> Void)?) {
         guard let compoundCell = cell as? CompoundMessageCollectionViewCell else {
             assertionFailure("\(cell) is not CompoundMessageCollectionViewCell")
             return
