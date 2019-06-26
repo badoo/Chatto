@@ -164,8 +164,14 @@ extension DemoChatMessageFactory {
     static func makeCompoundMessages() -> [MessageModelProtocol] {
         return [
             self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
             self.makeCompoundMessage(isIncoming: false)
-        ]
+        ].reversed()
     }
 
     private static let messagesSelectionMessages: [DemoMessage] = [

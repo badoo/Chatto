@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 import ChattoAdditions
 
 struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
@@ -36,17 +37,24 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
     private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
     private let font = UIFont.systemFont(ofSize: 17)
 
-    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
-        let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
+    func createContentView() -> UIView {
         let label = UILabel()
         label.textAlignment = .right
-        label.text = text
-        let infoView = DateInfoView(label: label, insets: self.textInsets)
-        return MessageContentModule(view: infoView, presenter: (), showBorder: true)
+        return DateInfoView(label: label, insets: self.textInsets)
+    }
+
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter<DemoCompoundMessageModel, DateInfoView>(
+            message: model,
+            showBorder: true,
+            onBinding: { message, dateInfoView in
+                dateInfoView?.text = DemoDateMessageContentFactory.dateFormatter.string(from: message.date)
+            }
+        )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
@@ -54,6 +62,10 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return TextMessageLayoutProvider(text: text,
                                          font: self.font,
                                          textInsets: self.textInsets)
+    }
+
+    func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
+        return nil
     }
 }
 
@@ -76,5 +88,10 @@ private final class DateInfoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.label.frame = self.bounds.inset(by: self.insets).inset(by: self.safeAreaInsets)
+    }
+
+    var text: String? {
+        get { return self.label.text }
+        set { self.label.text = newValue }
     }
 }

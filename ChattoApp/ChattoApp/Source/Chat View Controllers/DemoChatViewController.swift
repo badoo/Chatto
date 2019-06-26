@@ -95,9 +95,9 @@ class DemoChatViewController: BaseChatViewController {
                 .init(DemoTextMessageContentFactory()),
                 .init(DemoImageMessageContentFactory()),
                 .init(DemoDateMessageContentFactory())
-            ]
+            ],
+            baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
         )
-        compoundPresenterBuilder.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         return [
             DemoTextMessageModel.chatItemType: [textMessagePresenter],

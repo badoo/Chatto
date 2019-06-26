@@ -21,12 +21,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-@available(iOS 11, *)
-public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
+import UIKit
 
-    public override func createBubbleView() -> CompoundBubbleView! {
-        return CompoundBubbleView()
+public final class ViewReference {
+
+    public weak var view: UIView?
+
+    public init(to view: UIView?) {
+        self.view = view
     }
+}
 
-    public var viewReferences: [ViewReference]?
+public protocol MessageContentPresenterProtocol {
+
+    /// Very likely it should be moved to other place but we didn't decide yet where.
+    var showBorder: Bool { get }
+
+    func contentWillBeShown()
+    func contentWasHidden()
+
+    /// It will be removed in the future. View taps should be handled by presenters themselves.
+    func contentWasTapped_deprecated()
+
+    func bindToView(with viewReference: ViewReference)
+    func unbindFromView()
 }
