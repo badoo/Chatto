@@ -25,10 +25,31 @@ import UIKit
 
 public protocol CompoundBubbleViewStyleProtocol {
     typealias ViewModel = MessageViewModelProtocol
-    func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor
-    func maskingImage(forViewModel viewModel: ViewModel) -> UIImage
-    func borderImage(forViewModel viewModel: ViewModel) -> UIImage
+    func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor?
+    func maskingImage(forViewModel viewModel: ViewModel) -> UIImage?
+    func borderImage(forViewModel viewModel: ViewModel) -> UIImage?
     func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat
+}
+
+public final class NoBubbleCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
+
+    public init() {}
+
+    public func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
+        return nil
+    }
+
+    public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
+        return nil
+    }
+
+    public func borderImage(forViewModel viewModel: ViewModel) -> UIImage? {
+        return nil
+    }
+
+    public func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat {
+        return 0
+    }
 }
 
 public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
@@ -61,18 +82,17 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
         self.bubbleMasks = bubbleMasks
     }
 
-
-    public func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor {
+    public func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
         return viewModel.isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
     }
 
-    public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage {
+    public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
         return self.bubbleMasks.image(incoming: viewModel.isIncoming,
                                       showTail: viewModel.decorationAttributes.isShowingTail)
     }
 
-    public func borderImage(forViewModel viewModel: ViewModel) -> UIImage {
-        return self.baseStyle.borderImage(viewModel: viewModel)!
+    public func borderImage(forViewModel viewModel: ViewModel) -> UIImage? {
+        return self.baseStyle.borderImage(viewModel: viewModel)
     }
 
     public func tailWidth(forViewModel _: ViewModel) -> CGFloat {

@@ -21,49 +21,62 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public final class MessageContentModule {
-    public typealias Presenter = Any
-    public let view: UIView
-    public let showBorder: Bool
-    public let presenter: Presenter
-
-    public init(view: UIView,
-                presenter: Presenter,
-                showBorder: Bool = false) {
-        self.view = view
-        self.showBorder = showBorder
-        self.presenter = presenter
-    }
-}
+import Chatto
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
-    func canCreateMessageModule(forModel model: Model) -> Bool
-    func createMessageModule(forModel model: Model) -> MessageContentModule
+
+    var identifier: String { get }
+
+    func canCreateMessageContent(forModel model: Model) -> Bool
+    func createContentView() -> UIView
+    func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
+    func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
+}
+
+public extension MessageContentFactoryProtocol {
+    var identifier: String {
+        return String(describing: type(of: self))
+    }
 }
 
 public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtocol {
 
-    private let _canCreateMessageModule: (Model) -> Bool
-    private let _createMessageModule: (Model) -> MessageContentModule
+    private let _canCreateMessageContent: (Model) -> Bool
+    private let _createContentView: () -> UIView
+    private let _createContentPresenter: (Model) -> MessageContentPresenterProtocol
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
+    private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
-        self._canCreateMessageModule = base.canCreateMessageModule
-        self._createMessageModule = base.createMessageModule
+        self.identifier = base.identifier
+        self._canCreateMessageContent = base.canCreateMessageContent
+        self._createContentView = base.createContentView
+        self._createContentPresenter = base.createContentPresenter
         self._createLayoutProvider = base.createLayoutProvider
+        self._createMenuPresenter = base.createMenuPresenter
     }
 
-    public func canCreateMessageModule(forModel model: Model) -> Bool {
-        return self._canCreateMessageModule(model)
+    public let identifier: String
+
+    public func canCreateMessageContent(forModel model: Model) -> Bool {
+        return self._canCreateMessageContent(model)
     }
 
-    public func createMessageModule(forModel model: Model) -> MessageContentModule {
-        return self._createMessageModule(model)
+    public func createContentView() -> UIView {
+        return self._createContentView()
+    }
+
+    public func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol {
+        return self._createContentPresenter(model)
     }
 
     public func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol {
         return self._createLayoutProvider(model)
+    }
+
+    public func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol? {
+        return self._createMenuPresenter(model)
     }
 }

@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 import ChattoAdditions
 
 struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
@@ -29,24 +30,37 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
     private let font = UIFont.systemFont(ofSize: 17)
     private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
 
-    func canCreateMessageModule(forModel model: DemoCompoundMessageModel) -> Bool {
+    func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
-    func createMessageModule(forModel model: DemoCompoundMessageModel) -> MessageContentModule {
+    func createContentView() -> UIView {
         let label = LabelWithInsets()
         label.numberOfLines = 0
-        label.text = model.text
         label.font = self.font
         label.textInsets = self.textInsets
-        label.textColor = model.isIncoming ? .black : .white
-        return MessageContentModule(view: label, presenter: ())
+        return label
+    }
+
+    func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
+        return DefaultMessageContentPresenter<DemoCompoundMessageModel, LabelWithInsets>(
+            message: model,
+            showBorder: false,
+            onBinding: { message, label in
+                label?.text = message.text
+                label?.textColor = message.isIncoming ? .black : .white
+            }
+        )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         return TextMessageLayoutProvider(text: model.text,
                                          font: self.font,
                                          textInsets: self.textInsets)
+    }
+
+    func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
+        return nil
     }
 }
 

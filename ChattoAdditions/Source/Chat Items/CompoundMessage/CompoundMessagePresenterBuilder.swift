@@ -36,19 +36,23 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         accessibilityIdentifier: String?,
-        contentFactories: [AnyMessageContentFactory<ModelT>]) {
+        contentFactories: [AnyMessageContentFactory<ModelT>],
+        compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle(),
+        baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
         self.contentFactories = contentFactories
         self.accessibilityIdentifier = accessibilityIdentifier
+        self.compoundCellStyle = compoundCellStyle
+        self.baseCellStyle = baseCellStyle
     }
 
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell<ModelT>()
-    public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
-    public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
+    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
+    private let compoundCellStyle: CompoundBubbleViewStyleProtocol
+    private let baseCellStyle: BaseMessageCollectionViewCellStyleProtocol
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()
     private let accessibilityIdentifier: String?
 
@@ -67,8 +71,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
             cache: self.cache,
-            accessibilityIdentifier: self.accessibilityIdentifier,
-            menuPresenter: nil
+            accessibilityIdentifier: self.accessibilityIdentifier
         )
     }
 
