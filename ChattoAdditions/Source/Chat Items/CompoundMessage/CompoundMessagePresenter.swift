@@ -146,6 +146,16 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.contentPresenters.forEach { $0.contentWasTapped_deprecated() }
     }
 
+    open override func onCellBubbleLongPressBegan() {
+        super.onCellBubbleLongPressBegan()
+        self.contentPresenters.forEach { $0.contentLongPressBegan_deprecated() }
+    }
+
+    open override func onCellBubbleLongPressEnded() {
+        super.onCellBubbleLongPressEnded()
+        self.contentPresenters.forEach { $0.contentLongPressEnded_deprecated() }
+    }
+
     private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
         let configuration: CompoundBubbleLayoutProvider.Configuration = {
             let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }

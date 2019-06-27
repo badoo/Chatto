@@ -35,7 +35,9 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
                 onUnbinding: UnbindingClosure? = nil,
                 onContentWillBeShown: ActionHandler? = nil,
                 onContentWasHidden: ActionHandler? = nil,
-                onContentWasTapped_deprecated: ActionHandler? = nil) {
+                onContentWasTapped_deprecated: ActionHandler? = nil,
+                onContentLongPressBegan_deprecated: ActionHandler? = nil,
+                onContentLongPressEnded_deprecated: ActionHandler? = nil) {
         self.message = message
 
         self.onBinding = onBinding
@@ -44,7 +46,10 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
         self.showBorder = showBorder
         self.onContentWillBeShown = onContentWillBeShown
         self.onContentWasHidden = onContentWasHidden
+
         self.onContentWasTapped_deprecated = onContentWasTapped_deprecated
+        self.onContentLongPressBegan_deprecated = onContentLongPressBegan_deprecated
+        self.onContentLongPressEnded_deprecated = onContentLongPressEnded_deprecated
     }
 
     private var message: MessageType
@@ -56,7 +61,10 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     private let onContentWillBeShown: ActionHandler?
     private let onContentWasHidden: ActionHandler?
+
     private let onContentWasTapped_deprecated: ActionHandler?
+    private let onContentLongPressBegan_deprecated: ActionHandler?
+    private let onContentLongPressEnded_deprecated: ActionHandler?
 
     // MARK: - MessageContentPresenterProtocol
 
@@ -64,7 +72,10 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.view) }
     public func contentWasHidden() { self.onContentWasHidden?(self.message, self.view) }
+
     public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.message, self.view) }
+    public func contentLongPressBegan_deprecated() { self.onContentLongPressBegan_deprecated?(self.message, self.view) }
+    public func contentLongPressEnded_deprecated() { self.onContentLongPressEnded_deprecated?(self.message, self.view) }
 
     public func bindToView(with viewReference: ViewReference) {
         self.viewReference = viewReference

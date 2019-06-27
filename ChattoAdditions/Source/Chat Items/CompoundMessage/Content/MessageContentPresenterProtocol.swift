@@ -42,6 +42,8 @@ public protocol MessageContentPresenterProtocol {
 
     /// It will be removed in the future. View taps should be handled by presenters themselves.
     func contentWasTapped_deprecated()
+    func contentLongPressBegan_deprecated()
+    func contentLongPressEnded_deprecated()
 
     func bindToView(with viewReference: ViewReference)
     func unbindFromView()
