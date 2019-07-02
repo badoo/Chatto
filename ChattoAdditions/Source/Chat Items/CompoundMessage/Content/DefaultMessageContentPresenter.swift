@@ -60,6 +60,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     // MARK: - MessageContentPresenterProtocol
 
+    public weak var delegate: MessageContentPresenterDelegate?
+
     public let showBorder: Bool
 
     public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.view) }
