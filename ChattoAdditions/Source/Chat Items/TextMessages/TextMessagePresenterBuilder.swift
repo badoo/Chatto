@@ -25,27 +25,29 @@
 import Foundation
 import Chatto
 
-open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
-: ChatItemPresenterBuilderProtocol where
+open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
+
     typealias ViewModelT = ViewModelBuilderT.ViewModelT
     typealias ModelT = ViewModelBuilderT.ModelT
 
-    public init(
-        viewModelBuilder: ViewModelBuilderT,
-        interactionHandler: InteractionHandlerT? = nil) {
-            self.viewModelBuilder = viewModelBuilder
-            self.interactionHandler = interactionHandler
+    public init(viewModelBuilder: ViewModelBuilderT,
+                interactionHandler: InteractionHandlerT? = nil,
+                menuPresenter: TextMessageMenuItemPresenterProtocol? = TextMessageMenuItemPresenter()) {
+        self.viewModelBuilder = viewModelBuilder
+        self.interactionHandler = interactionHandler
+        self.menuPresenter = menuPresenter
     }
 
-    let viewModelBuilder: ViewModelBuilderT
-    let interactionHandler: InteractionHandlerT?
-    let layoutCache = NSCache<AnyObject, AnyObject>()
+    private let viewModelBuilder: ViewModelBuilderT
+    private let interactionHandler: InteractionHandlerT?
+    private let menuPresenter: TextMessageMenuItemPresenterProtocol?
+    private let layoutCache = NSCache<AnyObject, AnyObject>()
 
-    lazy var sizingCell: TextMessageCollectionViewCell = {
+    private lazy var sizingCell: TextMessageCollectionViewCell = {
         var cell: TextMessageCollectionViewCell?
         if Thread.isMainThread {
             cell = TextMessageCollectionViewCell.sizingCell()
@@ -66,13 +68,16 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        return self.createPresenter(withChatItem: chatItem,
-                                    viewModelBuilder: self.viewModelBuilder,
-                                    interactionHandler: self.interactionHandler,
-                                    sizingCell: self.sizingCell,
-                                    baseCellStyle: self.baseMessageStyle,
-                                    textCellStyle: self.textCellStyle,
-                                    layoutCache: self.layoutCache)
+        return self.createPresenter(
+            withChatItem: chatItem,
+            viewModelBuilder: self.viewModelBuilder,
+            interactionHandler: self.interactionHandler,
+            sizingCell: self.sizingCell,
+            baseCellStyle: self.baseMessageStyle,
+            textCellStyle: self.textCellStyle,
+            layoutCache: self.layoutCache,
+            menuPresenter: self.menuPresenter
+        )
     }
 
     open func createPresenter(withChatItem chatItem: ChatItemProtocol,
@@ -81,7 +86,8 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
                               sizingCell: TextMessageCollectionViewCell,
                               baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
                               textCellStyle: TextMessageCollectionViewCellStyleProtocol,
-                              layoutCache: NSCache<AnyObject, AnyObject>) -> TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT> {
+                              layoutCache: NSCache<AnyObject, AnyObject>,
+                              menuPresenter: TextMessageMenuItemPresenterProtocol?) -> TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT> {
         assert(self.canHandleChatItem(chatItem))
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
             messageModel: chatItem as! ModelT,
@@ -90,7 +96,8 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
             sizingCell: sizingCell,
             baseCellStyle: baseCellStyle,
             textCellStyle: textCellStyle,
-            layoutCache: layoutCache
+            layoutCache: layoutCache,
+            menuPresenter: menuPresenter
         )
     }
 
