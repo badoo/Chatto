@@ -28,30 +28,43 @@ public struct CompoundBubbleLayout {
 }
 
 public struct CompoundBubbleLayoutProvider {
+    public struct LayoutProviderConfiguration: Hashable {
+        let provider: MessageManualLayoutProviderProtocol
+        let alignment: MessageContentAlignment
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.provider.asHashable)
+            hasher.combine(self.alignment)
+        }
+
+        public static func == (lhs: CompoundBubbleLayoutProvider.LayoutProviderConfiguration, rhs: CompoundBubbleLayoutProvider.LayoutProviderConfiguration) -> Bool {
+            return lhs.provider.asHashable == rhs.provider.asHashable && lhs.alignment == rhs.alignment
+        }
+    }
 
     public struct Configuration: Hashable {
 
-        fileprivate let layoutProviders: [MessageManualLayoutProviderProtocol]
+        fileprivate let layoutProviderConfigurations: [LayoutProviderConfiguration]
         fileprivate let tailWidth: CGFloat
         fileprivate let isIncoming: Bool
 
-        public init(layoutProviders: [MessageManualLayoutProviderProtocol],
+        public init(layoutProviderConfigurations: [LayoutProviderConfiguration],
                     tailWidth: CGFloat,
                     isIncoming: Bool) {
-            self.layoutProviders = layoutProviders
+            self.layoutProviderConfigurations = layoutProviderConfigurations
             self.tailWidth = tailWidth
             self.isIncoming = isIncoming
         }
 
         public func hash(into hasher: inout Hasher) {
-            hasher.combine(self.layoutProviders.map { $0.asHashable })
+            hasher.combine(self.layoutProviderConfigurations)
             hasher.combine(self.tailWidth)
             hasher.combine(self.isIncoming)
         }
 
         public static func == (lhs: CompoundBubbleLayoutProvider.Configuration,
                                rhs: CompoundBubbleLayoutProvider.Configuration) -> Bool {
-            return lhs.layoutProviders.map { $0.asHashable } == rhs.layoutProviders.map { $0.asHashable }
+            return lhs.layoutProviderConfigurations == rhs.layoutProviderConfigurations
                 && lhs.tailWidth == rhs.tailWidth
                 && lhs.isIncoming == rhs.isIncoming
         }
@@ -73,25 +86,40 @@ public struct CompoundBubbleLayoutProvider {
         return layout
     }
 
+    typealias ProviderConfigurationWithFrame = (LayoutProviderConfiguration, CGRect)
+
     private func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
-        var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(self.configuration.layoutProviders.count)
+        var subviewsFramesWithProviders: [ProviderConfigurationWithFrame] = []
+        subviewsFramesWithProviders.reserveCapacity(self.configuration.layoutProviderConfigurations.count)
         var maxY: CGFloat = 0
         var resultWidth: CGFloat = 0
-        let sizeToFit = CGSize(width: width,
-                               height: .greatestFiniteMagnitude)
+        let sizeToFit = CGSize(width: width, height: .greatestFiniteMagnitude)
         let safeAreaInsets = self.safeAreaInsets()
-        for layoutProvider in self.configuration.layoutProviders {
-            let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
+        for layoutProviderConfiguration in self.configuration.layoutProviderConfigurations {
+            let size = layoutProviderConfiguration.provider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, width)
             let frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
-            subviewsFrames.append(frame)
+            subviewsFramesWithProviders.append((layoutProviderConfiguration, frame))
             maxY = frame.maxY
         }
+
+        subviewsFramesWithProviders = subviewsFramesWithProviders.map({ configurationWithFrame in
+            let adjustedFrame: CGRect
+            switch configurationWithFrame.0.alignment {
+            case .fill:
+                var newFrame = configurationWithFrame.1
+                newFrame.size.width = resultWidth
+                adjustedFrame = newFrame
+            case .leading:
+                adjustedFrame = configurationWithFrame.1
+            }
+            return (configurationWithFrame.0, adjustedFrame)
+        })
+
         return CompoundBubbleLayout(
             size: CGSize(width: resultWidth, height: maxY).bma_round(),
-            subviewsFrames: subviewsFrames,
+            subviewsFrames: subviewsFramesWithProviders.map({ $0.1 }),
             safeAreaInsets: safeAreaInsets
         )
     }

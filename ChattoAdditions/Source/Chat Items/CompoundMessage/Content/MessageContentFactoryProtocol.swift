@@ -23,6 +23,11 @@
 
 import Chatto
 
+public enum MessageContentAlignment: Hashable {
+    case leading
+    case fill
+}
+
 public protocol MessageContentFactoryProtocol {
     associatedtype Model
 
@@ -33,6 +38,7 @@ public protocol MessageContentFactoryProtocol {
     func createContentPresenter(forModel model: Model) -> MessageContentPresenterProtocol
     func createLayoutProvider(forModel model: Model) -> MessageManualLayoutProviderProtocol
     func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol?
+    func contentAlignment(forModel model: Model) -> MessageContentAlignment
 }
 
 public extension MessageContentFactoryProtocol {
@@ -48,6 +54,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
     private let _createContentPresenter: (Model) -> MessageContentPresenterProtocol
     private let _createLayoutProvider: (Model) -> MessageManualLayoutProviderProtocol
     private let _createMenuPresenter: (Model) -> ChatItemMenuPresenterProtocol?
+    private let _contentAlignment: (Model) -> MessageContentAlignment
 
     public init<U: MessageContentFactoryProtocol>(_ base: U) where U.Model == Model {
         self.identifier = base.identifier
@@ -56,6 +63,7 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
         self._createContentPresenter = base.createContentPresenter
         self._createLayoutProvider = base.createLayoutProvider
         self._createMenuPresenter = base.createMenuPresenter
+        self._contentAlignment = base.contentAlignment
     }
 
     public let identifier: String
@@ -78,5 +86,9 @@ public final class AnyMessageContentFactory<Model>: MessageContentFactoryProtoco
 
     public func createMenuPresenter(forModel model: Model) -> ChatItemMenuPresenterProtocol? {
         return self._createMenuPresenter(model)
+    }
+
+    public func contentAlignment(forModel model: Model) -> MessageContentAlignment {
+        return self._contentAlignment(model)
     }
 }
