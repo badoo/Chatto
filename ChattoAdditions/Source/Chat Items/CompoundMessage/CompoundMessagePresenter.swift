@@ -36,6 +36,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     public let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
+    private let compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions
 
     private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     private let accessibilityIdentifier: String?
@@ -52,10 +53,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         sizingCell: CompoundMessageCollectionViewCell,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
+        compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
         accessibilityIdentifier: String?
     ) {
         self.compoundCellStyle = compoundCellStyle
+        self.compoundCellDimensions = compoundCellDimensions
         self.contentFactories = contentFactories.filter { $0.canCreateMessageContent(forModel: messageModel) }
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
@@ -154,7 +157,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             return CompoundBubbleLayoutProvider.Configuration(
                 layoutProviders: contentLayoutProviders,
                 tailWidth: tailWidth,
-                isIncoming: viewModel.isIncoming
+                isIncoming: viewModel.isIncoming,
+                dimensions: self.compoundCellDimensions
             )
         }()
         guard let provider = self.cache[configuration] else {

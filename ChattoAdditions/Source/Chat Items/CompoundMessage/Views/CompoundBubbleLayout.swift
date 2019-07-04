@@ -29,24 +29,39 @@ public struct CompoundBubbleLayout {
 
 public struct CompoundBubbleLayoutProvider {
 
+    public struct Dimensions: Hashable {
+        public let spacing: CGFloat
+        public let contentInsets: UIEdgeInsets
+
+        public init(spacing: CGFloat,
+                    contentInsets: UIEdgeInsets) {
+            self.spacing = spacing
+            self.contentInsets = contentInsets
+        }
+    }
+
     public struct Configuration: Hashable {
 
         fileprivate let layoutProviders: [MessageManualLayoutProviderProtocol]
         fileprivate let tailWidth: CGFloat
         fileprivate let isIncoming: Bool
+        fileprivate let dimensions: Dimensions
 
         public init(layoutProviders: [MessageManualLayoutProviderProtocol],
                     tailWidth: CGFloat,
-                    isIncoming: Bool) {
+                    isIncoming: Bool,
+                    dimensions: Dimensions) {
             self.layoutProviders = layoutProviders
             self.tailWidth = tailWidth
             self.isIncoming = isIncoming
+            self.dimensions = dimensions
         }
 
         public func hash(into hasher: inout Hasher) {
             hasher.combine(self.layoutProviders.map { $0.asHashable })
             hasher.combine(self.tailWidth)
             hasher.combine(self.isIncoming)
+            hasher.combine(self.dimensions)
         }
 
         public static func == (lhs: CompoundBubbleLayoutProvider.Configuration,
@@ -54,6 +69,7 @@ public struct CompoundBubbleLayoutProvider {
             return lhs.layoutProviders.map { $0.asHashable } == rhs.layoutProviders.map { $0.asHashable }
                 && lhs.tailWidth == rhs.tailWidth
                 && lhs.isIncoming == rhs.isIncoming
+                && lhs.dimensions == rhs.dimensions
         }
     }
 
@@ -73,25 +89,59 @@ public struct CompoundBubbleLayoutProvider {
         return layout
     }
 
+    private typealias RectWithLayoutProvider = (frame: CGRect, provider: MessageManualLayoutProviderProtocol)
+
     private func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
-        var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(self.configuration.layoutProviders.count)
-        var maxY: CGFloat = 0
+        var subviewsFramesWithProviders: [RectWithLayoutProvider] = []
+        subviewsFramesWithProviders.reserveCapacity(self.configuration.layoutProviders.count)
+        let contentInsets = self.configuration.dimensions.contentInsets
+
         var resultWidth: CGFloat = 0
-        let sizeToFit = CGSize(width: width,
-                               height: .greatestFiniteMagnitude)
+        let fullWidthFittingSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let fittingSizeWithInsets = fullWidthFittingSize.bma_insetBy(dx: contentInsets.bma_horziontalInset, dy: 0)
         let safeAreaInsets = self.safeAreaInsets()
-        for layoutProvider in self.configuration.layoutProviders {
-            let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
-            let viewWidth = max(size.width, resultWidth)
-            resultWidth = min(viewWidth, width)
-            let frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
-            subviewsFrames.append(frame)
+
+        let shouldAddTopInset = self.configuration.layoutProviders.first?.ignoreContentInsets == false
+        let shouldAddBottomInset = self.configuration.layoutProviders.last?.ignoreContentInsets == false
+
+        var maxY: CGFloat = shouldAddTopInset ? contentInsets.top : 0
+        for (i, layoutProvider) in self.configuration.layoutProviders.enumerated() {
+            let frame: CGRect
+            if layoutProvider.ignoreContentInsets {
+                let size = layoutProvider.sizeThatFits(size: fullWidthFittingSize, safeAreaInsets: safeAreaInsets)
+                let viewWidth = max(size.width, resultWidth)
+                resultWidth = min(viewWidth, width)
+                frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
+            } else {
+                let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: safeAreaInsets)
+                let viewWidth = max(size.width, resultWidth)
+                resultWidth = min(viewWidth + contentInsets.bma_horziontalInset, width)
+                frame = CGRect(x: contentInsets.left, y: maxY, width: viewWidth, height: size.height)
+            }
+            subviewsFramesWithProviders.append((frame, layoutProvider))
             maxY = frame.maxY
+            if i != self.configuration.layoutProviders.count - 1 {
+                maxY += self.configuration.dimensions.spacing
+            }
         }
+
+        subviewsFramesWithProviders = subviewsFramesWithProviders.map({ frameWithProvider in
+            var newFrame = frameWithProvider.frame
+            if frameWithProvider.provider.ignoreContentInsets {
+                newFrame.size.width = resultWidth
+            } else {
+                newFrame.size.width = resultWidth - contentInsets.bma_horziontalInset
+            }
+            return (newFrame, frameWithProvider.provider)
+        })
+
+        if shouldAddBottomInset {
+            maxY += contentInsets.bottom
+        }
+
         return CompoundBubbleLayout(
             size: CGSize(width: resultWidth, height: maxY).bma_round(),
-            subviewsFrames: subviewsFrames,
+            subviewsFrames: subviewsFramesWithProviders.map({ $0.frame }),
             safeAreaInsets: safeAreaInsets
         )
     }

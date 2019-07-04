@@ -24,7 +24,12 @@
 import UIKit
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
+    var ignoreContentInsets: Bool { get }
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
+}
+
+public extension MessageManualLayoutProviderProtocol {
+    var ignoreContentInsets: Bool { return false }
 }
 
 // MARK: - Text
