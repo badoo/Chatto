@@ -66,7 +66,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             sizingCell: sizingCell,
             cellStyle: baseCellStyle
         )
-        self.contentPresenters = contentFactories.map { factory in
+        self.contentPresenters = self.contentFactories.map { factory in
             var presenter = factory.createContentPresenter(forModel: self.messageModel)
             presenter.delegate = self
             return presenter
