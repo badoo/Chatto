@@ -25,7 +25,7 @@ import Chatto
 
 @available(iOS 11, *)
 open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
-    : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT> where
+    : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT>, MessageContentPresenterDelegate where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ModelT: Equatable,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
@@ -42,8 +42,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let accessibilityIdentifier: String?
     private let menuPresenter: ChatItemMenuPresenterProtocol?
 
-    private lazy var layoutProvider: CompoundBubbleLayoutProvider = self.makeLayoutProvider()
-    private lazy var contentPresenters: [MessageContentPresenterProtocol] = self.contentFactories.map { $0.createContentPresenter(forModel: self.messageModel) }
+    private var contentPresenters: [MessageContentPresenterProtocol] = []
 
     public init(
         messageModel: ModelT,
@@ -70,6 +69,11 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             sizingCell: sizingCell,
             cellStyle: baseCellStyle
         )
+        self.contentPresenters = contentFactories.map { factory in
+            var presenter = factory.createContentPresenter(forModel: self.messageModel)
+            presenter.delegate = self
+            return presenter
+        }
     }
 
     open override var canCalculateHeightInBackground: Bool {
@@ -149,7 +153,13 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.contentPresenters.forEach { $0.contentWasTapped_deprecated() }
     }
 
-    private func makeLayoutProvider() -> CompoundBubbleLayoutProvider {
+    // TODO: Let's think how to improve it.
+    // We have to create a new configuration on each access to a layout provider
+    // because configuration may change at any time. Still, we want to keep
+    // reference to the last configuration to have ability to clean cache
+    // from obsolete and unused objects.
+    private var lastUsedConfiguration: CompoundBubbleLayoutProvider.Configuration?
+    private var layoutProvider: CompoundBubbleLayoutProvider {
         let configuration: CompoundBubbleLayoutProvider.Configuration = {
             let contentLayoutProviders = self.contentFactories.map { $0.createLayoutProvider(forModel: self.messageModel) }
             let viewModel = self.messageViewModel
@@ -161,6 +171,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 dimensions: self.compoundCellDimensions
             )
         }()
+        defer {
+            if self.lastUsedConfiguration != configuration {
+                self.cleanLayoutCache(for: self.lastUsedConfiguration)
+                self.lastUsedConfiguration = configuration
+            }
+        }
         guard let provider = self.cache[configuration] else {
             let provider = CompoundBubbleLayoutProvider(configuration: configuration)
             self.cache[configuration] = provider
@@ -183,5 +199,16 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func performMenuControllerAction(_ action: Selector) {
         self.menuPresenter?.performMenuControllerAction(action)
+    }
+
+    // MARK: - MessageContentPresenterDelegate
+
+    public func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol) {
+        self.cleanLayoutCache(for: self.lastUsedConfiguration)
+    }
+
+    private func cleanLayoutCache(for configuration: CompoundBubbleLayoutProvider.Configuration?) {
+        guard let configuration = configuration else { return }
+        self.cache[configuration] = nil
     }
 }
