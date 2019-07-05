@@ -34,27 +34,27 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
-    public init (
-        messageModel: ModelT,
-        viewModelBuilder: ViewModelBuilderT,
-        interactionHandler: InteractionHandlerT?,
-        sizingCell: TextMessageCollectionViewCell,
-        baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
-        textCellStyle: TextMessageCollectionViewCellStyleProtocol,
-        layoutCache: NSCache<AnyObject, AnyObject>) {
-            self.layoutCache = layoutCache
-            self.textCellStyle = textCellStyle
-            super.init(
-                messageModel: messageModel,
-                viewModelBuilder: viewModelBuilder,
-                interactionHandler: interactionHandler,
-                sizingCell: sizingCell,
-                cellStyle: baseCellStyle
-            )
-            self.menuPresenter = TextMessageMenuItemPresenter { [weak self] in self?.messageViewModel.text ?? "" }
+    public init (messageModel: ModelT,
+                 viewModelBuilder: ViewModelBuilderT,
+                 interactionHandler: InteractionHandlerT?,
+                 sizingCell: TextMessageCollectionViewCell,
+                 baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
+                 textCellStyle: TextMessageCollectionViewCellStyleProtocol,
+                 layoutCache: NSCache<AnyObject, AnyObject>,
+                 menuPresenter: TextMessageMenuItemPresenterProtocol?) {
+        self.layoutCache = layoutCache
+        self.textCellStyle = textCellStyle
+        self.menuPresenter = menuPresenter
+        super.init(
+            messageModel: messageModel,
+            viewModelBuilder: viewModelBuilder,
+            interactionHandler: interactionHandler,
+            sizingCell: sizingCell,
+            cellStyle: baseCellStyle
+        )
     }
 
-    private var menuPresenter: ChatItemMenuPresenterProtocol?
+    private let menuPresenter: TextMessageMenuItemPresenterProtocol?
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
@@ -109,14 +109,14 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func canShowMenu() -> Bool {
-        return self.menuPresenter?.shouldShowMenu() ?? false
+        return self.menuPresenter?.shouldShowMenu(for: self.messageViewModel.text, item: self.messageModel) ?? false
     }
 
     open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
-        return self.menuPresenter?.canPerformMenuControllerAction(action) ?? false
+        return self.menuPresenter?.canPerformMenuControllerAction(action, for: self.messageViewModel.text, item: self.messageModel) ?? false
     }
 
     open override func performMenuControllerAction(_ action: Selector) {
-        self.menuPresenter?.performMenuControllerAction(action)
+        self.menuPresenter?.performMenuControllerAction(action, for: self.messageViewModel.text, item: self.messageModel)
     }
 }

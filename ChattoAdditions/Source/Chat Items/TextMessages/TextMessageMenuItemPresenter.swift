@@ -23,36 +23,40 @@
 
 import Chatto
 
-public final class TextMessageMenuItemPresenter: ChatItemMenuPresenterProtocol {
+public protocol TextMessageMenuItemPresenterProtocol {
+    func shouldShowMenu(for text: String, item: MessageModelProtocol) -> Bool
+    func canPerformMenuControllerAction(_ action: Selector, for text: String, item: MessageModelProtocol) -> Bool
+    func performMenuControllerAction(_ action: Selector, for text: String, item: MessageModelProtocol)
+}
+
+public final class TextMessageMenuItemPresenter: TextMessageMenuItemPresenterProtocol {
 
     // MARK: - Private properties
 
     private let pasteboard: UIPasteboard
-    private let textProvider: () -> String
 
     // MARK: - Instantiation
 
-    public init(pasteboard: UIPasteboard = .general, textProvider: @escaping () -> String) {
+    public init(pasteboard: UIPasteboard = .general) {
         self.pasteboard = pasteboard
-        self.textProvider = textProvider
     }
 
-    // MARK: - ChatItemMenuPresenterProtocol
+    // MARK: - TextMessageMenuItemPresenterProtocol
 
-    public func shouldShowMenu() -> Bool {
+    public func shouldShowMenu(for text: String, item: MessageModelProtocol) -> Bool {
         return true
     }
 
-    public func canPerformMenuControllerAction(_ action: Selector) -> Bool {
+    public func canPerformMenuControllerAction(_ action: Selector, for text: String, item: MessageModelProtocol) -> Bool {
         return action == .copy
     }
 
-    public func performMenuControllerAction(_ action: Selector) {
+    public func performMenuControllerAction(_ action: Selector, for text: String, item: MessageModelProtocol) {
         guard action == .copy else {
             assertionFailure("Unexpected action")
             return
         }
-        self.pasteboard.string = self.textProvider()
+        self.pasteboard.string = text
     }
 }
 
