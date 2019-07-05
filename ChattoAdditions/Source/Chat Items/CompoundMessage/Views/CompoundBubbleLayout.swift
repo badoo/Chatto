@@ -117,7 +117,7 @@ public struct CompoundBubbleLayoutProvider {
                 resultWidth = min(viewWidth, width)
                 frame = CGRect(x: safeAreaInsets.left, y: maxY, width: viewWidth, height: size.height)
             } else {
-                let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: totalInsets)
+                let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: safeAreaInsets)
                 let viewWidth = max(size.width, resultWidth)
                 resultWidth = min(viewWidth + totalInsets.bma_horziontalInset, width)
                 frame = CGRect(x: totalInsets.left, y: maxY, width: viewWidth, height: size.height)
