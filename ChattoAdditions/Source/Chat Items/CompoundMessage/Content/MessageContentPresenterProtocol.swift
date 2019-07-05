@@ -32,7 +32,13 @@ public final class ViewReference {
     }
 }
 
+public protocol MessageContentPresenterDelegate: AnyObject {
+    func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol)
+}
+
 public protocol MessageContentPresenterProtocol {
+
+    var delegate: MessageContentPresenterDelegate? { get set }
 
     /// Very likely it should be moved to other place but we didn't decide yet where.
     var showBorder: Bool { get }
