@@ -95,28 +95,32 @@ public struct CompoundBubbleLayoutProvider {
         var subviewsFramesWithProviders: [RectWithLayoutProvider] = []
         subviewsFramesWithProviders.reserveCapacity(self.configuration.layoutProviders.count)
         let contentInsets = self.configuration.dimensions.contentInsets
+        let safeAreaInsets = self.safeAreaInsets()
+        let totalInsets = UIEdgeInsets(top: safeAreaInsets.top + contentInsets.top,
+                                       left: safeAreaInsets.left + contentInsets.left,
+                                       bottom: safeAreaInsets.bottom + contentInsets.bottom,
+                                       right: safeAreaInsets.right + contentInsets.right)
 
         var resultWidth: CGFloat = 0
-        let fullWidthFittingSize = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let fittingSizeWithInsets = fullWidthFittingSize.bma_insetBy(dx: contentInsets.bma_horziontalInset, dy: 0)
-        let safeAreaInsets = self.safeAreaInsets()
+        let fullWidthFittingSizeWithSafeInsets = CGSize(width: width - safeAreaInsets.bma_horziontalInset, height: .greatestFiniteMagnitude)
+        let fittingSizeWithInsets = fullWidthFittingSizeWithSafeInsets.bma_insetBy(dx: totalInsets.bma_horziontalInset, dy: 0)
 
         let shouldAddTopInset = self.configuration.layoutProviders.first?.ignoreContentInsets == false
         let shouldAddBottomInset = self.configuration.layoutProviders.last?.ignoreContentInsets == false
 
-        var maxY: CGFloat = shouldAddTopInset ? contentInsets.top : 0
+        var maxY: CGFloat = shouldAddTopInset ? totalInsets.top : 0
         for (i, layoutProvider) in self.configuration.layoutProviders.enumerated() {
             let frame: CGRect
             if layoutProvider.ignoreContentInsets {
-                let size = layoutProvider.sizeThatFits(size: fullWidthFittingSize, safeAreaInsets: safeAreaInsets)
+                let size = layoutProvider.sizeThatFits(size: fullWidthFittingSizeWithSafeInsets, safeAreaInsets: safeAreaInsets)
                 let viewWidth = max(size.width, resultWidth)
                 resultWidth = min(viewWidth, width)
-                frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
+                frame = CGRect(x: safeAreaInsets.left, y: maxY, width: viewWidth, height: size.height)
             } else {
-                let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: safeAreaInsets)
+                let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: totalInsets)
                 let viewWidth = max(size.width, resultWidth)
-                resultWidth = min(viewWidth + contentInsets.bma_horziontalInset, width)
-                frame = CGRect(x: contentInsets.left, y: maxY, width: viewWidth, height: size.height)
+                resultWidth = min(viewWidth + totalInsets.bma_horziontalInset, width)
+                frame = CGRect(x: totalInsets.left, y: maxY, width: viewWidth, height: size.height)
             }
             subviewsFramesWithProviders.append((frame, layoutProvider))
             maxY = frame.maxY
@@ -128,15 +132,15 @@ public struct CompoundBubbleLayoutProvider {
         subviewsFramesWithProviders = subviewsFramesWithProviders.map({ frameWithProvider in
             var newFrame = frameWithProvider.frame
             if frameWithProvider.provider.ignoreContentInsets {
-                newFrame.size.width = resultWidth
+                newFrame.size.width = resultWidth - safeAreaInsets.bma_horziontalInset
             } else {
-                newFrame.size.width = resultWidth - contentInsets.bma_horziontalInset
+                newFrame.size.width = resultWidth - totalInsets.bma_horziontalInset
             }
             return (newFrame, frameWithProvider.provider)
         })
 
         if shouldAddBottomInset {
-            maxY += contentInsets.bottom
+            maxY += totalInsets.bottom
         }
 
         return CompoundBubbleLayout(
