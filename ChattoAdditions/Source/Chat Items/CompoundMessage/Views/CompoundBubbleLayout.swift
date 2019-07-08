@@ -102,9 +102,7 @@ public struct CompoundBubbleLayoutProvider {
                                        right: safeAreaInsets.right + contentInsets.right)
 
         var resultWidth: CGFloat = 0
-        let fullWidthFittingSizeWithSafeInsets = CGSize(width: width - safeAreaInsets.bma_horziontalInset, height: .greatestFiniteMagnitude)
-        let fittingSizeWithInsets = fullWidthFittingSizeWithSafeInsets.bma_insetBy(dx: totalInsets.bma_horziontalInset, dy: 0)
-
+        let fittingSizeWithInsets = CGSize(width: width - contentInsets.bma_horziontalInset, height: .greatestFiniteMagnitude)
         let shouldAddTopInset = self.configuration.layoutProviders.first?.ignoreContentInsets == false
         let shouldAddBottomInset = self.configuration.layoutProviders.last?.ignoreContentInsets == false
 
@@ -112,10 +110,10 @@ public struct CompoundBubbleLayoutProvider {
         for (i, layoutProvider) in self.configuration.layoutProviders.enumerated() {
             let frame: CGRect
             if layoutProvider.ignoreContentInsets {
-                let size = layoutProvider.sizeThatFits(size: fullWidthFittingSizeWithSafeInsets, safeAreaInsets: safeAreaInsets)
+                let size = layoutProvider.sizeThatFits(size: CGSize(width: width, height: .greatestFiniteMagnitude), safeAreaInsets: safeAreaInsets)
                 let viewWidth = max(size.width, resultWidth)
                 resultWidth = min(viewWidth, width)
-                frame = CGRect(x: safeAreaInsets.left, y: maxY, width: viewWidth, height: size.height)
+                frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
             } else {
                 let size = layoutProvider.sizeThatFits(size: fittingSizeWithInsets, safeAreaInsets: safeAreaInsets)
                 let viewWidth = max(size.width, resultWidth)
@@ -132,7 +130,7 @@ public struct CompoundBubbleLayoutProvider {
         subviewsFramesWithProviders = subviewsFramesWithProviders.map({ frameWithProvider in
             var newFrame = frameWithProvider.frame
             if frameWithProvider.provider.ignoreContentInsets {
-                newFrame.size.width = resultWidth - safeAreaInsets.bma_horziontalInset
+                newFrame.size.width = resultWidth
             } else {
                 newFrame.size.width = resultWidth - totalInsets.bma_horziontalInset
             }
