@@ -28,7 +28,7 @@ import ChattoAdditions
 struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
 
     private let font = UIFont.systemFont(ofSize: 17)
-    private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+    private let textInsets = UIEdgeInsets.zero
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true

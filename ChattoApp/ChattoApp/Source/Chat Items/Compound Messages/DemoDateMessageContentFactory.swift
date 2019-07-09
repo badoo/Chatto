@@ -34,7 +34,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return formatter
     }()
 
-    private let textInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+    private let textInsets = UIEdgeInsets(top: 0, left: 8, bottom: 8, right: 8)
     private let font = UIFont.systemFont(ofSize: 17)
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
@@ -53,15 +53,19 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
             showBorder: true,
             onBinding: { message, dateInfoView in
                 dateInfoView?.text = DemoDateMessageContentFactory.dateFormatter.string(from: message.date)
+                dateInfoView?.textColor = message.isIncoming ? .black : .white
             }
         )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         let text = DemoDateMessageContentFactory.dateFormatter.string(from: model.date)
-        return TextMessageLayoutProvider(text: text,
-                                         font: self.font,
-                                         textInsets: self.textInsets)
+        return TextMessageLayoutProvider(
+            text: text,
+            font: self.font,
+            textInsets: self.textInsets,
+            ignoreContentInsets: true
+        )
     }
 
     func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
@@ -78,7 +82,7 @@ private final class DateInfoView: UIView {
         self.insets = insets
         super.init(frame: .zero)
         self.addSubview(self.label)
-        self.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        self.backgroundColor = .clear
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -93,5 +97,10 @@ private final class DateInfoView: UIView {
     var text: String? {
         get { return self.label.text }
         set { self.label.text = newValue }
+    }
+
+    var textColor: UIColor? {
+        get { return self.label.textColor }
+        set { self.label.textColor = newValue }
     }
 }

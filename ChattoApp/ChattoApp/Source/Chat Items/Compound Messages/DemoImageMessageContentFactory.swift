@@ -49,7 +49,7 @@ struct DemoImageMessageContentFactory: MessageContentFactoryProtocol {
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
         guard let image = model.image else { preconditionFailure() }
-        return ImageMessageLayoutProvider(imageSize: image.size)
+        return ImageMessageLayoutProvider(imageSize: image.size, ignoreContentInsets: true)
     }
 
     func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
