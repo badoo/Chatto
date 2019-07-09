@@ -24,6 +24,7 @@
 import UIKit
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
+    var ignoreContentInsets: Bool { get }
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
 }
 
@@ -42,6 +43,8 @@ public struct TextMessageLayoutProvider: Hashable, MessageManualLayoutProviderPr
         self.textInsets = textInsets
         self.numberOfLines = numberOfLines
     }
+
+    public let ignoreContentInsets: Bool = false
 
     public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
         var sizeWithInset = size
@@ -76,6 +79,8 @@ public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderP
     public init(imageSize: CGSize) {
         self.imageSize = imageSize
     }
+
+    public let ignoreContentInsets: Bool = false
 
     public func sizeThatFits(size: CGSize, safeAreaInsets _: UIEdgeInsets) -> CGSize {
         let ratio = self.imageSize.width / self.imageSize.height
