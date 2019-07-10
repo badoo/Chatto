@@ -111,9 +111,6 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             guard let sSelf = self else { return }
 
             let bubbleView = compoundCell.bubbleView!
-            bubbleView.viewModel = sSelf.messageViewModel
-            bubbleView.layoutProvider = sSelf.layoutProvider
-            bubbleView.style = sSelf.compoundCellStyle
 
             if bubbleView.decoratedContentViews == nil {
                 bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
@@ -121,6 +118,10 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                     return CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
                 }
             }
+
+            bubbleView.viewModel = sSelf.messageViewModel
+            bubbleView.layoutProvider = sSelf.layoutProvider
+            bubbleView.style = sSelf.compoundCellStyle
 
             /*
              There is a current algorithm of binding (and unbinding, as well) compoundCell's views to their presenters:
