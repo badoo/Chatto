@@ -127,6 +127,14 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
     private func updateViews() {
         guard let viewModel = self.viewModel, let style = self.style else { return }
 
+        if style.hideBubbleForSingleContent && self.decoratedContentViews?.count == 1 {
+            self.removeBubble()
+        } else {
+            self.updateBubble(style: style, viewModel: viewModel)
+        }
+    }
+
+    private func updateBubble(style: CompoundBubbleViewStyleProtocol, viewModel: MessageViewModelProtocol) {
         self.borderImageView.image = style.borderImage(forViewModel: viewModel)
 
         if let maskImage = style.maskingImage(forViewModel: viewModel) {
@@ -138,5 +146,12 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         }
 
         self.backgroundColor = style.backgroundColor(forViewModel: viewModel)
+    }
+
+    private func removeBubble() {
+        self.borderImageView.image = nil
+        self.borderImageView.layer.mask = nil
+        self.layer.mask = nil
+        self.backgroundColor = nil
     }
 }

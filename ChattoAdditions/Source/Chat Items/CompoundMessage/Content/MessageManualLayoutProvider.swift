@@ -37,14 +37,15 @@ public struct TextMessageLayoutProvider: Hashable, MessageManualLayoutProviderPr
     private let textInsets: UIEdgeInsets
     private let numberOfLines: Int
 
-    public init(text: String, font: UIFont, textInsets: UIEdgeInsets, numberOfLines: Int = 0) {
+    public init(text: String, font: UIFont, textInsets: UIEdgeInsets, numberOfLines: Int = 0, ignoreContentInsets: Bool = false) {
         self.text = text
         self.font = font
         self.textInsets = textInsets
         self.numberOfLines = numberOfLines
+        self.ignoreContentInsets = ignoreContentInsets
     }
 
-    public let ignoreContentInsets: Bool = false
+    public let ignoreContentInsets: Bool
 
     public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
         var sizeWithInset = size
@@ -76,13 +77,14 @@ public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderP
 
     private let imageSize: CGSize
 
-    public init(imageSize: CGSize) {
+    public init(imageSize: CGSize, ignoreContentInsets: Bool = false) {
         self.imageSize = imageSize
+        self.ignoreContentInsets = ignoreContentInsets
     }
 
-    public let ignoreContentInsets: Bool = false
+    public let ignoreContentInsets: Bool
 
-    public func sizeThatFits(size: CGSize, safeAreaInsets _: UIEdgeInsets) -> CGSize {
+    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
         let ratio = self.imageSize.width / self.imageSize.height
         return CGSize(width: size.width, height: size.width / ratio).bma_round()
     }
