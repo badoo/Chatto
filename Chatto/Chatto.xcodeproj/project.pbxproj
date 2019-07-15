@@ -36,7 +36,7 @@
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
 		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
-		EA3D58FD22DCB46B00191EDF /* ReadOnlyOrderedDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FB22DCB45D00191EDF /* ReadOnlyOrderedDictionaryTests.swift */; };
+		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +82,7 @@
 		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
-		EA3D58FB22DCB45D00191EDF /* ReadOnlyOrderedDictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadOnlyOrderedDictionaryTests.swift; sourceTree = "<group>"; };
+		EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				55E85D821BE390BE001885AD /* Info.plist */,
-				EA3D58FB22DCB45D00191EDF /* ReadOnlyOrderedDictionaryTests.swift */,
+				EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */,
 				C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */,
 				C321DDBB1BE964D500DE88CC /* Chat Items */,
 				C321C3941BE78835009803D1 /* ChatController */,
@@ -373,9 +373,9 @@
 				C342D0C51C638FDF008A4605 /* SerialTaskQueueTests.swift in Sources */,
 				C3383E281BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift in Sources */,
 				C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */,
-				EA3D58FD22DCB46B00191EDF /* ReadOnlyOrderedDictionaryTests.swift in Sources */,
 				C321C3961BE78835009803D1 /* CollectionChangesTests.swift in Sources */,
 				C321DDBE1BE964DC00DE88CC /* BaseChatItemPresenterTests.swift in Sources */,
+				EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */,
 				C31E919A1BFF4CA300339585 /* BaseChatViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
