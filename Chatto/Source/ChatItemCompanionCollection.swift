@@ -23,15 +23,16 @@
 */
 import Foundation
 
-public struct ReadOnlyOrderedDictionary<T>: Collection where T: UniqueIdentificable {
+public struct ChatItemCompanionCollection: Collection {
 
-    private let items: [T]
+    private let items: [ChatItemCompanion]
     private let itemIndexesById: [String: Int] // Maping to the position in the array instead the item itself for better performance
 
-    public init(items: [T]) {
+    public init(items: [ChatItemCompanion]) {
         var dictionary = [String: Int](minimumCapacity: items.count)
         for (index, item) in items.enumerated() {
             dictionary[item.uid] = index
+            dictionary[item.chatItem.uid] = index
         }
         self.items = items
         self.itemIndexesById = dictionary
@@ -41,18 +42,18 @@ public struct ReadOnlyOrderedDictionary<T>: Collection where T: UniqueIdentifica
         return self.itemIndexesById[uid]
     }
 
-    public subscript(index: Int) -> T {
+    public subscript(index: Int) -> ChatItemCompanion {
         return self.items[index]
     }
 
-    public subscript(uid: String) -> T? {
+    public subscript(uid: String) -> ChatItemCompanion? {
         if let index = self.indexOf(uid) {
             return self.items[index]
         }
         return nil
     }
 
-    public func makeIterator() -> IndexingIterator<[T]> {
+    public func makeIterator() -> IndexingIterator<[ChatItemCompanion]> {
         return self.items.makeIterator()
     }
 
