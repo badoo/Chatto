@@ -17,8 +17,7 @@
 		C32BB72B1BE0504D0069EC50 /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32BB7201BE0504D0069EC50 /* Chatto.framework */; };
 		C3383E281BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3383E271BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift */; };
 		C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0BC1C638681008A4605 /* ChatItemCompanion.swift */; };
-		C342D0C11C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C01C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift */; };
-		C342D0C41C638FDF008A4605 /* ReadOnlyOrderedDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C21C638FDF008A4605 /* ReadOnlyOrderedDictionaryTests.swift */; };
+		C342D0C11C638A2C008A4605 /* ChatItemCompanionCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */; };
 		C342D0C51C638FDF008A4605 /* SerialTaskQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */; };
 		C36281E51BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */; };
 		C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */; };
@@ -37,6 +36,7 @@
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
 		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
+		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,8 +62,7 @@
 		C32BB72A1BE0504D0069EC50 /* ChattoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3383E271BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewControllerTestHelpers.swift; sourceTree = "<group>"; };
 		C342D0BC1C638681008A4605 /* ChatItemCompanion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanion.swift; sourceTree = "<group>"; };
-		C342D0C01C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadOnlyOrderedDictionary.swift; sourceTree = "<group>"; };
-		C342D0C21C638FDF008A4605 /* ReadOnlyOrderedDictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadOnlyOrderedDictionaryTests.swift; sourceTree = "<group>"; };
+		C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollection.swift; sourceTree = "<group>"; };
 		C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialTaskQueueTests.swift; sourceTree = "<group>"; };
 		C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Changes.swift"; sourceTree = "<group>"; };
 		C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Scrolling.swift"; sourceTree = "<group>"; };
@@ -83,6 +82,7 @@
 		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
+		EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				55E85D821BE390BE001885AD /* Info.plist */,
-				C342D0C21C638FDF008A4605 /* ReadOnlyOrderedDictionaryTests.swift */,
+				EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */,
 				C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */,
 				C321DDBB1BE964D500DE88CC /* Chat Items */,
 				C321C3941BE78835009803D1 /* ChatController */,
@@ -191,7 +191,7 @@
 			children = (
 				C3E905031BE0521700C662A2 /* Chatto.h */,
 				C3E905041BE0521700C662A2 /* Info.plist */,
-				C342D0C01C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift */,
+				C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */,
 				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
 				B3B1B0FE1D6B40DF00D1183D /* Utils.swift */,
 				C321DD931BE9649F00DE88CC /* Chat Items */,
@@ -362,7 +362,7 @@
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
 				C3C7C39B1CAC4BAC00A49929 /* KeyboardTracker.swift in Sources */,
 				B3B1B0FF1D6B40DF00D1183D /* Utils.swift in Sources */,
-				C342D0C11C638A2C008A4605 /* ReadOnlyOrderedDictionary.swift in Sources */,
+				C342D0C11C638A2C008A4605 /* ChatItemCompanionCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,8 +374,8 @@
 				C3383E281BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift in Sources */,
 				C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */,
 				C321C3961BE78835009803D1 /* CollectionChangesTests.swift in Sources */,
-				C342D0C41C638FDF008A4605 /* ReadOnlyOrderedDictionaryTests.swift in Sources */,
 				C321DDBE1BE964DC00DE88CC /* BaseChatItemPresenterTests.swift in Sources */,
+				EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */,
 				C31E919A1BFF4CA300339585 /* BaseChatViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

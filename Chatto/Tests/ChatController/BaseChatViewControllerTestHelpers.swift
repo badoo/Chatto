@@ -117,13 +117,21 @@ class FakePresenter: BaseChatItemPresenter<FakeCell> {
     }
 }
 
-class FakeChatItem: ChatItemProtocol {
+final class FakeChatItem: ChatItemProtocol {
     var uid: String
     var type: ChatItemType
     init(uid: String, type: ChatItemType) {
         self.uid = uid
         self.type = type
     }
+}
+
+final class FakeChatItemPresenter: ChatItemPresenterProtocol {
+    init() {}
+    static func registerCells(_ collectionView: UICollectionView) {}
+    func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat { return 0 }
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell { return UICollectionViewCell() }
+    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {}
 }
 
 final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {

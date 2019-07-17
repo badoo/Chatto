@@ -38,8 +38,6 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
 
-    public typealias ChatItemCompanionCollection = ReadOnlyOrderedDictionary<ChatItemCompanion>
-
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
@@ -70,7 +68,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
 
     public private(set) var collectionView: UICollectionView?
-    public final internal(set) var chatItemCompanionCollection: ChatItemCompanionCollection = ReadOnlyOrderedDictionary(items: [])
+    public final internal(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
     private var _chatDataSource: ChatDataSourceProtocol?
     public final var chatDataSource: ChatDataSourceProtocol? {
         get {
