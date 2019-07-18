@@ -31,6 +31,7 @@ public protocol ChatInputBarDelegate: class {
     func inputBarDidChangeText(_ inputBar: ChatInputBar)
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
+    func inputBar(_ inputBar: ChatInputBar, didLoseFocusOnItem item: ChatInputItemProtocol)
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
     func inputBarDidShowPlaceholder(_ inputBar: ChatInputBar)
     func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar)
@@ -211,7 +212,12 @@ extension ChatInputBar: ChatInputItemViewDelegate {
         let shouldFocus = self.delegate?.inputBar(self, shouldFocusOnItem: inputItem) ?? true
         guard shouldFocus else { return }
 
+        let previousFocusedItem = self.presenter?.focusedItem
         self.presenter?.onDidReceiveFocusOnItem(inputItem)
+
+        if let previousFocusedItem = previousFocusedItem {
+            self.delegate?.inputBar(self, didLoseFocusOnItem: previousFocusedItem)
+        }
         self.delegate?.inputBar(self, didReceiveFocusOnItem: inputItem)
     }
 }

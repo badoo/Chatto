@@ -195,6 +195,33 @@ class ChatInputBarTests: XCTestCase {
         XCTAssertTrue(self.delegateStrong.focusedItem === item)
     }
 
+    func testThat_GivenFocusedItemIsNil_WhenFocusOnItem_InputBarDidLoseFocusIsNotCalled() {
+        self.setupDelegate()
+        self.setupPresenter()
+        self.delegateStrong.inputBarShouldFocusOnItemResult = true
+        let item = MockInputItem()
+
+        self.presenter.focusedItem = nil
+        self.bar.focusOnInputItem(item)
+
+        XCTAssertFalse(self.delegateStrong.inputBarDidLoseFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidReceiveFocusOnItemCalled)
+    }
+
+    func testThat_GivenFocusedItemIsItem1_WhenFocusOnItem2_InputBarDidLoseFocusIsCalled() {
+        self.setupDelegate()
+        self.setupPresenter()
+        self.delegateStrong.inputBarShouldFocusOnItemResult = true
+        let item1 = MockInputItem()
+        let item2 = MockInputItem()
+
+        self.presenter.focusedItem = item1
+        self.bar.focusOnInputItem(item2)
+
+        XCTAssertTrue(self.delegateStrong.inputBarDidLoseFocusOnItemCalled)
+        XCTAssertTrue(self.delegateStrong.inputBarDidReceiveFocusOnItemCalled)
+    }
+
     func testThat_WhenItemViewTappedAndDelegateDisallowsFocusing_ItWontFocusTheItem() {
         self.setupDelegate()
         self.delegateStrong.inputBarShouldFocusOnItemResult = false
@@ -230,6 +257,8 @@ class ChatInputBarTests: XCTestCase {
 }
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
+    var focusedItem: ChatInputItemProtocol?
+
     let chatInputBar: ChatInputBar
     init(chatInputBar: ChatInputBar) {
         self.chatInputBar = chatInputBar
@@ -292,6 +321,11 @@ class FakeChatInputBarDelegate: ChatInputBarDelegate {
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool {
         self.inputBarShouldFocusOnItemCalled = true
         return self.inputBarShouldFocusOnItemResult
+    }
+
+    var inputBarDidLoseFocusOnItemCalled = false
+    func inputBar(_ inputBar: ChatInputBar, didLoseFocusOnItem item: ChatInputItemProtocol) {
+        self.inputBarDidLoseFocusOnItemCalled = true
     }
 
     var inputBarDidReceiveFocusOnItemCalled = false
