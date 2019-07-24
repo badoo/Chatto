@@ -61,7 +61,10 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         }
         self.fullImageRequests[cell.hash] = nil
         let index = indexPath.item - 1
-        let targetSize = cell.bounds.size
+        let targetSize: CGSize = {
+            let maxCellSide = max(cell.bounds.size.width, cell.bounds.size.height) * UIScreen.main.scale
+            return CGSize(width: maxCellSide, height: maxCellSide)
+        }()
         var imageProvidedSynchronously = true
         var requestId: Int32 = -1
         let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] result in
