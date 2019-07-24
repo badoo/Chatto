@@ -59,6 +59,7 @@ open class ExpandableTextView: UITextView {
 
     private func commonInit() {
         NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextView.textDidChangeNotification, object: self)
+        self.updateBoundsToFitSize()
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
     }
@@ -127,6 +128,7 @@ open class ExpandableTextView: UITextView {
     }
 
     @objc func textDidChange() {
+        self.updateBoundsToFitSize()
         self.updatePlaceholderVisibility()
         self.scrollToCaret()
 
@@ -158,6 +160,22 @@ open class ExpandableTextView: UITextView {
     }
 
     // MARK: - Private methods
+
+    private func updateBoundsToFitSize() {
+        guard #available(iOS 13.0, *) else { return }
+
+        /*
+         Since iOS 13 Beta 4, changing a text doesn't cause a recalculation of the content size.
+         Because of this, invalidateIntrinsicContentSize is not called, and layout is not updated.
+         To fix it, updateBoundsToFitSize should be called on each text change.
+
+         Analyzing a stack trace:
+         -[_UITextContainerView setConstrainedFrameSize:] is still called.
+         -[_UITextContainerView setFrame:] is NOT called since iOS 13 Beta 4.
+         */
+
+        self.bounds.size = self.sizeThatFits(self.bounds.size)
+    }
 
     private func scrollToCaret() {
         if let textRange = self.selectedTextRange {
