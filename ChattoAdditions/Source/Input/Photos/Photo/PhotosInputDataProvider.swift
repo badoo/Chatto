@@ -199,7 +199,8 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
 
     private func makePreviewRequestOptions() -> PHImageRequestOptions {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.deliveryMode = .opportunistic
+        options.resizeMode = .fast
         options.isNetworkAccessAllowed = true
         return options
     }
