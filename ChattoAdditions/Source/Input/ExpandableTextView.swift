@@ -246,20 +246,6 @@ open class ExpandableTextView: UITextView {
     // Point that is already inside text container or outside of the view itself will not be moved.
     private func closestPointInTextContainer(to point: CGPoint) -> CGPoint {
         guard self.bounds.contains(point) else { return point }
-        let x = min(
-            max(
-                point.x,
-                self.textContainerInset.left
-            ),
-            self.bounds.width - self.textContainerInset.right
-        )
-        let y = min(
-            max(
-                point.y,
-                self.textContainerInset.top
-            ),
-            self.bounds.height - self.textContainerInset.bottom
-        )
-        return CGPoint(x: x, y: y)
+        return point.clamped(to: self.bounds.inset(by: self.textContainerInset))
     }
 }
