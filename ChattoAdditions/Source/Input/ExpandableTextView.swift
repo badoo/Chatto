@@ -110,6 +110,21 @@ open class ExpandableTextView: UITextView {
         }
     }
 
+    override open func closestPosition(to point: CGPoint) -> UITextPosition? {
+        let pointInTextContainer = self.closestPointInTextContainer(to: point)
+        return super.closestPosition(to: pointInTextContainer)
+    }
+
+    override open func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
+        let pointInTextContainer = self.closestPointInTextContainer(to: point)
+        return super.closestPosition(to: pointInTextContainer, within: range)
+    }
+
+    override open func characterRange(at point: CGPoint) -> UITextRange? {
+        let pointInTextContainer = self.closestPointInTextContainer(to: point)
+        return super.characterRange(at: pointInTextContainer)
+    }
+
     @available(*, deprecated, message: "use placeholderText property instead")
     open func setTextPlaceholder(_ textPlaceholder: String) {
         self.placeholder.text = textPlaceholder
@@ -224,5 +239,27 @@ open class ExpandableTextView: UITextView {
         self.placeholder.textAlignment = self.textAlignment
         self.placeholder.textContainerInset = self.textContainerInset
         self.placeholder.backgroundColor = UIColor.clear
+    }
+
+    // When you press on inset area inside UITextView, cursor is automatically moved to beginning of the content.
+    // We move press point to the closest point inside text container to avoid this behaviour.
+    // Point that is already inside text container or outside of the view itself will not be moved.
+    private func closestPointInTextContainer(to point: CGPoint) -> CGPoint {
+        guard self.bounds.contains(point) else { return point }
+        let x = min(
+            max(
+                point.x,
+                self.textContainerInset.left
+            ),
+            self.bounds.width - self.textContainerInset.right
+        )
+        let y = min(
+            max(
+                point.y,
+                self.textContainerInset.top
+            ),
+            self.bounds.height - self.textContainerInset.bottom
+        )
+        return CGPoint(x: x, y: y)
     }
 }
