@@ -39,6 +39,10 @@ class TimeSeparatorModel: ChatItemProtocol {
         self.date = date
         self.uid = uid
     }
+
+    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
+    }
 }
 
 extension Date {

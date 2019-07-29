@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import Chatto
 
 public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
     var text: String { get }
@@ -37,5 +38,8 @@ open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageMod
     public init(messageModel: MessageModelT, text: String) {
         self._messageModel = messageModel
         self.text = text
+    }
+    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
     }
 }

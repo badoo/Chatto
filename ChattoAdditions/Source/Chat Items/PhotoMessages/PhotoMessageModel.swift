@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import Chatto
 
 public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol {
     var image: UIImage { get }
@@ -33,12 +34,15 @@ open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageM
     public var messageModel: MessageModelProtocol {
         return self._messageModel
     }
-    public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public let _messageModel: MessageModelT // Can't make messageModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
     public let image: UIImage
     public let imageSize: CGSize
     public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
         self._messageModel = messageModel
         self.imageSize = imageSize
         self.image = image
+    }
+    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
     }
 }

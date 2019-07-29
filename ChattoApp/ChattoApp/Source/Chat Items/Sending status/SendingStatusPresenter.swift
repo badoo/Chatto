@@ -42,6 +42,10 @@ class SendingStatusModel: ChatItemProtocol {
         self.uid = uid
         self.status = status
     }
+
+    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
+    }
 }
 
 public class SendingStatusPresenterBuilder: ChatItemPresenterBuilderProtocol {

@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Chatto
 import ChattoAdditions
 
 final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, DemoMessageModelProtocol {
@@ -50,9 +51,12 @@ final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, 
     // MARK: - Equatable
 
     static func == (lhs: DemoCompoundMessageModel, rhs: DemoCompoundMessageModel) -> Bool {
-        return lhs.text == rhs.text
-            && lhs.image == rhs.image
-            && lhs.messageModel.uid == rhs.messageModel.uid
-            && lhs.status == rhs.status
+        return lhs.isEqual(to: rhs)
+    }
+
+    // MARK: - ChatItemProtocol
+
+    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
     }
 }

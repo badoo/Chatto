@@ -84,4 +84,8 @@ open class MessageModel: MessageModelProtocol {
         self.date = date
         self.status = status
     }
+
+    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
+        return self.uid == otherItem.uid && self.type == otherItem.type
+    }
 }
