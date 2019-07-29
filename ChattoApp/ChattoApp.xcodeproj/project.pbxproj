@@ -46,6 +46,7 @@
 		DD49AA1095C478DD42524839 /* Pods_ChattoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */; };
 		DECD501A21AEEAF100988729 /* ContentAwareInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD501921AEEAF100988729 /* ContentAwareInputItem.swift */; };
 		DECD501C21AEEC5A00988729 /* CustomInput.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DECD501B21AEEC5A00988729 /* CustomInput.xcassets */; };
+		EAE6345722EB0CAD0053E21A /* TestItemsReloadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE6345622EB0CAD0053E21A /* TestItemsReloadingViewController.swift */; };
 		FE2D050B1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,7 @@
 		C3F91DCB1C75EFE300D461D2 /* SendingStatusPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingStatusPresenter.swift; sourceTree = "<group>"; };
 		DECD501921AEEAF100988729 /* ContentAwareInputItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentAwareInputItem.swift; sourceTree = "<group>"; };
 		DECD501B21AEEC5A00988729 /* CustomInput.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CustomInput.xcassets; sourceTree = "<group>"; };
+		EAE6345622EB0CAD0053E21A /* TestItemsReloadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestItemsReloadingViewController.swift; sourceTree = "<group>"; };
 		FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCellAvatarStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -198,6 +200,7 @@
 				C3F91DAB1C75EF9E00D461D2 /* DemoChatMessageSender.swift */,
 				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
 				26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */,
+				EAE6345622EB0CAD0053E21A /* TestItemsReloadingViewController.swift */,
 			);
 			path = "Chat View Controllers";
 			sourceTree = "<group>";
@@ -504,6 +507,7 @@
 				268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
 				C3F91DB71C75EF9E00D461D2 /* DemoChatItemsDecorator.swift in Sources */,
+				EAE6345722EB0CAD0053E21A /* TestItemsReloadingViewController.swift in Sources */,
 				0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */,
 				0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */,
 				558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */,

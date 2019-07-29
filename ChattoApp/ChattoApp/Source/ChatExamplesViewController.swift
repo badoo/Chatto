@@ -40,7 +40,8 @@ class ChatExamplesViewController: CellsViewController {
             self.makeOpenWithTabBarCellItem(),
             self.makeScrollToBottomCellItem(),
             self.makeCompoundDemoViewController(),
-            self.makeUpdateItemTypeViewController()
+            self.makeUpdateItemTypeViewController(),
+            self.makeTestItemsReloadingCellItem()
         ]
     }
 
@@ -114,6 +115,12 @@ class ChatExamplesViewController: CellsViewController {
             let viewController = DemoChatViewController()
             viewController.dataSource = dataSource
             self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+
+    private func makeTestItemsReloadingCellItem() -> CellItem {
+        return CellItem(title: "Test items reloading") { [unowned self] in
+            self.navigationController?.pushViewController(TestItemsReloadingViewController(), animated: true)
         }
     }
 
