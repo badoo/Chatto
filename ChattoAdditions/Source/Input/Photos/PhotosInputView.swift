@@ -111,7 +111,6 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func commonInit() {
-        self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.configureCollectionView()
         self.configureItemSizeCalculator()
         self.dataProvider = PhotosInputPlaceholderDataProvider()
@@ -119,6 +118,11 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.collectionViewQueue.start()
         self.requestAccessToVideo()
         self.requestAccessToPhoto()
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.collectionView.frame = self.bounds
     }
 
     private func configureItemSizeCalculator() {
@@ -203,18 +207,14 @@ extension PhotosInputView: UICollectionViewDataSource {
     func configureCollectionView() {
         self.collectionViewLayout = PhotosInputCollectionViewLayout()
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionViewLayout)
-        self.collectionView.backgroundColor = UIColor.white
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.backgroundColor = .white
         LiveCameraCellPresenter.registerCells(collectionView: self.collectionView)
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
 
+        self.collectionView.frame = self.bounds
         self.addSubview(self.collectionView)
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
