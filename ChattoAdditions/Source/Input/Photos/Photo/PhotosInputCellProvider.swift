@@ -62,8 +62,9 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         self.fullImageRequests[cell.hash] = nil
         let index = indexPath.item - 1
         let targetSize: CGSize = {
-            let maxCellSide = max(cell.bounds.size.width, cell.bounds.size.height) * UIScreen.main.scale
-            return CGSize(width: maxCellSide, height: maxCellSide)
+            let maxScale: CGFloat = 2 // This constant is a heuristically chosen compromise between photo quality and memory consumption.
+            let side = max(cell.bounds.size.width, cell.bounds.size.height) * min(UIScreen.main.scale, maxScale)
+            return CGSize(width: side, height: side)
         }()
         var imageProvidedSynchronously = true
         var requestId: Int32 = -1
