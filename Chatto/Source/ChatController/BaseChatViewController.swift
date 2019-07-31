@@ -426,6 +426,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if animated {
             self.isAdjustingInputContainer = true
             self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            CATransaction.begin()
             UIView.animate(
                 withDuration: duration,
                 delay: 0.0,
@@ -433,7 +434,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
                 initialSpringVelocity: initialSpringVelocity,
                 options: .curveLinear,
                 animations: { self.view.layoutIfNeeded() },
-                completion: { (_) in callback?() })
+                completion: { _ in })
+            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
+            CATransaction.commit()
             self.isAdjustingInputContainer = false
         } else {
             self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
@@ -450,8 +453,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             UIView.animate(
                 withDuration: duration,
                 animations: { self.view.layoutIfNeeded() },
-                completion: { (_) in callback?() }
+                completion: { _ in }
             )
+            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
             CATransaction.commit()
             self.isAdjustingInputContainer = false
         } else {
