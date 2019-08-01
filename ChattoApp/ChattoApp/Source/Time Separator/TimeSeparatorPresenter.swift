@@ -44,6 +44,14 @@ public class TimeSeparatorPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
 class TimeSeparatorPresenter: ChatItemPresenterProtocol {
 
+    var isItemUpdateSupported: Bool {
+        return false
+    }
+
+    func update(with chatItem: ChatItemProtocol) {
+        assertionFailure("TimeSeparatorPresenter update is not supported yet.")
+    }
+
     let timeSeparatorModel: TimeSeparatorModel
     init (timeSeparatorModel: TimeSeparatorModel) {
         self.timeSeparatorModel = timeSeparatorModel

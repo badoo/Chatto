@@ -73,6 +73,14 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
         self.statusModel = statusModel
     }
 
+    var isItemUpdateSupported: Bool {
+        return false
+    }
+
+    func update(with chatItem: ChatItemProtocol) {
+        assertionFailure("SendingStatusPresenter update is not supported yet.")
+    }
+
     static func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(UINib(nibName: "SendingStatusCollectionViewCell", bundle: Bundle(for: self)), forCellWithReuseIdentifier: "SendingStatusCollectionViewCell")
     }

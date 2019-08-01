@@ -46,12 +46,21 @@ final class TestItemsReloadingViewController: DemoChatViewController {
         self.dataSource = DemoChatDataSource(messages: self.remakeItems(), pageSize: 50)
     }
 
-    private func remakeItems() -> [DemoTextMessageModel] {
+    private func remakeItems() -> [ChatItemProtocol] {
+        let randomGoodAnswer = ["Nice!", "Great!", "Amazing!", "Brilliant!", "Another very very long answer to test how cell resizing works."].randomElement()!
+        let randomImageName = "pic-test-\((1...3).randomElement()!)"
+        let randomImage = UIImage(named: randomImageName)!
+        let randomImageSize = CGSize(width: [300, 400].randomElement()!, height: [300, 400].randomElement()!)
+
         return [
             DemoChatMessageFactory.makeTextMessage("1", text: "Hello", isIncoming: true),
             DemoChatMessageFactory.makeTextMessage("2", text: "Hi!", isIncoming: false),
             DemoChatMessageFactory.makeTextMessage("3", text: "How are you doing?", isIncoming: true),
-            DemoChatMessageFactory.makeTextMessage("4", text: "I'm fine, thanks!", isIncoming: false)
-        ]
+            DemoChatMessageFactory.makeTextMessage("4", text: "I'm fine, thanks!", isIncoming: false),
+            DemoChatMessageFactory.makeTextMessage("5", text: randomGoodAnswer, isIncoming: true),
+            DemoChatMessageFactory.makePhotoMessage("6", image: randomImage, size: randomImageSize, isIncoming: false),
+            DemoChatMessageFactory.makeTextMessage("7", text: "Cool, bye!", isIncoming: true),
+            DemoChatMessageFactory.makeCompoundMessage(uid: "8", text: randomGoodAnswer, imageName: randomImageName, isIncoming: false)
+        ].reversed()
     }
 }
