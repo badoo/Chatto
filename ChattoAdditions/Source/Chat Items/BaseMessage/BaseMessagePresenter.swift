@@ -68,15 +68,15 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             self.interactionHandler = interactionHandler
     }
 
-    public let messageModel: ModelT
+    public internal(set) var messageModel: ModelT {
+        didSet { self.messageViewModel = self.createViewModel() }
+    }
     public let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     public let cellStyle: BaseMessageCollectionViewCellStyleProtocol
 
-    public private(set) final lazy var messageViewModel: ViewModelT = {
-        return self.createViewModel()
-    }()
+    public private(set) final lazy var messageViewModel: ViewModelT = self.createViewModel()
 
     open func createViewModel() -> ViewModelT {
         let viewModel = self.viewModelBuilder.createViewModel(self.messageModel)

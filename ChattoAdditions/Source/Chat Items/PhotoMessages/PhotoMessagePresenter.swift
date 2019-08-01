@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import Chatto
 
 open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<PhotoBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -54,6 +55,15 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     public final override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(PhotoMessageCollectionViewCell.self, forCellWithReuseIdentifier: "photo-message")
+    }
+
+    open override var isItemUpdateSupported: Bool {
+        return true
+    }
+
+    open override func update(with chatItem: ChatItemProtocol) {
+        guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
+        self.messageModel = newMessageModel
     }
 
     public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
