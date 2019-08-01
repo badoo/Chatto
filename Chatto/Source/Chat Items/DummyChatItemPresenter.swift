@@ -24,11 +24,19 @@
 
 import Foundation
 
-// Handles messages that aren't supported so they appear as invisible
+// Handles messages which aren't supported. So, they appear as invisible.
 class DummyChatItemPresenter: ChatItemPresenterProtocol {
 
     class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(DummyCollectionViewCell.self, forCellWithReuseIdentifier: "cell-id-unhandled-message")
+    }
+
+    var isItemUpdateSupported: Bool {
+        return true
+    }
+
+    func update(with chatItem: ChatItemProtocol) {
+        // Does nothing
     }
 
     var canCalculateHeightInBackground: Bool {

@@ -317,6 +317,11 @@ extension BaseChatViewController {
                     return self.createPresenterForChatItem(decoratedChatItem.chatItem)
                 }
 
+                guard oldChatItemCompanion.presenter.isItemUpdateSupported else {
+                    return self.createPresenterForChatItem(decoratedChatItem.chatItem)
+                }
+
+                oldChatItemCompanion.presenter.update(with: decoratedChatItem.chatItem)
                 return oldChatItemCompanion.presenter
             }()
 

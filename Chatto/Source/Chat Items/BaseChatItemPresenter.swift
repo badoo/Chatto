@@ -35,6 +35,15 @@ open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenter
 
     public init() {}
 
+    open var isItemUpdateSupported: Bool {
+        assertionFailure("Implement in subclass")
+        return false
+    }
+
+    open func update(with chatItem: ChatItemProtocol) {
+        assertionFailure("Implement in subclass")
+    }
+
     open class func registerCells(_ collectionView: UICollectionView) {
         assert(false, "Implement in subclass")
     }

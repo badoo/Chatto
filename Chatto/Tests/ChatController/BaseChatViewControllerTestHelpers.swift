@@ -83,14 +83,16 @@ class FakeDataSource: ChatDataSourceProtocol {
 class FakeCell: UICollectionViewCell {}
 
 class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
-    var presentersCreatedCount: Int = 0
+    private(set) var createdPresenters: [ChatItemPresenterProtocol] = []
+
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return chatItem.type == "fake-type"
     }
 
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        self.presentersCreatedCount += 1
-        return FakePresenter()
+        let presenter = FakePresenter()
+        self.createdPresenters.append(presenter)
+        return presenter
     }
 
     var presenterType: ChatItemPresenterProtocol.Type {
@@ -99,6 +101,20 @@ class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
 }
 
 class FakePresenter: BaseChatItemPresenter<FakeCell> {
+
+    var _isItemUpdateSupportedReturnValue: Bool = false
+    override var isItemUpdateSupported: Bool {
+        return self._isItemUpdateSupportedReturnValue
+    }
+
+    private var _updateWithChatItemCalls: [(ChatItemProtocol)] = []
+    var _updateWithChatItemIsCalled: Bool { return self._updateWithChatItemCallsCount > 0 }
+    var _updateWithChatItemCallsCount: Int { return self._updateWithChatItemCalls.count }
+    var _updateWithChatItemLastCallParams: ChatItemProtocol? { return self._updateWithChatItemCalls.last }
+    override func update(with chatItem: ChatItemProtocol) {
+        self._updateWithChatItemCalls.append((chatItem))
+    }
+
     override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(FakeCell.self, forCellWithReuseIdentifier: "fake-cell")
     }
@@ -131,6 +147,8 @@ final class FakeChatItem: ChatItemProtocol {
 
 final class FakeChatItemPresenter: ChatItemPresenterProtocol {
     init() {}
+    var isItemUpdateSupported: Bool { return false }
+    func update(with chatItem: ChatItemProtocol) {}
     static func registerCells(_ collectionView: UICollectionView) {}
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat { return 0 }
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell { return UICollectionViewCell() }
