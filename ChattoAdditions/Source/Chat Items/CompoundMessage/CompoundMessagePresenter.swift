@@ -45,6 +45,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private var contentPresenters: [MessageContentPresenterProtocol]!
     private var menuPresenter: ChatItemMenuPresenterProtocol?
 
+    private weak var compoundCell: CompoundMessageCollectionViewCell?
+
     public init(
         messageModel: ModelT,
         viewModelBuilder: ViewModelBuilderT,
@@ -148,12 +150,16 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
              3. CompoundCell's views bound with a current compound message presenters.
              */
 
+            guard sSelf.compoundCell != compoundCell else { return }
+
             sSelf.contentPresenters.forEach { $0.unbindFromView() }
             compoundCell.viewReferences = zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
                 let viewReference = ViewReference(to: view)
                 presenter.bindToView(with: viewReference)
                 return viewReference
             }
+
+            sSelf.compoundCell = compoundCell
         }
     }
 
