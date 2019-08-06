@@ -42,7 +42,9 @@ open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageM
         self.imageSize = imageSize
         self.image = image
     }
-    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherMessageModel = anotherItem as? PhotoMessageModel else { return false }
+        return self.image == anotherMessageModel.image
+            && self.imageSize == anotherMessageModel.imageSize
     }
 }

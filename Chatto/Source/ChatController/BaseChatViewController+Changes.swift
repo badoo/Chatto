@@ -309,11 +309,11 @@ extension BaseChatViewController {
              */
 
             let presenter: ChatItemPresenterProtocol = {
-                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] else {
+                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] ?? oldItems[decoratedChatItem.chatItem.uid] else {
                     return self.createPresenterForChatItem(decoratedChatItem.chatItem)
                 }
 
-                guard oldChatItemCompanion.chatItem.isEqual(to: decoratedChatItem.chatItem) else {
+                guard oldChatItemCompanion.chatItem.type == decoratedChatItem.chatItem.type else {
                     return self.createPresenterForChatItem(decoratedChatItem.chatItem)
                 }
 

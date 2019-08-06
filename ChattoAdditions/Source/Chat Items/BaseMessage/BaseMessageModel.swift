@@ -85,7 +85,8 @@ open class MessageModel: MessageModelProtocol {
         self.status = status
     }
 
-    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        assertionFailure("Should be implemented in a subclass.")
+        return false
     }
 }

@@ -86,7 +86,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func update(with chatItem: ChatItemProtocol) {
         guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
-        let isUpdateNeeded = !self.messageModel.isEqual(to: newMessageModel)
+        let isUpdateNeeded = !self.messageModel.hasSameContent(as: newMessageModel)
         self.messageModel = newMessageModel
         if isUpdateNeeded { self.updateContent() }
     }

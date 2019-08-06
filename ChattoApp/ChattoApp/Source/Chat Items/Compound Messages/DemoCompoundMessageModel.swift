@@ -51,12 +51,16 @@ final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, 
     // MARK: - Equatable
 
     static func == (lhs: DemoCompoundMessageModel, rhs: DemoCompoundMessageModel) -> Bool {
-        return lhs.isEqual(to: rhs)
+        return lhs.messageModel.uid == rhs.messageModel.uid
+            && lhs.status == rhs.status
+            && lhs.hasSameContent(as: rhs)
     }
 
     // MARK: - ChatItemProtocol
 
-    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherModel = anotherItem as? DemoCompoundMessageModel else { return false }
+        return self.text == anotherModel.text
+            && self.image == anotherModel.image
     }
 }

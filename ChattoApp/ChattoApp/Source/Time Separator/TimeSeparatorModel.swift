@@ -40,8 +40,9 @@ class TimeSeparatorModel: ChatItemProtocol {
         self.uid = uid
     }
 
-    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherModel = anotherItem as? TimeSeparatorModel else { return false }
+        return self.date == anotherModel.date
     }
 }
 

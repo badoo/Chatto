@@ -43,8 +43,9 @@ class SendingStatusModel: ChatItemProtocol {
         self.status = status
     }
 
-    func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherModel = anotherItem as? SendingStatusModel else { return false }
+        return self.status == anotherModel.status
     }
 }
 

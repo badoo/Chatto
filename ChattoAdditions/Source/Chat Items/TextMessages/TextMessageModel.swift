@@ -39,7 +39,8 @@ open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageMod
         self._messageModel = messageModel
         self.text = text
     }
-    public func isEqual(to otherItem: ChatItemProtocol) -> Bool {
-        return self.uid == otherItem.uid && self.type == otherItem.type
+    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherMessageModel = anotherItem as? TextMessageModel else { return false }
+        return self.text == anotherMessageModel.text
     }
 }

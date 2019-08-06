@@ -28,7 +28,7 @@ public typealias ChatItemType = String
 
 public protocol ChatItemProtocol: AnyObject, UniqueIdentificable {
     var type: ChatItemType { get }
-    func isEqual(to otherItem: ChatItemProtocol) -> Bool
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool
 }
 
 public protocol ChatItemDecorationAttributesProtocol {
