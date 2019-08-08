@@ -127,9 +127,6 @@ final class FakeChatItem: ChatItemProtocol {
         self.uid = uid
         self.type = type
     }
-    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
-        return self.type == anotherItem.type
-    }
 }
 
 final class FakeChatItemPresenter: ChatItemPresenterProtocol {
