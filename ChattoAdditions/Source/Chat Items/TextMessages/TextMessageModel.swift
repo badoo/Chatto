@@ -25,7 +25,7 @@
 import Foundation
 import Chatto
 
-public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
+public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol, ContentEquatableChatItemProtocol {
     var text: String { get }
 }
 

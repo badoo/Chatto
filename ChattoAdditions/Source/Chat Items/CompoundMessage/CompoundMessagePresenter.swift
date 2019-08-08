@@ -80,13 +80,11 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         // Cell registration is happening lazily, right before the moment when a cell is dequeued.
     }
 
-    open override var isItemUpdateSupported: Bool {
-        return true
-    }
-
     open override func update(with chatItem: ChatItemProtocol) {
-        guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
-        let isUpdateNeeded = !self.messageModel.hasSameContent(as: newMessageModel)
+        guard let oldChatItem = self.messageModel as? ContentEquatableChatItemProtocol else { assertionFailure("Unexpected type of the message: \(type(of: self.messageModel))."); return }
+        guard let newChatItem = chatItem as? ContentEquatableChatItemProtocol, let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
+
+        let isUpdateNeeded = !oldChatItem.hasSameContent(as: newChatItem)
         self.messageModel = newMessageModel
         if isUpdateNeeded { self.updateContent() }
     }

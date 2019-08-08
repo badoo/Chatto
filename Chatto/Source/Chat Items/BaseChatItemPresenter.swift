@@ -30,15 +30,10 @@ public enum ChatItemVisibility {
     case visible
 }
 
-open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenterProtocol {
+open class BaseChatItemPresenter<CellT: UICollectionViewCell>: UpdatableChatItemPresenterProtocol {
     public final weak var cell: CellT?
 
     public init() {}
-
-    open var isItemUpdateSupported: Bool {
-        assertionFailure("Implement in subclass")
-        return false
-    }
 
     open func update(with chatItem: ChatItemProtocol) {
         assertionFailure("Implement in subclass")

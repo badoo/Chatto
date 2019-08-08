@@ -42,11 +42,6 @@ class SendingStatusModel: ChatItemProtocol {
         self.uid = uid
         self.status = status
     }
-
-    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
-        guard let anotherModel = anotherItem as? SendingStatusModel else { return false }
-        return self.status == anotherModel.status
-    }
 }
 
 public class SendingStatusPresenterBuilder: ChatItemPresenterBuilderProtocol {
@@ -72,14 +67,6 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
     let statusModel: SendingStatusModel
     init (statusModel: SendingStatusModel) {
         self.statusModel = statusModel
-    }
-
-    var isItemUpdateSupported: Bool {
-        return false
-    }
-
-    func update(with chatItem: ChatItemProtocol) {
-        assertionFailure("SendingStatusPresenter update is not supported yet.")
     }
 
     static func registerCells(_ collectionView: UICollectionView) {

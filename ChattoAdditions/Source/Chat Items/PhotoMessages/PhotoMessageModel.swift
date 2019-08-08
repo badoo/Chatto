@@ -25,7 +25,7 @@
 import UIKit
 import Chatto
 
-public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol {
+public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol, ContentEquatableChatItemProtocol {
     var image: UIImage { get }
     var imageSize: CGSize { get }
 }

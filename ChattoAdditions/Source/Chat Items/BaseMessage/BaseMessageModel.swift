@@ -84,9 +84,4 @@ open class MessageModel: MessageModelProtocol {
         self.date = date
         self.status = status
     }
-
-    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
-        assertionFailure("Should be implemented in a subclass.")
-        return false
-    }
 }

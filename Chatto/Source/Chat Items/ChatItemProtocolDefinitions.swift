@@ -28,7 +28,6 @@ public typealias ChatItemType = String
 
 public protocol ChatItemProtocol: AnyObject, UniqueIdentificable {
     var type: ChatItemType { get }
-    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool
 }
 
 public protocol ChatItemDecorationAttributesProtocol {
@@ -43,9 +42,6 @@ public protocol ChatItemMenuPresenterProtocol {
 
 public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol {
     static func registerCells(_ collectionView: UICollectionView)
-
-    var isItemUpdateSupported: Bool { get }
-    func update(with chatItem: ChatItemProtocol)
 
     var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
@@ -68,4 +64,14 @@ public protocol ChatItemPresenterBuilderProtocol {
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
     var presenterType: ChatItemPresenterProtocol.Type { get }
+}
+
+// MARK: - Updatable Chat Items
+
+public protocol UpdatableChatItemPresenterProtocol: ChatItemPresenterProtocol {
+    func update(with chatItem: ChatItemProtocol)
+}
+
+public protocol ContentEquatableChatItemProtocol: ChatItemProtocol {
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool
 }

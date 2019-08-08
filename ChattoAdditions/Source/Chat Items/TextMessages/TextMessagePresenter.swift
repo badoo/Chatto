@@ -63,10 +63,6 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
     }
 
-    open override var isItemUpdateSupported: Bool {
-        return true
-    }
-
     open override func update(with chatItem: ChatItemProtocol) {
         guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
         self.messageModel = newMessageModel

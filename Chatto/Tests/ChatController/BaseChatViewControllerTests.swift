@@ -278,15 +278,67 @@ class ChatViewControllerTests: XCTestCase {
 
 extension ChatViewControllerTests {
 
-    func testThat_WhenDataSourceIsUpdatedWithOneNewItem_ThenOneNewItemPresenterIsCreated() {
+    // MARK: Same Items
+
+    func testThat_GivenDataSourceWithNotUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithSameItems_ThenTwoPresentersAreCreated() {
         let presenterBuilder = FakePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
-        presenterBuilder.createdPresenters.forEach { ($0 as! FakePresenter)._isItemUpdateSupportedReturnValue = true }
-        let numberOfPresentersBeforeUpdate = presenterBuilder.createdPresenters.count
+        let numberOfCreatedPresentersBeforeUpdate = presenterBuilder.createdPresenters.count
+
+        fakeDataSource.chatItems = createFakeChatItems(count: 2)
+        let asyncExpectation = expectation(description: "update")
+        controller.enqueueModelUpdate(updateType: .normal) {
+            asyncExpectation.fulfill()
+        }
+
+        self.waitForExpectations(timeout: 1) { _ in
+            let numberOfCreatedPresentersAfterUpdate = presenterBuilder.createdPresenters.count
+            let numberOfCreatedPresenters = numberOfCreatedPresentersAfterUpdate - numberOfCreatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfCreatedPresenters, 2)
+        }
+    }
+
+    func testThat_GivenDataSourceWithUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithSameItems_ThenTwoPresentersAreUpdated() {
+        let presenterBuilder = FakeUpdatablePresenterBuilder()
+        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let fakeDataSource = FakeDataSource()
+        fakeDataSource.chatItems = createFakeChatItems(count: 2)
+        controller.chatDataSource = fakeDataSource
+        self.fakeDidAppearAndLayout(controller: controller)
+        let numberOfUpdatedPresentersBeforeUpdate = presenterBuilder.updatedPresentersCount
+        let numberOfCreatedPresentersBeforeUpdate = presenterBuilder.createdPresenters.count
+
+        fakeDataSource.chatItems = createFakeChatItems(count: 2)
+        let asyncExpectation = expectation(description: "update")
+        controller.enqueueModelUpdate(updateType: .normal) {
+            asyncExpectation.fulfill()
+        }
+
+        self.waitForExpectations(timeout: 1) { _ in
+            let numberOfUpdatedPresentersAfterUpdate = presenterBuilder.updatedPresentersCount
+            let numberOfUpdatedPresenters = numberOfUpdatedPresentersAfterUpdate - numberOfUpdatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfUpdatedPresenters, 2)
+
+            let numberOfCreatedPresentersAfterUpdate = presenterBuilder.createdPresenters.count
+            let numberOfCreatedPresenters = numberOfCreatedPresentersAfterUpdate - numberOfCreatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfCreatedPresenters, 0)
+        }
+    }
+
+    // MARK: New Items
+
+    func testThat_GivenDataSourceWithNotUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithOneNewItem_ThenThreePresentersAreCreated() {
+        let presenterBuilder = FakePresenterBuilder()
+        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let fakeDataSource = FakeDataSource()
+        fakeDataSource.chatItems = createFakeChatItems(count: 2)
+        controller.chatDataSource = fakeDataSource
+        self.fakeDidAppearAndLayout(controller: controller)
+        let numberOfCreatedPresentersBeforeUpdate = presenterBuilder.createdPresenters.count
 
         fakeDataSource.chatItems = createFakeChatItems(count: 3)
         let asyncExpectation = expectation(description: "update")
@@ -295,57 +347,36 @@ extension ChatViewControllerTests {
         }
 
         self.waitForExpectations(timeout: 1) { _ in
-            let numberOfPresenterAfterUpdate = presenterBuilder.createdPresenters.count
-            XCTAssertEqual(numberOfPresenterAfterUpdate - numberOfPresentersBeforeUpdate, 1)
+            let numberOfCreatedPresentersAfterUpdate = presenterBuilder.createdPresenters.count
+            let numberOfCreatedPresenters = numberOfCreatedPresentersAfterUpdate - numberOfCreatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfCreatedPresenters, 3)
         }
     }
 
-    func testThat_GivenPresenterSupportsUpdates_WhenDataSourceIsUpdatedWithTheSameItem_ThendNewPresenterIsNotCreated_AndPresenterIsUpdatedOnce() {
-        let presenterBuilder = FakePresenterBuilder()
+    func testThat_GivenDataSourceWithUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithOneNewItem_ThenTwoPresentersAreUpdated_AndOnePresenterIsCreated() {
+        let presenterBuilder = FakeUpdatablePresenterBuilder()
         let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
-        fakeDataSource.chatItems = createFakeChatItems(count: 1)
+        fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
         self.fakeDidAppearAndLayout(controller: controller)
-        let presenter = presenterBuilder.createdPresenters.last! as! FakePresenter
-        presenter._isItemUpdateSupportedReturnValue = true
-        XCTAssertEqual(presenter._updateWithChatItemCallsCount, 0)
-        XCTAssertEqual(presenterBuilder.createdPresenters.count, 1)
+        let numberOfUpdatedPresentersBeforeUpdate = presenterBuilder.updatedPresentersCount
+        let numberOfCreatedPresentersBeforeUpdate = presenterBuilder.createdPresenters.count
 
-        fakeDataSource.chatItems = createFakeChatItems(count: 1)
+        fakeDataSource.chatItems = createFakeChatItems(count: 3)
         let asyncExpectation = expectation(description: "update")
         controller.enqueueModelUpdate(updateType: .normal) {
             asyncExpectation.fulfill()
         }
 
         self.waitForExpectations(timeout: 1) { _ in
-            XCTAssertEqual(presenterBuilder.createdPresenters.count, 1)
-            XCTAssertEqual(presenter._updateWithChatItemCallsCount, 1)
-            XCTAssert(presenter._updateWithChatItemLastCallParams! === fakeDataSource.chatItems.first!)
+            let numberOfUpdatedPresentersAfterUpdate = presenterBuilder.updatedPresentersCount
+            let numberOfUpdatedPresenters = numberOfUpdatedPresentersAfterUpdate - numberOfUpdatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfUpdatedPresenters, 2)
+
+            let numberOfCreatedPresentersAfterUpdate = presenterBuilder.createdPresenters.count
+            let numberOfCreatedPresenters = numberOfCreatedPresentersAfterUpdate - numberOfCreatedPresentersBeforeUpdate
+            XCTAssertEqual(numberOfCreatedPresenters, 1)
         }
     }
-
-    func testThat_GivenPresenterDoesntSupportUpdates_WhenDataSourceIsUpdatedWithTheSameItem_ThenPresenterIsNotUpdated_AndNewPresenterIsCreated() {
-            let presenterBuilder = FakePresenterBuilder()
-            let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
-            let fakeDataSource = FakeDataSource()
-            fakeDataSource.chatItems = createFakeChatItems(count: 1)
-            controller.chatDataSource = fakeDataSource
-            self.fakeDidAppearAndLayout(controller: controller)
-            let presenter = presenterBuilder.createdPresenters.last! as! FakePresenter
-            presenter._isItemUpdateSupportedReturnValue = false
-            XCTAssertEqual(presenter._updateWithChatItemCallsCount, 0)
-            XCTAssertEqual(presenterBuilder.createdPresenters.count, 1)
-
-            fakeDataSource.chatItems = createFakeChatItems(count: 1)
-            let asyncExpectation = expectation(description: "update")
-            controller.enqueueModelUpdate(updateType: .normal) {
-                asyncExpectation.fulfill()
-            }
-
-            self.waitForExpectations(timeout: 1) { _ in
-                XCTAssertFalse(presenter._updateWithChatItemIsCalled)
-                XCTAssertEqual(presenterBuilder.createdPresenters.count, 2)
-            }
-        }
 }
