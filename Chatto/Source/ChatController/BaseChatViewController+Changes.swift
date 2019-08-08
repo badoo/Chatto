@@ -309,20 +309,14 @@ extension BaseChatViewController {
              */
 
             let presenter: ChatItemPresenterProtocol = {
-                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] ?? oldItems[decoratedChatItem.chatItem.uid] else {
-                    return self.createPresenterForChatItem(decoratedChatItem.chatItem)
+                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] ?? oldItems[decoratedChatItem.chatItem.uid],
+                    oldChatItemCompanion.chatItem.type == decoratedChatItem.chatItem.type,
+                    let existingPresenter = oldChatItemCompanion.presenter as? UpdatableChatItemPresenterProtocol else {
+                        return self.createPresenterForChatItem(decoratedChatItem.chatItem)
                 }
 
-                guard oldChatItemCompanion.chatItem.type == decoratedChatItem.chatItem.type else {
-                    return self.createPresenterForChatItem(decoratedChatItem.chatItem)
-                }
-
-                guard oldChatItemCompanion.presenter.isItemUpdateSupported else {
-                    return self.createPresenterForChatItem(decoratedChatItem.chatItem)
-                }
-
-                oldChatItemCompanion.presenter.update(with: decoratedChatItem.chatItem)
-                return oldChatItemCompanion.presenter
+                existingPresenter.update(with: decoratedChatItem.chatItem)
+                return existingPresenter
             }()
 
             return ChatItemCompanion(uid: decoratedChatItem.uid, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)
