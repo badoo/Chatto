@@ -27,7 +27,7 @@ import Chatto
 open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT>, MessageContentPresenterDelegate where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: Equatable,
+    ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
 
@@ -81,10 +81,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func update(with chatItem: ChatItemProtocol) {
-        guard let oldChatItem = self.messageModel as? ContentEquatableChatItemProtocol else { assertionFailure("Unexpected type of the message: \(type(of: self.messageModel))."); return }
-        guard let newChatItem = chatItem as? ContentEquatableChatItemProtocol, let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
+        guard let newMessageModel = chatItem as? ModelT else {
+            assertionFailure("Unexpected type of the message: \(type(of: chatItem)).")
+            return
+        }
 
-        let isUpdateNeeded = !oldChatItem.hasSameContent(as: newChatItem)
+        let isUpdateNeeded = !self.messageModel.hasSameContent(as: newMessageModel)
         self.messageModel = newMessageModel
         if isUpdateNeeded { self.updateContent() }
     }
