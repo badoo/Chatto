@@ -51,4 +51,6 @@ public protocol MessageContentPresenterProtocol {
 
     func bindToView(with viewReference: ViewReference)
     func unbindFromView()
+
+    func updateMessage(_ newMessage: Any)
 }

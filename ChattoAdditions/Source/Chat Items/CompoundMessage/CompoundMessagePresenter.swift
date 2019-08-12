@@ -88,7 +88,18 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
         let isUpdateNeeded = !self.messageModel.hasSameContent(as: newMessageModel)
         self.messageModel = newMessageModel
-        if isUpdateNeeded { self.updateContent() }
+
+        guard !isUpdateNeeded else {
+            self.updateContent()
+            return
+        }
+
+        let isUidUpdateNeeded = self.messageModel.uid != newMessageModel.uid
+
+        guard !isUidUpdateNeeded else {
+            self.updateContentPresenters(with: newMessageModel.uid)
+            return
+        }
     }
 
     private func updateContent() {
@@ -101,6 +112,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         }
 
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
+    }
+
+    private func updateContentPresenters(with newMessage: Any) {
+        self.contentPresenters.forEach {
+            $0.updateMessage(newMessage)
+        }
     }
 
     open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {

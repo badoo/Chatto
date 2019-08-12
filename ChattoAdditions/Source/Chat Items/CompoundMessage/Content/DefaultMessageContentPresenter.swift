@@ -76,4 +76,12 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     public func unbindFromView() {
         self.onUnbinding?(self.view)
     }
+
+    public func updateMessage(_ newMessage: Any) {
+        guard let message = newMessage as? MessageType else {
+            assertionFailure("Unexpected message type: \(type(of: newMessage))")
+            return
+        }
+        self.message = message
+    }
 }
