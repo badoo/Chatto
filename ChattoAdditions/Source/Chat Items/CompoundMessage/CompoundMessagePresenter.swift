@@ -86,23 +86,23 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             return
         }
 
-        let isUpdateNeeded = !self.messageModel.hasSameContent(as: newMessageModel)
+        let isContentChanged = !self.messageModel.hasSameContent(as: newMessageModel)
+        let isMessageUidChanged = self.messageModel.uid != newMessageModel.uid
+
         self.messageModel = newMessageModel
 
-        guard !isUpdateNeeded else {
+        guard !isContentChanged else {
             self.updateContent()
             return
         }
 
-        let isUidUpdateNeeded = self.messageModel.uid != newMessageModel.uid
-
-        guard !isUidUpdateNeeded else {
-            self.updateContentPresenters(with: newMessageModel.uid)
+        guard !isMessageUidChanged else {
+            self.updateExistingContentPresenters(with: newMessageModel)
             return
         }
     }
 
-    private func updateContent() {
+    open func updateContent() {
         self.contentFactories = self.initialContentFactories.filter { $0.canCreateMessageContent(forModel: self.messageModel) }
 
         self.contentPresenters = self.contentFactories.compactMap {
@@ -114,7 +114,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
     }
 
-    private func updateContentPresenters(with newMessage: Any) {
+    open func updateExistingContentPresenters(with newMessage: Any) {
         self.contentPresenters.forEach {
             $0.updateMessage(newMessage)
         }
