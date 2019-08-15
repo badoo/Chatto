@@ -71,6 +71,12 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     public internal(set) var messageModel: ModelT {
         didSet { self.messageViewModel = self.createViewModel() }
     }
+
+    open override func update(with chatItem: ChatItemProtocol) {
+        guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
+        self.messageModel = newMessageModel
+    }
+
     public let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?

@@ -63,11 +63,6 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
     }
 
-    open override func update(with chatItem: ChatItemProtocol) {
-        guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
-        self.messageModel = newMessageModel
-    }
-
     public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let identifier = self.messageViewModel.isIncoming ? "text-message-incoming" : "text-message-outcoming"
         return collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
