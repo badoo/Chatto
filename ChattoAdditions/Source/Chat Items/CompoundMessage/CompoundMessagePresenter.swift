@@ -80,6 +80,10 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         // Cell registration is happening lazily, right before the moment when a cell is dequeued.
     }
 
+    open override var isItemUpdateSupported: Bool {
+        return true
+    }
+
     open override func update(with chatItem: ChatItemProtocol) {
         let oldMessageModel = self.messageModel
         super.update(with: chatItem)

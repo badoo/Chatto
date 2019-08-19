@@ -91,32 +91,13 @@ final class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
 
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         let presenter = FakePresenter()
+        presenter._isItemUpdateSupportedResult = false
         self.createdPresenters.append(presenter)
         return presenter
     }
 
     var presenterType: ChatItemPresenterProtocol.Type {
         return FakePresenter.self
-    }
-}
-
-final class FakePresenter: ChatItemPresenterProtocol {
-
-    class func registerCells(_ collectionView: UICollectionView) {
-        collectionView.register(FakeCell.self, forCellWithReuseIdentifier: "fake-cell")
-    }
-
-    func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
-        return 10
-    }
-
-    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCell(withReuseIdentifier: "fake-cell", for: indexPath as IndexPath)
-    }
-
-    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
-        let fakeCell = cell as! FakeCell
-        fakeCell.backgroundColor = UIColor.red
     }
 }
 
@@ -127,14 +108,6 @@ final class FakeChatItem: ChatItemProtocol {
         self.uid = uid
         self.type = type
     }
-}
-
-final class FakeChatItemPresenter: ChatItemPresenterProtocol {
-    init() {}
-    static func registerCells(_ collectionView: UICollectionView) {}
-    func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat { return 0 }
-    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell { return UICollectionViewCell() }
-    func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {}
 }
 
 final class SerialTaskQueueTestHelper: SerialTaskQueueProtocol {
@@ -190,7 +163,7 @@ final class FakeUpdatablePresenterBuilder: ChatItemPresenterBuilderProtocol {
     private(set) var createdPresenters: [ChatItemPresenterProtocol] = []
 
     var updatedPresentersCount: Int {
-        return self.createdPresenters.reduce(0) { return $0 + ($1 as! FakeUpdatablePresenter)._updateWithChatItemCallsCount }
+        return self.createdPresenters.reduce(0) { return $0 + ($1 as! FakePresenter)._updateWithChatItemCallsCount }
     }
 
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
@@ -198,20 +171,34 @@ final class FakeUpdatablePresenterBuilder: ChatItemPresenterBuilderProtocol {
     }
 
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        let presenter = FakeUpdatablePresenter()
+        let presenter = FakePresenter()
+        presenter._isItemUpdateSupportedResult = true
         self.createdPresenters.append(presenter)
         return presenter
     }
 
     var presenterType: ChatItemPresenterProtocol.Type {
-        return FakeUpdatablePresenter.self
+        return FakePresenter.self
     }
 }
 
-final class FakeUpdatablePresenter: UpdatableChatItemPresenterProtocol {
+final class FakePresenter: ChatItemPresenterProtocol {
 
     static func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(FakeCell.self, forCellWithReuseIdentifier: "fake-cell")
+    }
+
+    var _isItemUpdateSupportedResult: Bool!
+    var isItemUpdateSupported: Bool {
+        return self._isItemUpdateSupportedResult
+    }
+
+    private var _updateWithChatItemCalls: [(ChatItemProtocol)] = []
+    var _updateWithChatItemIsCalled: Bool { return self._updateWithChatItemCallsCount > 0 }
+    var _updateWithChatItemCallsCount: Int { return self._updateWithChatItemCalls.count }
+    var _updateWithChatItemLastCallParams: ChatItemProtocol? { return self._updateWithChatItemCalls.last }
+    func update(with chatItem: ChatItemProtocol) {
+        self._updateWithChatItemCalls.append((chatItem))
     }
 
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
@@ -225,14 +212,5 @@ final class FakeUpdatablePresenter: UpdatableChatItemPresenterProtocol {
     func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         let fakeCell = cell as! FakeCell
         fakeCell.backgroundColor = UIColor.red
-    }
-
-    private var _updateWithChatItemCalls: [(ChatItemProtocol)] = []
-    var _updateWithChatItemIsCalled: Bool { return self._updateWithChatItemCallsCount > 0 }
-    var _updateWithChatItemCallsCount: Int { return self._updateWithChatItemCalls.count }
-    var _updateWithChatItemLastCallParams: ChatItemProtocol? { return self._updateWithChatItemCalls.last }
-
-    func update(with chatItem: ChatItemProtocol) {
-        self._updateWithChatItemCalls.append((chatItem))
     }
 }

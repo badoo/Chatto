@@ -43,6 +43,9 @@ public protocol ChatItemMenuPresenterProtocol {
 public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol {
     static func registerCells(_ collectionView: UICollectionView)
 
+    var isItemUpdateSupported: Bool { get }
+    func update(with chatItem: ChatItemProtocol)
+
     var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
@@ -67,10 +70,6 @@ public protocol ChatItemPresenterBuilderProtocol {
 }
 
 // MARK: - Updatable Chat Items
-
-public protocol UpdatableChatItemPresenterProtocol: ChatItemPresenterProtocol {
-    func update(with chatItem: ChatItemProtocol)
-}
 
 public protocol ContentEquatableChatItemProtocol: ChatItemProtocol {
     func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool

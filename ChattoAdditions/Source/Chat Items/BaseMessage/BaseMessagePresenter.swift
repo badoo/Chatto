@@ -72,7 +72,17 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         didSet { self.messageViewModel = self.createViewModel() }
     }
 
+    open override var isItemUpdateSupported: Bool {
+        /*
+         By default, item updates are not supported.
+         But this behaviour could be changed by the descendants.
+         In this case, an update method checks item type, sets a new value for a message model and creates a new message view model.
+         */
+        return false
+    }
+
     open override func update(with chatItem: ChatItemProtocol) {
+        assert(self.isItemUpdateSupported, "Updated is called on presenter which doesn't support updates: \(type(of: chatItem)).")
         guard let newMessageModel = chatItem as? ModelT else { assertionFailure("Unexpected type of the message: \(type(of: chatItem))."); return }
         self.messageModel = newMessageModel
     }

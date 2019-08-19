@@ -31,7 +31,7 @@ class ChatItemCompanionCollectionTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let fakeChatItemPresenter = FakeChatItemPresenter()
+        let fakeChatItemPresenter = FakePresenter()
         let items = [
             ChatItemCompanion(uid: "3", chatItem: FakeChatItem(uid: "3", type: "type3"), presenter: fakeChatItemPresenter, decorationAttributes: nil),
             ChatItemCompanion(uid: "1", chatItem: FakeChatItem(uid: "1", type: "type1"), presenter: fakeChatItemPresenter, decorationAttributes: nil),
