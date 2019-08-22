@@ -22,26 +22,27 @@
  THE SOFTWARE.
 */
 
-@import UIKit;
+import UIKit
 
-typedef NS_ENUM(NSUInteger, CircleIconType) {
-  CircleIconTypeUndefined,
+final class ScrollToBottomButtonChatViewController: DemoChatViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-  CircleIconTypeInfinity,
-  CircleIconTypeExclamation,
-  CircleIconTypeCheck,
+        let button = UIBarButtonItem(
+            title: "Scroll To Bottom",
+            style: .plain,
+            target: self,
+            action: #selector(handleTapOnScrollToBottomButton)
+        )
+        self.navigationItem.rightBarButtonItem = button
+    }
 
-  CircleIconTypeArrowDown,
-  CircleIconTypeArrowUp,
-  CircleIconTypeStop,
+    @objc
+    private func handleTapOnScrollToBottomButton() {
+        guard self.chatItemCompanionCollection.count > 0 else { return }
 
-  CircleIconTypeText
-};
-
-@interface CircleIconView : UIView
-- (void)setType:(CircleIconType)type;
-- (void)setTitle:(NSAttributedString *)title;
-
-- (void)setLineWidth:(CGFloat)lineWidth;
-- (void)setLineColor:(UIColor *)lineColor;
-@end
+        let endIndex = self.chatItemCompanionCollection.endIndex
+        let lastItemIndex = self.chatItemCompanionCollection.index(endIndex, offsetBy: -1)
+        self.scrollToItem(withId: self.chatItemCompanionCollection[lastItemIndex].uid, position: .bottom, animated: true)
+    }
+}

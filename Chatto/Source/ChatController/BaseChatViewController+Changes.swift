@@ -24,16 +24,31 @@
 
 import Foundation
 
+private struct HashableItem: Hashable {
+    private let uid: String
+    private let type: String
+
+    init(_ decoratedChatItem: DecoratedChatItem) {
+        self.uid = decoratedChatItem.uid
+        self.type = decoratedChatItem.chatItem.type
+    }
+
+    init(_ chatItemCompanion: ChatItemCompanion) {
+        self.uid = chatItemCompanion.uid
+        self.type = chatItemCompanion.chatItem.type
+    }
+}
+
 extension BaseChatViewController {
 
-    public func enqueueModelUpdate(updateType: UpdateType) {
+    public func enqueueModelUpdate(updateType: UpdateType, completion: (() -> Void)? = nil) {
         let newItems = self.chatDataSource?.chatItems ?? []
 
         if self.updatesConfig.coalesceUpdates {
             self.updateQueue.flushQueue()
         }
 
-        self.updateQueue.addTask({ [weak self] (completion) -> Void in
+        self.updateQueue.addTask({ [weak self] (runNextTask) -> Void in
             guard let sSelf = self else { return }
 
             let oldItems = sSelf.chatItemCompanionCollection
@@ -42,7 +57,11 @@ extension BaseChatViewController {
                 if sSelf.updateQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
-                completion()
+                completion?()
+                DispatchQueue.main.async(execute: { () -> Void in
+                    // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
+                    runNextTask()
+                })
             })
         })
     }
@@ -175,11 +194,7 @@ extension BaseChatViewController {
             myCompletion = {
                 if myCompletionExecuted { return }
                 myCompletionExecuted = true
-
-                DispatchQueue.main.async(execute: { () -> Void in
-                    // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
-                    completion()
-                })
+                completion()
             }
         }
 
@@ -273,7 +288,8 @@ extension BaseChatViewController {
 
     private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
         let newDecoratedItems = self.chatItemsDecorator?.decorateItems(newItems) ?? newItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
-        let changes = Chatto.generateChanges(oldCollection: oldItems.lazy.map { $0 }, newCollection: newDecoratedItems.lazy.map { $0 })
+        let changes = Chatto.generateChanges(oldCollection: oldItems.map(HashableItem.init),
+                                             newCollection: newDecoratedItems.map(HashableItem.init))
         let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
         let layoutModel = self.createLayoutModel(itemCompanionCollection, collectionViewWidth: collectionViewWidth)
         let updateModelClosure : () -> Void = { [weak self] in

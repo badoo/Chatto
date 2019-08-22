@@ -55,6 +55,14 @@ open class TextChatInputItem {
 
 // MARK: - ChatInputItemProtocol
 extension TextChatInputItem: ChatInputItemProtocol {
+    public var supportsExpandableState: Bool {
+        return false
+    }
+
+    public var expandedStateTopMargin: CGFloat {
+        return 0.0
+    }
+
     public var presentationMode: ChatInputItemPresentationMode {
         return .keyboard
     }
@@ -75,5 +83,9 @@ extension TextChatInputItem: ChatInputItemProtocol {
         if let text = input as? String {
             self.textInputHandler?(text)
         }
+    }
+
+    public var shouldSaveDraftMessage: Bool {
+        return false
     }
 }

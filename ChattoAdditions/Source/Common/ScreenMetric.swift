@@ -154,7 +154,7 @@ extension UIScreen {
         }
     }
 
-    var defaultKeyboardHeightForCurrentOrientation: CGFloat {
+    public var defaultKeyboardHeightForCurrentOrientation: CGFloat {
         if UIDevice.current.orientation.isPortrait {
             return self.defaultPortraitKeyboardHeight
         } else {

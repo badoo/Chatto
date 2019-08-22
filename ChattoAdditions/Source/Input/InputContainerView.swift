@@ -20,15 +20,35 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
-@import UIKit;
+open class InputContainerView: UIInputView {
 
-@interface CircleProgressView : UIView
-- (void)prepareForLoading;
-- (void)finishPrepareForLoading;
-- (void)setProgress:(CGFloat)progress;
+    public var contentHeight: CGFloat = 0 {
+        didSet {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
 
-- (void)setLineWidth:(CGFloat)lineWidth;
-- (void)setLineColor:(UIColor *)lineColor;
-@end
+    public var contentView: UIView? {
+        willSet {
+            self.contentView?.removeFromSuperview()
+        }
+        didSet {
+            if let contentView = self.contentView {
+                contentView.frame = self.bounds
+                self.addSubview(contentView)
+                self.setNeedsLayout()
+            }
+        }
+    }
+
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView?.frame = self.bounds
+    }
+
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: self.contentHeight)
+    }
+}

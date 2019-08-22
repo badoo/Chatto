@@ -29,3 +29,12 @@ public extension CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
     }
 }
+
+extension CGPoint {
+    func clamped(to rect: CGRect) -> CGPoint {
+        return CGPoint(
+            x: self.x.clamped(to: rect.minX...rect.maxX),
+            y: self.y.clamped(to: rect.minY...rect.maxY)
+        )
+    }
+}
