@@ -301,18 +301,24 @@ extension BaseChatViewController {
 
     private func createCompanionCollection(fromChatItems newItems: [DecoratedChatItem], previousCompanionCollection oldItems: ChatItemCompanionCollection) -> ChatItemCompanionCollection {
         return ChatItemCompanionCollection(items: newItems.map { (decoratedChatItem) -> ChatItemCompanion in
-            let chatItem = decoratedChatItem.chatItem
-            var presenter: ChatItemPresenterProtocol!
-            // We assume that a same messageId can't mutate from one cell class to a different one.
-            // If we ever need to support that then generation of changes needs to suppport reloading items.
-            // Oherwise updateVisibleCells may try to update existing cell with a new presenter which is working with a different type of cell
 
-            // Optimization: reuse presenter if it's the same instance.
-            if let oldChatItemCompanion = oldItems[decoratedChatItem.uid], oldChatItemCompanion.chatItem === chatItem {
-                presenter = oldChatItemCompanion.presenter
-            } else {
-                presenter = self.createPresenterForChatItem(decoratedChatItem.chatItem)
-            }
+            /*
+             We use an assumption, that message having a specific messageId never changes its type.
+             If such changes has to be supported, then generation of changes has to suppport reloading items.
+             Otherwise, updateVisibleCells may try to update the existing cells with new presenters which aren't able to work with another types.
+             */
+
+            let presenter: ChatItemPresenterProtocol = {
+                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] ?? oldItems[decoratedChatItem.chatItem.uid],
+                    oldChatItemCompanion.chatItem.type == decoratedChatItem.chatItem.type,
+                    oldChatItemCompanion.presenter.isItemUpdateSupported else {
+                        return self.createPresenterForChatItem(decoratedChatItem.chatItem)
+                }
+
+                oldChatItemCompanion.presenter.update(with: decoratedChatItem.chatItem)
+                return oldChatItemCompanion.presenter
+            }()
+
             return ChatItemCompanion(uid: decoratedChatItem.uid, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)
         })
     }

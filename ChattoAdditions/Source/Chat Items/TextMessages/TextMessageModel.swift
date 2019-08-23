@@ -23,8 +23,9 @@
 */
 
 import Foundation
+import Chatto
 
-public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
+public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol, ContentEquatableChatItemProtocol {
     var text: String { get }
 }
 
@@ -37,5 +38,9 @@ open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageMod
     public init(messageModel: MessageModelT, text: String) {
         self._messageModel = messageModel
         self.text = text
+    }
+    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherMessageModel = anotherItem as? TextMessageModel else { return false }
+        return self.text == anotherMessageModel.text
     }
 }

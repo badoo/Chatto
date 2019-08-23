@@ -27,7 +27,7 @@ import Chatto
 open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT>, MessageContentPresenterDelegate where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: Equatable,
+    ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
 
@@ -35,14 +35,15 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
     public let compoundCellStyle: CompoundBubbleViewStyleProtocol
-    private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    private let compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions
 
+    private let compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions
     private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     private let accessibilityIdentifier: String?
-    private let menuPresenter: ChatItemMenuPresenterProtocol?
 
-    private var contentPresenters: [MessageContentPresenterProtocol] = []
+    private let initialContentFactories: [AnyMessageContentFactory<ModelT>]
+    private var contentFactories: [AnyMessageContentFactory<ModelT>]!
+    private var contentPresenters: [MessageContentPresenterProtocol]!
+    private var menuPresenter: ChatItemMenuPresenterProtocol?
 
     public init(
         messageModel: ModelT,
@@ -58,10 +59,9 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.compoundCellDimensions = compoundCellDimensions
-        self.contentFactories = contentFactories.filter { $0.canCreateMessageContent(forModel: messageModel) }
+        self.initialContentFactories = contentFactories
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
-        self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: messageModel) }.first
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -69,11 +69,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             sizingCell: sizingCell,
             cellStyle: baseCellStyle
         )
-        self.contentPresenters = self.contentFactories.map { factory in
-            var presenter = factory.createContentPresenter(forModel: self.messageModel)
-            presenter.delegate = self
-            return presenter
-        }
+        self.updateContent()
     }
 
     open override var canCalculateHeightInBackground: Bool {
@@ -82,6 +78,45 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override class func registerCells(_ collectionView: UICollectionView) {
         // Cell registration is happening lazily, right before the moment when a cell is dequeued.
+    }
+
+    open override var isItemUpdateSupported: Bool {
+        return true
+    }
+
+    open override func update(with chatItem: ChatItemProtocol) {
+        let oldMessageModel = self.messageModel
+        super.update(with: chatItem)
+
+        let isContentChanged = !oldMessageModel.hasSameContent(as: chatItem)
+        guard !isContentChanged else {
+            self.updateContent()
+            return
+        }
+
+        let isMessageUidChanged = oldMessageModel.uid != chatItem.uid
+        guard !isMessageUidChanged else {
+            self.updateExistingContentPresenters(with: chatItem)
+            return
+        }
+    }
+
+    open func updateContent() {
+        self.contentFactories = self.initialContentFactories.filter { $0.canCreateMessageContent(forModel: self.messageModel) }
+
+        self.contentPresenters = self.contentFactories.compactMap {
+            var presenter = $0.createContentPresenter(forModel: self.messageModel)
+            presenter.delegate = self
+            return presenter
+        }
+
+        self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
+    }
+
+    open func updateExistingContentPresenters(with newMessage: Any) {
+        self.contentPresenters.forEach {
+            $0.updateMessage(newMessage)
+        }
     }
 
     open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {

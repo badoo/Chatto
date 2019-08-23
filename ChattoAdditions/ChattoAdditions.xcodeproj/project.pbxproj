@@ -116,6 +116,15 @@
 		EA13CAF2229EE8C8009340C5 /* CircleIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */; };
 		EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF3229EE985009340C5 /* CircleProgressView.swift */; };
 		EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */; };
+		EA7525502302E94B0069D1AF /* MessageModel+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */; };
+		EA7525522302FB930069D1AF /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7525512302FB930069D1AF /* TestHelpers.swift */; };
+		EA7527982302FD790069D1AF /* StubCompoundBubbleViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */; };
+		EA75279A2302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */; };
+		EA75279C23031FE60069D1AF /* TestableCompoundMessagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */; };
+		EAAFBCEB2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */; };
+		EAAFBCED2302D8C8004F553D /* CompoundMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */; };
+		EAAFBCEF2302DB22004F553D /* FakeViewModelBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */; };
+		EAAFBCF12302DBAF004F553D /* FakeMessageInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */; };
 		EAF2678E22BD1524006B3455 /* MessageContentPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF2678D22BD1524006B3455 /* MessageContentPresenterProtocol.swift */; };
 		EAF2679022BD2625006B3455 /* DefaultMessageContentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF2678F22BD2625006B3455 /* DefaultMessageContentPresenter.swift */; };
 		F6D04BA71CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */; };
@@ -245,6 +254,15 @@
 		EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconView.swift; sourceTree = "<group>"; };
 		EA13CAF3229EE985009340C5 /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressIndicatorView.swift; sourceTree = "<group>"; };
+		EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageModel+Helpers.swift"; sourceTree = "<group>"; };
+		EA7525512302FB930069D1AF /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubCompoundBubbleViewStyle.swift; sourceTree = "<group>"; };
+		EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubMessageCollectionViewCellStyle.swift; sourceTree = "<group>"; };
+		EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableCompoundMessagePresenter.swift; sourceTree = "<group>"; };
+		EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMessageContentPresenterTests.swift; sourceTree = "<group>"; };
+		EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompoundMessagePresenterTests.swift; sourceTree = "<group>"; };
+		EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeViewModelBuilder.swift; sourceTree = "<group>"; };
+		EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMessageInteractionHandler.swift; sourceTree = "<group>"; };
 		EAF2678D22BD1524006B3455 /* MessageContentPresenterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContentPresenterProtocol.swift; sourceTree = "<group>"; };
 		EAF2678F22BD2625006B3455 /* DefaultMessageContentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMessageContentPresenter.swift; sourceTree = "<group>"; };
 		F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputPlaceholderDataProviderTests.swift; sourceTree = "<group>"; };
@@ -581,6 +599,15 @@
 			isa = PBXGroup;
 			children = (
 				C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */,
+				EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */,
+				EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */,
+				EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */,
+				EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */,
+				EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */,
+				EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */,
+				EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */,
+				EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */,
+				EA7525512302FB930069D1AF /* TestHelpers.swift */,
 			);
 			path = BaseMessage;
 			sourceTree = "<group>";
@@ -846,15 +873,24 @@
 			files = (
 				C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */,
 				CDC6100B1FD8268200C2588E /* FakePhotosInputDataProvider.swift in Sources */,
+				EAAFBCEB2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift in Sources */,
+				EAAFBCEF2302DB22004F553D /* FakeViewModelBuilder.swift in Sources */,
+				EA75279A2302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift in Sources */,
 				55ABA5771FC74F8D00923302 /* ObservableTests.swift in Sources */,
+				EA7527982302FD790069D1AF /* StubCompoundBubbleViewStyle.swift in Sources */,
 				C3C0CC881BFE49700052747C /* ChatInputPresenterTests.swift in Sources */,
 				C3815D001C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift in Sources */,
 				C363C33F1D2405F800599FF5 /* LiveCameraCellPresenterTests.swift in Sources */,
 				F6D04BA91CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift in Sources */,
+				EA75279C23031FE60069D1AF /* TestableCompoundMessagePresenter.swift in Sources */,
+				EA7525522302FB930069D1AF /* TestHelpers.swift in Sources */,
 				C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */,
 				55ABA5731FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift in Sources */,
 				C3C0CC8A1BFE49700052747C /* PhotosChatInputItemTests.swift in Sources */,
+				EA7525502302E94B0069D1AF /* MessageModel+Helpers.swift in Sources */,
+				EAAFBCED2302D8C8004F553D /* CompoundMessagePresenterTests.swift in Sources */,
 				55ABA5691FC7498700923302 /* CGRect+AdditionsTests.swift in Sources */,
+				EAAFBCF12302DBAF004F553D /* FakeMessageInteractionHandler.swift in Sources */,
 				C3C0CC8B1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift in Sources */,
 				CDE15F43205993FB005D86DD /* PhotosInputCameraPickerTests.swift in Sources */,
 				F6D04BA71CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift in Sources */,

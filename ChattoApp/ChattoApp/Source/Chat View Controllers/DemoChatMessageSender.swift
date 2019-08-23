@@ -26,7 +26,7 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-public protocol DemoMessageModelProtocol: MessageModelProtocol {
+public protocol DemoMessageModelProtocol: MessageModelProtocol, ContentEquatableChatItemProtocol {
     var status: MessageStatus { get set }
 }
 
