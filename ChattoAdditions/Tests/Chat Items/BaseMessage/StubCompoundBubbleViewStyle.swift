@@ -21,36 +21,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+import ChattoAdditions
+import Foundation
 
-public final class ViewReference {
-
-    public weak var view: UIView?
-
-    public init(to view: UIView?) {
-        self.view = view
+final class StubCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
+    var stubbedHideBubbleForSingleContent: Bool! = false
+    var hideBubbleForSingleContent: Bool {
+        return stubbedHideBubbleForSingleContent
     }
-}
-
-public protocol MessageContentPresenterDelegate: AnyObject {
-    func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol)
-}
-
-public protocol MessageContentPresenterProtocol {
-
-    var delegate: MessageContentPresenterDelegate? { get set }
-
-    /// Very likely it should be moved to other place but we didn't decide yet where.
-    var showBorder: Bool { get }
-
-    func contentWillBeShown()
-    func contentWasHidden()
-
-    /// It will be removed in the future. View taps should be handled by presenters themselves.
-    func contentWasTapped_deprecated()
-
-    func bindToView(with viewReference: ViewReference)
-    func unbindFromView()
-
-    func updateMessage(_ newMessage: Any)
+    var stubbedBackgroundColorResult: UIColor!
+    func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
+        return stubbedBackgroundColorResult
+    }
+    var stubbedMaskingImageResult: UIImage!
+    func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
+        return stubbedMaskingImageResult
+    }
+    var stubbedBorderImageResult: UIImage!
+    func borderImage(forViewModel viewModel: ViewModel) -> UIImage? {
+        return stubbedBorderImageResult
+    }
+    var stubbedTailWidthResult: CGFloat!
+    func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat {
+        return stubbedTailWidthResult
+    }
 }

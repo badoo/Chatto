@@ -39,6 +39,14 @@ open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenter
         assert(false, "Implement in subclass")
     }
 
+    open var isItemUpdateSupported: Bool {
+        fatalError("Implement in subclass")
+    }
+
+    open func update(with chatItem: ChatItemProtocol) {
+        fatalError("Implement in subclass")
+    }
+
     open var canCalculateHeightInBackground: Bool {
         return false
     }

@@ -21,36 +21,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+@testable import ChattoAdditions
+import XCTest
 
-public final class ViewReference {
+final class DefaultMessageContentPresenterTests: XCTestCase {
 
-    public weak var view: UIView?
+    func test_WhenPresenterIsUpdatedWithTheSameMessageWithAnotherId_ThenOnMessageUpdateClosureIsCalled_AndItIsCalledWithUpdatedMessage() {
+        let message = TestHelpers.makeMessage(withId: "123")
+        let sameMessageWithAnotherId = message.makeSameMessage(butAnotherId: "456")
+        var isOnMessageUpdateCallsCount = 0
+        var newMessageOnUpdate: MessageModel!
+        let presenter = TestHelpers.makeDefaultMessageContentPresenter(with: message, onMessageUpdate: { newMessage in
+            isOnMessageUpdateCallsCount += 1
+            newMessageOnUpdate = newMessage
+        })
 
-    public init(to view: UIView?) {
-        self.view = view
+        presenter.updateMessage(sameMessageWithAnotherId)
+
+        XCTAssertEqual(1, isOnMessageUpdateCallsCount)
+        XCTAssertEqual(sameMessageWithAnotherId.uid, newMessageOnUpdate!.uid)
     }
-}
-
-public protocol MessageContentPresenterDelegate: AnyObject {
-    func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol)
-}
-
-public protocol MessageContentPresenterProtocol {
-
-    var delegate: MessageContentPresenterDelegate? { get set }
-
-    /// Very likely it should be moved to other place but we didn't decide yet where.
-    var showBorder: Bool { get }
-
-    func contentWillBeShown()
-    func contentWasHidden()
-
-    /// It will be removed in the future. View taps should be handled by presenters themselves.
-    func contentWasTapped_deprecated()
-
-    func bindToView(with viewReference: ViewReference)
-    func unbindFromView()
-
-    func updateMessage(_ newMessage: Any)
 }

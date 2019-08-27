@@ -24,7 +24,7 @@
 
 import Foundation
 
-public enum UpdateType {
+public enum UpdateType: CaseIterable {
     case normal
     case firstLoad
     case pagination
