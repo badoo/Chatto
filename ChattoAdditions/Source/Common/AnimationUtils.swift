@@ -33,3 +33,12 @@ public extension CABasicAnimation {
         return animation
     }
 }
+
+public extension CATransaction {
+    public static func performWithDisabledActions(block: () -> Void) {
+        self.begin()
+        self.setDisableActions(true)
+        block()
+        self.commit()
+    }
+}
