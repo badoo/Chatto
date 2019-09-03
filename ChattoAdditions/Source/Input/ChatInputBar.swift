@@ -290,14 +290,17 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
-        let range = self.textView.text.bma_rangeFromNSRange(nsRange)
-        if let maxCharactersCount = self.maxCharactersCount {
-            let currentCount = textView.text.count
-            let rangeLength = textView.text[range].count
-            let nextCount = currentCount - rangeLength + text.count
-            return UInt(nextCount) <= maxCharactersCount
-        }
-        return true
+        guard let maxCharactersCount = self.maxCharactersCount else { return true }
+        let currentText = (self.textView.text ?? "") + "" // Empty string is added for force bridging from Obj-C.
+        // Otherwise range access may crash if all conditions are met:
+        // - library is compiled with optimization (-O) for Speed for iOS13 (Xcode11)
+        // - text is longer than 255 characters
+        // - text contains long unicode characters (emoji,glyphs)
+        let range = currentText.bma_rangeFromNSRange(nsRange)
+        let currentCount = currentText.count
+        let rangeLength = currentText[range].count
+        let nextCount = currentCount - rangeLength + text.count
+        return UInt(nextCount) <= maxCharactersCount
     }
 }
 
