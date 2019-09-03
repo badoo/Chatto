@@ -109,6 +109,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.showsVerticalScrollIndicator = false
         textView.isExclusiveTouch = true
         textView.textContainer.lineFragmentPadding = 0
+        textView.disableDragInteraction()
+        textView.disableLargeContentViewer()
         return textView
     }()
 
@@ -286,10 +288,17 @@ private final class ChatMessageTextView: UITextView {
         }
         get {
             return super.gestureRecognizers?.filter { gestureRecognizer in
-                if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self, gestureRecognizer.delaysTouchesEnded {
+                if #available(iOS 13, *) {
+                    let notAllowedGestureRecognizersNames = Set([
+                        "X1VJS2V5Ym9hcmRUZXh0U2VsZWN0aW9uR2VzdHVyZUZvcmNlUHJlc3M=",
+                        "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTG91cGU="
+                    ])
+                    return !notAllowedGestureRecognizersNames.contains(gestureRecognizer.name?.base64String ?? "")
+                }
+                if #available(iOS 11, *), gestureRecognizer.name?.base64String == "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTGlua1RhcA==" {
                     return true
                 }
-                if #available(iOS 11, *), gestureRecognizer.name == "UITextInteractionNameLinkTap" {
+                if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self, gestureRecognizer.delaysTouchesEnded {
                     return true
                 }
                 return false
@@ -319,5 +328,25 @@ private final class ChatMessageTextView: UITextView {
             // Part of the heaviest stack trace when scrolling (when bounds are set)
             // See https://github.com/badoo/Chatto/pull/144
         }
+    }
+
+    fileprivate func disableDragInteraction() {
+        if #available(iOS 11.0, *) {
+            self.textDragInteraction?.isEnabled = false
+        }
+    }
+
+    fileprivate func disableLargeContentViewer() {
+        #if swift(>=5.1)
+        if #available(iOS 13.0, *) {
+            textView.showsLargeContentViewer = false
+        }
+        #endif
+    }
+}
+
+private extension String {
+    var base64String: String? {
+        return self.data(using: .utf8)?.base64EncodedString()
     }
 }
