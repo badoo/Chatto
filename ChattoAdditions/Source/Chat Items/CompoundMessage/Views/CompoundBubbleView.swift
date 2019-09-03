@@ -112,7 +112,10 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         decoratedViewsWithFrames.forEach { $0.view.frame = $1 }
         let frame = CGRect(origin: .zero, size: layout.size)
         self.borderImageView.frame = frame
-        self.layer.mask?.frame = frame
+        // Disables implicit layer animation
+        CATransaction.performWithDisabledActions {
+            self.layer.mask?.frame = frame
+        }
 
         guard let sublayers = self.borderMaskLayer.sublayers else { return }
         let framesOfBorderedViews = decoratedViewsWithFrames.compactMap { $0.showBorder ? $1 : nil }
