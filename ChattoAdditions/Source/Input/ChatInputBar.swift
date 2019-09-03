@@ -291,17 +291,13 @@ extension ChatInputBar: UITextViewDelegate {
 
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
         guard let maxCharactersCount = self.maxCharactersCount else { return true }
-        let currentText = (self.textView.text ?? "") + "" // Empty string is added for force bridging from Obj-C.
-        // Otherwise range access may crash if all conditions are met:
-        // - library is compiled with optimization (-O) for Speed for iOS13 (Xcode11)
-        // - text is longer than 255 characters
-        // - text contains long unicode characters (emoji,glyphs)
-        let range = currentText.bma_rangeFromNSRange(nsRange)
-        let currentCount = currentText.count
-        let rangeLength = currentText[range].count
-        let nextCount = currentCount - rangeLength + text.count
+        let currentText: NSString = textView.text as NSString
+        let currentCount = currentText.length
+        let rangeLength = nsRange.length
+        let nextCount = currentCount - rangeLength + (text as NSString).length
         return UInt(nextCount) <= maxCharactersCount
     }
+
 }
 
 // MARK: ExpandableTextViewPlaceholderDelegate
@@ -312,17 +308,5 @@ extension ChatInputBar: ExpandableTextViewPlaceholderDelegate {
 
     public func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView) {
         self.delegate?.inputBarDidHidePlaceholder(self)
-    }
-}
-
-private extension String {
-    func bma_rangeFromNSRange(_ nsRange: NSRange) -> Range<String.Index> {
-        guard
-            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
-            let to16 = utf16.index(from16, offsetBy: nsRange.length, limitedBy: utf16.endIndex),
-            let from = String.Index(from16, within: self),
-            let to = String.Index(to16, within: self)
-            else { return  self.startIndex..<self.startIndex }
-        return from ..< to
     }
 }
