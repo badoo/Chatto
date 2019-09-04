@@ -337,9 +337,9 @@ private final class ChatMessageTextView: UITextView {
     }
 
     fileprivate func disableLargeContentViewer() {
-        #if swift(>=5.1)
+        #if compiler(>=5.1)
         if #available(iOS 13.0, *) {
-            textView.showsLargeContentViewer = false
+            self.showsLargeContentViewer = false
         }
         #endif
     }
