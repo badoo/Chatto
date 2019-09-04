@@ -52,5 +52,13 @@ public protocol MessageContentPresenterProtocol {
     func bindToView(with viewReference: ViewReference)
     func unbindFromView()
 
+    var supportsMessageUpdating: Bool { get }
+
+    /// Please note, that returning `false` from `supportsMessageUpdating`
+    /// doesn't mean that this method won't be called.
     func updateMessage(_ newMessage: Any)
+}
+
+public extension MessageContentPresenterProtocol {
+    var supportsMessageUpdating: Bool { return false }
 }
