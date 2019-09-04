@@ -289,13 +289,9 @@ private final class ChatMessageTextView: UITextView {
         get {
             return super.gestureRecognizers?.filter { gestureRecognizer in
                 if #available(iOS 13, *) {
-                    let notAllowedGestureRecognizersNames = Set([
-                        "X1VJS2V5Ym9hcmRUZXh0U2VsZWN0aW9uR2VzdHVyZUZvcmNlUHJlc3M=",
-                        "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTG91cGU="
-                    ])
-                    return !notAllowedGestureRecognizersNames.contains(gestureRecognizer.name?.base64String ?? "")
+                    return !ChatMessageTextView.notAllowedGestureRecognizerNames.contains(gestureRecognizer.name?.base64String ?? "")
                 }
-                if #available(iOS 11, *), gestureRecognizer.name?.base64String == "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTGlua1RhcA==" {
+                if #available(iOS 11, *), gestureRecognizer.name?.base64String == SystemGestureRecognizerNames.linkTap.rawValue {
                     return true
                 }
                 if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self, gestureRecognizer.delaysTouchesEnded {
@@ -343,6 +339,20 @@ private final class ChatMessageTextView: UITextView {
         }
         #endif
     }
+
+    private static let notAllowedGestureRecognizerNames: Set<String> = Set([
+        SystemGestureRecognizerNames.forcePress.rawValue,
+        SystemGestureRecognizerNames.loupe.rawValue
+    ])
+}
+
+private enum SystemGestureRecognizerNames: String {
+    // _UIKeyboardTextSelectionGestureForcePress
+    case forcePress = "X1VJS2V5Ym9hcmRUZXh0U2VsZWN0aW9uR2VzdHVyZUZvcmNlUHJlc3M="
+    // UITextInteractionNameLoupe
+    case loupe = "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTG91cGU="
+    // UITextInteractionNameLinkTap
+    case linkTap = "VUlUZXh0SW50ZXJhY3Rpb25OYW1lTGlua1RhcA=="
 }
 
 private extension String {
