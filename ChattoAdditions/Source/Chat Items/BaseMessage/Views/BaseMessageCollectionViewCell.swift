@@ -189,8 +189,10 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return (gestureRecognizer === self.longPressGestureRecognizer)
-            || (gestureRecognizer === self.tapGestureRecognizer && otherGestureRecognizer is UITapGestureRecognizer)
+        let allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizers = gestureRecognizer === self.longPressGestureRecognizer
+        let allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures = gestureRecognizer === self.tapGestureRecognizer && otherGestureRecognizer is UITapGestureRecognizer
+        return allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizers
+            || allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures
     }
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -198,7 +200,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             return false
         }
 
-        return gestureRecognizer == self.longPressGestureRecognizer && otherLongPressGestureRecognizer.numberOfTouchesRequired == 1
+        let allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail = gestureRecognizer == self.longPressGestureRecognizer && otherLongPressGestureRecognizer.numberOfTouchesRequired == 1
+        return allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail
     }
 
     open override func prepareForReuse() {
