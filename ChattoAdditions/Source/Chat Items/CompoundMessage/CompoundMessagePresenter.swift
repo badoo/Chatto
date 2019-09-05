@@ -90,7 +90,14 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
         let isContentChanged = !oldMessageModel.hasSameContent(as: chatItem)
         guard !isContentChanged else {
-            self.updateContent()
+            let allContentPresentersSupportUpdate = self.contentPresenters.reduce(true) {
+                $0 && $1.supportsMessageUpdating
+            }
+            if !self.contentPresenters.isEmpty && allContentPresentersSupportUpdate {
+                self.updateExistingContentPresenters(with: chatItem)
+            } else {
+                self.updateContent()
+            }
             return
         }
 
