@@ -148,6 +148,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleTapped(_:)))
+        tapGestureRecognizer.delegate = self
         return tapGestureRecognizer
     }()
 
@@ -170,6 +171,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.bubbleView.isExclusiveTouch = true
         self.bubbleView.addGestureRecognizer(self.tapGestureRecognizer)
         self.bubbleView.addGestureRecognizer(self.longPressGestureRecognizer)
+        self.tapGestureRecognizer.require(toFail: self.longPressGestureRecognizer)
         self.contentView.addSubview(self.avatarView)
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
@@ -187,11 +189,19 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer === self.longPressGestureRecognizer
+        let allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizers = gestureRecognizer === self.longPressGestureRecognizer
+        let allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures = gestureRecognizer === self.tapGestureRecognizer && otherGestureRecognizer is UITapGestureRecognizer
+        return allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizers
+            || allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures
     }
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer === self.longPressGestureRecognizer && otherGestureRecognizer is UILongPressGestureRecognizer
+        guard let otherLongPressGestureRecognizer = otherGestureRecognizer as? UILongPressGestureRecognizer else {
+            return false
+        }
+
+        let allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail = gestureRecognizer == self.longPressGestureRecognizer && otherLongPressGestureRecognizer.numberOfTouchesRequired == 1
+        return allowLongPressGestureToWaitUntilOtherLongPressGesturesWithSingleTouchFail
     }
 
     open override func prepareForReuse() {
