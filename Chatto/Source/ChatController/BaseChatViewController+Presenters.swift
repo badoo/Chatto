@@ -126,6 +126,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
             assertionFailure("CollectionView is not initialized")
             return
         }
+        self.chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
         self.presenterFactory = self.createPresenterFactory()
         self.presenterFactory.configure(withCollectionView: collectionView )
     }
