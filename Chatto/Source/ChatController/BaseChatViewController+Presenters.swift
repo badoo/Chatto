@@ -122,7 +122,6 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
     }
 
     public func confugureCollectionViewWithPresenters() {
-        assert(self.presenterFactory == nil, "Presenter factory is already initialized")
         guard let collectionView = self.collectionView else {
             assertionFailure("CollectionView is not initialized")
             return
