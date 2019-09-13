@@ -69,9 +69,9 @@ extension BaseChatViewController {
         let visibleRect = self.visibleRect()
         let intersection = visibleRect.intersection(attributes.frame)
         if edge == .top {
-            return abs(intersection.minY - attributes.frame.minY) < CGFloat.bma_epsilon
+            return abs(intersection.minY - attributes.frame.minY) < 50
         } else {
-            return abs(intersection.maxY - attributes.frame.maxY) < CGFloat.bma_epsilon
+            return abs(intersection.maxY - attributes.frame.maxY) < 50
         }
     }
 
