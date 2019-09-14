@@ -23,7 +23,7 @@
 */
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 public protocol TextBubbleViewStyleProtocol {
     func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage

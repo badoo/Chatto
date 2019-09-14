@@ -23,8 +23,8 @@
 */
 
 import Foundation
-import Chatto
-import ChattoAdditions
+import VoodooLabChatto
+import VoodooLabChattoAdditions
 
 public protocol DemoMessageViewModelProtocol {
     var messageModel: DemoMessageModelProtocol { get }

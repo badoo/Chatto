@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import Chatto
+import VoodooLabChatto
 
 class DemoChatDataSource: ChatDataSourceProtocol {
     var nextMessageId: Int = 0

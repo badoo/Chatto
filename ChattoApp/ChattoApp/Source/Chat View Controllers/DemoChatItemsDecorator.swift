@@ -23,8 +23,8 @@
 */
 
 import Foundation
-import Chatto
-import ChattoAdditions
+import VoodooLabChatto
+import VoodooLabChattoAdditions
 
 final class DemoChatItemsDecorator: ChatItemsDecoratorProtocol {
     private struct Constants {

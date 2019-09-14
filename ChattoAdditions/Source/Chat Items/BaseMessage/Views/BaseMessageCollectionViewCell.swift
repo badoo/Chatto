@@ -23,7 +23,7 @@
 */
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar

@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 public class DemoPhotoMessageModel: PhotoMessageModel<MessageModel>, DemoMessageModelProtocol {
     public override init(messageModel: MessageModel, imageSize: CGSize, image: UIImage) {

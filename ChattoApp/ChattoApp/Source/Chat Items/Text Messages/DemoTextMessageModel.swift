@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 public class DemoTextMessageModel: TextMessageModel<MessageModel>, DemoMessageModelProtocol {
     public override init(messageModel: MessageModel, text: String) {

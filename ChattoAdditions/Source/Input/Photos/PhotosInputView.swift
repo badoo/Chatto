@@ -24,7 +24,7 @@
 
 import UIKit
 import Photos
-import Chatto
+import VoodooLabChatto
 
 public struct PhotosInputViewAppearance {
     public var liveCameraCellAppearence: LiveCameraCellAppearance

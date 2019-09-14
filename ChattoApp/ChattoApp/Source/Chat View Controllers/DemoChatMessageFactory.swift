@@ -23,8 +23,8 @@
 */
 
 import Foundation
-import Chatto
-import ChattoAdditions
+import VoodooLabChatto
+import VoodooLabChattoAdditions
 
 class DemoChatMessageFactory {
     private static let demoText =

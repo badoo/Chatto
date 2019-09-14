@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import Chatto
+import VoodooLabChatto
 
 public enum MessageStatus {
     case failed

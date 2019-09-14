@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Chatto
+import VoodooLabChatto
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model

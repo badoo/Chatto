@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
 

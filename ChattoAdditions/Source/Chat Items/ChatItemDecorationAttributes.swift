@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import Chatto
+import VoodooLabChatto
 
 public struct BaseMessageDecorationAttributes {
     public var canShowFailedIcon: Bool

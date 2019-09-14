@@ -23,8 +23,8 @@
 */
 
 import UIKit
-import Chatto
-import ChattoAdditions
+import VoodooLabChatto
+import VoodooLabChattoAdditions
 
 // This is a dirty implementation that shows what's needed to add a new type of element
 // @see DemoChatItemsDecorator

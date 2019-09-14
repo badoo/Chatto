@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import Chatto
+import VoodooLabChatto
 
 open class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,

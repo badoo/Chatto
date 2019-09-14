@@ -23,7 +23,7 @@
 */
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
     typealias Class = TextMessageCollectionViewCellDefaultStyle

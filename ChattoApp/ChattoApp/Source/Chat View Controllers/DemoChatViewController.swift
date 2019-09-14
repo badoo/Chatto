@@ -23,8 +23,8 @@
 */
 
 import UIKit
-import Chatto
-import ChattoAdditions
+import VoodooLabChatto
+import VoodooLabChattoAdditions
 
 class DemoChatViewController: BaseChatViewController {
     var shouldUseAlternativePresenter: Bool = false

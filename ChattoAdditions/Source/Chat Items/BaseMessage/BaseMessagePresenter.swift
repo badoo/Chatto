@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import Chatto
+import VoodooLabChatto
 
 public protocol ViewModelBuilderProtocol {
     associatedtype ModelT: MessageModelProtocol

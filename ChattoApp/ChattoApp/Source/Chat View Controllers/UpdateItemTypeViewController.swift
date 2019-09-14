@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 final class UpdateItemTypeViewController: DemoChatViewController {
 

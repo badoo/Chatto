@@ -24,7 +24,7 @@
 
 import Foundation
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 class TimeSeparatorModel: ChatItemProtocol {
     let uid: String

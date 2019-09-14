@@ -22,7 +22,7 @@
  THE SOFTWARE.
  */
 
-import Chatto
+import VoodooLabChatto
 
 @objc
 public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {

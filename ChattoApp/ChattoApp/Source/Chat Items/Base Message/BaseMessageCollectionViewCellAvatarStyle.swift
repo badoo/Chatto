@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDefaultStyle {
     override func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize {

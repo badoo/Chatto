@@ -23,7 +23,7 @@
 */
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> where

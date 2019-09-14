@@ -22,7 +22,7 @@
  THE SOFTWARE.
  */
 
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 open class ContentAwareInputItem {
     public var textInputHandler: ((String) -> Void)?

@@ -23,7 +23,7 @@
 */
 
 import Foundation
-import ChattoAdditions
+import VoodooLabChattoAdditions
 
 public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel>, DemoMessageViewModelProtocol {
 

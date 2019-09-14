@@ -23,7 +23,7 @@
 */
 
 import XCTest
-@testable import ChattoApp
+@testable import VoodooLabChattoApp
 
 class SlidingDataSourceTests: XCTestCase {
 
