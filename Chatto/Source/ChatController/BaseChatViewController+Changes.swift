@@ -288,8 +288,7 @@ extension BaseChatViewController {
 
     private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
         let newDecoratedItems = self.chatItemsDecorator?.decorateItems(newItems) ?? newItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
-        let changes = Chatto.generateChanges(oldCollection: oldItems.map(HashableItem.init),
-                                             newCollection: newDecoratedItems.map(HashableItem.init))
+        let changes = generateChanges(oldCollection: oldItems.map(HashableItem.init),  newCollection: newDecoratedItems.map(HashableItem.init))
         let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
         let layoutModel = self.createLayoutModel(itemCompanionCollection, collectionViewWidth: collectionViewWidth)
         let updateModelClosure : () -> Void = { [weak self] in
