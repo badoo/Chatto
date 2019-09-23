@@ -12,6 +12,6 @@
 
 #import "ChattoAdditions.h"
 
-FOUNDATION_EXPORT double ChattoAdditionsVersionNumber;
-FOUNDATION_EXPORT const unsigned char ChattoAdditionsVersionString[];
+FOUNDATION_EXPORT double VoodooLabChattoAdditionsVersionNumber;
+FOUNDATION_EXPORT const unsigned char VoodooLabChattoAdditionsVersionString[];
 

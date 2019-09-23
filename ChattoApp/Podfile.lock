@@ -1,22 +1,22 @@
 PODS:
-  - Chatto (3.4.0)
-  - ChattoAdditions (3.4.0):
-    - Chatto
+  - VoodooLabChatto (10.0.0)
+  - VoodooLabChattoAdditions (10.0.0):
+    - VoodooLabChatto
 
 DEPENDENCIES:
-  - Chatto (from `..`)
-  - ChattoAdditions (from `..`)
+  - VoodooLabChatto (from `..`)
+  - VoodooLabChattoAdditions (from `..`)
 
 EXTERNAL SOURCES:
-  Chatto:
+  VoodooLabChatto:
     :path: ".."
-  ChattoAdditions:
+  VoodooLabChattoAdditions:
     :path: ".."
 
 SPEC CHECKSUMS:
-  Chatto: a749f52d0ded9237267ad91e820990b249f565a1
-  ChattoAdditions: 54df52d6976b5fd6cce3efa0d2793f451fdefb74
+  VoodooLabChatto: 164e4ec8a4cf01199db7801d130ececc5eb3fcfb
+  VoodooLabChattoAdditions: 2c763765a88638d404f987a893b4049f851e9b6a
 
-PODFILE CHECKSUM: 7e673449d94d383ef7c7669fdd0f282d4d0e7059
+PODFILE CHECKSUM: dcdb8012e65af5e8ba5c956b5d30f99761b23de3
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.7.3

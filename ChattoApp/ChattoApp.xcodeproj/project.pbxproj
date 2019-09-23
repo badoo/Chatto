@@ -442,13 +442,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ChattoApp/Pods-ChattoApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Chatto/Chatto.framework",
-				"${BUILT_PRODUCTS_DIR}/ChattoAdditions/ChattoAdditions.framework",
+				"${BUILT_PRODUCTS_DIR}/VoodooLabChatto/VoodooLabChatto.framework",
+				"${BUILT_PRODUCTS_DIR}/VoodooLabChattoAdditions/VoodooLabChattoAdditions.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Chatto.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChattoAdditions.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VoodooLabChatto.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VoodooLabChattoAdditions.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

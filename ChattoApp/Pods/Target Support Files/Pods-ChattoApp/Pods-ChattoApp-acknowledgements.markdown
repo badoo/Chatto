@@ -1,7 +1,7 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## Chatto
+## VoodooLabChatto
 
 The MIT License (MIT)
 
@@ -27,7 +27,7 @@ SOFTWARE.
 
 
 
-## ChattoAdditions
+## VoodooLabChattoAdditions
 
 The MIT License (MIT)
 
