@@ -1,3 +1,35 @@
+### 3.5.0 (September 12, 2019)
+
+#### Features
+- Support of using compound bubble for text messages #578 by [@magic146](https://github.com/magic146)
+- Support of custom menu presentation #584 by [@AntonPalich](https://github.com/AntonPalich)
+- Support of layout invalidation for compound bubble #586 by [@Wisors](https://github.com/Wisors)
+
+#### Improvements
+- Added accessibility identifier to text bubble #575 by [@wiruzx](https://github.com/wiruzx)
+- Migrated existing objc classes to Swift #579 by [@magic146](https://github.com/magic146)
+- Various compound bubble layout improvements #587 by [@turbulem](https://github.com/turbulem)
+- Added support for draft messages #580 by [@aabalaban](https://github.com/aabalaban)
+- Added `didLoseFocusOnItem` method to `ChatInputBarDelegate` #591 by [@magic146](https://github.com/magic146)
+- Improved cursor positioning #595 by [@leonspok](https://github.com/leonspok)
+- Added support of presenters reusing #596 by [@magic146](https://github.com/magic146)
+- Added support for updating message in content presenters #605 by [@wiruzx](https://github.com/wiruzx)
+
+#### Bugfixes
+- Fixed using correct uid for decorated item #570 by [@magic146](https://github.com/magic146)
+- Fixed filtering content factories #588 by [@Wisors](https://github.com/Wisors)
+- Fixed issue with wrong text size calculation in compound bubble #589 by [@AntonPalich](https://github.com/AntonPalich)
+- Replaced ReadOnlyOrderedDictionary with ChatItemCompanionCollection in order to support correct uids #590 by [@magic146](https://github.com/magic146)
+- Fixed updating `ExpandableTextView` bounds in iOS 13 #592 by [@magic146](https://github.com/magic146)
+- Fixed blurry images in the photo picker #594 by [@magic146](https://github.com/magic146)
+- Limited maximum scale of preview photos #597 by [@magic146](https://github.com/magic146)
+- Fixed calling completion in `changeInputContentBottomMarginTo` method #599 by [@leonspok](https://github.com/leonspok)
+- Fixed openning a link in a message #600 by [@magic146](https://github.com/magic146)
+- Fixed out of bounds crash due to stirng encoding #603 by [@turbulem](https://github.com/turbulem)
+- Fixed implicitly animating layout #604 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed issues with non-selectable links in iOS 13 #606 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed simultaniously recognizing tap and long press #608 by [@AntonPalich](https://github.com/AntonPalich)
+
 ### 3.4.0 (April 23, 2019)
 
 #### Features
