@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import ChattoAdditions
-import Foundation
+import UIKit
 
 final class StubCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
     var stubbedHideBubbleForSingleContent: Bool! = false

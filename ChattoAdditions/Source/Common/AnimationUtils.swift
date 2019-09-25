@@ -22,6 +22,8 @@
  THE SOFTWARE.
 */
 
+import UIKit
+
 public extension CABasicAnimation {
     class func bma_fadeInAnimationWithDuration(_ duration: CFTimeInterval) -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: "opacity")

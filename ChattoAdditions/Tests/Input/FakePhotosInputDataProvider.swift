@@ -22,6 +22,7 @@
  THE SOFTWARE.
  */
 
+import UIKit
 @testable import ChattoAdditions
 
 final class FakePhotosInputDataProviderImageRequest: PhotosInputDataProviderImageRequestProtocol {
