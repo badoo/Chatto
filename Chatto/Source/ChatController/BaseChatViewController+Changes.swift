@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 private struct HashableItem: Hashable {
     private let uid: String
