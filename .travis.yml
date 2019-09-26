@@ -1,10 +1,10 @@
 language: objective-c
-osx_image: xcode10
+osx_image: xcode11
 
 script:
 - set -o pipefail
-- xcodebuild clean build test -workspace ./Chatto.xcworkspace -scheme Chatto -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 7' -configuration Debug | xcpretty
+- xcodebuild clean build test -workspace ./Chatto.xcworkspace -scheme Chatto -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11' -configuration Debug | xcpretty
 - bash <(curl -s https://codecov.io/bash) -J 'Chatto'
-- xcodebuild clean build test -workspace ./Chatto.xcworkspace -scheme ChattoAdditions -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 7' -configuration Debug | xcpretty
+- xcodebuild clean build test -workspace ./Chatto.xcworkspace -scheme ChattoAdditions -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11' -configuration Debug | xcpretty
 - bash <(curl -s https://codecov.io/bash) -J 'ChattoAdditions'
-- xcodebuild clean build test -workspace ./ChattoApp/ChattoApp.xcworkspace -scheme ChattoApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 7' -configuration Debug | xcpretty
+- xcodebuild clean build test -workspace ./ChattoApp/ChattoApp.xcworkspace -scheme ChattoApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11' -configuration Debug | xcpretty
