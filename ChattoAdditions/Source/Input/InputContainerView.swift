@@ -22,6 +22,8 @@
  THE SOFTWARE.
  */
 
+import UIKit
+
 open class InputContainerView: UIInputView {
 
     public var contentHeight: CGFloat = 0 {

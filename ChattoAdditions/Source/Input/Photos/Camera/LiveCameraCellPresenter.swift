@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 import Photos
 
 public struct LiveCameraSettings {

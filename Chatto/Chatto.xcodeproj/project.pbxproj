@@ -34,7 +34,6 @@
 		C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */; };
 		C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */; };
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
-		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
 		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
 /* End PBXBuildFile section */
@@ -79,7 +78,6 @@
 		C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemPresenterFactory.swift; sourceTree = "<group>"; };
 		C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Presenters.swift"; sourceTree = "<group>"; };
 		C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
-		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
 		EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollectionTests.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 		C3E904AC1BE0509E00C662A2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				C3E905031BE0521700C662A2 /* Chatto.h */,
 				C3E905041BE0521700C662A2 /* Info.plist */,
 				C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */,
 				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
@@ -222,7 +219,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3E905051BE0521700C662A2 /* Chatto.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +287,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = C32BB7161BE0504D0069EC50;

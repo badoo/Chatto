@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public enum MessageViewModelStatus {
     case success

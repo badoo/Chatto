@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 protocol ChatInputItemViewDelegate: class {
     func inputItemViewTapped(_ view: ChatInputItemView)

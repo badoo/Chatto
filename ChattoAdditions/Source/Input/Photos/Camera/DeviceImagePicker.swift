@@ -22,6 +22,8 @@
  THE SOFTWARE.
 */
 
+import UIKit
+
 final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
     private weak var delegate: ImagePickerDelegate?

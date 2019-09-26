@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 // Handles messages which aren't supported. So, they appear as invisible.
 class DummyChatItemPresenter: ChatItemPresenterProtocol {

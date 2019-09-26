@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 open class TextChatInputItem {
     typealias Class = TextChatInputItem

@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 open class PhotosChatInputItem: ChatInputItemProtocol {
     public private(set) var supportsExpandableState: Bool = false
