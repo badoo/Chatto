@@ -10,7 +10,6 @@
 #endif
 #endif
 
-#import "ChattoAdditions.h"
 
 FOUNDATION_EXPORT double ChattoAdditionsVersionNumber;
 FOUNDATION_EXPORT const unsigned char ChattoAdditionsVersionString[];

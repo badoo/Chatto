@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import Chatto
+import UIKit
 
 public protocol MessageContentFactoryProtocol {
     associatedtype Model

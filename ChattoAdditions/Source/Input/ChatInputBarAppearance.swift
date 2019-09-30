@@ -22,6 +22,8 @@
  THE SOFTWARE.
 */
 
+import UIKit
+
 public struct ChatInputBarAppearance {
     public struct SendButtonAppearance {
         public var font = UIFont.systemFont(ofSize: 16)

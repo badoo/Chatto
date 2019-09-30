@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import ChattoAdditions
-import Foundation
+import UIKit
 
 struct TestHelpers {
 

@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public struct TabInputButtonAppearance {
     public var images: [UIControlStateWrapper: UIImage]

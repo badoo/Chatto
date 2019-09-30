@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
