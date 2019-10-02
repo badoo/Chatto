@@ -112,6 +112,7 @@
 		DE51010D21B5670A009BC61C /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51010C21B5670A009BC61C /* InputContainerView.swift */; };
 		E3E0D60322EA1AA2006E2053 /* Comparable+Clamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */; };
 		E3E0D60522EA1AEE006E2053 /* Comparable+ClampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */; };
+		EA02BFC123452F61009E7349 /* Bundle+Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA02BFC023452F61009E7349 /* Bundle+Resources.swift */; };
 		EA13CAF2229EE8C8009340C5 /* CircleIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */; };
 		EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF3229EE985009340C5 /* CircleProgressView.swift */; };
 		EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */; };
@@ -249,6 +250,7 @@
 		DE51010C21B5670A009BC61C /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
 		E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamp.swift"; sourceTree = "<group>"; };
 		E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+ClampTests.swift"; sourceTree = "<group>"; };
+		EA02BFC023452F61009E7349 /* Bundle+Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Resources.swift"; sourceTree = "<group>"; };
 		EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconView.swift; sourceTree = "<group>"; };
 		EA13CAF3229EE985009340C5 /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressIndicatorView.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 				55ABA5701FC74DB400923302 /* UIView+Additions.swift */,
 				2645F90C2209C11C004CB829 /* HashableRepresentible.swift */,
 				E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */,
+				EA02BFC023452F61009E7349 /* Bundle+Resources.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -783,6 +786,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55ABA5631FC7444700923302 /* CGPoint+Additions.swift in Sources */,
+				EA02BFC123452F61009E7349 /* Bundle+Resources.swift in Sources */,
 				C3C9BC8F1D11540D00F3A54E /* TabInputButton.swift in Sources */,
 				C3C0CC3B1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift in Sources */,
 				C38658B21BFE55620012F181 /* AnimationUtils.swift in Sources */,

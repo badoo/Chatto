@@ -101,7 +101,7 @@ extension DefaultCompoundBubbleViewStyle.BubbleMasks {
     }
 
     public static var `default`: DefaultCompoundBubbleViewStyle.BubbleMasks {
-        let bundle = Bundle(for: DefaultCompoundBubbleViewStyle.self)
+        let bundle = Bundle.resourcesBundle(for: DefaultCompoundBubbleViewStyle.self)
         return DefaultCompoundBubbleViewStyle.BubbleMasks(
             incomingTail: UIImage(named: "bubble-incoming-tail", in: bundle, compatibleWith: nil)!,
             incomingNoTail: UIImage(named: "bubble-incoming", in: bundle, compatibleWith: nil)!,
