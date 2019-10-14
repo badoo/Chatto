@@ -31,15 +31,16 @@ public protocol TextMessageMenuItemPresenterProtocol {
 }
 
 public final class TextMessageMenuItemPresenter: TextMessageMenuItemPresenterProtocol {
+    public typealias PasteboardProvider = () -> UIPasteboard
 
     // MARK: - Private properties
 
-    private let pasteboard: UIPasteboard
+    private let pasteboardProvider: PasteboardProvider
 
     // MARK: - Instantiation
 
-    public init(pasteboard: UIPasteboard = .general) {
-        self.pasteboard = pasteboard
+    public init(pasteboard: @escaping @autoclosure PasteboardProvider = .general) {
+        self.pasteboardProvider = pasteboard
     }
 
     // MARK: - TextMessageMenuItemPresenterProtocol
@@ -57,7 +58,7 @@ public final class TextMessageMenuItemPresenter: TextMessageMenuItemPresenterPro
             assertionFailure("Unexpected action")
             return
         }
-        self.pasteboard.string = text
+        self.pasteboardProvider().string = text
     }
 }
 
