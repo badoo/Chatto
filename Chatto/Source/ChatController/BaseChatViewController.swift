@@ -214,7 +214,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
-    private func setupInputContainerBottomConstraint() {
+    private func updateInputContainerBottomBaseOffset() {
         if #available(iOS 11.0, *) {
             self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
         } else {
@@ -279,8 +279,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            self.setupInputContainerBottomConstraint()
         }
+
+        self.updateInputContainerBottomBaseOffset()
     }
 
     public var allContentFits: Bool {
