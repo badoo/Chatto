@@ -216,7 +216,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func setupInputContainerBottomConstraint() {
         if #available(iOS 11.0, *) {
-            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -230,11 +230,24 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             }
 
             if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-                self.inputContainerBottomConstraint.constant = 0
+                self.inputContainerBottomBaseOffset = 0
             } else {
-                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+                self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
             }
         }
+    }
+
+    private var inputContainerBottomBaseOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    private var inputContainerBottomAdditionalOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    private func updateInputContainerBottomConstraint() {
+        self.inputContainerBottomConstraint.constant = max(self.inputContainerBottomBaseOffset, self.inputContainerBottomAdditionalOffset)
+        self.view.setNeedsLayout()
     }
 
     var isAdjustingInputContainer: Bool = false
@@ -425,7 +438,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
         if animated {
             self.isAdjustingInputContainer = true
-            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            self.inputContainerBottomAdditionalOffset = newValue
             CATransaction.begin()
             UIView.animate(
                 withDuration: duration,
@@ -449,7 +462,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.isAdjustingInputContainer = true
             CATransaction.begin()
             CATransaction.setAnimationTimingFunction(timingFunction)
-            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            self.inputContainerBottomAdditionalOffset = newValue
             UIView.animate(
                 withDuration: duration,
                 animations: { self.view.layoutIfNeeded() },
@@ -465,7 +478,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+        self.inputContainerBottomAdditionalOffset = newValue
         self.view.layoutIfNeeded()
         callback?()
         self.isAdjustingInputContainer = false
