@@ -294,7 +294,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         return availableHeight >= contentSize.height
     }
 
-    private var lastBoundsUsedForInsetsAdjustment: CGRect? = nil
+    private var previousBoundsUsedForInsetsAdjustment: CGRect? = nil
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard let collectionView = self.collectionView else { return }
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
@@ -319,14 +319,16 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let prevContentOffsetY = collectionView.contentOffset.y
 
         let boundsHeightDiff: CGFloat = {
-            defer {
-                self.lastBoundsUsedForInsetsAdjustment = collectionView.bounds
-            }
-            guard let lastUsedBounds = self.lastBoundsUsedForInsetsAdjustment else {
+            guard shouldUpdateContentOffset, let lastUsedBounds = self.previousBoundsUsedForInsetsAdjustment else {
                 return 0
             }
-            return lastUsedBounds.height - collectionView.bounds.height
+            let diff = lastUsedBounds.height - collectionView.bounds.height
+            // When collectionView is scrolled to bottom and height increases,
+            // collectionView adjusts its contentOffset automatically
+            let isScrolledToBottom = contentSize.height <= collectionView.bounds.maxY - collectionView.contentInset.bottom
+            return isScrolledToBottom ? max(0, diff) : diff
         }()
+        self.previousBoundsUsedForInsetsAdjustment = collectionView.bounds
 
         let newContentOffsetY: CGFloat = {
             let minOffset = -newInsetTop
