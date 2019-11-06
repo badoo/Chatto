@@ -130,7 +130,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     public private(set) var avatarView: UIImageView!
-    func createAvatarView() -> UIImageView! {
+    open func createAvatarView() -> UIImageView! {
         let avatarImageView = UIImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
         return avatarImageView
