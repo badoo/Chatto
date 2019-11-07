@@ -149,7 +149,7 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
 
 public extension TextMessageCollectionViewCellDefaultStyle { // Default values
 
-    static public func createDefaultBubbleImages() -> BubbleImages {
+    static func createDefaultBubbleImages() -> BubbleImages {
         return BubbleImages(
             incomingTail: UIImage(named: "bubble-incoming-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
             incomingNoTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
@@ -158,7 +158,7 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultTextStyle() -> TextStyle {
+    static func createDefaultTextStyle() -> TextStyle {
         return TextStyle(
             font: UIFont.systemFont(ofSize: 16),
             incomingColor: UIColor.black,

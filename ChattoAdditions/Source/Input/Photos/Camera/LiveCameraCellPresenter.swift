@@ -187,6 +187,9 @@ public final class LiveCameraCellPresenter {
             return false
         case .authorized:
             return true
+        @unknown default:
+            assertionFailure("Unsupported \(type(of: self.cameraAuthorizationStatus)) case: \(self.cameraAuthorizationStatus).")
+            return false
         }
     }
 

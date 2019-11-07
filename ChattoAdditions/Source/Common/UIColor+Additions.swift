@@ -29,7 +29,7 @@ public extension UIColor {
         return UIColor(red: CGFloat((rgb & 0xFF0000) >> 16) / 255.0, green: CGFloat((rgb & 0xFF00) >> 8) / 255.0, blue: CGFloat((rgb & 0xFF)) / 255.0, alpha: 1.0)
     }
 
-    public func bma_blendWithColor(_ color: UIColor) -> UIColor {
+    func bma_blendWithColor(_ color: UIColor) -> UIColor {
         var r1: CGFloat = 0, r2: CGFloat = 0
         var g1: CGFloat = 0, g2: CGFloat = 0
         var b1: CGFloat = 0, b2: CGFloat = 0
