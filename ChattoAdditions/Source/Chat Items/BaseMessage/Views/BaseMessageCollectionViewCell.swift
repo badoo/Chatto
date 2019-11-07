@@ -98,7 +98,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open var messageViewModel: MessageViewModelProtocol! {
         didSet {
+            oldValue?.avatarImage.removeObserver(self)
             self.updateViews()
+            self.observeAvatar()
         }
     }
 
@@ -235,7 +237,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
-        self.updateAvatarView(from: viewModel, with: style)
         self.updateSelectionIndicator(with: style)
 
         self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
@@ -245,13 +246,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.layoutIfNeeded()
     }
 
-    private func updateAvatarView(from viewModel: MessageViewModelProtocol,
-                                  with style: BaseMessageCollectionViewCellStyleProtocol) {
+    private func observeAvatar() {
+        guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
-
-        let avatarImageSize = style.avatarSize(viewModel: viewModel)
-        if avatarImageSize != .zero {
-            self.avatarView.image = viewModel.avatarImage.value
+        self.avatarView.image = viewModel.avatarImage.value
+        viewModel.avatarImage.observe(self) { [weak self] _, new in
+            guard let self = self else { return }
+            self.avatarView.image = new
         }
     }
 
