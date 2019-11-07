@@ -37,7 +37,7 @@ public extension CABasicAnimation {
 }
 
 public extension CATransaction {
-    public static func performWithDisabledActions(block: () -> Void) {
+    static func performWithDisabledActions(block: () -> Void) {
         self.begin()
         self.setDisableActions(true)
         block()
