@@ -247,6 +247,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     private func observeAvatar() {
+        guard self.viewContext != .sizing else { return }
         guard let viewModel = self.messageViewModel else { return }
         self.avatarView.isHidden = !viewModel.decorationAttributes.isShowingAvatar
         self.avatarView.image = viewModel.avatarImage.value
