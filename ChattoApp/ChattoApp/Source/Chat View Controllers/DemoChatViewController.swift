@@ -76,7 +76,7 @@ class DemoChatViewController: BaseChatViewController {
     override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
-            viewModelBuilder: DemoTextMessageViewModelBuilder(),
+            viewModelBuilder: self.createTextMessageViewModelBuilder(),
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
@@ -107,6 +107,10 @@ class DemoChatViewController: BaseChatViewController {
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()],
             ChatItemType.compoundItemType: [compoundPresenterBuilder]
         ]
+    }
+
+    func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+        return DemoTextMessageViewModelBuilder()
     }
 
     func createChatInputItems() -> [ChatInputItemProtocol] {
