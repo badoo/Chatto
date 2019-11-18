@@ -225,11 +225,11 @@ public final class CircleProgressIndicatorView: UIView {
 
 public extension CircleProgressIndicatorView {
 
-    public convenience init(size: CGSize) {
+    convenience init(size: CGSize) {
         self.init(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height))
     }
 
-    public static func `default`() -> CircleProgressIndicatorView {
+    static func `default`() -> CircleProgressIndicatorView {
         return CircleProgressIndicatorView(size: CGSize(width: 28, height: 28))
     }
 }
