@@ -167,7 +167,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
-
+        collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
+        
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
         self.collectionView = collectionView
 
@@ -344,12 +345,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             return currentInsets
         }()
 
-        collectionView.scrollIndicatorInsets = {
+        collectionView.chatto_setVerticalScrollIndicatorInsets({
             var currentInsets = collectionView.scrollIndicatorInsets
             currentInsets.bottom = self.layoutConfiguration.scrollIndicatorInsets.bottom + inputHeightWithKeyboard
             currentInsets.top = self.topLayoutGuide.length + self.layoutConfiguration.scrollIndicatorInsets.top
             return currentInsets
-        }()
+        }())
 
         guard shouldUpdateContentOffset else { return }
 
