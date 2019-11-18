@@ -105,10 +105,11 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let failedIconImages: FailedIconImages
     let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
     let dateTextStyle: DateTextStyle
-    let avatarStyle: AvatarStyle
+    let incomingAvatarStyle: AvatarStyle
+    let outgoingAvatarStyle: AvatarStyle
     let selectionIndicatorStyle: SelectionIndicatorStyle
 
-    public init(
+    public convenience init(
         colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
         failedIconImages: FailedIconImages = BaseMessageCollectionViewCellDefaultStyle.createDefaultFailedIconImages(),
@@ -116,18 +117,39 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
         avatarStyle: AvatarStyle = AvatarStyle(),
         selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()) {
-            self.colors = colors
-            self.bubbleBorderImages = bubbleBorderImages
-            self.failedIconImages = failedIconImages
-            self.layoutConstants = layoutConstants
-            self.dateTextStyle = dateTextStyle
-            self.avatarStyle = avatarStyle
-            self.selectionIndicatorStyle = selectionIndicatorStyle
+        self.init(colors: colors,
+                  bubbleBorderImages: bubbleBorderImages,
+                  failedIconImages: failedIconImages,
+                  layoutConstants: layoutConstants,
+                  dateTextStyle: dateTextStyle,
+                  incomingAvatarStyle: avatarStyle,
+                  outgoingAvatarStyle: avatarStyle,
+                  selectionIndicatorStyle: selectionIndicatorStyle)
+    }
 
-            self.dateStringAttributes = [
-                NSAttributedString.Key.font: self.dateTextStyle.font(),
-                NSAttributedString.Key.foregroundColor: self.dateTextStyle.color()
-            ]
+    public init(
+        colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
+        bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
+        failedIconImages: FailedIconImages = BaseMessageCollectionViewCellDefaultStyle.createDefaultFailedIconImages(),
+        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = BaseMessageCollectionViewCellDefaultStyle.createDefaultLayoutConstants(),
+        dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
+        incomingAvatarStyle: AvatarStyle = AvatarStyle(),
+        outgoingAvatarStyle: AvatarStyle = AvatarStyle(),
+        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()
+    ) {
+        self.colors = colors
+        self.bubbleBorderImages = bubbleBorderImages
+        self.failedIconImages = failedIconImages
+        self.layoutConstants = layoutConstants
+        self.dateTextStyle = dateTextStyle
+        self.incomingAvatarStyle = incomingAvatarStyle
+        self.outgoingAvatarStyle = outgoingAvatarStyle
+        self.selectionIndicatorStyle = selectionIndicatorStyle
+
+        self.dateStringAttributes = [
+            NSAttributedString.Key.font: self.dateTextStyle.font(),
+            NSAttributedString.Key.foregroundColor: self.dateTextStyle.color()
+        ]
     }
 
     public lazy var baseColorIncoming: UIColor = self.colors.incoming()
@@ -161,11 +183,11 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     }
 
     open func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize {
-        return self.avatarStyle.size
+        return self.avatarStyle(for: viewModel).size
     }
 
     open func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment {
-        return self.avatarStyle.alignment
+        return self.avatarStyle(for: viewModel).alignment
     }
 
     public var selectionIndicatorMargins: UIEdgeInsets {
@@ -178,6 +200,10 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     open func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants {
         return self.layoutConstants
+    }
+
+    private func avatarStyle(for viewModel: MessageViewModelProtocol) -> AvatarStyle {
+        return viewModel.isIncoming ? self.incomingAvatarStyle : self.outgoingAvatarStyle
     }
 }
 

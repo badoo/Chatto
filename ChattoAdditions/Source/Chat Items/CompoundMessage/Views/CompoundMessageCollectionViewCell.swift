@@ -22,11 +22,11 @@
 // THE SOFTWARE.
 
 @available(iOS 11, *)
-public final class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
+open class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
 
-    public override func createBubbleView() -> CompoundBubbleView! {
+    open override func createBubbleView() -> CompoundBubbleView! {
         return CompoundBubbleView()
     }
 
-    public var viewReferences: [ViewReference]?
+    public final var viewReferences: [ViewReference]?
 }

@@ -41,7 +41,8 @@ class ChatExamplesViewController: CellsViewController {
             self.makeScrollToBottomCellItem(),
             self.makeCompoundDemoViewController(),
             self.makeUpdateItemTypeViewController(),
-            self.makeTestItemsReloadingCellItem()
+            self.makeTestItemsReloadingCellItem(),
+            self.makeAsyncAvatarLoadingCellItem()
         ]
     }
 
@@ -121,6 +122,12 @@ class ChatExamplesViewController: CellsViewController {
     private func makeTestItemsReloadingCellItem() -> CellItem {
         return CellItem(title: "Test items reloading") { [unowned self] in
             self.navigationController?.pushViewController(TestItemsReloadingViewController(), animated: true)
+        }
+    }
+
+    private func makeAsyncAvatarLoadingCellItem() -> CellItem {
+        return CellItem(title: "Async avatar loading") { [unowned self] in
+            self.navigationController?.pushViewController(AsyncAvatarLoadingViewController(), animated: true)
         }
     }
 

@@ -40,6 +40,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions
     private let cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>
     private let accessibilityIdentifier: String?
+    private let cellClass: CompoundMessageCollectionViewCell.Type
 
     private let initialContentFactories: [AnyMessageContentFactory<ModelT>]
     private var contentFactories: [AnyMessageContentFactory<ModelT>]!
@@ -56,13 +57,15 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
         compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
-        accessibilityIdentifier: String?
+        accessibilityIdentifier: String?,
+        cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.compoundCellDimensions = compoundCellDimensions
         self.initialContentFactories = contentFactories
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
+        self.cellClass = cellClass
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -129,7 +132,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let cellReuseIdentifier = self.compoundCellReuseId
-        collectionView.register(CompoundMessageCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        collectionView.register(self.cellClass, forCellWithReuseIdentifier: cellReuseIdentifier)
         return collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath)
     }
 
