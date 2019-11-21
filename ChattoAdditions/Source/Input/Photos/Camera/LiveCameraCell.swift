@@ -127,6 +127,9 @@ class LiveCameraCell: UICollectionViewCell {
             self.iconImageView.image = self.appearance.cameraImageProvider()
         case .restricted, .denied:
             self.iconImageView.image = self.appearance.cameraLockImageProvider()
+        @unknown default:
+            assertionFailure("Unsupported \(type(of: self.authorizationStatus)) case: \(self.authorizationStatus).")
+            self.iconImageView.image = self.appearance.cameraLockImageProvider()
         }
         self.setNeedsLayout()
     }

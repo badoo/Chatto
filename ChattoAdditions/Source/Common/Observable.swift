@@ -46,6 +46,10 @@ public class Observable<T> {
         self.cleanDeadObservers()
     }
 
+    public func removeObserver(_ observer: AnyObject) {
+        self.observers.removeAll { $0.owner === observer }
+    }
+
     private func cleanDeadObservers() {
         self.observers = self.observers.filter { $0.owner != nil }
     }
