@@ -59,3 +59,11 @@ extension UIScrollView {
         }
     }
 }
+
+extension UICollectionView {
+    func chatto_setIsPrefetchingEnabled(_ isPrefetchingEnabled: Bool) {
+        if #available(iOS 10.0, *) {
+            self.isPrefetchingEnabled = isPrefetchingEnabled
+        }
+    }
+}
