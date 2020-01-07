@@ -161,9 +161,18 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.autoresizingMask = []
         self.view.addSubview(collectionView)
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: collectionView, attribute: .top, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: collectionView, attribute: .leading, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: collectionView, attribute: .trailing, multiplier: 1, constant: 0))
+
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+
+            collectionView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+            collectionView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+        } else {
+            self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: collectionView, attribute: .leading, multiplier: 1, constant: 0))
+            self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: collectionView, attribute: .trailing, multiplier: 1, constant: 0))
+        }
+
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
@@ -199,9 +208,17 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let inputView = self.createChatInputView()
         self.inputBarContainer.addSubview(inputView)
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .equal, toItem: inputView, attribute: .top, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
+
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+
+            inputView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+            inputView.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+        } else {
+            self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
+            self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
+        }
     }
 
     private func addInputContentContainer() {
