@@ -69,9 +69,9 @@ public struct UIControlStateWrapper: Hashable {
     public init(state: UIControl.State) {
         self.controlState = state
     }
-
-    public var hashValue: Int {
-        return self.controlState.rawValue.hashValue
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.controlState.rawValue.hashValue)
     }
 }
 

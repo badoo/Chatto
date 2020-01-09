@@ -25,7 +25,7 @@
 import UIKit
 
 public extension UIImage {
-    public func bma_tintWithColor(_ color: UIColor) -> UIImage {
+    func bma_tintWithColor(_ color: UIColor) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, self.scale)
         let context = UIGraphicsGetCurrentContext()!
@@ -37,7 +37,7 @@ public extension UIImage {
         return image.resizableImage(withCapInsets: self.capInsets)
     }
 
-    public func bma_blendWithColor(_ color: UIColor) -> UIImage {
+    func bma_blendWithColor(_ color: UIColor) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: self.size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.main.scale)
         let context = UIGraphicsGetCurrentContext()!
@@ -54,7 +54,7 @@ public extension UIImage {
         return image.resizableImage(withCapInsets: self.capInsets)
     }
 
-    public static func bma_imageWithColor(_ color: UIColor, size: CGSize) -> UIImage {
+    static func bma_imageWithColor(_ color: UIColor, size: CGSize) -> UIImage {
         let rect = CGRect(origin: CGPoint.zero, size: size)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()

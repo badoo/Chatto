@@ -186,11 +186,11 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
     private static let defaultIncomingColor = UIColor.bma_color(rgb: 0xE6ECF2)
     private static let defaultOutgoingColor = UIColor.bma_color(rgb: 0x3D68F5)
 
-    static public func createDefaultColors() -> Colors {
+    static func createDefaultColors() -> Colors {
         return Colors(incoming: self.defaultIncomingColor, outgoing: self.defaultOutgoingColor)
     }
 
-    static public func createDefaultBubbleBorderImages() -> BubbleBorderImages {
+    static func createDefaultBubbleBorderImages() -> BubbleBorderImages {
         return BubbleBorderImages(
             borderIncomingTail: UIImage(named: "bubble-incoming-border-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
             borderIncomingNoTail: UIImage(named: "bubble-incoming-border", in: Bundle(for: Class.self), compatibleWith: nil)!,
@@ -199,7 +199,7 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultFailedIconImages() -> FailedIconImages {
+    static func createDefaultFailedIconImages() -> FailedIconImages {
         let normal = {
             return UIImage(named: "base-message-failed-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
         }
@@ -209,11 +209,11 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultDateTextStyle() -> DateTextStyle {
+    static func createDefaultDateTextStyle() -> DateTextStyle {
         return DateTextStyle(font: UIFont.systemFont(ofSize: 12), color: UIColor.bma_color(rgb: 0x9aa3ab))
     }
 
-    static public func createDefaultLayoutConstants() -> BaseMessageCollectionViewCellLayoutConstants {
+    static func createDefaultLayoutConstants() -> BaseMessageCollectionViewCellLayoutConstants {
         return BaseMessageCollectionViewCellLayoutConstants(horizontalMargin: 11,
                                                             horizontalInterspacing: 4,
                                                             horizontalTimestampMargin: 11,
@@ -223,7 +223,7 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
     private static let selectionIndicatorIconSelected = UIImage(named: "base-message-checked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(BaseMessageCollectionViewCellDefaultStyle.defaultOutgoingColor)
     private static let selectionIndicatorIconDeselected = UIImage(named: "base-message-unchecked-icon", in: Bundle(for: Class.self), compatibleWith: nil)!.bma_tintWithColor(UIColor.bma_color(rgb: 0xC6C6C6))
 
-    static public func createDefaultSelectionIndicatorStyle() -> SelectionIndicatorStyle {
+    static func createDefaultSelectionIndicatorStyle() -> SelectionIndicatorStyle {
         return SelectionIndicatorStyle(
             margins: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10),
             selectedIcon: self.selectionIndicatorIconSelected,

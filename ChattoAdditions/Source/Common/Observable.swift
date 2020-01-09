@@ -26,8 +26,10 @@ import Foundation
 
 // Be aware this is not thread safe!
 // Why class? https://lists.swift.org/pipermail/swift-users/Week-of-Mon-20160711/002580.html
-public class Observable<T> {
+public class Observable<T>: Codable {
 
+    
+    
     public init(_ value: T) {
         self.value = value
     }

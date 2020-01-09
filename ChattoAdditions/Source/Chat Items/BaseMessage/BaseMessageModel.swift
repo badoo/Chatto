@@ -25,7 +25,7 @@
 import Foundation
 import VoodooLabChatto
 
-public enum MessageStatus {
+public enum MessageStatus: Int {
     case failed
     case sending
     case success
