@@ -116,7 +116,7 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
             if let keyboardHeight = self.lastKnownKeyboardHeight, keyboardHeight > 0 {
                 return keyboardHeight
             } else {
-                if UIApplication.shared.statusBarOrientation.isPortrait {
+                if UIScreen.main.portraitOrientation {
                     return UIScreen.main.defaultPortraitKeyboardHeight
                 } else {
                     return UIScreen.main.defaultLandscapeKeyboardHeight
