@@ -59,9 +59,9 @@ open class ExpandableTextView: UITextView {
 
     private func commonInit() {
         NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextView.textDidChangeNotification, object: self)
-        self.updateBoundsToFitSize()
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
+        self.updateBoundsToFitSize()
     }
 
     open override func didMoveToWindow() {
@@ -74,13 +74,32 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-        self.placeholder.frame = self.bounds
+    override open var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            self.placeholder.frame = self.bounds
+            super.frame = newValue
+        }
+    }
+
+    override open var bounds: CGRect {
+        get {
+            return super.bounds
+        }
+        set {
+            self.placeholder.frame = newValue
+            super.bounds = newValue
+        }
     }
 
     override open var intrinsicContentSize: CGSize {
-        return self.contentSize
+        if self.isPlaceholderViewAttached {
+            return self.placeholder.contentSize
+        } else {
+            return self.contentSize
+        }
     }
 
     override open var text: String! {
@@ -95,6 +114,7 @@ open class ExpandableTextView: UITextView {
         }
         set {
             self.placeholder.text = newValue
+            self.updateBoundsToFitSizeForIOS13()
         }
     }
 
@@ -127,7 +147,7 @@ open class ExpandableTextView: UITextView {
 
     @available(*, deprecated, message: "use placeholderText property instead")
     open func setTextPlaceholder(_ textPlaceholder: String) {
-        self.placeholder.text = textPlaceholder
+        self.placeholderText = textPlaceholder
     }
 
     open func setTextPlaceholderColor(_ color: UIColor) {
@@ -143,8 +163,8 @@ open class ExpandableTextView: UITextView {
     }
 
     @objc func textDidChange() {
-        self.updateBoundsToFitSize()
         self.updatePlaceholderVisibility()
+        self.updateBoundsToFitSizeForIOS13()
         self.scrollToCaret()
 
         // Bugfix:
@@ -177,19 +197,21 @@ open class ExpandableTextView: UITextView {
     // MARK: - Private methods
 
     private func updateBoundsToFitSize() {
+        self.bounds.size = self.sizeThatFits(self.bounds.size)
+    }
+    
+    private func updateBoundsToFitSizeForIOS13() {
         guard #available(iOS 13.0, *) else { return }
-
         /*
          Since iOS 13 Beta 4, changing a text doesn't cause a recalculation of the content size.
          Because of this, invalidateIntrinsicContentSize is not called, and layout is not updated.
          To fix it, updateBoundsToFitSize should be called on each text change.
-
+         
          Analyzing a stack trace:
          -[_UITextContainerView setConstrainedFrameSize:] is still called.
          -[_UITextContainerView setFrame:] is NOT called since iOS 13 Beta 4.
          */
-
-        self.bounds.size = self.sizeThatFits(self.bounds.size)
+        self.updateBoundsToFitSize()
     }
 
     private func scrollToCaret() {
@@ -214,6 +236,7 @@ open class ExpandableTextView: UITextView {
         self.addSubview(self.placeholder)
 
         if !wasAttachedBeforeShowing {
+            self.updateBoundsToFitSize()
             self.placeholderDelegate?.expandableTextViewDidShowPlaceholder(self)
         }
     }
