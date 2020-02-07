@@ -74,23 +74,9 @@ open class ExpandableTextView: UITextView {
         }
     }
 
-    override open var frame: CGRect {
-        get {
-            return super.frame
-        }
-        set {
-            self.placeholder.frame = self.bounds
-            super.frame = newValue
-        }
-    }
-
     override open var bounds: CGRect {
-        get {
-            return super.bounds
-        }
-        set {
+        willSet {
             self.placeholder.frame = newValue
-            super.bounds = newValue
         }
     }
 
@@ -114,7 +100,7 @@ open class ExpandableTextView: UITextView {
         }
         set {
             self.placeholder.text = newValue
-            self.updateBoundsToFitSizeForIOS13()
+            self.doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13()
         }
     }
 
@@ -164,7 +150,7 @@ open class ExpandableTextView: UITextView {
 
     @objc func textDidChange() {
         self.updatePlaceholderVisibility()
-        self.updateBoundsToFitSizeForIOS13()
+        self.doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13()
         self.scrollToCaret()
 
         // Bugfix:
@@ -200,7 +186,7 @@ open class ExpandableTextView: UITextView {
         self.bounds.size = self.sizeThatFits(self.bounds.size)
     }
     
-    private func updateBoundsToFitSizeForIOS13() {
+    private func doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13() {
         guard #available(iOS 13.0, *) else { return }
         /*
          Since iOS 13 Beta 4, changing a text doesn't cause a recalculation of the content size.
