@@ -59,7 +59,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         self.notificationCenter.removeObserver(self)
     }
 
-    fileprivate(set) var focusedItem: ChatInputItemProtocol? {
+    fileprivate(set) public var focusedItem: ChatInputItemProtocol? {
         willSet {
             self.focusedItem?.selected = false
         }
@@ -267,7 +267,7 @@ extension ExpandableChatInputBarPresenter {
         }
     }
 
-    func onSendButtonPressed() {
+    public func onSendButtonPressed() {
         if let focusedItem = self.focusedItem {
             focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
@@ -276,7 +276,7 @@ extension ExpandableChatInputBarPresenter {
         self.chatInputBar.inputText = ""
     }
 
-    func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
+    public func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
         guard item.presentationMode != .none else { return }
         guard item !== self.focusedItem else { return }
 
