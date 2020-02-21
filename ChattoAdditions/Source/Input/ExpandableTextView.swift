@@ -143,7 +143,6 @@ open class ExpandableTextView: UITextView {
     }
 
     @objc func textDidChange() {
-        self.updateBoundsToFitSize()
         self.updatePlaceholderVisibility()
         self.scrollToCaret()
 
