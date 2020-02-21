@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "VoodooLabChattoAdditions"
-  s.version      = "10.0.2"
+  s.version      = "10.0.3"
   s.summary      = "UI componentes for Chatto"
   s.homepage     = "https://github.com/badoo/Chatto"
   s.license      = { :type => "MIT"}
