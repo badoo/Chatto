@@ -61,7 +61,6 @@ open class ExpandableTextView: UITextView {
         NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextView.textDidChangeNotification, object: self)
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
-        self.updateBoundsToFitSize()
     }
 
     open override func didMoveToWindow() {
@@ -100,7 +99,7 @@ open class ExpandableTextView: UITextView {
         }
         set {
             self.placeholder.text = newValue
-            self.doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13()
+            self.invalidateIntrinsicContentSize()
         }
     }
 
@@ -150,7 +149,6 @@ open class ExpandableTextView: UITextView {
 
     @objc func textDidChange() {
         self.updatePlaceholderVisibility()
-        self.doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13()
         self.scrollToCaret()
 
         // Bugfix:
@@ -182,24 +180,6 @@ open class ExpandableTextView: UITextView {
 
     // MARK: - Private methods
 
-    private func updateBoundsToFitSize() {
-        self.bounds.size = self.sizeThatFits(self.bounds.size)
-    }
-    
-    private func doAnAdditionalCallOf_updateBoundsToFitSize_forIOS13() {
-        guard #available(iOS 13.0, *) else { return }
-        /*
-         Since iOS 13 Beta 4, changing a text doesn't cause a recalculation of the content size.
-         Because of this, invalidateIntrinsicContentSize is not called, and layout is not updated.
-         To fix it, updateBoundsToFitSize should be called on each text change.
-         
-         Analyzing a stack trace:
-         -[_UITextContainerView setConstrainedFrameSize:] is still called.
-         -[_UITextContainerView setFrame:] is NOT called since iOS 13 Beta 4.
-         */
-        self.updateBoundsToFitSize()
-    }
-
     private func scrollToCaret() {
         if let textRange = self.selectedTextRange {
             var rect = caretRect(for: textRange.end)
@@ -222,7 +202,7 @@ open class ExpandableTextView: UITextView {
         self.addSubview(self.placeholder)
 
         if !wasAttachedBeforeShowing {
-            self.updateBoundsToFitSize()
+            self.invalidateIntrinsicContentSize()
             self.placeholderDelegate?.expandableTextViewDidShowPlaceholder(self)
         }
     }
