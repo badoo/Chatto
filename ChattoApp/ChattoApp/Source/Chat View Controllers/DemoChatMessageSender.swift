@@ -26,7 +26,7 @@ import Foundation
 import VoodooLabChatto
 import VoodooLabChattoAdditions
 
-public protocol DemoMessageModelProtocol: MessageModelProtocol {
+public protocol DemoMessageModelProtocol: MessageModelProtocol, ContentEquatableChatItemProtocol {
     var status: MessageStatus { get set }
 }
 

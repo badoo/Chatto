@@ -34,7 +34,6 @@
 		C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */; };
 		C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */; };
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
-		C3E905051BE0521700C662A2 /* Chatto.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E905031BE0521700C662A2 /* Chatto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
 		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
 /* End PBXBuildFile section */
@@ -45,7 +44,7 @@
 			containerPortal = C32BB7171BE0504D0069EC50 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C32BB71F1BE0504D0069EC50;
-			remoteInfo = BMAChatFramework;
+			remoteInfo = Chatto;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -79,7 +78,6 @@
 		C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemPresenterFactory.swift; sourceTree = "<group>"; };
 		C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Presenters.swift"; sourceTree = "<group>"; };
 		C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
-		C3E905031BE0521700C662A2 /* Chatto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chatto.h; path = Source/Chatto.h; sourceTree = SOURCE_ROOT; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
 		EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollectionTests.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 		C3E904AC1BE0509E00C662A2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				C3E905031BE0521700C662A2 /* Chatto.h */,
 				C3E905041BE0521700C662A2 /* Info.plist */,
 				C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */,
 				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
@@ -222,7 +219,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3E905051BE0521700C662A2 /* Chatto.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +240,7 @@
 			dependencies = (
 			);
 			name = Chatto;
-			productName = BMAChatFramework;
+			productName = Chatto;
 			productReference = C32BB7201BE0504D0069EC50 /* Chatto.framework */;
 			productType = "com.apple.product-type.framework";
 		};
@@ -262,7 +258,7 @@
 				C32BB72D1BE0504D0069EC50 /* PBXTargetDependency */,
 			);
 			name = ChattoTests;
-			productName = BMAChatFrameworkTests;
+			productName = ChattoTests;
 			productReference = C32BB72A1BE0504D0069EC50 /* ChattoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -291,6 +287,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = C32BB7161BE0504D0069EC50;
@@ -443,7 +440,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -495,7 +492,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -518,7 +515,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.Chatto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -537,7 +533,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.Chatto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -550,7 +545,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -563,7 +557,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

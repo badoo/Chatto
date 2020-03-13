@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
     var ignoreContentInsets: Bool { get }

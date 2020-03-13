@@ -191,7 +191,11 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.placeholderIconView.center = layout.visualCenter
         self.placeholderIconView.bounds = CGRect(origin: .zero, size: layout.placeholderFrame.size)
         self.imageView.bma_rect = layout.photoFrame
-        self.imageView.layer.mask?.frame = self.imageView.layer.bounds
+        // Disables implicit layer animation
+        CATransaction.performWithDisabledActions {
+            self.imageView.layer.mask?.frame = self.imageView.layer.bounds
+        }
+
         self.overlayView.bma_rect = self.imageView.bounds
         self.borderView.bma_rect = self.imageView.bounds
     }

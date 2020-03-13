@@ -73,6 +73,10 @@ class SendingStatusPresenter: ChatItemPresenterProtocol {
         collectionView.register(UINib(nibName: "SendingStatusCollectionViewCell", bundle: Bundle(for: self)), forCellWithReuseIdentifier: "SendingStatusCollectionViewCell")
     }
 
+    let isItemUpdateSupported = false
+
+    func update(with chatItem: ChatItemProtocol) {}
+
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SendingStatusCollectionViewCell", for: indexPath)
         return cell

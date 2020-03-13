@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 import Photos
 
 public struct LiveCameraSettings {
@@ -187,6 +187,9 @@ public final class LiveCameraCellPresenter {
             return false
         case .authorized:
             return true
+        @unknown default:
+            assertionFailure("Unsupported \(type(of: self.cameraAuthorizationStatus)) case: \(self.cameraAuthorizationStatus).")
+            return false
         }
     }
 

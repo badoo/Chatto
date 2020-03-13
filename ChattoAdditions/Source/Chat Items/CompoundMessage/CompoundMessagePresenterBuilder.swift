@@ -26,7 +26,7 @@ import VoodooLabChatto
 @available(iOS 11, *)
 public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: Equatable,
+    ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT

@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 // If you wish to use your custom view instead of BaseChatViewControllerView, you must implement this protocol.
 public protocol BaseChatViewControllerViewProtocol: class {

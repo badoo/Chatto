@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public protocol ChatItemPresenterFactoryProtocol {
     var presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]] { get set }

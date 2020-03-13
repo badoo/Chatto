@@ -28,6 +28,7 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     public typealias ActionHandler = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias BindingClosure = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias UnbindingClosure = (_ view: ViewType?) -> Void
+    public typealias MessageUpdateClosure = (_ newMessage: MessageType) -> Void
 
     public init(message: MessageType,
                 showBorder: Bool,
@@ -35,7 +36,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
                 onUnbinding: UnbindingClosure? = nil,
                 onContentWillBeShown: ActionHandler? = nil,
                 onContentWasHidden: ActionHandler? = nil,
-                onContentWasTapped_deprecated: ActionHandler? = nil) {
+                onContentWasTapped_deprecated: ActionHandler? = nil,
+                onMessageUpdate: MessageUpdateClosure? = nil) {
         self.message = message
 
         self.onBinding = onBinding
@@ -45,6 +47,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
         self.onContentWillBeShown = onContentWillBeShown
         self.onContentWasHidden = onContentWasHidden
         self.onContentWasTapped_deprecated = onContentWasTapped_deprecated
+
+        self.onMessageUpdate = onMessageUpdate
     }
 
     private var message: MessageType
@@ -57,6 +61,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     private let onContentWillBeShown: ActionHandler?
     private let onContentWasHidden: ActionHandler?
     private let onContentWasTapped_deprecated: ActionHandler?
+
+    private let onMessageUpdate: MessageUpdateClosure?
 
     // MARK: - MessageContentPresenterProtocol
 
@@ -75,5 +81,14 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     public func unbindFromView() {
         self.onUnbinding?(self.view)
+    }
+
+    public func updateMessage(_ newMessage: Any) {
+        guard let message = newMessage as? MessageType else {
+            assertionFailure("Unexpected message type: \(type(of: newMessage))")
+            return
+        }
+        self.message = message
+        self.onMessageUpdate?(self.message)
     }
 }

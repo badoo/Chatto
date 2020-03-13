@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import UIKit
+
 public struct CompoundBubbleLayout {
     public let size: CGSize
     public let subviewsFrames: [CGRect]

@@ -21,44 +21,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+import Chatto
+import ChattoAdditions
+import Foundation
 
-public final class ViewReference {
+extension MessageModel: Equatable, ContentEquatableChatItemProtocol {
 
-    public weak var view: UIView?
-
-    public init(to view: UIView?) {
-        self.view = view
+    public static func == (lhs: MessageModel, rhs: MessageModel) -> Bool {
+        return lhs.uid == rhs.uid && lhs.hasSameContent(as: rhs)
     }
-}
 
-public protocol MessageContentPresenterDelegate: AnyObject {
-    func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol)
-}
+    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
+        guard let anotherMessageModel = anotherItem as? MessageModel else { return false }
+        return self.senderId == anotherMessageModel.senderId
+            && self.type == anotherMessageModel.type
+            && self.isIncoming == anotherMessageModel.isIncoming
+            && self.date == anotherMessageModel.date
+            && self.status == anotherMessageModel.status
+    }
 
-public protocol MessageContentPresenterProtocol {
-
-    var delegate: MessageContentPresenterDelegate? { get set }
-
-    /// Very likely it should be moved to other place but we didn't decide yet where.
-    var showBorder: Bool { get }
-
-    func contentWillBeShown()
-    func contentWasHidden()
-
-    /// It will be removed in the future. View taps should be handled by presenters themselves.
-    func contentWasTapped_deprecated()
-
-    func bindToView(with viewReference: ViewReference)
-    func unbindFromView()
-
-    var supportsMessageUpdating: Bool { get }
-
-    /// Please note, that returning `false` from `supportsMessageUpdating`
-    /// doesn't mean that this method won't be called.
-    func updateMessage(_ newMessage: Any)
-}
-
-public extension MessageContentPresenterProtocol {
-    var supportsMessageUpdating: Bool { return false }
+    func makeSameMessage(butAnotherId anotherId: String) -> MessageModel {
+        return MessageModel(
+            uid: anotherId,
+            senderId: self.senderId,
+            type: self.type,
+            isIncoming: self.isIncoming,
+            date: self.date,
+            status: self.status
+        )
+    }
 }

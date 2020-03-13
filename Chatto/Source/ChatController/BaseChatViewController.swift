@@ -167,7 +167,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
-
+        collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
+        collectionView.chatto_setIsPrefetchingEnabled(false)
+        
         self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
         self.collectionView = collectionView
 
@@ -214,9 +216,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .bottom, multiplier: 1, constant: 0))
     }
 
-    private func setupInputContainerBottomConstraint() {
+    private func updateInputContainerBottomBaseOffset() {
         if #available(iOS 11.0, *) {
-            self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+            self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -230,11 +232,24 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             }
 
             if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-                self.inputContainerBottomConstraint.constant = 0
+                self.inputContainerBottomBaseOffset = 0
             } else {
-                self.inputContainerBottomConstraint.constant = self.bottomLayoutGuide.length
+                self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
             }
         }
+    }
+
+    private var inputContainerBottomBaseOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    private var inputContainerBottomAdditionalOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    private func updateInputContainerBottomConstraint() {
+        self.inputContainerBottomConstraint.constant = max(self.inputContainerBottomBaseOffset, self.inputContainerBottomAdditionalOffset)
+        self.view.setNeedsLayout()
     }
 
     var isAdjustingInputContainer: Bool = false
@@ -266,8 +281,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         if self.isFirstLayout {
             self.updateQueue.start()
             self.isFirstLayout = false
-            self.setupInputContainerBottomConstraint()
         }
+
+        self.updateInputContainerBottomBaseOffset()
     }
 
     public var allContentFits: Bool {
@@ -280,6 +296,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         return availableHeight >= contentSize.height
     }
 
+    private var previousBoundsUsedForInsetsAdjustment: CGRect? = nil
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard let collectionView = self.collectionView else { return }
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
@@ -303,10 +320,22 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
         let prevContentOffsetY = collectionView.contentOffset.y
 
+        let boundsHeightDiff: CGFloat = {
+            guard shouldUpdateContentOffset, let lastUsedBounds = self.previousBoundsUsedForInsetsAdjustment else {
+                return 0
+            }
+            let diff = lastUsedBounds.height - collectionView.bounds.height
+            // When collectionView is scrolled to bottom and height increases,
+            // collectionView adjusts its contentOffset automatically
+            let isScrolledToBottom = contentSize.height <= collectionView.bounds.maxY - collectionView.contentInset.bottom
+            return isScrolledToBottom ? max(0, diff) : diff
+        }()
+        self.previousBoundsUsedForInsetsAdjustment = collectionView.bounds
+
         let newContentOffsetY: CGFloat = {
             let minOffset = -newInsetTop
             let maxOffset = contentSize.height - (collectionView.bounds.height - newInsetBottom)
-            let targetOffset = prevContentOffsetY + insetBottomDiff
+            let targetOffset = prevContentOffsetY + insetBottomDiff + boundsHeightDiff
             return max(min(maxOffset, targetOffset), minOffset)
         }()
 
@@ -317,12 +346,12 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             return currentInsets
         }()
 
-        collectionView.scrollIndicatorInsets = {
+        collectionView.chatto_setVerticalScrollIndicatorInsets({
             var currentInsets = collectionView.scrollIndicatorInsets
             currentInsets.bottom = self.layoutConfiguration.scrollIndicatorInsets.bottom + inputHeightWithKeyboard
             currentInsets.top = self.topLayoutGuide.length + self.layoutConfiguration.scrollIndicatorInsets.top
             return currentInsets
-        }()
+        }())
 
         guard shouldUpdateContentOffset else { return }
 
@@ -425,7 +454,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
         if animated {
             self.isAdjustingInputContainer = true
-            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            self.inputContainerBottomAdditionalOffset = newValue
             CATransaction.begin()
             UIView.animate(
                 withDuration: duration,
@@ -449,7 +478,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
             self.isAdjustingInputContainer = true
             CATransaction.begin()
             CATransaction.setAnimationTimingFunction(timingFunction)
-            self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+            self.inputContainerBottomAdditionalOffset = newValue
             UIView.animate(
                 withDuration: duration,
                 animations: { self.view.layoutIfNeeded() },
@@ -465,7 +494,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomConstraint.constant = max(newValue, self.bottomLayoutGuide.length)
+        self.inputContainerBottomAdditionalOffset = newValue
         self.view.layoutIfNeeded()
         callback?()
         self.isAdjustingInputContainer = false
