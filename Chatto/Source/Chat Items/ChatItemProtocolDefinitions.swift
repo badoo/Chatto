@@ -54,6 +54,11 @@ public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProto
     func cellWasHidden(_ cell: UICollectionViewCell) // optional
 }
 
+public extension ChatItemPresenterProtocol {
+    var isItemUpdateSupported: Bool { false }
+    func update(with chatItem: ChatItemProtocol) { }
+}
+
 public extension ChatItemPresenterProtocol { // Optionals
     var canCalculateHeightInBackground: Bool { return false }
     func cellWillBeShown(_ cell: UICollectionViewCell) {}

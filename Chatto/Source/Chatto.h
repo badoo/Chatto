@@ -22,29 +22,12 @@
  THE SOFTWARE.
 */
 
-import UIKit
-import VoodooLabChatto
+#import <UIKit/UIKit.h>
 
-public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol, ContentEquatableChatItemProtocol {
-    var image: UIImage { get }
-    var imageSize: CGSize { get }
-}
+//! Project version number for Chatto.
+FOUNDATION_EXPORT double ChattoVersionNumber;
 
-open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageModelProtocol {
-    public var messageModel: MessageModelProtocol {
-        return self._messageModel
-    }
-    public let _messageModel: MessageModelT // Can't make messageModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let image: UIImage
-    public let imageSize: CGSize
-    public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
-        self._messageModel = messageModel
-        self.imageSize = imageSize
-        self.image = image
-    }
-    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
-        guard let anotherMessageModel = anotherItem as? PhotoMessageModel else { return false }
-        return self.image == anotherMessageModel.image
-            && self.imageSize == anotherMessageModel.imageSize
-    }
-}
+//! Project version string for Chatto.
+FOUNDATION_EXPORT const unsigned char ChattoVersionString[];
+
+// In this header, you should import all the public headers of your framework using statements like #import <Chatto/PublicHeader.h>

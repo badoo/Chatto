@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
-import Chatto
+import VoodooLabChatto
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
     var ignoreContentInsets: Bool { get }
