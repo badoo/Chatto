@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "VoodooLabChatto"
-  s.version      = "10.0.2"
+  s.version      = "10.0.4"
   s.summary      = "Chat framework in Swift"
   s.homepage     = "https://github.com/VoodooTeam/Chatto"
   s.license      = { :type => "MIT"}
