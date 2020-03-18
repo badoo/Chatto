@@ -137,7 +137,7 @@ open class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         guard self.focusedItem != nil else { return }
         guard let value = (notification as NSNotification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         guard value.cgRectValue.height > 0 else { return }
-        self.lastKnownKeyboardHeight = value.cgRectValue.height - self.chatInputBar.bounds.height
+        self.lastKnownKeyboardHeight = value.cgRectValue.height - chatInputBar.bounds.height
     }
 
     @objc
