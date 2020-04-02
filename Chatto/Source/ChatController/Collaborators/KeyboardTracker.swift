@@ -246,18 +246,18 @@ private class KeyboardTrackingView: UIView {
         return self.preferredSize
     }
 
-    override func willMove(toSuperview newSuperview: UIView?) {
+    override func didMoveToSuperview() {
         if let observedView = self.observedView {
             observedView.removeObserver(self, forKeyPath: "center")
             self.observedView = nil
         }
 
-        if let newSuperview = newSuperview {
+        if let newSuperview = self.superview {
             newSuperview.addObserver(self, forKeyPath: "center", options: [.new, .old], context: nil)
             self.observedView = newSuperview
         }
 
-        super.willMove(toSuperview: newSuperview)
+        super.didMoveToSuperview()
     }
 
     override func observeValue(forKeyPath keyPath: String?,
