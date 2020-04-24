@@ -84,10 +84,10 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
         }
     }
 
-    let bubbleMasks: BubbleMasks
-    let sizes: Sizes
-    let colors: Colors
-    let baseStyle: BaseMessageCollectionViewCellDefaultStyle
+    public let bubbleMasks: BubbleMasks
+    public let sizes: Sizes
+    public let colors: Colors
+    public let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     public init(
         bubbleMasks: BubbleMasks = PhotoMessageCollectionViewCellDefaultStyle.createDefaultBubbleMasks(),
         sizes: Sizes = PhotoMessageCollectionViewCellDefaultStyle.createDefaultSizes(),
