@@ -31,8 +31,8 @@ Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 2. Include the following in your `Podfile`:
   ```
   # Swift 5
-  pod 'Chatto', '= 3.5.0'
-  pod 'ChattoAdditions', '= 3.5.0' # if you want to use the cells or the input component
+  pod 'Chatto', '= 3.6.0'
+  pod 'ChattoAdditions', '= 3.6.0' # if you want to use the cells or the input component
   ```
   ```
   # Swift 4.2
