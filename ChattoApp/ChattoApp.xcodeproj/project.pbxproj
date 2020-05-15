@@ -3,12 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */; };
 		0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */; };
+		262FD9922521495800804EF9 /* ChattoAdditions in Frameworks */ = {isa = PBXBuildFile; productRef = 262FD9912521495800804EF9 /* ChattoAdditions */; };
+		262FD9942521495800804EF9 /* Chatto in Frameworks */ = {isa = PBXBuildFile; productRef = 262FD9932521495800804EF9 /* Chatto */; };
 		266C7AE124B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */; };
 		268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */; };
 		268CD56F21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56E21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift */; };
@@ -128,6 +130,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				262FD9922521495800804EF9 /* ChattoAdditions in Frameworks */,
+				262FD9942521495800804EF9 /* Chatto in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +328,10 @@
 			dependencies = (
 			);
 			name = ChattoApp;
+			packageProductDependencies = (
+				262FD9912521495800804EF9 /* ChattoAdditions */,
+				262FD9932521495800804EF9 /* Chatto */,
+			);
 			productName = ChattoApp;
 			productReference = C33FBFA51BDE441C008E3545 /* ChattoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -378,6 +386,9 @@
 				Base,
 			);
 			mainGroup = C33FBF9C1BDE441C008E3545;
+			packageReferences = (
+				262FD9902521495800804EF9 /* XCRemoteSwiftPackageReference "Chatto" */,
+			);
 			productRefGroup = C33FBFA61BDE441C008E3545 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -603,7 +614,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -621,7 +633,10 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ChattoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -641,7 +656,10 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ChattoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -655,7 +673,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ChattoAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -669,7 +691,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ChattoAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -708,6 +734,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		262FD9902521495800804EF9 /* XCRemoteSwiftPackageReference "Chatto" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/badoo/Chatto";
+			requirement = {
+				branch = spm;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		262FD9912521495800804EF9 /* ChattoAdditions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 262FD9902521495800804EF9 /* XCRemoteSwiftPackageReference "Chatto" */;
+			productName = ChattoAdditions;
+		};
+		262FD9932521495800804EF9 /* Chatto */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 262FD9902521495800804EF9 /* XCRemoteSwiftPackageReference "Chatto" */;
+			productName = Chatto;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C33FBF9D1BDE441C008E3545 /* Project object */;
 }
