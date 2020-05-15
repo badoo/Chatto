@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import ChattoAdditions
+import UIKit
 
 final class DemoMessageInteractionHandler<Model: DemoMessageModelProtocol, ViewModel: MessageViewModelProtocol>: BaseMessageInteractionHandlerProtocol {
 

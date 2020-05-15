@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import XCTest
+import UIKit
 @testable import ChattoAdditions
 
 class Comparable_ClampTests: XCTestCase {

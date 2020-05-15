@@ -23,6 +23,7 @@
 
 
 import Chatto
+import UIKit
 
 final class DemoReplyActionHandler: ReplyActionHandler {
 

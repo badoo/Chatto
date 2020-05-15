@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 import ChattoAdditions
 
 class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {

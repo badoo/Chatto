@@ -22,6 +22,7 @@
  THE SOFTWARE.
  */
 
+import UIKit
 import ChattoAdditions
 
 open class ContentAwareInputItem {

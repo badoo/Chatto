@@ -24,6 +24,7 @@
 
 import Foundation
 import ChattoAdditions
+import UIKit
 
 public typealias DemoTextMessageViewModel = TextMessageViewModel<DemoTextMessageModel>
 
