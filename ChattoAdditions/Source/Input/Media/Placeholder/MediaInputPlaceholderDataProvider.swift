@@ -24,15 +24,15 @@
 
 import UIKit
 
-final class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol {
-    weak var delegate: PhotosInputDataProviderDelegate?
+final class MediaInputPlaceholderDataProvider: MediaInputDataProviderProtocol {
+    weak var delegate: MediaInputDataProviderDelegate?
 
-    private class PlaceholderImageDummyRequest: PhotosInputDataProviderImageRequestProtocol {
+    private class PlaceholderImageDummyRequest: MediaInputDataProviderResourceRequestProtocol {
         let requestId: Int32 = -1
         let progress: Double = 1
 
-        func observeProgress(with progressHandler: PhotosInputDataProviderProgressHandler?,
-                             completion: PhotosInputDataProviderCompletion?) {
+        func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
+                             completion: MediaInputDataProviderCompletion?) {
         }
 
         func cancel() {
@@ -51,17 +51,17 @@ final class PhotosInputPlaceholderDataProvider: PhotosInputDataProviderProtocol 
 
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
+                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
         return PlaceholderImageDummyRequest()
     }
 
-    func requestFullImage(at index: Int,
-                          progressHandler: PhotosInputDataProviderProgressHandler?,
-                          completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
+    func requestResource(at index: Int,
+                         progressHandler: MediaInputDataProviderProgressHandler?,
+                         completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
         return PlaceholderImageDummyRequest()
     }
 
-    func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
+    func resourceRequest(at index: Int) -> MediaInputDataProviderResourceRequestProtocol? {
         return nil
     }
 }

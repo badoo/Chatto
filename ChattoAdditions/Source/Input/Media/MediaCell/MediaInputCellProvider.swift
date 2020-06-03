@@ -24,37 +24,38 @@
 
 import UIKit
 
-protocol PhotosInputCellProviderProtocol: class {
+protocol MediaInputCellProviderProtocol: class {
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
-                                            request: PhotosInputDataProviderImageRequestProtocol)
+                                            request: MediaInputDataProviderResourceRequestProtocol)
 }
 
-final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
+final class MediaInputCellProvider: MediaInputCellProviderProtocol {
     private let reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
-    private let dataProvider: PhotosInputDataProviderProtocol
-    init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {
+    private let dataProvider: MediaInputDataProviderProtocol
+    
+    init(collectionView: UICollectionView, dataProvider: MediaInputDataProviderProtocol) {
         self.dataProvider = dataProvider
         self.collectionView = collectionView
-        self.collectionView.register(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
+        self.collectionView.register(MediaInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! PhotosInputCell
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! MediaInputCell
         self.configureCell(cell, at: indexPath)
         return cell
     }
 
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
-                                            request: PhotosInputDataProviderImageRequestProtocol) {
-        guard let cell = self.collectionView.cellForItem(at: indexPath) as? PhotosInputCell else { return }
+                                            request: MediaInputDataProviderResourceRequestProtocol) {
+        guard let cell = self.collectionView.cellForItem(at: indexPath) as? MediaInputCell else { return }
         self.configureCellForFullImageLoadingIfNeeded(cell, request: request)
     }
 
-    private var previewRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
-    private var fullImageRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
-    private func configureCell(_ cell: PhotosInputCell, at indexPath: IndexPath) {
+    private var previewRequests = [Int: MediaInputDataProviderResourceRequestProtocol]()
+    private var fullImageRequests = [Int: MediaInputDataProviderResourceRequestProtocol]()
+    private func configureCell(_ cell: MediaInputCell, at indexPath: IndexPath) {
         if let request = self.previewRequests[cell.hash] {
             self.previewRequests[cell.hash] = nil
             request.cancel()
@@ -82,12 +83,12 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         requestId = request.requestId
         imageProvidedSynchronously = false
         self.previewRequests[cell.hash] = request
-        if let fullImageRequest = self.dataProvider.fullImageRequest(at: index) {
+        if let fullImageRequest = self.dataProvider.resourceRequest(at: index) {
             self.configureCellForFullImageLoadingIfNeeded(cell, request: fullImageRequest)
         }
     }
 
-    private func configureCellForFullImageLoadingIfNeeded(_ cell: PhotosInputCell, request: PhotosInputDataProviderImageRequestProtocol) {
+    private func configureCellForFullImageLoadingIfNeeded(_ cell: MediaInputCell, request: MediaInputDataProviderResourceRequestProtocol) {
         guard request.progress < 1 else { return }
         cell.showProgressView()
         cell.updateProgress(CGFloat(request.progress))

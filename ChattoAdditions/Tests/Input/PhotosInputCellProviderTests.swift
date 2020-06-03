@@ -27,16 +27,16 @@ import XCTest
 
 class PhotosInputCellProviderTests: XCTestCase, UICollectionViewDataSource {
     var collectionView: UICollectionView!
-    var fakePhotosProvider: FakePhotosInputDataProvider!
-    var sut: PhotosInputCellProvider!
+    var fakePhotosProvider: FakeMediaInputDataProvider!
+    var sut: MediaInputCellProvider!
 
     override func setUp() {
         super.setUp()
         self.collectionView = UICollectionView(frame: UIScreen.main.bounds, collectionViewLayout: UICollectionViewFlowLayout())
         self.collectionView.dataSource = self
-        self.fakePhotosProvider = FakePhotosInputDataProvider()
+        self.fakePhotosProvider = FakeMediaInputDataProvider()
         self.fakePhotosProvider.count = 10
-        self.sut = PhotosInputCellProvider(collectionView: collectionView, dataProvider: self.fakePhotosProvider)
+        self.sut = MediaInputCellProvider(collectionView: collectionView, dataProvider: self.fakePhotosProvider)
     }
 
     override func tearDown() {
@@ -52,7 +52,7 @@ class PhotosInputCellProviderTests: XCTestCase, UICollectionViewDataSource {
         var photoProviderRequested = false
         self.fakePhotosProvider.onRequestPreviewImage = { (_, _, _) in
             photoProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
         _ = self.sut.cellForItem(at: IndexPath(row: indexToRequest, section: 0))
@@ -66,7 +66,7 @@ class PhotosInputCellProviderTests: XCTestCase, UICollectionViewDataSource {
         var requestedPhotoIndex = NSNotFound
         self.fakePhotosProvider.onRequestPreviewImage = { (index, _, _) in
             requestedPhotoIndex = index
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
         _ = self.sut.cellForItem(at: IndexPath(row: indexToRequest, section: 0))
@@ -78,7 +78,7 @@ class PhotosInputCellProviderTests: XCTestCase, UICollectionViewDataSource {
         // Given
         let indexToRequest = 5
         var fullImageRequestRequested = false
-        self.fakePhotosProvider.onFullImageRequest = { _ in
+        self.fakePhotosProvider.onResourceRequest = { _ in
             fullImageRequestRequested = true
             return nil
         }

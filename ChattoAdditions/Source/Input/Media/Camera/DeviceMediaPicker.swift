@@ -24,17 +24,18 @@
 
 import UIKit
 
-final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+final class DeviceMediaPicker: NSObject, MediaPicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
-    private weak var delegate: ImagePickerDelegate?
+    private weak var delegate: MediaPickerDelegate?
 
-    init(_ delegate: ImagePickerDelegate) {
+    init(delegate: MediaPickerDelegate, mediaTypes: [String]) {
         let pickerController = UIImagePickerController()
         self.controller = pickerController
         self.delegate = delegate
         super.init()
         pickerController.delegate = self
         pickerController.sourceType = .camera
+        pickerController.mediaTypes = mediaTypes
     }
 
     @objc
@@ -48,11 +49,19 @@ final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDel
     }
 }
 
-final class DeviceImagePickerFactory: ImagePickerFactory {
-    func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker? {
+public final class DeviceImagePickerFactory: MediaPickerFactory {
+
+    private let mediaTypes: [String]
+
+    public init(mediaTypes: [String]) {
+        self.mediaTypes = mediaTypes
+    }
+
+    public func makeImagePicker(delegate: MediaPickerDelegate) -> MediaPicker? {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             return nil
         }
-        return DeviceImagePicker(delegate)
+        return DeviceMediaPicker(delegate: delegate,
+                                 mediaTypes: self.mediaTypes)
     }
 }

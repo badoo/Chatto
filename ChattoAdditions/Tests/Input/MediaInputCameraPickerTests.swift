@@ -24,11 +24,12 @@
 
 import XCTest
 @testable import ChattoAdditions
+import CoreServices
 
-class PhotosInputCameraPickerTests: XCTestCase {
-    var sut: PhotosInputCameraPicker!
+class MediaInputCameraPickerTests: XCTestCase {
+    var sut: MediaInputCameraPicker!
     var presentingController: UIViewController!
-    var imagePickerFactoryStorage: ImagePickerFactory!
+    var imagePickerFactoryStorage: MediaPickerFactory!
     private var fakeImagePicker: FakeImagePicker!
     private var fakeImagePickerFactory: FakeImagePickerFactory!
 
@@ -38,15 +39,13 @@ class PhotosInputCameraPickerTests: XCTestCase {
         self.fakeImagePicker = FakeImagePicker()
         self.fakeImagePickerFactory = FakeImagePickerFactory()
         self.fakeImagePickerFactory.picker = self.fakeImagePicker
-        self.sut = PhotosInputCameraPicker(presentingController: self.presentingController)
-        self.imagePickerFactoryStorage = ImagePickerStore.factory
-        ImagePickerStore.factory = self.fakeImagePickerFactory
+        self.sut = MediaInputCameraPicker(mediaPickerFactory: self.fakeImagePickerFactory,
+                                          presentingControllerProvider: { self.presentingController })
     }
 
     override func tearDown() {
         self.sut = nil
         self.presentingController = nil
-        ImagePickerStore.factory = self.imagePickerFactoryStorage
         self.imagePickerFactoryStorage = nil
         self.fakeImagePickerFactory = nil
         self.fakeImagePicker = nil
@@ -62,7 +61,8 @@ class PhotosInputCameraPickerTests: XCTestCase {
         self.sut.presentCameraPicker(onImageTaken: { (image) in
             onImageTakenCalled = true
             XCTAssertNil(image)
-        }, onCameraPickerDismissed: {
+        }, onVideoTaken: { _ in },
+           onCameraPickerDismissed: {
             onCameraPickerDismissedCalled = true
         })
         // Then
@@ -76,9 +76,11 @@ class PhotosInputCameraPickerTests: XCTestCase {
         self.sut.presentCameraPicker(onImageTaken: { (image) in
             onImageTakenCalled = true
             XCTAssertNotNil(image)
-        }, onCameraPickerDismissed: {})
+        }, onVideoTaken: { _ in },
+           onCameraPickerDismissed: {})
         // When
-        self.fakeImagePicker.finish(with: [UIImagePickerController.InfoKey.originalImage: UIImage()])
+        self.fakeImagePicker.finish(with: [UIImagePickerController.InfoKey.originalImage: UIImage(),
+                                           UIImagePickerController.InfoKey.mediaType: kUTTypeImage as String])
         // Then
         XCTAssertTrue(onImageTakenCalled)
     }
@@ -89,7 +91,8 @@ class PhotosInputCameraPickerTests: XCTestCase {
         self.sut.presentCameraPicker(onImageTaken: { (image) in
             onImageTakenCalled = true
             XCTAssertNil(image)
-        }, onCameraPickerDismissed: {})
+        }, onVideoTaken: { _ in },
+           onCameraPickerDismissed: {})
         // When
         self.fakeImagePicker.finish(with: [:])
         // Then
@@ -102,7 +105,8 @@ class PhotosInputCameraPickerTests: XCTestCase {
         self.sut.presentCameraPicker(onImageTaken: { (image) in
             onImageTakenCalled = true
             XCTAssertNil(image)
-        }, onCameraPickerDismissed: {})
+        }, onVideoTaken: { _ in },
+           onCameraPickerDismissed: {})
         // When
         self.fakeImagePicker.cancel()
         // Then
@@ -110,9 +114,9 @@ class PhotosInputCameraPickerTests: XCTestCase {
     }
 }
 
-private class FakeImagePicker: ImagePicker {
+private class FakeImagePicker: MediaPicker {
     let controller: UIViewController = DummyViewController()
-    weak var delegate: ImagePickerDelegate?
+    weak var delegate: MediaPickerDelegate?
 
     func finish(with mediaInfo: [UIImagePickerController.InfoKey: Any]) {
         self.delegate?.imagePickerDidFinish(self, mediaInfo: mediaInfo)
@@ -123,10 +127,10 @@ private class FakeImagePicker: ImagePicker {
     }
 }
 
-private class FakeImagePickerFactory: ImagePickerFactory {
+private class FakeImagePickerFactory: MediaPickerFactory {
     var picker: FakeImagePicker!
 
-    func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker? {
+    func makeImagePicker(delegate: MediaPickerDelegate) -> MediaPicker? {
         picker?.delegate = delegate
         return picker
     }

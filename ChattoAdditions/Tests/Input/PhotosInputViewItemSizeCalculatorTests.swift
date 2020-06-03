@@ -26,10 +26,10 @@ import XCTest
 @testable import ChattoAdditions
 
 class PhotosInputViewItemSizeCalculatorTests: XCTestCase {
-    private var calculator: PhotosInputViewItemSizeCalculator!
+    private var calculator: MediaInputViewItemSizeCalculator!
     override func setUp() {
         super.setUp()
-        self.calculator = PhotosInputViewItemSizeCalculator()
+        self.calculator = MediaInputViewItemSizeCalculator()
     }
 
     func testThat_WhenWidthIsZero_ItemSizeIsZero() {

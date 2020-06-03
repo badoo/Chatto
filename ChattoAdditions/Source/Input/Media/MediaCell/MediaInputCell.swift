@@ -24,7 +24,7 @@
 
 import UIKit
 
-final class PhotosInputCell: UICollectionViewCell {
+final class MediaInputCell: UICollectionViewCell {
 
     private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
