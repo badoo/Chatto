@@ -41,6 +41,7 @@
 		55ABA5771FC74F8D00923302 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5761FC74F8D00923302 /* ObservableTests.swift */; };
 		BB86B1E12487B91300944540 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB86B1DF2487B91300944540 /* CoreServices.framework */; };
 		BBF10C5B2487EACA00366949 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB86B1DF2487B91300944540 /* CoreServices.framework */; };
+		BBF10C5F2487ECC000366949 /* ExpandableChatInputBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF10C5D2487ECBF00366949 /* ExpandableChatInputBarPresenter.swift */; };
 		C33DEA451D23F825002AAD26 /* LiveCameraCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */; };
 		C33DEA471D23F8C8002AAD26 /* LiveCameraCaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */; };
 		C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */; };
@@ -197,6 +198,7 @@
 		55ABA5721FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInets+AdditionsTests.swift"; sourceTree = "<group>"; };
 		55ABA5761FC74F8D00923302 /* ObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		BB86B1DF2487B91300944540 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
+		BBF10C5D2487ECBF00366949 /* ExpandableChatInputBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableChatInputBarPresenter.swift; sourceTree = "<group>"; };
 		C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCellPresenter.swift; sourceTree = "<group>"; };
 		C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCaptureSession.swift; sourceTree = "<group>"; };
 		C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextMessagePresenterTests.swift; path = "Tests/Chat Items/TextMessages/TextMessagePresenterTests.swift"; sourceTree = SOURCE_ROOT; };
@@ -533,6 +535,7 @@
 		C3C0CC031BFE496A0052747C /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				BBF10C5D2487ECBF00366949 /* ExpandableChatInputBarPresenter.swift */,
 				DE51010C21B5670A009BC61C /* InputContainerView.swift */,
 				C3C0CC041BFE496A0052747C /* ChatInputBar.swift */,
 				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
@@ -867,6 +870,7 @@
 				C3C0CC3C1BFE496A0052747C /* TextMessageModel.swift in Sources */,
 				2645F90D2209C11C004CB829 /* HashableRepresentible.swift in Sources */,
 				EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */,
+				BBF10C5F2487ECC000366949 /* ExpandableChatInputBarPresenter.swift in Sources */,
 				C3C0CC2A1BFE496A0052747C /* BaseMessageModel.swift in Sources */,
 				C3C0CC4F1BFE496A0052747C /* ChatInputBar.swift in Sources */,
 				C3C0CC361BFE496A0052747C /* PhotoMessagePresenterBuilder.swift in Sources */,

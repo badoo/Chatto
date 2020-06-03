@@ -116,7 +116,7 @@ class DemoChatViewController: BaseChatViewController {
     func createChatInputItems() -> [ChatInputItemProtocol] {
         var items = [ChatInputItemProtocol]()
         items.append(self.createTextInputItem())
-        items.append(self.createPhotoInputItem())
+        items.append(self.createMediaInputItem())
         if self.shouldUseAlternativePresenter {
             items.append(self.customInputItem())
         }
@@ -131,8 +131,8 @@ class DemoChatViewController: BaseChatViewController {
         return item
     }
 
-    private func createPhotoInputItem() -> PhotosChatInputItem {
-        let item = PhotosChatInputItem(presentingController: self)
+    private func createMediaInputItem() -> MediaChatInputItem {
+        let item = MediaChatInputItem(presentingController: self)
         item.photoInputHandler = { [weak self] image, _ in
             self?.dataSource.addPhotoMessage(image)
         }
