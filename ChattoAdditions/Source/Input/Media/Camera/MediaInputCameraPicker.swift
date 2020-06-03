@@ -37,7 +37,7 @@ protocol MediaInputCameraPickerProtocol {
 final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerDelegate {
     private let mediaPickerFactory: MediaPickerFactory
     private let presentingControllerProvider: () -> UIViewController?
-    private var MediaPicker: MediaPicker?
+    private var mediaPicker: MediaPicker?
 
     private var onImageTaken: OnImageTakenBlock?
     private var onVideoTaken: OnVideoTakenBlock?
@@ -53,7 +53,7 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
                              onVideoTaken: @escaping OnVideoTakenBlock,
                              onCameraPickerDismissed: @escaping OnCameraPickerDismissedBlock) {
         guard let presentingController = self.presentingControllerProvider(),
-            let MediaPicker = self.mediaPickerFactory.makeImagePicker(delegate: self) else {
+            let mediaPicker = self.mediaPickerFactory.makeImagePicker(delegate: self) else {
                 onImageTaken(nil)
                 onCameraPickerDismissed()
                 return
@@ -61,8 +61,8 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
         self.onImageTaken = onImageTaken
         self.onVideoTaken = onVideoTaken
         self.onCameraPickerDismissed = onCameraPickerDismissed
-        self.MediaPicker = MediaPicker
-        presentingController.present(MediaPicker.controller, animated: true, completion: nil)
+        self.mediaPicker = mediaPicker
+        presentingController.present(mediaPicker.controller, animated: true, completion: nil)
     }
 
     // MARK: - MediaPickerDelegate
@@ -78,10 +78,12 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
         } else {
             self.imagePickerDidCancel(picker)
         }
+        self.cleanUpAllCallbacks()
     }
 
     func imagePickerDidCancel(_ picker: MediaPicker) {
         self.finishPickingImage(nil, fromPicker: picker.controller)
+        self.cleanUpAllCallbacks()
     }
 
     // MARK: - Private API
@@ -89,12 +91,18 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
     private func finishPickingImage(_ image: UIImage?, fromPicker picker: UIViewController) {
         picker.dismiss(animated: true, completion: self.onCameraPickerDismissed)
         self.onImageTaken?(image)
-        self.MediaPicker = nil
+        self.mediaPicker = nil
     }
 
     private func finishPickingVideo(_ url: URL?, fromPicker picker: UIViewController) {
         picker.dismiss(animated: true, completion: self.onCameraPickerDismissed)
         self.onVideoTaken?(url)
-        self.MediaPicker = nil
+        self.mediaPicker = nil
+    }
+
+    private func cleanUpAllCallbacks() {
+        self.onImageTaken = nil
+        self.onVideoTaken = nil
+        self.onCameraPickerDismissed = nil
     }
 }

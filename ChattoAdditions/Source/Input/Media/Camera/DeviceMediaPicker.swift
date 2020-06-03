@@ -49,7 +49,7 @@ final class DeviceMediaPicker: NSObject, MediaPicker, UIImagePickerControllerDel
     }
 }
 
-public final class DeviceImagePickerFactory: MediaPickerFactory {
+public final class DeviceMediaPickerFactory: MediaPickerFactory {
 
     private let mediaTypes: [String]
 

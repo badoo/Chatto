@@ -217,7 +217,7 @@ public final class MediaInputView: UIView, MediaInputViewProtocol {
     }()
 
     private func makeCameraPicker() -> MediaInputCameraPicker {
-        return MediaInputCameraPicker(mediaPickerFactory: DeviceImagePickerFactory(mediaTypes: self.mediaTypes.map({ $0.UTI })),
+        return MediaInputCameraPicker(mediaPickerFactory: DeviceMediaPickerFactory(mediaTypes: self.mediaTypes.map({ $0.UTI })),
                                       presentingControllerProvider: self.presentingControllerProvider)
     }
 }
@@ -330,7 +330,7 @@ extension MediaInputView: UICollectionViewDelegateFlowLayout {
 }
 
 extension MediaInputView: MediaInputDataProviderDelegate {
-    func handlePhotosInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
+    func handleMediaInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 

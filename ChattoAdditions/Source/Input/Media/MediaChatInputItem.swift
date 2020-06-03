@@ -64,7 +64,7 @@ open class MediaChatInputItem: ChatInputItemProtocol {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
 
-    lazy var photosInputView: MediaInputViewProtocol = {
+    lazy var mediaInputView: MediaInputViewProtocol = {
         let photosInputView = MediaInputView(presentingControllerProvider: { [weak presentingController] in presentingController },
                                              appearance: self.inputViewAppearance,
                                              mediaTypes: [.image])
@@ -89,7 +89,7 @@ open class MediaChatInputItem: ChatInputItemProtocol {
     }
 
     open var inputView: UIView? {
-        return self.photosInputView as? UIView
+        return self.mediaInputView as? UIView
     }
 
     open var tabView: UIView {

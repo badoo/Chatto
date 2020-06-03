@@ -25,7 +25,7 @@
 import PhotosUI
 
 protocol MediaInputDataProviderDelegate: class {
-    func handlePhotosInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void)
+    func handleMediaInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void)
 }
 
 protocol MediaInputDataProviderProtocol: class {
@@ -113,7 +113,7 @@ final class MediaInputWithPlaceholdersDataProvider: MediaInputDataProviderProtoc
 
     // MARK: MediaInputDataProviderDelegate
 
-    func handlePhotosInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
-        self.delegate?.handlePhotosInputDataProviderUpdate(self, updateBlock: updateBlock)
+    func handleMediaInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
+        self.delegate?.handleMediaInputDataProviderUpdate(self, updateBlock: updateBlock)
     }
 }
