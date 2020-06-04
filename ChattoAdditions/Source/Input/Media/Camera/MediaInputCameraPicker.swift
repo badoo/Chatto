@@ -67,7 +67,7 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
 
     // MARK: - MediaPickerDelegate
 
-    func imagePickerDidFinish(_ picker: MediaPicker, mediaInfo: [UIImagePickerController.InfoKey: Any]) {
+    func mediaPickerDidFinish(_ picker: MediaPicker, mediaInfo: [UIImagePickerController.InfoKey: Any]) {
         let mediaType = mediaInfo[UIImagePickerController.InfoKey.mediaType] as? String
         if let image = mediaInfo[UIImagePickerController.InfoKey.originalImage] as? UIImage,
             mediaType == InputMediaType.image.UTI {
@@ -76,12 +76,12 @@ final class MediaInputCameraPicker: MediaInputCameraPickerProtocol, MediaPickerD
             mediaType == InputMediaType.video.UTI {
             self.finishPickingVideo(videoURL, fromPicker: picker.controller)
         } else {
-            self.imagePickerDidCancel(picker)
+            self.mediaPickerDidCancel(picker)
         }
         self.cleanUpAllCallbacks()
     }
 
-    func imagePickerDidCancel(_ picker: MediaPicker) {
+    func mediaPickerDidCancel(_ picker: MediaPicker) {
         self.finishPickingImage(nil, fromPicker: picker.controller)
         self.cleanUpAllCallbacks()
     }

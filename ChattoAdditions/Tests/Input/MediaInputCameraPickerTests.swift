@@ -119,11 +119,11 @@ private class FakeImagePicker: MediaPicker {
     weak var delegate: MediaPickerDelegate?
 
     func finish(with mediaInfo: [UIImagePickerController.InfoKey: Any]) {
-        self.delegate?.imagePickerDidFinish(self, mediaInfo: mediaInfo)
+        self.delegate?.mediaPickerDidFinish(self, mediaInfo: mediaInfo)
     }
 
     func cancel() {
-        self.delegate?.imagePickerDidCancel(self)
+        self.delegate?.mediaPickerDidCancel(self)
     }
 }
 
