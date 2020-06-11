@@ -39,6 +39,18 @@ final class MediaInputPlaceholderDataProvider: MediaInputDataProviderProtocol {
         }
     }
 
+    private class PreviewDummyRequest: MediaInputDataProviderPreviewRequestProtocol {
+        let requestId: Int32 = -1
+        let progress: Double = 1
+
+        func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
+                             completion: MediaInputDataProviderPreviewCompletion?) {
+        }
+
+        func cancel() {
+        }
+    }
+
     let numberOfPlaceholders: Int
 
     init(numberOfPlaceholders: Int = 5) {
@@ -51,8 +63,8 @@ final class MediaInputPlaceholderDataProvider: MediaInputDataProviderProtocol {
 
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
-        return PlaceholderImageDummyRequest()
+                             completion: @escaping MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol {
+        return PreviewDummyRequest()
     }
 
     func requestResource(at index: Int,

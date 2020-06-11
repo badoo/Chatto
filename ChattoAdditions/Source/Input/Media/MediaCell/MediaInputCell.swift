@@ -45,6 +45,7 @@ final class MediaInputCell: UICollectionViewCell {
     }
 
     private var imageView: UIImageView!
+    private let durationLabel = UILabel()
     private func commonInit() {
         self.clipsToBounds = true
         self.imageView = UIImageView()
@@ -52,16 +53,25 @@ final class MediaInputCell: UICollectionViewCell {
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
         self.accessibilityIdentifier = Constants.accessibilityIdentifier
+        self.imageView.addSubview(self.durationLabel)
+        self.durationLabel.font = UIFont.systemFont(ofSize: 14)
+        self.durationLabel.textColor = .white
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView.frame = self.bounds
+        self.durationLabel.sizeToFit()
+        let durationLabelSize = self.durationLabel.bounds.size
+        let durationLabelOrigin = CGPoint(x: 8, y: self.bounds.size.height - durationLabelSize.height - 6)
+        self.durationLabel.frame = CGRect(origin: durationLabelOrigin,
+                                          size: self.durationLabel.bounds.size)
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         self.image = nil
+        self.durationString = nil
         self.hideProgressView()
     }
 
@@ -73,6 +83,14 @@ final class MediaInputCell: UICollectionViewCell {
             self.imageView.image = newValue
         }
     }
+
+    var durationString: String? {
+        didSet {
+            self.durationLabel.text = self.durationString
+            self.durationLabel.isHidden = self.durationString == nil || self.durationString?.isEmpty == true
+            self.setNeedsLayout()
+        }
+    }   
 
     // MARK: - Progress indicator -
 

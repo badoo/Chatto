@@ -53,7 +53,7 @@ final class MediaInputCellProvider: MediaInputCellProviderProtocol {
         self.configureCellForFullImageLoadingIfNeeded(cell, request: request)
     }
 
-    private var previewRequests = [Int: MediaInputDataProviderResourceRequestProtocol]()
+    private var previewRequests = [Int: MediaInputDataProviderPreviewRequestProtocol]()
     private var fullImageRequests = [Int: MediaInputDataProviderResourceRequestProtocol]()
     private func configureCell(_ cell: MediaInputCell, at indexPath: IndexPath) {
         if let request = self.previewRequests[cell.hash] {
@@ -69,14 +69,15 @@ final class MediaInputCellProvider: MediaInputCellProviderProtocol {
         }()
         var imageProvidedSynchronously = true
         var requestId: Int32 = -1
-        let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] result in
+        let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] image, duration in
             guard let sSelf = self, let sCell = cell else { return }
             // We can get here even after calling cancelPreviewImageRequest (looks like a race condition in PHImageManager)
             // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
             // This can also be called before returning from requestPreviewImage (synchronously) if the image is cached by PHImageManager
             let imageIsForThisCell = imageProvidedSynchronously || sSelf.previewRequests[sCell.hash]?.requestId == requestId
             if imageIsForThisCell {
-                sCell.image = result.image
+                sCell.image = image
+                sCell.durationString = sSelf.durationString(value: duration)
                 sSelf.previewRequests[sCell.hash] = nil
             }
         }
@@ -101,5 +102,34 @@ final class MediaInputCellProvider: MediaInputCellProviderProtocol {
                 sSelf.fullImageRequests[sCell.hash] = nil
         })
         self.fullImageRequests[cell.hash] = request
+    }
+
+    // MARK: - Helpers
+
+    private lazy var durationFormatterMinutes: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private lazy var durationFormatterHours: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.second, .minute, .hour]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private func durationString(value: TimeInterval) -> String? {
+        guard value != 0 else { return nil }
+
+        let secondsInHour: TimeInterval = 60 * 60
+        if value >= secondsInHour {
+            return self.durationFormatterHours.string(from: value)
+        } else {
+            return self.durationFormatterMinutes.string(from: value)
+        }
     }
 }

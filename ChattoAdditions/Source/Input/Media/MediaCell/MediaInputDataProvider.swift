@@ -25,7 +25,7 @@
 import PhotosUI
 import UIKit
 
-private class MediaInputDataProviderImageRequest: MediaInputDataProviderResourceRequestProtocol {
+private class MediaInputDataProviderResourceRequest: MediaInputDataProviderResourceRequestProtocol {
     fileprivate(set) var requestId: Int32 = -1
     private(set) var progress: Double = 0
     fileprivate var cancelBlock: (() -> Void)?
@@ -56,6 +56,39 @@ private class MediaInputDataProviderImageRequest: MediaInputDataProviderResource
         self.completionHandlers.forEach { $0(result) }
     }
 }
+
+private class MediaInputDataProviderPreviewRequest: MediaInputDataProviderPreviewRequestProtocol {
+    fileprivate(set) var requestId: Int32 = -1
+    private(set) var progress: Double = 0
+    fileprivate var cancelBlock: (() -> Void)?
+
+    private var progressHandlers = [MediaInputDataProviderProgressHandler]()
+    private var completionHandlers = [MediaInputDataProviderPreviewCompletion]()
+
+    func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
+                         completion: MediaInputDataProviderPreviewCompletion?) {
+        if let progressHandler = progressHandler {
+            self.progressHandlers.append(progressHandler)
+        }
+        if let completion = completion {
+            self.completionHandlers.append(completion)
+        }
+    }
+
+    func cancel() {
+        self.cancelBlock?()
+    }
+
+    fileprivate func handleProgressChange(with progress: Double) {
+        self.progressHandlers.forEach { $0(progress) }
+        self.progress = progress
+    }
+
+    fileprivate func handleCompletion(with image: UIImage?, duration: TimeInterval) {
+        self.completionHandlers.forEach { $0(image, duration) }
+    }
+}
+
 
 @objc
 final class MediaInputDataProvider: NSObject, MediaInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
@@ -113,25 +146,23 @@ final class MediaInputDataProvider: NSObject, MediaInputDataProviderProtocol, PH
 
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
+                             completion: @escaping MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol {
         guard let fetchResult = self.fetchResult, let imageManager = self.imageManager else {
             assertionFailure("MediaInputDataProvider is not prepared")
-            return MediaInputDataProviderImageRequest()
+            return MediaInputDataProviderPreviewRequest()
         }
         assert(index >= 0 && index < self.count, "Index out of bounds")
         let asset = fetchResult[index]
-        let request = MediaInputDataProviderImageRequest()
+        let request = MediaInputDataProviderPreviewRequest()
         request.observeProgress(with: nil, completion: completion)
         let options = self.makePreviewRequestOptions()
         var requestId: Int32 = -1
         requestId = imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
-            let result: MediaInputDataProviderResult
             if let image = image {
-                result = .successImage(image)
+                request.handleCompletion(with: image, duration: asset.duration)
             } else {
-                result = .error(info?[PHImageErrorKey] as? Error)
+                request.handleCompletion(with: nil, duration: 0)
             }
-            request.handleCompletion(with: result)
         }
         request.cancelBlock = { [weak imageManager] in
             imageManager?.cancelImageRequest(requestId)
@@ -145,7 +176,7 @@ final class MediaInputDataProvider: NSObject, MediaInputDataProviderProtocol, PH
                          completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
         guard let fetchResult = self.fetchResult, let imageManager = self.imageManager else {
             assertionFailure("MediaInputDataProvider is not prepared")
-            return MediaInputDataProviderImageRequest()
+            return MediaInputDataProviderResourceRequest()
         }
         assert(index >= 0 && index < self.count, "Index out of bounds")
         let asset = fetchResult[index]
@@ -153,7 +184,7 @@ final class MediaInputDataProvider: NSObject, MediaInputDataProviderProtocol, PH
         if let existedRequest = self.resourceRequest(at: index) {
             return existedRequest
         } else {
-            let request = MediaInputDataProviderImageRequest()
+            let request = MediaInputDataProviderResourceRequest()
             request.observeProgress(with: progressHandler, completion: completion)
             let options = self.makeFullImageRequestOptions()
             options.progressHandler = { (progress, _, _, _) -> Void in

@@ -34,7 +34,7 @@ protocol MediaInputDataProviderProtocol: class {
     @discardableResult
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol
+                             completion: @escaping MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol
 
     @discardableResult
     func requestResource(at index: Int,
@@ -45,6 +45,7 @@ protocol MediaInputDataProviderProtocol: class {
 
 typealias MediaInputDataProviderProgressHandler = (Double) -> Void
 typealias MediaInputDataProviderCompletion = (MediaInputDataProviderResult) -> Void
+typealias MediaInputDataProviderPreviewCompletion = (UIImage?, TimeInterval) -> Void
 
 enum MediaInputDataProviderResult {
     case successImage(UIImage)
@@ -57,13 +58,22 @@ enum MediaInputDataProviderResult {
     }
 }
 
-protocol MediaInputDataProviderResourceRequestProtocol: class {
+protocol MediaInputDataProviderRequestProtocol: AnyObject {
     var requestId: Int32 { get }
     var progress: Double { get }
 
+    func cancel()
+}
+
+protocol MediaInputDataProviderResourceRequestProtocol: MediaInputDataProviderRequestProtocol {
     func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
                          completion: MediaInputDataProviderCompletion?)
-    func cancel()
+
+}
+
+protocol MediaInputDataProviderPreviewRequestProtocol: MediaInputDataProviderRequestProtocol {
+    func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
+                         completion: MediaInputDataProviderPreviewCompletion?)
 }
 
 final class MediaInputWithPlaceholdersDataProvider: MediaInputDataProviderProtocol, MediaInputDataProviderDelegate {
@@ -84,7 +94,7 @@ final class MediaInputWithPlaceholdersDataProvider: MediaInputDataProviderProtoc
     @discardableResult
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
+                             completion: @escaping MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol {
         if index < self.mediaDataProvider.count {
             return self.mediaDataProvider.requestPreviewImage(at: index, targetSize: targetSize, completion: completion)
         } else {
