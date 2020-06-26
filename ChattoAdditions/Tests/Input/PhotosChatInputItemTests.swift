@@ -26,10 +26,10 @@ import XCTest
 @testable import ChattoAdditions
 
 class PhotosChatInputItemTests: XCTestCase {
-    private var inputItem: PhotosChatInputItem!
+    private var inputItem: MediaChatInputItem!
     override func setUp() {
         super.setUp()
-        self.inputItem = PhotosChatInputItem(presentingController: nil)
+        self.inputItem = MediaChatInputItem(presentingController: nil)
     }
 
     func testThat_PresentationModeIsCustomView() {
@@ -51,13 +51,13 @@ class PhotosChatInputItemTests: XCTestCase {
 
     func testThat_WhenInputViewSelectsImage_ItemPassedImageIntoPhotoHandler() {
         var handledImage: UIImage?
-        var handledSource: PhotosInputViewPhotoSource?
+        var handledSource: MediaInputViewSource?
         self.inputItem.photoInputHandler = { image, source in
             handledImage = image
             handledSource = source
         }
         let image = UIImage()
-        let source = PhotosInputViewPhotoSource.camera
+        let source = MediaInputViewSource.camera
         let inputView = MockPhotosInputView()
         self.inputItem.inputView(inputView, didSelectImage: image, source: source)
 
@@ -68,7 +68,7 @@ class PhotosChatInputItemTests: XCTestCase {
     func testThat_GivenItemIsSelected_WhenItemIsSelected_ItDoesntReloadInputView() {
         self.inputItem.selected = true
         let mockPhotosInputView = MockPhotosInputView()
-        self.inputItem.photosInputView = mockPhotosInputView
+        self.inputItem.mediaInputView = mockPhotosInputView
 
         self.inputItem.selected = true
 
@@ -76,8 +76,8 @@ class PhotosChatInputItemTests: XCTestCase {
     }
 }
 
-class MockPhotosInputView: PhotosInputViewProtocol {
-    weak var delegate: PhotosInputViewDelegate?
+class MockPhotosInputView: MediaInputViewProtocol {
+    weak var delegate: MediaInputViewDelegate?
     var presentingController: UIViewController?
 
     var reloaded: Bool = false

@@ -24,37 +24,38 @@
 
 import UIKit
 
-protocol PhotosInputCellProviderProtocol: class {
+protocol MediaInputCellProviderProtocol: class {
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
-                                            request: PhotosInputDataProviderImageRequestProtocol)
+                                            request: MediaInputDataProviderResourceRequestProtocol)
 }
 
-final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
+final class MediaInputCellProvider: MediaInputCellProviderProtocol {
     private let reuseIdentifier = "PhotosCellProvider"
     private let collectionView: UICollectionView
-    private let dataProvider: PhotosInputDataProviderProtocol
-    init(collectionView: UICollectionView, dataProvider: PhotosInputDataProviderProtocol) {
+    private let dataProvider: MediaInputDataProviderProtocol
+    
+    init(collectionView: UICollectionView, dataProvider: MediaInputDataProviderProtocol) {
         self.dataProvider = dataProvider
         self.collectionView = collectionView
-        self.collectionView.register(PhotosInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
+        self.collectionView.register(MediaInputCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! PhotosInputCell
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! MediaInputCell
         self.configureCell(cell, at: indexPath)
         return cell
     }
 
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
-                                            request: PhotosInputDataProviderImageRequestProtocol) {
-        guard let cell = self.collectionView.cellForItem(at: indexPath) as? PhotosInputCell else { return }
+                                            request: MediaInputDataProviderResourceRequestProtocol) {
+        guard let cell = self.collectionView.cellForItem(at: indexPath) as? MediaInputCell else { return }
         self.configureCellForFullImageLoadingIfNeeded(cell, request: request)
     }
 
-    private var previewRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
-    private var fullImageRequests = [Int: PhotosInputDataProviderImageRequestProtocol]()
-    private func configureCell(_ cell: PhotosInputCell, at indexPath: IndexPath) {
+    private var previewRequests = [Int: MediaInputDataProviderPreviewRequestProtocol]()
+    private var fullImageRequests = [Int: MediaInputDataProviderResourceRequestProtocol]()
+    private func configureCell(_ cell: MediaInputCell, at indexPath: IndexPath) {
         if let request = self.previewRequests[cell.hash] {
             self.previewRequests[cell.hash] = nil
             request.cancel()
@@ -68,26 +69,27 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
         }()
         var imageProvidedSynchronously = true
         var requestId: Int32 = -1
-        let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] result in
+        let request = self.dataProvider.requestPreviewImage(at: index, targetSize: targetSize) { [weak self, weak cell] image, duration in
             guard let sSelf = self, let sCell = cell else { return }
             // We can get here even after calling cancelPreviewImageRequest (looks like a race condition in PHImageManager)
             // Also, according to PHImageManager's documentation, this block can be called several times: we may receive an image with a low quality and then receive an update with a better one
             // This can also be called before returning from requestPreviewImage (synchronously) if the image is cached by PHImageManager
             let imageIsForThisCell = imageProvidedSynchronously || sSelf.previewRequests[sCell.hash]?.requestId == requestId
             if imageIsForThisCell {
-                sCell.image = result.image
+                sCell.image = image
+                sCell.durationString = sSelf.durationString(value: duration)
                 sSelf.previewRequests[sCell.hash] = nil
             }
         }
         requestId = request.requestId
         imageProvidedSynchronously = false
         self.previewRequests[cell.hash] = request
-        if let fullImageRequest = self.dataProvider.fullImageRequest(at: index) {
+        if let fullImageRequest = self.dataProvider.resourceRequest(at: index) {
             self.configureCellForFullImageLoadingIfNeeded(cell, request: fullImageRequest)
         }
     }
 
-    private func configureCellForFullImageLoadingIfNeeded(_ cell: PhotosInputCell, request: PhotosInputDataProviderImageRequestProtocol) {
+    private func configureCellForFullImageLoadingIfNeeded(_ cell: MediaInputCell, request: MediaInputDataProviderResourceRequestProtocol) {
         guard request.progress < 1 else { return }
         cell.showProgressView()
         cell.updateProgress(CGFloat(request.progress))
@@ -100,5 +102,34 @@ final class PhotosInputCellProvider: PhotosInputCellProviderProtocol {
                 sSelf.fullImageRequests[sCell.hash] = nil
         })
         self.fullImageRequests[cell.hash] = request
+    }
+
+    // MARK: - Helpers
+
+    private lazy var durationFormatterMinutes: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private lazy var durationFormatterHours: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.allowedUnits = [.second, .minute, .hour]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private func durationString(value: TimeInterval) -> String? {
+        guard value != 0 else { return nil }
+
+        let secondsInHour: TimeInterval = 60 * 60
+        if value >= secondsInHour {
+            return self.durationFormatterHours.string(from: value)
+        } else {
+            return self.durationFormatterMinutes.string(from: value)
+        }
     }
 }

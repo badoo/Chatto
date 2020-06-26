@@ -24,12 +24,13 @@
 
 import UIKit
 
-final class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol {
-    private let reuseIdentifier = "PhotosPlaceholderCellProvider"
+final class MediaInputPlaceholderCellProvider: MediaInputCellProviderProtocol {
+    private let reuseIdentifier = "MediaPlaceholderCellProvider"
     private let collectionView: UICollectionView
+    
     init(collectionView: UICollectionView) {
         self.collectionView = collectionView
-        self.collectionView.register(PhotosInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
+        self.collectionView.register(MediaInputPlaceholderCell.self, forCellWithReuseIdentifier: self.reuseIdentifier)
     }
 
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell {
@@ -37,6 +38,6 @@ final class PhotosInputPlaceholderCellProvider: PhotosInputCellProviderProtocol 
     }
 
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
-                                            request: PhotosInputDataProviderImageRequestProtocol) {
+                                            request: MediaInputDataProviderResourceRequestProtocol) {
     }
 }
