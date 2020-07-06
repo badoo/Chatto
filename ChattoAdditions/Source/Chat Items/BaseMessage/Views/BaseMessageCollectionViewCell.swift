@@ -101,14 +101,17 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             oldValue?.avatarImage.removeObserver(self)
             self.updateViews()
             self.observeAvatar()
+            self.addBubbleViewConstraintsIfNeeded()
         }
     }
 
     public var baseStyle: BaseMessageCollectionViewCellStyleProtocol! {
         didSet {
             self.updateViews()
+            self.addBubbleViewConstraintsIfNeeded()
         }
     }
+
     private var shouldShowFailedIcon: Bool {
         return self.messageViewModel?.decorationAttributes.canShowFailedIcon == true && self.messageViewModel?.isShowingFailedIcon == true
     }
@@ -120,6 +123,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             }
         }
     }
+
+    open var useAutolayoutForBubbleView: Bool { false }
 
     open var canCalculateSizeInBackground: Bool {
         return self.bubbleView.canCalculateSizeInBackground
@@ -258,14 +263,40 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     // MARK: layout
+
+    private var didAddConstraintsForBubbleView = false
+    private func addBubbleViewConstraintsIfNeeded() {
+        guard !self.didAddConstraintsForBubbleView, let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
+        guard self.useAutolayoutForBubbleView else { return }
+        self.didAddConstraintsForBubbleView = true
+        let layoutConstants = style.layoutConstants(viewModel: viewModel)
+        let percentage = layoutConstants.maxContainerWidthPercentageForBubbleView
+        let offset = layoutConstants.horizontalMargin + layoutConstants.horizontalInterspacing
+        let xConstraint: NSLayoutConstraint
+        if viewModel.isIncoming {
+            xConstraint = bubbleView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: offset)
+        } else {
+            xConstraint = bubbleView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -offset)
+        }
+
+        NSLayoutConstraint.activate([
+            bubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            bubbleView.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: percentage),
+            bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            xConstraint
+        ])
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
 
         let layout = self.calculateLayout(availableWidth: self.contentView.bounds.width)
         self.failedButton.bma_rect = layout.failedButtonFrame
-        self.bubbleView.bma_rect = layout.bubbleViewFrame
-        self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
-        self.bubbleView.layoutIfNeeded()
+        if !self.useAutolayoutForBubbleView {
+            self.bubbleView.bma_rect = layout.bubbleViewFrame
+            self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
+            self.bubbleView.layoutIfNeeded()
+        }
 
         self.avatarView.bma_rect = layout.avatarViewFrame
         self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
@@ -288,7 +319,13 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return self.calculateLayout(availableWidth: size.width).size
+        if self.useAutolayoutForBubbleView {
+            return contentView.systemLayoutSizeFitting(.init(width: size.width, height: 0),
+                                                       withHorizontalFittingPriority: .required,
+                                                       verticalFittingPriority: .defaultLow)
+        } else {
+            return self.calculateLayout(availableWidth: size.width).size
+        }
     }
 
     private func calculateLayout(availableWidth: CGFloat) -> Layout {

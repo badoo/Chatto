@@ -35,6 +35,11 @@ final class BaseChatViewControllerView: UIView, BaseChatViewControllerViewProtoc
     var bmaInputAccessoryView: UIView?
 
     override var inputAccessoryView: UIView? {
-        return self.bmaInputAccessoryView
+        get {
+            return self.bmaInputAccessoryView
+        }
+        set {
+            self.bmaInputAccessoryView = newValue
+        }
     }
 }

@@ -36,7 +36,6 @@ final class TestableCompoundMessagePresenter: CompoundMessagePresenter<FakeViewM
             sizingCell: CompoundMessageCollectionViewCell(frame: .zero),
             baseCellStyle: StubMessageCollectionViewCellStyle(),
             compoundCellStyle: StubCompoundBubbleViewStyle(),
-            compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions(spacing: 0, contentInsets: .zero),
             cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>(),
             accessibilityIdentifier: nil
         )

@@ -1,3 +1,29 @@
+### 3.6.0 (April 24, 2020)
+
+#### Features
+
+- Multiline placeholder support #640 by [@Ssimboss](https://github.com/Ssimboss)
+
+#### Improvements
+
+- Add explicit dependency on Chatto #646 by [@wiruzx](https://github.com/wiruzx)
+- Allow to specify orientation in default keyboard height #630 by [@leonspok](https://github.com/leonspok)
+- Improve scroll performance #629 by [@AntonPalich](https://github.com/AntonPalich)
+- Disable BUILD_LIBRARY_FOR_DISTRIBUTION option #626 by [@dive](https://github.com/dive)
+- Enable module stability support #625 by [@dive](https://github.com/dive)
+- Open avatar for customization #624 by [@wiruzx](https://github.com/wiruzx)
+- Fix product name #622 by [@wiruzx](https://github.com/wiruzx)
+- Fix imports #612 by [@wiruzx](https://github.com/wiruzx)
+
+#### Bugfixes
+
+- Fix crash on termination #648 by [@dive](https://github.com/dive)
+- Made overridden inputAccessoryView read-write #644 by [@azatZul](https://github.com/azatZul)
+- Fix jumping with long text in text input #642 by [@leonspok](https://github.com/leonspok)
+- Fix wrong scroll indicator insets on iOS 13 #627 by [@AntonPalich](https://github.com/AntonPalich)
+- Fix scrolled position after frame change #623 by [@leonspok](https://github.com/leonspok)
+- Fix input bar position #620 by [@magic146](https://github.com/magic146)
+
 ### 3.5.0 (September 12, 2019)
 
 #### Features

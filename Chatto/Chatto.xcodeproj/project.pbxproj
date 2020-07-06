@@ -44,7 +44,7 @@
 			containerPortal = C32BB7171BE0504D0069EC50 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C32BB71F1BE0504D0069EC50;
-			remoteInfo = BMAChatFramework;
+			remoteInfo = Chatto;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -240,7 +240,7 @@
 			dependencies = (
 			);
 			name = Chatto;
-			productName = BMAChatFramework;
+			productName = Chatto;
 			productReference = C32BB7201BE0504D0069EC50 /* Chatto.framework */;
 			productType = "com.apple.product-type.framework";
 		};
@@ -258,7 +258,7 @@
 				C32BB72D1BE0504D0069EC50 /* PBXTargetDependency */,
 			);
 			name = ChattoTests;
-			productName = BMAChatFrameworkTests;
+			productName = ChattoTests;
 			productReference = C32BB72A1BE0504D0069EC50 /* ChattoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
