@@ -76,23 +76,40 @@ class DemoChatViewController: BaseChatViewController {
     override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
-            viewModelBuilder: DemoTextMessageViewModelBuilder(),
-            interactionHandler: DemoTextMessageHandler(baseHandler: self.baseMessageHandler)
+            viewModelBuilder: self.createTextMessageViewModelBuilder(),
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: DemoPhotoMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
+
+        let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
+            viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
+            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            accessibilityIdentifier: nil,
+            contentFactories: [
+                .init(DemoTextMessageContentFactory()),
+                .init(DemoImageMessageContentFactory()),
+                .init(DemoDateMessageContentFactory())
+            ],
+            baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
+        )
 
         return [
             DemoTextMessageModel.chatItemType: [textMessagePresenter],
             DemoPhotoMessageModel.chatItemType: [photoMessagePresenter],
             SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
-            TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
+            TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()],
+            ChatItemType.compoundItemType: [compoundPresenterBuilder]
         ]
+    }
+
+    func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+        return DemoTextMessageViewModelBuilder()
     }
 
     func createChatInputItems() -> [ChatInputItemProtocol] {
@@ -115,7 +132,7 @@ class DemoChatViewController: BaseChatViewController {
 
     private func createPhotoInputItem() -> PhotosChatInputItem {
         let item = PhotosChatInputItem(presentingController: self)
-        item.photoInputHandler = { [weak self] image in
+        item.photoInputHandler = { [weak self] image, _ in
             self?.dataSource.addPhotoMessage(image)
         }
         return item

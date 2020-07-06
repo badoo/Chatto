@@ -35,4 +35,5 @@ public protocol InputPositionControlling: AnyObject {
 
     func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
     func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
+    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)?)
 }

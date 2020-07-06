@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public protocol AccessoryViewRevealable {
     func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)

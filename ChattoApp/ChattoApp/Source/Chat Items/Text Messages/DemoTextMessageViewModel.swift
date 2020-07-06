@@ -37,14 +37,23 @@ public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel
 }
 
 public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
-    public init() {}
+
+    typealias ObservableImageProvider = (DemoTextMessageModel) -> Observable<UIImage?>
+
+    private static let defaultObservableImageProvider: ObservableImageProvider = { _ in Observable(UIImage(named: "userAvatar")) }
+
+    private let imageProvider: ObservableImageProvider
+
+    init(imageProvider: @escaping ObservableImageProvider = DemoTextMessageViewModelBuilder.defaultObservableImageProvider) {
+        self.imageProvider = imageProvider
+    }
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
     public func createViewModel(_ textMessage: DemoTextMessageModel) -> DemoTextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = DemoTextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
-        textMessageViewModel.avatarImage.value = UIImage(named: "userAvatar")
+        textMessageViewModel.avatarImage = self.imageProvider(textMessage)
         return textMessageViewModel
     }
 

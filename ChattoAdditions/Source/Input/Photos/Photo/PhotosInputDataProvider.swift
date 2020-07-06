@@ -60,44 +60,64 @@ private class PhotosInputDataProviderImageRequest: PhotosInputDataProviderImageR
 @objc
 final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, PHPhotoLibraryChangeObserver {
     weak var delegate: PhotosInputDataProviderDelegate?
-    private var imageManager = PHCachingImageManager()
-    private var fetchResult: PHFetchResult<PHAsset>!
+    private var imageManager: PHCachingImageManager?
+    private var fetchResult: PHFetchResult<PHAsset>?
     private var fullImageRequests = [PHAsset: PhotosInputDataProviderImageRequestProtocol]()
-    override init() {
-        func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
-            let options = PHFetchOptions()
-            options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
-            options.predicate = predicate
-            return options
-        }
-
-        if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
-            self.fetchResult = PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
-        } else {
-            self.fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions(nil))
-        }
-        super.init()
-        PHPhotoLibrary.shared().register(self)
-    }
 
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
+    func prepare(_ completion: @escaping () -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else {
+                DispatchQueue.main.async(execute: completion)
+                return
+            }
+
+            func fetchOptions(_ predicate: NSPredicate?) -> PHFetchOptions {
+                let options = PHFetchOptions()
+                options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+                options.predicate = predicate
+                return options
+            }
+
+            let fetchResult: PHFetchResult<PHAsset> = {
+                if let userLibraryCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
+                    return PHAsset.fetchAssets(in: userLibraryCollection, options: fetchOptions(NSPredicate(format: "mediaType = \(PHAssetMediaType.image.rawValue)")))
+                } else {
+                    return PHAsset.fetchAssets(with: .image, options: fetchOptions(nil))
+                }
+            }()
+            let imageManager = PHCachingImageManager()
+            PHPhotoLibrary.shared().register(self)
+
+            DispatchQueue.main.async(execute: { [weak self] in
+                self?.fetchResult = fetchResult
+                self?.imageManager = imageManager
+                completion()
+            })
+        }
+    }
+
     var count: Int {
-        return self.fetchResult.count
+        return self.fetchResult?.count ?? 0
     }
 
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
                              completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
-        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
-        let asset = self.fetchResult[index]
+        guard let fetchResult = self.fetchResult, let imageManager = self.imageManager else {
+            assertionFailure("PhotosInputDataProvider is not prepared")
+            return PhotosInputDataProviderImageRequest()
+        }
+        assert(index >= 0 && index < self.count, "Index out of bounds")
+        let asset = fetchResult[index]
         let request = PhotosInputDataProviderImageRequest()
         request.observeProgress(with: nil, completion: completion)
         let options = self.makePreviewRequestOptions()
         var requestId: Int32 = -1
-        requestId = self.imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
+        requestId = imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { (image, info) in
             let result: PhotosInputDataProviderResult
             if let image = image {
                 result = .success(image)
@@ -106,8 +126,8 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             }
             request.handleCompletion(with: result)
         }
-        request.cancelBlock = { [weak self] in
-            self?.imageManager.cancelImageRequest(requestId)
+        request.cancelBlock = { [weak imageManager] in
+            imageManager?.cancelImageRequest(requestId)
         }
         request.requestId = requestId
         return request
@@ -116,11 +136,15 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
     func requestFullImage(at index: Int,
                           progressHandler: PhotosInputDataProviderProgressHandler?,
                           completion: @escaping PhotosInputDataProviderCompletion) -> PhotosInputDataProviderImageRequestProtocol {
-        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
+        guard let fetchResult = self.fetchResult, let imageManager = self.imageManager else {
+            assertionFailure("PhotosInputDataProvider is not prepared")
+            return PhotosInputDataProviderImageRequest()
+        }
+        assert(index >= 0 && index < self.count, "Index out of bounds")
         if let existedRequest = self.fullImageRequest(at: index) {
             return existedRequest
         } else {
-            let asset = self.fetchResult[index]
+            let asset = fetchResult[index]
             let request = PhotosInputDataProviderImageRequest()
             request.observeProgress(with: progressHandler, completion: completion)
             let options = self.makeFullImageRequestOptions()
@@ -131,7 +155,7 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
             }
             var requestId: Int32 = -1
             self.fullImageRequests[asset] = request
-            requestId = self.imageManager.requestImageData(for: asset, options: options, resultHandler: { [weak self] (data, _, _, info) in
+            requestId = imageManager.requestImageData(for: asset, options: options, resultHandler: { [weak self] (data, _, _, info) in
                 guard let sSelf = self else { return }
                 let result: PhotosInputDataProviderResult
                 if let data = data, let image = UIImage(data: data) {
@@ -152,14 +176,22 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
     }
 
     func fullImageRequest(at index: Int) -> PhotosInputDataProviderImageRequestProtocol? {
-        assert(index >= 0 && index < self.fetchResult.count, "Index out of bounds")
-        let asset = self.fetchResult[index]
+        guard let fetchResult = self.fetchResult else {
+            assertionFailure("PhotosInputDataProvider is not prepared")
+            return nil
+        }
+        assert(index >= 0 && index < self.count, "Index out of bounds")
+        let asset = fetchResult[index]
         return self.fullImageRequests[asset]
     }
 
     func cancelFullImageRequest(_ request: PhotosInputDataProviderImageRequestProtocol) {
+        guard let imageManager = self.imageManager else {
+            assertionFailure("PhotosInputDataProvider is not prepared")
+            return
+        }
         assert(Thread.isMainThread, "Cancel function is called not on Main Thread. It's not a thread-safe.")
-        self.imageManager.cancelImageRequest(request.requestId)
+        imageManager.cancelImageRequest(request.requestId)
         if let assetAndRequestPair = self.fullImageRequests.first(where: { $0.value === request }) {
             self.fullImageRequests[assetAndRequestPair.key] = nil
         }
@@ -167,7 +199,8 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
 
     private func makePreviewRequestOptions() -> PHImageRequestOptions {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .highQualityFormat
+        options.deliveryMode = .opportunistic
+        options.resizeMode = .fast
         options.isNetworkAccessAllowed = true
         return options
     }
@@ -183,9 +216,9 @@ final class PhotosInputDataProvider: NSObject, PhotosInputDataProviderProtocol, 
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         // Photos may call this method on a background queue; switch to the main queue to update the UI.
         DispatchQueue.main.async { [weak self]  in
-            guard let sSelf = self else { return }
+            guard let sSelf = self, let fetchResult = sSelf.fetchResult else { return }
 
-            if let changeDetails = changeInstance.changeDetails(for: sSelf.fetchResult) {
+            if let changeDetails = changeInstance.changeDetails(for: fetchResult) {
                 let updateBlock = { () -> Void in
                     self?.fetchResult = changeDetails.fetchResultAfterChanges
                 }

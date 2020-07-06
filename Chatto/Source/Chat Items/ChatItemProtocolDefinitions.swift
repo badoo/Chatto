@@ -22,11 +22,11 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public typealias ChatItemType = String
 
-public protocol ChatItemProtocol: class, UniqueIdentificable {
+public protocol ChatItemProtocol: AnyObject, UniqueIdentificable {
     var type: ChatItemType { get }
 }
 
@@ -34,17 +34,24 @@ public protocol ChatItemDecorationAttributesProtocol {
     var bottomMargin: CGFloat { get }
 }
 
-public protocol ChatItemPresenterProtocol: class {
+public protocol ChatItemMenuPresenterProtocol {
+    func shouldShowMenu() -> Bool
+    func canPerformMenuControllerAction(_ action: Selector) -> Bool
+    func performMenuControllerAction(_ action: Selector)
+}
+
+public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol {
     static func registerCells(_ collectionView: UICollectionView)
+
+    var isItemUpdateSupported: Bool { get }
+    func update(with chatItem: ChatItemProtocol)
+
     var canCalculateHeightInBackground: Bool { get } // Default is false
     func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
     func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?)
     func cellWillBeShown(_ cell: UICollectionViewCell) // optional
     func cellWasHidden(_ cell: UICollectionViewCell) // optional
-    func shouldShowMenu() -> Bool // optional. Default is false
-    func canPerformMenuControllerAction(_ action: Selector) -> Bool // optional. Default is false
-    func performMenuControllerAction(_ action: Selector) // optional
 }
 
 public extension ChatItemPresenterProtocol { // Optionals
@@ -60,4 +67,10 @@ public protocol ChatItemPresenterBuilderProtocol {
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol
     var presenterType: ChatItemPresenterProtocol.Type { get }
+}
+
+// MARK: - Updatable Chat Items
+
+public protocol ContentEquatableChatItemProtocol: ChatItemProtocol {
+    func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool
 }

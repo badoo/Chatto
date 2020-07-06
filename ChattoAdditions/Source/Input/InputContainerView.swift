@@ -22,15 +22,17 @@
  THE SOFTWARE.
  */
 
+import UIKit
+
 open class InputContainerView: UIInputView {
 
-    var contentHeight: CGFloat = 0 {
+    public var contentHeight: CGFloat = 0 {
         didSet {
             self.invalidateIntrinsicContentSize()
         }
     }
 
-    var contentView: UIView? {
+    public var contentView: UIView? {
         willSet {
             self.contentView?.removeFromSuperview()
         }

@@ -22,6 +22,8 @@
  THE SOFTWARE.
 */
 
+import UIKit
+
 struct PhotosInputViewItemSizeCalculator {
     var itemsPerRow: Int = 0
     var interitemSpace: CGFloat = 0

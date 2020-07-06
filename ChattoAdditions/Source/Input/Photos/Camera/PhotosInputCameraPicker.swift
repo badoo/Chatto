@@ -25,16 +25,20 @@
 import UIKit
 
 final class PhotosInputCameraPicker: ImagePickerDelegate {
-    private weak var presentingController: UIViewController?
+    private let presentingControllerProvider: () -> UIViewController?
     private var imagePicker: ImagePicker?
     private var completionBlocks: (onImageTaken: (UIImage?) -> Void, onCameraPickerDismissed: () -> Void)?
 
-    init(presentingController: UIViewController?) {
-        self.presentingController = presentingController
+    convenience init(presentingController: UIViewController?) {
+        self.init(presentingControllerProvider: { [weak presentingController] in presentingController })
+    }
+
+    init(presentingControllerProvider: @escaping () -> UIViewController?) {
+        self.presentingControllerProvider = presentingControllerProvider
     }
 
     func presentCameraPicker(onImageTaken: @escaping (UIImage?) -> Void, onCameraPickerDismissed: @escaping () -> Void) {
-        guard let presentingController = self.presentingController,
+        guard let presentingController = self.presentingControllerProvider(),
             let imagePicker = ImagePickerStore.factory.makeImagePicker(delegate: self) else {
                 onImageTaken(nil)
                 onCameraPickerDismissed()

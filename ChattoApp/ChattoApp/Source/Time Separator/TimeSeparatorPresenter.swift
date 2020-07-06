@@ -55,6 +55,10 @@ class TimeSeparatorPresenter: ChatItemPresenterProtocol {
         collectionView.register(TimeSeparatorCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
     }
 
+    let isItemUpdateSupported = false
+
+    func update(with chatItem: ChatItemProtocol) {}
+
     func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
         return collectionView.dequeueReusableCell(withReuseIdentifier: TimeSeparatorPresenter.cellReuseIdentifier, for: indexPath)
     }

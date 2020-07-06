@@ -174,7 +174,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
 
 public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
 
-    static public func createDefaultBubbleMasks() -> BubbleMasks {
+    static func createDefaultBubbleMasks() -> BubbleMasks {
         return BubbleMasks(
             incomingTail: UIImage(named: "bubble-incoming-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
             incomingNoTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
@@ -184,7 +184,7 @@ public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultSizes() -> Sizes {
+    static func createDefaultSizes() -> Sizes {
         return Sizes(
             aspectRatioIntervalForSquaredSize: 0.90...1.10,
             photoSizeLandscape: CGSize(width: 210, height: 136),
@@ -193,7 +193,7 @@ public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultColors() -> Colors {
+    static func createDefaultColors() -> Colors {
         return Colors(
             placeholderIconTintIncoming: UIColor.bma_color(rgb: 0xced6dc),
             placeholderIconTintOutgoing: UIColor.bma_color(rgb: 0x508dfc),

@@ -22,15 +22,15 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 open class PhotosChatInputItem: ChatInputItemProtocol {
     public private(set) var supportsExpandableState: Bool = false
     public private(set) var expandedStateTopMargin: CGFloat = 0.0
-    
+
     typealias Class = PhotosChatInputItem
 
-    public var photoInputHandler: ((UIImage) -> Void)?
+    public var photoInputHandler: ((UIImage, PhotosInputViewPhotoSource) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
@@ -92,24 +92,26 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return self.internalTabView
     }
 
-    open func handleInput(_ input: AnyObject) {
-        if let image = input as? UIImage {
-            self.photoInputHandler?(image)
-        }
+    open func handleInput(_ input: AnyObject) {}
+
+    open var shouldSaveDraftMessage: Bool {
+        return false
     }
 }
 
 // MARK: - PhotosInputViewDelegate
 extension PhotosChatInputItem: PhotosInputViewDelegate {
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage) {
-        self.photoInputHandler?(image)
+    public func inputView(_ inputView: PhotosInputViewProtocol,
+                          didSelectImage image: UIImage,
+                          source: PhotosInputViewPhotoSource) {
+        self.photoInputHandler?(image, source)
     }
 
-    func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
         self.cameraPermissionHandler?()
     }
 
-    func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
         self.photosPermissionHandler?()
     }
 }

@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 // If you wish to use your custom view instead of BaseChatViewControllerView, you must implement this protocol.
 public protocol BaseChatViewControllerViewProtocol: class {
@@ -35,6 +35,11 @@ final class BaseChatViewControllerView: UIView, BaseChatViewControllerViewProtoc
     var bmaInputAccessoryView: UIView?
 
     override var inputAccessoryView: UIView? {
-        return self.bmaInputAccessoryView
+        get {
+            return self.bmaInputAccessoryView
+        }
+        set {
+            self.bmaInputAccessoryView = newValue
+        }
     }
 }

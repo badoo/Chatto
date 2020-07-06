@@ -22,18 +22,24 @@
  THE SOFTWARE.
 */
 
+import UIKit
 import CoreGraphics
 
 public extension UIEdgeInsets {
-    public var bma_horziontalInset: CGFloat {
+    var bma_horziontalInset: CGFloat {
         return self.left + self.right
     }
 
-    public var bma_verticalInset: CGFloat {
+    var bma_verticalInset: CGFloat {
         return self.top + self.bottom
     }
+}
 
-    public var bma_hashValue: Int {
-        return self.top.hashValue ^ self.left.hashValue ^ self.bottom.hashValue ^ self.right.hashValue
+extension UIEdgeInsets: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.top)
+        hasher.combine(self.left)
+        hasher.combine(self.bottom)
+        hasher.combine(self.right)
     }
 }

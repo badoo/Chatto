@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 open class TextChatInputItem {
     typealias Class = TextChatInputItem
@@ -83,5 +83,9 @@ extension TextChatInputItem: ChatInputItemProtocol {
         if let text = input as? String {
             self.textInputHandler?(text)
         }
+    }
+
+    public var shouldSaveDraftMessage: Bool {
+        return false
     }
 }
