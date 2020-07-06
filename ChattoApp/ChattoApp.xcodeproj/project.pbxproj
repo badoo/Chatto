@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */; };
 		0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */; };
+		266C7AE124B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */; };
 		268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */; };
 		268CD56F21FA485500DEE2C2 /* GenericMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */; };
 		268CD57121FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */; };
@@ -78,6 +79,7 @@
 		0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellsViewController.swift; sourceTree = "<group>"; };
 		0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWithTabBarExamplesViewController.swift; sourceTree = "<group>"; };
 		13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChattoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoEmojiDecorationViewFactory.swift; sourceTree = "<group>"; };
 		268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageModel.swift; sourceTree = "<group>"; };
 		268CD56E21FA485500DEE2C2 /* GenericMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericMessageHandler.swift; sourceTree = "<group>"; };
 		268CD57021FB704500DEE2C2 /* DemoCompoundMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageViewModel.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */,
 				268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */,
 				268CD57D220377D500DEE2C2 /* DemoDateMessageContentFactory.swift */,
+				266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */,
 			);
 			path = "Compound Messages";
 			sourceTree = "<group>";
@@ -390,6 +393,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -505,6 +509,7 @@
 				C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */,
 				C3F91DCE1C75EFE300D461D2 /* SendingStatusPresenter.swift in Sources */,
 				C3F91DC51C75EF9E00D461D2 /* DemoTextMessageModel.swift in Sources */,
+				266C7AE124B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift in Sources */,
 				55EE230821BFFD6600D50A1C /* ScrollToBottomButtonChatViewController.swift in Sources */,
 				5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */,
 				26FAADC423747B1300F62D01 /* AsyncAvatarLoadingViewController.swift in Sources */,
