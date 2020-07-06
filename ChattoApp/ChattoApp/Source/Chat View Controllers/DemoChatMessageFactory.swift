@@ -55,12 +55,12 @@ class DemoChatMessageFactory {
         return photoMessageModel
     }
 
-    static func makeCompoundMessage(isIncoming: Bool) -> DemoCompoundMessageModel {
-        let messageModel = self.makeMessageModel(UUID().uuidString,
+    static func makeCompoundMessage(uid: String = UUID().uuidString, text: String? = nil, imageName: String? = nil, isIncoming: Bool) -> DemoCompoundMessageModel {
+        let messageModel = self.makeMessageModel(uid,
                                                  isIncoming: isIncoming,
                                                  type: .compoundItemType)
-        let text = isIncoming ? "Hello, how are you" : "I'm good, thanks, how about yourself?"
-        let imageName = isIncoming ? "pic-test-1" : "pic-test-2"
+        let text = text ?? (isIncoming ? "Hello, how are you" : "I'm good, thanks, how about yourself?")
+        let imageName = imageName ?? (isIncoming ? "pic-test-1" : "pic-test-2")
         let image = UIImage(named: imageName)!
         return DemoCompoundMessageModel(text: text,
                                         image: image,
@@ -164,8 +164,14 @@ extension DemoChatMessageFactory {
     static func makeCompoundMessages() -> [MessageModelProtocol] {
         return [
             self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(isIncoming: false),
             self.makeCompoundMessage(isIncoming: false)
-        ]
+        ].reversed()
     }
 
     private static let messagesSelectionMessages: [DemoMessage] = [

@@ -25,36 +25,43 @@ THE SOFTWARE.
 import XCTest
 @testable import Chatto
 
-class ReadOnlyOrderedDictionaryTests: XCTestCase {
+class ChatItemCompanionCollectionTests: XCTestCase {
 
-    var orderedDictionary: ReadOnlyOrderedDictionary<FakeChatItem>!
+    var companionCollection: ChatItemCompanionCollection!
+
     override func setUp() {
         super.setUp()
+        let fakeChatItemPresenter = FakePresenter()
         let items = [
-            FakeChatItem(uid: "3", type: "type3"),
-            FakeChatItem(uid: "1", type: "type1"),
-            FakeChatItem(uid: "2", type: "type2")
+            ChatItemCompanion(uid: "3", chatItem: FakeChatItem(uid: "3", type: "type3"), presenter: fakeChatItemPresenter, decorationAttributes: nil),
+            ChatItemCompanion(uid: "1", chatItem: FakeChatItem(uid: "1", type: "type1"), presenter: fakeChatItemPresenter, decorationAttributes: nil),
+            ChatItemCompanion(uid: "2", chatItem: FakeChatItem(uid: "#2", type: "type2"), presenter: fakeChatItemPresenter, decorationAttributes: nil)
         ]
-        self.orderedDictionary = ReadOnlyOrderedDictionary<FakeChatItem>(items: items)
+        self.companionCollection = ChatItemCompanionCollection(items: items)
     }
 
     func testThat_MapsCorrectly() {
-        XCTAssertEqual(self.orderedDictionary.map { $0.uid }, ["3", "1", "2"])
+        XCTAssertEqual(self.companionCollection.map { $0.uid }, ["3", "1", "2"])
     }
 
     func testThat_NumberOfItemsIsCorrect() {
-        XCTAssertEqual(self.orderedDictionary.count, 3)
+        XCTAssertEqual(self.companionCollection.count, 3)
     }
 
     func testThat_WhenSubscriptingByIndex_ThenReturnsCorrectValue() {
-        XCTAssertEqual(self.orderedDictionary[1].uid, "1")
+        XCTAssertEqual(self.companionCollection[1].uid, "1")
     }
 
     func testThat_WhenSubscriptingByExistingKey_ThenReturnsCorrectValue() {
-        XCTAssertEqual(self.orderedDictionary["3"]?.type, "type3")
+        XCTAssertEqual(self.companionCollection["3"]!.chatItem.type, "type3")
     }
 
     func testThat_WhenSubscriptingByNonExistingKey_ThenReturnsNil() {
-        XCTAssertTrue(self.orderedDictionary["non-existing"] == nil)
+        XCTAssertTrue(self.companionCollection["non-existing"] == nil)
+    }
+
+    func testThat_WhenSubscriptingByItemId_ThenReturnsTheSameItemAsSubscriptingByCompanionId() {
+        XCTAssertEqual(self.companionCollection["2"]!.uid, "2")
+        XCTAssertEqual(self.companionCollection["#2"]!.uid, "2")
     }
 }

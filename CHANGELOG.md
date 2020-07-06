@@ -1,3 +1,92 @@
+### 3.6.0 (April 24, 2020)
+
+#### Features
+
+- Multiline placeholder support #640 by [@Ssimboss](https://github.com/Ssimboss)
+
+#### Improvements
+
+- Add explicit dependency on Chatto #646 by [@wiruzx](https://github.com/wiruzx)
+- Allow to specify orientation in default keyboard height #630 by [@leonspok](https://github.com/leonspok)
+- Improve scroll performance #629 by [@AntonPalich](https://github.com/AntonPalich)
+- Disable BUILD_LIBRARY_FOR_DISTRIBUTION option #626 by [@dive](https://github.com/dive)
+- Enable module stability support #625 by [@dive](https://github.com/dive)
+- Open avatar for customization #624 by [@wiruzx](https://github.com/wiruzx)
+- Fix product name #622 by [@wiruzx](https://github.com/wiruzx)
+- Fix imports #612 by [@wiruzx](https://github.com/wiruzx)
+
+#### Bugfixes
+
+- Fix crash on termination #648 by [@dive](https://github.com/dive)
+- Made overridden inputAccessoryView read-write #644 by [@azatZul](https://github.com/azatZul)
+- Fix jumping with long text in text input #642 by [@leonspok](https://github.com/leonspok)
+- Fix wrong scroll indicator insets on iOS 13 #627 by [@AntonPalich](https://github.com/AntonPalich)
+- Fix scrolled position after frame change #623 by [@leonspok](https://github.com/leonspok)
+- Fix input bar position #620 by [@magic146](https://github.com/magic146)
+
+### 3.5.0 (September 12, 2019)
+
+#### Features
+- Support of using compound bubble for text messages #578 by [@magic146](https://github.com/magic146)
+- Support of custom menu presentation #584 by [@AntonPalich](https://github.com/AntonPalich)
+- Support of layout invalidation for compound bubble #586 by [@Wisors](https://github.com/Wisors)
+
+#### Improvements
+- Added accessibility identifier to text bubble #575 by [@wiruzx](https://github.com/wiruzx)
+- Migrated existing objc classes to Swift #579 by [@magic146](https://github.com/magic146)
+- Various compound bubble layout improvements #587 by [@turbulem](https://github.com/turbulem)
+- Added support for draft messages #580 by [@aabalaban](https://github.com/aabalaban)
+- Added `didLoseFocusOnItem` method to `ChatInputBarDelegate` #591 by [@magic146](https://github.com/magic146)
+- Improved cursor positioning #595 by [@leonspok](https://github.com/leonspok)
+- Added support of presenters reusing #596 by [@magic146](https://github.com/magic146)
+- Added support for updating message in content presenters #605 by [@wiruzx](https://github.com/wiruzx)
+
+#### Bugfixes
+- Fixed using correct uid for decorated item #570 by [@magic146](https://github.com/magic146)
+- Fixed filtering content factories #588 by [@Wisors](https://github.com/Wisors)
+- Fixed issue with wrong text size calculation in compound bubble #589 by [@AntonPalich](https://github.com/AntonPalich)
+- Replaced ReadOnlyOrderedDictionary with ChatItemCompanionCollection in order to support correct uids #590 by [@magic146](https://github.com/magic146)
+- Fixed updating `ExpandableTextView` bounds in iOS 13 #592 by [@magic146](https://github.com/magic146)
+- Fixed blurry images in the photo picker #594 by [@magic146](https://github.com/magic146)
+- Limited maximum scale of preview photos #597 by [@magic146](https://github.com/magic146)
+- Fixed calling completion in `changeInputContentBottomMarginTo` method #599 by [@leonspok](https://github.com/leonspok)
+- Fixed openning a link in a message #600 by [@magic146](https://github.com/magic146)
+- Fixed out of bounds crash due to stirng encoding #603 by [@turbulem](https://github.com/turbulem)
+- Fixed implicitly animating layout #604 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed issues with non-selectable links in iOS 13 #606 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed simultaniously recognizing tap and long press #608 by [@AntonPalich](https://github.com/AntonPalich)
+
+### 3.4.0 (April 23, 2019)
+
+#### Features
+- Added Xcode 10 and Swift 4.2 support #521 by [@AntonPalich](https://github.com/AntonPalich)
+- Added support for showing messages starting from the bottom of the chat #483 by [@rokemoon](https://github.com/rokemoon)
+- Added support for scrolling to a specific item in chat #542 by [@AntonPalich](https://github.com/AntonPalich)
+- Added accessibility identifiers to messages, photos input and input bar #517 by [@dive](https://github.com/dive)
+- Added support for an experimental input presenter that don't use `UIResponder.inputView` API to present a custom input views #536 by [@aabalaban](https://github.com/aabalaban) and [@magic146](https://github.com/magic146)
+- Added support for a compound bubble that shows a mixed content in a single bubble #545 by [@wiruzx](https://github.com/wiruzx)
+- Added accessibility identifiers to a compound bubble #556 by [@wiruzx](https://github.com/wiruzx)
+- Added ability to change an item type dynamically #548 by [@wiruzx](https://github.com/wiruzx)
+- Added support for intercepting paste action in input bar #558 and #560 by [@wiruzx](https://github.com/wiruzx)
+- Added support for copy action in compound bubble #573 by [@wiruzx](https://github.com/wiruzx)
+
+#### Improvements
+- Changed access modifier to `open` in `scrollToBottom` function #501 by [@azimin](https://github.com/azimin)
+- Added `@objc` modifier to `scrollToBottom` function #502 by [@azimin](https://github.com/azimin)
+- Added support for postponing a presenter factory initialization #528 by [@magic146](https://github.com/magic146)
+- Added `IDETemplateMacros` to workspaces #544 by [@wiruzx](https://github.com/wiruzx)
+- Changed some access modifiers to `public` in `ScreenMetric.swift` and `InputContainerView` #551 by [@magic146](https://github.com/magic146)
+- Various improvements to support a new input bar in Badoo #552 by [@magic146](https://github.com/magic146)
+
+#### Bug
+- Fixed an issue with wrong `inputAccessoryView` position on iOS 12 #530 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed an issue (introduced in #530) with wrong `inputView` height after dismissing a modally presented view controller #531 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed an issue (introduced in #530) with wrong `inputView` height after sending a multilin text message #568 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed an issue (introduced in #542) with double completion execution in performBatchUpdates #543 by [@AntonPalich](https://github.com/AntonPalich)
+- Fixed an issue (introduced in #545) with fractional bubble size #553 by [@wiruzx](https://github.com/wiruzx)
+- Fixed a crash caused by force unwrapped optional in case when a device was rotated with unopened tab with chat in `UITabBarViewController` #538 by [@alaija](https://github.com/alaija)
+- Fixed a freeze caused by `PHCachingImageManager` in some cases #566 by [@leonspok](https://github.com/leonspok)
+
 ### 3.3.1 (April 9, 2018)
 
 #### Bugs

@@ -25,6 +25,7 @@
 import UIKit
 
 protocol ChatInputBarPresenter: class {
+    var focusedItem: ChatInputItemProtocol? { get }
     var chatInputBar: ChatInputBar { get }
     func onDidBeginEditing()
     func onDidEndEditing()

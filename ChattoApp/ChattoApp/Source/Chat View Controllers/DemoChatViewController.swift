@@ -76,7 +76,7 @@ class DemoChatViewController: BaseChatViewController {
     override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
-            viewModelBuilder: DemoTextMessageViewModelBuilder(),
+            viewModelBuilder: self.createTextMessageViewModelBuilder(),
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
@@ -90,13 +90,14 @@ class DemoChatViewController: BaseChatViewController {
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
             interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
                 .init(DemoImageMessageContentFactory()),
                 .init(DemoDateMessageContentFactory())
-            ]
+            ],
+            baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
         )
-        compoundPresenterBuilder.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         return [
             DemoTextMessageModel.chatItemType: [textMessagePresenter],
@@ -105,6 +106,10 @@ class DemoChatViewController: BaseChatViewController {
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()],
             ChatItemType.compoundItemType: [compoundPresenterBuilder]
         ]
+    }
+
+    func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+        return DemoTextMessageViewModelBuilder()
     }
 
     func createChatInputItems() -> [ChatInputItemProtocol] {
@@ -127,7 +132,7 @@ class DemoChatViewController: BaseChatViewController {
 
     private func createPhotoInputItem() -> PhotosChatInputItem {
         let item = PhotosChatInputItem(presentingController: self)
-        item.photoInputHandler = { [weak self] image in
+        item.photoInputHandler = { [weak self] image, _ in
             self?.dataSource.addPhotoMessage(image)
         }
         return item

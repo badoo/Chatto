@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public enum KeyboardStatus {
     case hiding
@@ -175,7 +175,14 @@ class KeyboardTracker {
         if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
             self.isPerformingForcedLayout = true
+
+            // Sometimes, the autolayout system doesn't finish the layout inside of the input bar container at this point.
+            // If it happens, then the input bar may have a height different than an input bar container.
+            // We need to ensure that their heights are the same; otherwise, it would lead to incorrect calculations that in turn affects lastKnownKeyboardHeight.
+            // Tracking view adjustment changes a keyboard height and triggers an update of lastKnownKeyboardHeight.
+            self.inputBarContainer.layoutIfNeeded()
             self.keyboardTrackerView.window?.layoutIfNeeded()
+
             self.isPerformingForcedLayout = false
         }
     }
@@ -239,18 +246,18 @@ private class KeyboardTrackingView: UIView {
         return self.preferredSize
     }
 
-    override func willMove(toSuperview newSuperview: UIView?) {
+    override func didMoveToSuperview() {
         if let observedView = self.observedView {
             observedView.removeObserver(self, forKeyPath: "center")
             self.observedView = nil
         }
 
-        if let newSuperview = newSuperview {
+        if let newSuperview = self.superview {
             newSuperview.addObserver(self, forKeyPath: "center", options: [.new, .old], context: nil)
             self.observedView = newSuperview
         }
 
-        super.willMove(toSuperview: newSuperview)
+        super.didMoveToSuperview()
     }
 
     override func observeValue(forKeyPath keyPath: String?,

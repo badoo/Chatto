@@ -31,6 +31,7 @@ public protocol ChatInputBarDelegate: class {
     func inputBarDidChangeText(_ inputBar: ChatInputBar)
     func inputBarSendButtonPressed(_ inputBar: ChatInputBar)
     func inputBar(_ inputBar: ChatInputBar, shouldFocusOnItem item: ChatInputItemProtocol) -> Bool
+    func inputBar(_ inputBar: ChatInputBar, didLoseFocusOnItem item: ChatInputItemProtocol)
     func inputBar(_ inputBar: ChatInputBar, didReceiveFocusOnItem item: ChatInputItemProtocol)
     func inputBarDidShowPlaceholder(_ inputBar: ChatInputBar)
     func inputBarDidHidePlaceholder(_ inputBar: ChatInputBar)
@@ -39,11 +40,20 @@ public protocol ChatInputBarDelegate: class {
 @objc
 open class ChatInputBar: ReusableXibView {
 
+    public var pasteActionInterceptor: PasteActionInterceptor? {
+        get { return self.textView.pasteActionInterceptor }
+        set { self.textView.pasteActionInterceptor = newValue }
+    }
+
     public weak var delegate: ChatInputBarDelegate?
     weak var presenter: ChatInputBarPresenter?
 
     public var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
         return !inputBar.textView.text.isEmpty
+    }
+
+    public var inputTextView: UITextView? {
+        return self.textView
     }
 
     @IBOutlet weak var scrollView: HorizontalStackScrollView!
@@ -202,7 +212,12 @@ extension ChatInputBar: ChatInputItemViewDelegate {
         let shouldFocus = self.delegate?.inputBar(self, shouldFocusOnItem: inputItem) ?? true
         guard shouldFocus else { return }
 
+        let previousFocusedItem = self.presenter?.focusedItem
         self.presenter?.onDidReceiveFocusOnItem(inputItem)
+
+        if let previousFocusedItem = previousFocusedItem {
+            self.delegate?.inputBar(self, didLoseFocusOnItem: previousFocusedItem)
+        }
         self.delegate?.inputBar(self, didReceiveFocusOnItem: inputItem)
     }
 }
@@ -275,15 +290,14 @@ extension ChatInputBar: UITextViewDelegate {
     }
 
     public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
-        let range = self.textView.text.bma_rangeFromNSRange(nsRange)
-        if let maxCharactersCount = self.maxCharactersCount {
-            let currentCount = textView.text.count
-            let rangeLength = textView.text[range].count
-            let nextCount = currentCount - rangeLength + text.count
-            return UInt(nextCount) <= maxCharactersCount
-        }
-        return true
+        guard let maxCharactersCount = self.maxCharactersCount else { return true }
+        let currentText: NSString = textView.text as NSString
+        let currentCount = currentText.length
+        let rangeLength = nsRange.length
+        let nextCount = currentCount - rangeLength + (text as NSString).length
+        return UInt(nextCount) <= maxCharactersCount
     }
+
 }
 
 // MARK: ExpandableTextViewPlaceholderDelegate
@@ -294,17 +308,5 @@ extension ChatInputBar: ExpandableTextViewPlaceholderDelegate {
 
     public func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView) {
         self.delegate?.inputBarDidHidePlaceholder(self)
-    }
-}
-
-private extension String {
-    func bma_rangeFromNSRange(_ nsRange: NSRange) -> Range<String.Index> {
-        guard
-            let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
-            let to16 = utf16.index(from16, offsetBy: nsRange.length, limitedBy: utf16.endIndex),
-            let from = String.Index(from16, within: self),
-            let to = String.Index(to16, within: self)
-            else { return  self.startIndex..<self.startIndex }
-        return from ..< to
     }
 }

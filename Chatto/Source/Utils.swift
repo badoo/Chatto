@@ -44,4 +44,26 @@ extension UIScrollView {
             viewController.automaticallyAdjustsScrollViewInsets = enabled
         #endif
     }
+
+    func chatto_setAutomaticallyAdjustsScrollIndicatorInsets(_ adjusts: Bool) {
+        if #available(iOS 13.0, *) {
+            self.automaticallyAdjustsScrollIndicatorInsets = adjusts
+        }
+    }
+
+    func chatto_setVerticalScrollIndicatorInsets(_ insets: UIEdgeInsets) {
+        if #available(iOS 11.1, *) {
+            self.verticalScrollIndicatorInsets = insets
+        } else {
+            self.scrollIndicatorInsets = insets
+        }
+    }
+}
+
+extension UICollectionView {
+    func chatto_setIsPrefetchingEnabled(_ isPrefetchingEnabled: Bool) {
+        if #available(iOS 10.0, *) {
+            self.isPrefetchingEnabled = isPrefetchingEnabled
+        }
+    }
 }

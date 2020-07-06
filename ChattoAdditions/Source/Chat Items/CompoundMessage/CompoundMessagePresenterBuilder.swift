@@ -26,7 +26,7 @@ import Chatto
 @available(iOS 11, *)
 public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
-    ViewModelBuilderT.ModelT: Equatable,
+    ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
@@ -35,19 +35,26 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public init(
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
-        contentFactories: [AnyMessageContentFactory<ModelT>]) {
+        accessibilityIdentifier: String?,
+        contentFactories: [AnyMessageContentFactory<ModelT>],
+        compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle(),
+        baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
         self.contentFactories = contentFactories
+        self.accessibilityIdentifier = accessibilityIdentifier
+        self.compoundCellStyle = compoundCellStyle
+        self.baseCellStyle = baseCellStyle
     }
 
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
-    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell<ModelT>()
-    public lazy var compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle()
-    public lazy var baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()
+    public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
+    private let compoundCellStyle: CompoundBubbleViewStyleProtocol
+    private let baseCellStyle: BaseMessageCollectionViewCellStyleProtocol
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()
+    private let accessibilityIdentifier: String?
 
     public func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
         return self.viewModelBuilder.canCreateViewModel(fromModel: chatItem)
@@ -63,7 +70,8 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             sizingCell: self.sizingCell,
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
-            cache: self.cache
+            cache: self.cache,
+            accessibilityIdentifier: self.accessibilityIdentifier
         )
     }
 

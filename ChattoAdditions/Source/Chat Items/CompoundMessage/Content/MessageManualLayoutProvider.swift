@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
     func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
@@ -77,7 +78,7 @@ public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderP
         self.imageSize = imageSize
     }
 
-    public func sizeThatFits(size: CGSize, safeAreaInsets _: UIEdgeInsets) -> CGSize {
+    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
         let ratio = self.imageSize.width / self.imageSize.height
         return CGSize(width: size.width, height: size.width / ratio).bma_round()
     }

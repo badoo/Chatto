@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-import Foundation
+import UIKit
 
 public protocol ChatItemPresenterFactoryProtocol {
     func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol

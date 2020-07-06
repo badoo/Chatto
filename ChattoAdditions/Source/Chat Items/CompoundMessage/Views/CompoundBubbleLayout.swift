@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import UIKit
+
 public struct CompoundBubbleLayout {
     public let size: CGSize
     public let subviewsFrames: [CGRect]
@@ -73,25 +75,34 @@ public struct CompoundBubbleLayoutProvider {
         return layout
     }
 
+    private typealias RectWithLayoutProvider = (frame: CGRect, provider: MessageManualLayoutProviderProtocol)
+
     private func makeLayout(forMaxWidth width: CGFloat) -> CompoundBubbleLayout {
-        var subviewsFrames: [CGRect] = []
-        subviewsFrames.reserveCapacity(self.configuration.layoutProviders.count)
-        var maxY: CGFloat = 0
-        var resultWidth: CGFloat = 0
-        let sizeToFit = CGSize(width: width,
-                               height: .greatestFiniteMagnitude)
+        var subviewsFramesWithProviders: [RectWithLayoutProvider] = []
+        subviewsFramesWithProviders.reserveCapacity(self.configuration.layoutProviders.count)
         let safeAreaInsets = self.safeAreaInsets()
-        for layoutProvider in self.configuration.layoutProviders {
-            let size = layoutProvider.sizeThatFits(size: sizeToFit, safeAreaInsets: safeAreaInsets)
+
+        var resultWidth: CGFloat = 0
+        var maxY: CGFloat = 0
+        self.configuration.layoutProviders.forEach { layoutProvider in
+            let frame: CGRect
+            let size = layoutProvider.sizeThatFits(size: CGSize(width: width, height: .greatestFiniteMagnitude), safeAreaInsets: safeAreaInsets)
             let viewWidth = max(size.width, resultWidth)
             resultWidth = min(viewWidth, width)
-            let frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
-            subviewsFrames.append(frame)
+            frame = CGRect(x: 0, y: maxY, width: viewWidth, height: size.height)
+            subviewsFramesWithProviders.append((frame, layoutProvider))
             maxY = frame.maxY
         }
+
+        subviewsFramesWithProviders = subviewsFramesWithProviders.map { frameWithProvider in
+            var newFrame = frameWithProvider.frame
+            newFrame.size.width = resultWidth
+            return (newFrame, frameWithProvider.provider)
+        }
+
         return CompoundBubbleLayout(
-            size: CGSize(width: resultWidth, height: maxY),
-            subviewsFrames: subviewsFrames,
+            size: CGSize(width: resultWidth, height: maxY).bma_round(),
+            subviewsFrames: subviewsFramesWithProviders.map({ $0.frame }),
             safeAreaInsets: safeAreaInsets
         )
     }

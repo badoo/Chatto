@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import Chatto
 
 open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -33,31 +34,37 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
-    public init (
-        messageModel: ModelT,
-        viewModelBuilder: ViewModelBuilderT,
-        interactionHandler: InteractionHandlerT?,
-        sizingCell: TextMessageCollectionViewCell,
-        baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
-        textCellStyle: TextMessageCollectionViewCellStyleProtocol,
-        layoutCache: NSCache<AnyObject, AnyObject>) {
-            self.layoutCache = layoutCache
-            self.textCellStyle = textCellStyle
-            super.init(
-                messageModel: messageModel,
-                viewModelBuilder: viewModelBuilder,
-                interactionHandler: interactionHandler,
-                sizingCell: sizingCell,
-                cellStyle: baseCellStyle
-            )
+    public init (messageModel: ModelT,
+                 viewModelBuilder: ViewModelBuilderT,
+                 interactionHandler: InteractionHandlerT?,
+                 sizingCell: TextMessageCollectionViewCell,
+                 baseCellStyle: BaseMessageCollectionViewCellStyleProtocol,
+                 textCellStyle: TextMessageCollectionViewCellStyleProtocol,
+                 layoutCache: NSCache<AnyObject, AnyObject>,
+                 menuPresenter: TextMessageMenuItemPresenterProtocol?) {
+        self.layoutCache = layoutCache
+        self.textCellStyle = textCellStyle
+        self.menuPresenter = menuPresenter
+        super.init(
+            messageModel: messageModel,
+            viewModelBuilder: viewModelBuilder,
+            interactionHandler: interactionHandler,
+            sizingCell: sizingCell,
+            cellStyle: baseCellStyle
+        )
     }
 
+    private let menuPresenter: TextMessageMenuItemPresenterProtocol?
     let layoutCache: NSCache<AnyObject, AnyObject>
     let textCellStyle: TextMessageCollectionViewCellStyleProtocol
 
     public final override class func registerCells(_ collectionView: UICollectionView) {
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-incoming")
         collectionView.register(TextMessageCollectionViewCell.self, forCellWithReuseIdentifier: "text-message-outcoming")
+    }
+
+    open override var isItemUpdateSupported: Bool {
+        return true
     }
 
     public final override func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
@@ -106,20 +113,14 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     open override func canShowMenu() -> Bool {
-        return true
+        return self.menuPresenter?.shouldShowMenu(for: self.messageViewModel.text, item: self.messageModel) ?? false
     }
 
     open override func canPerformMenuControllerAction(_ action: Selector) -> Bool {
-        let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        return action == selector
+        return self.menuPresenter?.canPerformMenuControllerAction(action, for: self.messageViewModel.text, item: self.messageModel) ?? false
     }
 
     open override func performMenuControllerAction(_ action: Selector) {
-        let selector = #selector(UIResponderStandardEditActions.copy(_:))
-        if action == selector {
-            UIPasteboard.general.string = self.messageViewModel.text
-        } else {
-            assert(false, "Unexpected action")
-        }
+        self.menuPresenter?.performMenuControllerAction(action, for: self.messageViewModel.text, item: self.messageModel)
     }
 }

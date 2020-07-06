@@ -108,7 +108,32 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
     }
 
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        return self.layoutModel.layoutAttributes.filter { $0.frame.intersects(rect) }
+        var attributesArray = [UICollectionViewLayoutAttributes]()
+        
+        // Find any cell that sits within the query rect.
+        guard let firstMatchIndex = self.layoutModel.layoutAttributes.binarySearch(predicate: { attribute in
+            if attribute.frame.intersects(rect) {
+                return .orderedSame
+            }
+            if attribute.frame.minY > rect.maxY {
+                return .orderedDescending
+            }
+            return .orderedAscending
+        }) else { return attributesArray }
+        
+        // Starting from the match, loop up and down through the array until all the attributes
+        // have been added within the query rect.
+        for attributes in self.layoutModel.layoutAttributes[..<firstMatchIndex].reversed() {
+            guard attributes.frame.maxY >= rect.minY else { break }
+            attributesArray.append(attributes)
+        }
+        
+        for attributes in self.layoutModel.layoutAttributes[firstMatchIndex...] {
+            guard attributes.frame.minY <= rect.maxY else { break }
+            attributesArray.append(attributes)
+        }
+        
+        return attributesArray
     }
 
     open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -121,5 +146,25 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
 
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return self.layoutModel.calculatedForWidth != newBounds.width
+    }
+}
+
+private extension Array {
+    
+    func binarySearch(predicate: (Element) -> ComparisonResult) -> Index? {
+        var lowerBound = startIndex
+        var upperBound = endIndex
+        
+        while lowerBound < upperBound {
+            let midIndex = lowerBound + (upperBound - lowerBound) / 2
+            if predicate(self[midIndex]) == .orderedSame {
+                return midIndex
+            } else if predicate(self[midIndex]) == .orderedAscending {
+                lowerBound = midIndex + 1
+            } else {
+                upperBound = midIndex
+            }
+        }
+        return nil
     }
 }
