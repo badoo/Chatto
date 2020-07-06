@@ -44,6 +44,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let initialContentFactories: [AnyMessageContentFactory<ModelT>]
     private var contentFactories: [AnyMessageContentFactory<ModelT>]!
     private var contentPresenters: [MessageContentPresenterProtocol]!
+    private let initialDecorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
+    private var decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = []
     private var menuPresenter: ChatItemMenuPresenterProtocol?
 
     public init(
@@ -56,6 +58,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         compoundCellStyle: CompoundBubbleViewStyleProtocol,
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
         accessibilityIdentifier: String?,
+        decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
         cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self
     ) {
         self.compoundCellStyle = compoundCellStyle
@@ -63,6 +66,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.cache = cache
         self.accessibilityIdentifier = accessibilityIdentifier
         self.cellClass = cellClass
+        self.initialDecorationFactories = decorationFactories
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -119,6 +123,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         }
 
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
+
+        self.decorationFactories = self.initialDecorationFactories.filter { $0.canCreateDecorationView(for: self.messageModel) }
     }
 
     open func updateExistingContentPresenters(with newMessage: Any) {
@@ -151,20 +157,20 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
         super.configureCell(compoundCell, decorationAttributes: decorationAttributes, animated: animated) { [weak self] in
             defer { additionalConfiguration?() }
-            guard let sSelf = self else { return }
+            guard let self = self else { return }
 
             let bubbleView = compoundCell.bubbleView!
 
             if bubbleView.decoratedContentViews == nil {
-                bubbleView.accessibilityIdentifier = sSelf.accessibilityIdentifier
-                bubbleView.decoratedContentViews = zip(sSelf.contentFactories, sSelf.contentPresenters).map { factory, presenter in
+                bubbleView.accessibilityIdentifier = self.accessibilityIdentifier
+                bubbleView.decoratedContentViews = zip(self.contentFactories, self.contentPresenters).map { factory, presenter in
                     return CompoundBubbleView.DecoratedView(view: factory.createContentView(), showBorder: presenter.showBorder)
                 }
             }
 
-            bubbleView.viewModel = sSelf.messageViewModel
-            bubbleView.layoutProvider = sSelf.layoutProvider
-            bubbleView.style = sSelf.compoundCellStyle
+            bubbleView.viewModel = self.messageViewModel
+            bubbleView.layoutProvider = self.layoutProvider
+            bubbleView.style = self.compoundCellStyle
 
             /*
              There is a current algorithm of binding (and unbinding, as well) compoundCell's views to their presenters:
@@ -173,11 +179,17 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
              3. CompoundCell's views bound with a current compound message presenters.
              */
 
-            sSelf.contentPresenters.forEach { $0.unbindFromView() }
-            compoundCell.viewReferences = zip(sSelf.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
+            self.contentPresenters.forEach { $0.unbindFromView() }
+            compoundCell.viewReferences = zip(self.contentPresenters, bubbleView.decoratedContentViews!.map({ $0.view })).map { presenter, view in
                 let viewReference = ViewReference(to: view)
                 presenter.bindToView(with: viewReference)
                 return viewReference
+            }
+
+            compoundCell.decorationViews = self.decorationFactories.map { factory in
+                let view = factory.makeDecorationView(for: self.messageModel)
+                let layoutProvider = factory.makeLayoutProvider(for: self.messageModel)
+                return (view,layoutProvider)
             }
         }
     }
