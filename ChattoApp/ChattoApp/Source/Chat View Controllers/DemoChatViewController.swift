@@ -96,6 +96,9 @@ class DemoChatViewController: BaseChatViewController {
                 .init(DemoImageMessageContentFactory()),
                 .init(DemoDateMessageContentFactory())
             ],
+            decorationFactories: [
+                .init(DemoEmojiDecorationViewFactory())
+            ],
             baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
         )
 
