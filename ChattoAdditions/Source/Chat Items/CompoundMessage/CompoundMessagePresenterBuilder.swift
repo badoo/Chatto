@@ -37,11 +37,13 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
         interactionHandler: InteractionHandlerT?,
         accessibilityIdentifier: String?,
         contentFactories: [AnyMessageContentFactory<ModelT>],
+        decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
         compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle(),
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
         self.contentFactories = contentFactories
+        self.decorationFactories = decorationFactories
         self.accessibilityIdentifier = accessibilityIdentifier
         self.compoundCellStyle = compoundCellStyle
         self.baseCellStyle = baseCellStyle
@@ -50,6 +52,7 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
+    private let decorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
     private let compoundCellStyle: CompoundBubbleViewStyleProtocol
     private let baseCellStyle: BaseMessageCollectionViewCellStyleProtocol
@@ -71,7 +74,8 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
             cache: self.cache,
-            accessibilityIdentifier: self.accessibilityIdentifier
+            accessibilityIdentifier: self.accessibilityIdentifier,
+            decorationFactories: self.decorationFactories
         )
     }
 
