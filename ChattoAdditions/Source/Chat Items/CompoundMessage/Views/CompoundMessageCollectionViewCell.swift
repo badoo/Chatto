@@ -54,7 +54,9 @@ open class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<Comp
         for (view, layoutProvider) in decorationViews {
             var frame = layoutProvider.makeLayout(from: bubbleView.bounds).frame
             frame.origin = bubbleView.convert(frame.origin, to: self.contentView)
-            view.frame = frame
+            CATransaction.performWithDisabledActions {
+                view.frame = frame
+            }
         }
     }
 }
