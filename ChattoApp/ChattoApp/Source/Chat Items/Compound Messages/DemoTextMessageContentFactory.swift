@@ -28,7 +28,7 @@ import VoodooLabChattoAdditions
 struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
 
     private let font = UIFont.systemFont(ofSize: 17)
-    private let textInsets = UIEdgeInsets.zero
+    private let textInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true

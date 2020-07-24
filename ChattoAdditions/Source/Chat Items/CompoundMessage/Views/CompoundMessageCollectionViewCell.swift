@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import UIKit
+
 @available(iOS 11, *)
 open class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
 
@@ -29,4 +31,32 @@ open class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<Comp
     }
 
     public final var viewReferences: [ViewReference]?
+
+    // MARK: - Decoration Views
+
+    public typealias DecorationViewWithLayout = (UIView, MessageDecorationViewLayoutProviderProtocol)
+
+    public var decorationViews: [DecorationViewWithLayout]? {
+        didSet {
+            for (view, _) in oldValue ?? [] {
+                view.removeFromSuperview()
+            }
+            for (view, _) in self.decorationViews ?? [] {
+                self.contentView.addSubview(view)
+            }
+        }
+    }
+
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let bubbleView = self.bubbleView,
+              let decorationViews = decorationViews else { return }
+        for (view, layoutProvider) in decorationViews {
+            var frame = layoutProvider.makeLayout(from: bubbleView.bounds).frame
+            frame.origin = bubbleView.convert(frame.origin, to: self.contentView)
+            CATransaction.performWithDisabledActions {
+                view.frame = frame
+            }
+        }
+    }
 }

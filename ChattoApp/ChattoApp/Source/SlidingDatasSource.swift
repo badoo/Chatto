@@ -85,6 +85,15 @@ public class SlidingDataSource<Element> {
         }
     }
 
+    public func removeRandomItem() {
+        guard let randomIndex = self.items.indices.randomElement() else { return }
+        let shouldShrinkWindow = self.itemsOffset + self.items.count == self.windowOffset + self.windowCount
+        if shouldShrinkWindow {
+            self.windowCount -= 1
+        }
+        self.items.remove(at: randomIndex)
+    }
+
     public func hasPrevious() -> Bool {
         return self.windowOffset > 0
     }

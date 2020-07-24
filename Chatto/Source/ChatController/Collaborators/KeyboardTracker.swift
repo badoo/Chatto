@@ -245,18 +245,16 @@ private class KeyboardTrackingView: UIView {
     override var intrinsicContentSize: CGSize {
         return self.preferredSize
     }
-    
-    override func willMove(toSuperview newSuperview: UIView?) {
-        if #available(iOS 13, *) {} else {
-            updateObserver(for: newSuperview)
-        }
-        
-        super.willMove(toSuperview: newSuperview)
-    }
-    
+
     override func didMoveToSuperview() {
-        if #available(iOS 13, *) {
-            updateObserver(for: superview)
+        if let observedView = self.observedView {
+            observedView.removeObserver(self, forKeyPath: "center")
+            self.observedView = nil
+        }
+
+        if let newSuperview = self.superview {
+            newSuperview.addObserver(self, forKeyPath: "center", options: [.new, .old], context: nil)
+            self.observedView = newSuperview
         }
 
         super.didMoveToSuperview()
@@ -274,18 +272,6 @@ private class KeyboardTrackingView: UIView {
             if oldCenter != newCenter {
                 self.positionChangedCallback?()
             }
-        }
-    }
-    
-    func updateObserver(for newSuperview: UIView?) {
-        if let observedView = self.observedView {
-            observedView.removeObserver(self, forKeyPath: "center")
-            self.observedView = nil
-        }
-
-        if let newSuperview = newSuperview {
-            newSuperview.addObserver(self, forKeyPath: "center", options: [.new, .old], context: nil)
-            self.observedView = newSuperview
         }
     }
 }

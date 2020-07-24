@@ -34,7 +34,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return formatter
     }()
 
-    private let textInsets = UIEdgeInsets(top: 0, left: 8, bottom: 8, right: 8)
+    private let textInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     private let font = UIFont.systemFont(ofSize: 17)
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
@@ -63,8 +63,7 @@ struct DemoDateMessageContentFactory: MessageContentFactoryProtocol {
         return TextMessageLayoutProvider(
             text: text,
             font: self.font,
-            textInsets: self.textInsets,
-            ignoreContentInsets: true
+            textInsets: self.textInsets
         )
     }
 

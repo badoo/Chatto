@@ -37,24 +37,24 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
         interactionHandler: InteractionHandlerT?,
         accessibilityIdentifier: String?,
         contentFactories: [AnyMessageContentFactory<ModelT>],
+        decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
         compoundCellStyle: CompoundBubbleViewStyleProtocol = DefaultCompoundBubbleViewStyle(),
-        compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions,
         baseCellStyle: BaseMessageCollectionViewCellStyleProtocol = BaseMessageCollectionViewCellDefaultStyle()) {
         self.viewModelBuilder = viewModelBuilder
         self.interactionHandler = interactionHandler
         self.contentFactories = contentFactories
+        self.decorationFactories = decorationFactories
         self.accessibilityIdentifier = accessibilityIdentifier
         self.compoundCellStyle = compoundCellStyle
         self.baseCellStyle = baseCellStyle
-        self.compoundCellDimensions = compoundCellDimensions
     }
 
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?
     private let contentFactories: [AnyMessageContentFactory<ModelT>]
+    private let decorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     public let sizingCell: CompoundMessageCollectionViewCell = CompoundMessageCollectionViewCell()
     private let compoundCellStyle: CompoundBubbleViewStyleProtocol
-    private let compoundCellDimensions: CompoundBubbleLayoutProvider.Dimensions
     private let baseCellStyle: BaseMessageCollectionViewCellStyleProtocol
     private let cache = Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>()
     private let accessibilityIdentifier: String?
@@ -73,9 +73,9 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
             sizingCell: self.sizingCell,
             baseCellStyle: self.baseCellStyle,
             compoundCellStyle: self.compoundCellStyle,
-            compoundCellDimensions: self.compoundCellDimensions,
             cache: self.cache,
-            accessibilityIdentifier: self.accessibilityIdentifier
+            accessibilityIdentifier: self.accessibilityIdentifier,
+            decorationFactories: self.decorationFactories
         )
     }
 
