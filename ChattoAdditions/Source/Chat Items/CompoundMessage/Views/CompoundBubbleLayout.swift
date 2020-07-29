@@ -34,26 +34,31 @@ public struct CompoundBubbleLayoutProvider {
     public struct Configuration: Hashable {
 
         fileprivate let layoutProviders: [MessageManualLayoutProviderProtocol]
+        fileprivate let decorationLayoutProviders: [MessageDecorationViewLayoutProviderProtocol]
         fileprivate let tailWidth: CGFloat
         fileprivate let isIncoming: Bool
 
         public init(layoutProviders: [MessageManualLayoutProviderProtocol],
+                    decorationLayoutProviders: [MessageDecorationViewLayoutProviderProtocol],
                     tailWidth: CGFloat,
                     isIncoming: Bool) {
             self.layoutProviders = layoutProviders
+            self.decorationLayoutProviders = decorationLayoutProviders
             self.tailWidth = tailWidth
             self.isIncoming = isIncoming
         }
 
         public func hash(into hasher: inout Hasher) {
-            hasher.combine(self.layoutProviders.map { $0.asHashable })
+            hasher.combine(self.layoutProviders.map(\.asHashable))
+            hasher.combine(self.decorationLayoutProviders.map(\.asHashable))
             hasher.combine(self.tailWidth)
             hasher.combine(self.isIncoming)
         }
 
         public static func == (lhs: CompoundBubbleLayoutProvider.Configuration,
                                rhs: CompoundBubbleLayoutProvider.Configuration) -> Bool {
-            return lhs.layoutProviders.map { $0.asHashable } == rhs.layoutProviders.map { $0.asHashable }
+            return lhs.layoutProviders.map(\.asHashable) == rhs.layoutProviders.map(\.asHashable)
+                && lhs.decorationLayoutProviders.map(\.asHashable) == rhs.decorationLayoutProviders.map(\.asHashable)
                 && lhs.tailWidth == rhs.tailWidth
                 && lhs.isIncoming == rhs.isIncoming
         }
@@ -108,13 +113,26 @@ public struct CompoundBubbleLayoutProvider {
     }
 
     private func safeAreaInsets() -> UIEdgeInsets {
-        var left: CGFloat = 0
-        var right: CGFloat = 0
+        var insets: UIEdgeInsets = .zero
         if self.configuration.isIncoming {
-            left = self.configuration.tailWidth
+            insets.left = self.configuration.tailWidth
         } else {
-            right = self.configuration.tailWidth
+            insets.right = self.configuration.tailWidth
         }
-        return UIEdgeInsets(top: 0, left: left, bottom: 0, right: right)
+
+        for provider in self.configuration.decorationLayoutProviders {
+            insets.combine(with: provider.safeAreaInsets)
+        }
+
+        return insets
+    }
+}
+
+private extension UIEdgeInsets {
+    mutating func combine(with other: UIEdgeInsets) {
+        self.top = max(self.top, other.top)
+        self.left = max(self.left, other.left)
+        self.right = max(self.right, other.right)
+        self.bottom = max(self.bottom, other.bottom)
     }
 }

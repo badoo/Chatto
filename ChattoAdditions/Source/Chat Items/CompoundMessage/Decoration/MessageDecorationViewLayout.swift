@@ -30,6 +30,11 @@ public struct MessageDecorationViewLayout {
     }
 }
 
-public protocol MessageDecorationViewLayoutProviderProtocol {
+public protocol MessageDecorationViewLayoutProviderProtocol: HashableRepresentible {
     func makeLayout(from bubbleBounds: CGRect) -> MessageDecorationViewLayout
+    var safeAreaInsets: UIEdgeInsets { get }
+}
+
+extension MessageDecorationViewLayoutProviderProtocol {
+    public var safeAreaInsets: UIEdgeInsets { .zero }
 }
