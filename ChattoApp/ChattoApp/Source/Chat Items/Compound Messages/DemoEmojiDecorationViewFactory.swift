@@ -46,7 +46,8 @@ final class DemoEmojiDecorationViewFactory: MessageDecorationViewFactoryProtocol
     }
 }
 
-private struct DemoEmojiDecorationViewLayoutProvider: MessageDecorationViewLayoutProviderProtocol {
+private final class DemoEmojiDecorationViewLayoutProvider: Hashable, MessageDecorationViewLayoutProviderProtocol {
+
     private let emoji: String
     private let font: UIFont
     private let isIncoming: Bool
@@ -58,10 +59,7 @@ private struct DemoEmojiDecorationViewLayoutProvider: MessageDecorationViewLayou
     }
 
     func makeLayout(from bubbleBounds: CGRect) -> MessageDecorationViewLayout {
-        let textLayoutProvider = TextMessageLayoutProvider(text: self.emoji,
-                                                           font: self.font,
-                                                           textInsets: .zero)
-        let size = textLayoutProvider.sizeThatFits(size: bubbleBounds.size, safeAreaInsets: .zero)
+        let size = self.emojiSize
         return MessageDecorationViewLayout(
             frame: .init(
                 origin: .init(
@@ -71,5 +69,36 @@ private struct DemoEmojiDecorationViewLayoutProvider: MessageDecorationViewLayou
                 size: size
             )
         )
+    }
+
+    var safeAreaInsets: UIEdgeInsets {
+        let width = self.emojiSize.width
+        let horizontalInset = width / 2
+        var insets: UIEdgeInsets = .zero
+        if self.isIncoming {
+            insets.right = horizontalInset
+        } else {
+            insets.left = horizontalInset
+        }
+        return insets
+    }
+
+    private lazy var emojiSize: CGSize = {
+        let textLayoutProvider = TextMessageLayoutProvider(text: self.emoji,
+                                                           font: self.font,
+                                                           textInsets: .zero)
+        return textLayoutProvider.sizeThatFits(size: UIView.layoutFittingExpandedSize, safeAreaInsets: .zero)
+    }()
+
+    static func == (lhs: DemoEmojiDecorationViewLayoutProvider, rhs: DemoEmojiDecorationViewLayoutProvider) -> Bool {
+        return lhs.emoji == rhs.emoji
+            && lhs.font == rhs.font
+            && lhs.isIncoming == rhs.isIncoming
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.emoji)
+        hasher.combine(self.font)
+        hasher.combine(self.isIncoming)
     }
 }
