@@ -24,78 +24,156 @@
 import ChattoAdditions
 import UIKit
 
-final class FakeMessageInteractionHandler: BaseMessageInteractionHandlerProtocol {
+// swiftlint:disable all
 
-    typealias ViewModelT = MessageViewModel
+public final class FakeMessageInteractionHandler: BaseMessageInteractionHandlerProtocol {
 
-    var invokedUserDidTapOnFailIcon = false
-    var invokedUserDidTapOnFailIconCount = 0
-    var invokedUserDidTapOnFailIconParameters: (viewModel: ViewModelT, failIconView: UIView)?
-    var invokedUserDidTapOnFailIconParametersList = [(viewModel: ViewModelT, failIconView: UIView)]()
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
-        invokedUserDidTapOnFailIcon = true
-        invokedUserDidTapOnFailIconCount += 1
-        invokedUserDidTapOnFailIconParameters = (viewModel, failIconView)
-        invokedUserDidTapOnFailIconParametersList.append((viewModel, failIconView))
+    public typealias MessageType = MessageModel
+    public typealias ViewModelType = MessageViewModel
+
+    private var isNiceMock: Bool
+
+    convenience init() {
+        self.init(isNiceMock: false)
     }
-    var invokedUserDidTapOnAvatar = false
-    var invokedUserDidTapOnAvatarCount = 0
-    var invokedUserDidTapOnAvatarParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidTapOnAvatarParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidTapOnAvatar(viewModel: ViewModelT) {
-        invokedUserDidTapOnAvatar = true
-        invokedUserDidTapOnAvatarCount += 1
-        invokedUserDidTapOnAvatarParameters = (viewModel, ())
-        invokedUserDidTapOnAvatarParametersList.append((viewModel, ()))
+
+    static func niceMock() -> FakeMessageInteractionHandler {
+        return FakeMessageInteractionHandler(isNiceMock: true)
     }
-    var invokedUserDidTapOnBubble = false
-    var invokedUserDidTapOnBubbleCount = 0
-    var invokedUserDidTapOnBubbleParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidTapOnBubbleParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidTapOnBubble(viewModel: ViewModelT) {
-        invokedUserDidTapOnBubble = true
-        invokedUserDidTapOnBubbleCount += 1
-        invokedUserDidTapOnBubbleParameters = (viewModel, ())
-        invokedUserDidTapOnBubbleParametersList.append((viewModel, ()))
+
+    private init(isNiceMock: Bool) {
+        self.isNiceMock = isNiceMock
     }
-    var invokedUserDidBeginLongPressOnBubble = false
-    var invokedUserDidBeginLongPressOnBubbleCount = 0
-    var invokedUserDidBeginLongPressOnBubbleParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidBeginLongPressOnBubbleParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
-        invokedUserDidBeginLongPressOnBubble = true
-        invokedUserDidBeginLongPressOnBubbleCount += 1
-        invokedUserDidBeginLongPressOnBubbleParameters = (viewModel, ())
-        invokedUserDidBeginLongPressOnBubbleParametersList.append((viewModel, ()))
+
+    var _userDidTapOnFailIcon = _UserDidTapOnFailIcon()
+    var _userDidTapOnAvatar = _UserDidTapOnAvatar()
+    var _userDidTapOnBubble = _UserDidTapOnBubble()
+    var _userDidBeginLongPressOnBubble = _UserDidBeginLongPressOnBubble()
+    var _userDidEndLongPressOnBubble = _UserDidEndLongPressOnBubble()
+    var _userDidSelectMessage = _UserDidSelectMessage()
+    var _userDidDeselectMessage = _UserDidDeselectMessage()
+
+    var onUserDidTapOnFailIcon: ((MessageType, ViewModelType, UIView) -> Void)? = nil
+    public func userDidTapOnFailIcon(message: MessageType, viewModel: ViewModelType, failIconView: UIView) -> Void {
+        if let fakeImplementation = self.onUserDidTapOnFailIcon {
+            fakeImplementation(message, viewModel, failIconView)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidTapOnFailIcon.history.append((message, viewModel, failIconView))
+        }
     }
-    var invokedUserDidEndLongPressOnBubble = false
-    var invokedUserDidEndLongPressOnBubbleCount = 0
-    var invokedUserDidEndLongPressOnBubbleParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidEndLongPressOnBubbleParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
-        invokedUserDidEndLongPressOnBubble = true
-        invokedUserDidEndLongPressOnBubbleCount += 1
-        invokedUserDidEndLongPressOnBubbleParameters = (viewModel, ())
-        invokedUserDidEndLongPressOnBubbleParametersList.append((viewModel, ()))
+
+    var onUserDidTapOnAvatar: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidTapOnAvatar(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidTapOnAvatar {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidTapOnAvatar.history.append((message, viewModel))
+        }
     }
-    var invokedUserDidSelectMessage = false
-    var invokedUserDidSelectMessageCount = 0
-    var invokedUserDidSelectMessageParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidSelectMessageParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidSelectMessage(viewModel: ViewModelT) {
-        invokedUserDidSelectMessage = true
-        invokedUserDidSelectMessageCount += 1
-        invokedUserDidSelectMessageParameters = (viewModel, ())
-        invokedUserDidSelectMessageParametersList.append((viewModel, ()))
+
+    var onUserDidTapOnBubble: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidTapOnBubble {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidTapOnBubble.history.append((message, viewModel))
+        }
     }
-    var invokedUserDidDeselectMessage = false
-    var invokedUserDidDeselectMessageCount = 0
-    var invokedUserDidDeselectMessageParameters: (viewModel: ViewModelT, Void)?
-    var invokedUserDidDeselectMessageParametersList = [(viewModel: ViewModelT, Void)]()
-    func userDidDeselectMessage(viewModel: ViewModelT) {
-        invokedUserDidDeselectMessage = true
-        invokedUserDidDeselectMessageCount += 1
-        invokedUserDidDeselectMessageParameters = (viewModel, ())
-        invokedUserDidDeselectMessageParametersList.append((viewModel, ()))
+
+    var onUserDidBeginLongPressOnBubble: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidBeginLongPressOnBubble {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidBeginLongPressOnBubble.history.append((message, viewModel))
+        }
+    }
+
+    var onUserDidEndLongPressOnBubble: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidEndLongPressOnBubble {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidEndLongPressOnBubble.history.append((message, viewModel))
+        }
+    }
+
+    var onUserDidSelectMessage: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidSelectMessage(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidSelectMessage {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidSelectMessage.history.append((message, viewModel))
+        }
+    }
+
+    var onUserDidDeselectMessage: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidDeselectMessage(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidDeselectMessage {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidDeselectMessage.history.append((message, viewModel))
+        }
     }
 }
+
+public extension FakeMessageInteractionHandler {
+
+    struct _UserDidTapOnFailIcon {
+        var history: [(message: MessageType, viewModel: ViewModelType, failIconView: UIView)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType, failIconView: UIView)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidTapOnAvatar {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidTapOnBubble {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidBeginLongPressOnBubble {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidEndLongPressOnBubble {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidSelectMessage {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidDeselectMessage {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+}
+
+// swiftlint:enable all
