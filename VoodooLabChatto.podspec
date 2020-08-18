@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "VoodooLabChatto"
-  s.version      = "10.0.6"
+  s.version      = "10.0.7"
   s.summary      = "Chat framework in Swift"
   s.homepage     = "https://github.com/VoodooTeam/Chatto"
   s.license      = { :type => "MIT"}
@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.source_files = "Chatto/Source/**/*.{h,m,swift}"
   s.public_header_files = "Chatto/Source/**/*.h"
   s.requires_arc = true
-  s.swift_version = '4.2'
+  s.swift_version = '5.1'
 end
