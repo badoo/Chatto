@@ -236,8 +236,10 @@ extension BaseChatViewController {
         case .scrollToBottom:
             self.scrollToBottom(animated: updateType == .normal)
         case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
-            let newRect = self.rectAtIndexPath(indexPath)
-            self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+            if updateType == .pagination {
+                let newRect = self.rectAtIndexPath(indexPath)
+                self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+            }
         }
 
         if !usesBatchUpdates || self.updatesConfig.fastUpdates {
