@@ -195,7 +195,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             compoundCell.decorationViews = self.decorationFactories.map { factory in
                 let view = factory.makeDecorationView(for: self.messageModel)
                 let layoutProvider = factory.makeLayoutProvider(for: self.messageModel)
-                return (view,layoutProvider)
+                return (view, layoutProvider)
             }
         }
     }
