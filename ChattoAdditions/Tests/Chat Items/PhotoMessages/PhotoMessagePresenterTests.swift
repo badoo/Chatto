@@ -87,36 +87,38 @@ class PhotoMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 }
 
 class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = PhotoMessageViewModel<PhotoMessageModel<MessageModel>>
+
+    typealias MessageType = PhotoMessageModel<MessageModel>
+    typealias ViewModelType = PhotoMessageViewModel<PhotoMessageModel<MessageModel>>
 
     var didHandleTapOnFailIcon = false
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
+    func userDidTapOnFailIcon(message: MessageType, viewModel: ViewModelType, failIconView: UIView) {
         self.didHandleTapOnFailIcon = true
     }
 
     var didHandleTapOnAvatar = false
-    func userDidTapOnAvatar(viewModel: ViewModelT) {
+    func userDidTapOnAvatar(message: MessageType, viewModel: ViewModelType) {
         self.didHandleTapOnAvatar = true
     }
 
     var didHandleTapOnBubble = false
-    func userDidTapOnBubble(viewModel: ViewModelT) {
+    func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType) {
         self.didHandleTapOnBubble = true
     }
 
     var didHandleBeginLongPressOnBubble = false
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
+    func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {
         self.didHandleBeginLongPressOnBubble = true
     }
 
     var didHandleEndLongPressOnBubble = false
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
+    func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {
         self.didHandleEndLongPressOnBubble = true
     }
 
-    func userDidSelectMessage(viewModel: ViewModelT) {
+    func userDidSelectMessage(message: MessageType, viewModel: ViewModelType) {
     }
 
-    func userDidDeselectMessage(viewModel: ViewModelT) {
+    func userDidDeselectMessage(message: MessageType, viewModel: ViewModelType) {
     }
 }

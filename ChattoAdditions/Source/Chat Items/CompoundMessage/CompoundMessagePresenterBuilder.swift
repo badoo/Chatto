@@ -28,7 +28,8 @@ public final class CompoundMessagePresenterBuilder<ViewModelBuilderT, Interactio
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ModelT: Equatable & ContentEquatableChatItemProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
+    InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
+    InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT {
     public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 

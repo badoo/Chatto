@@ -39,10 +39,6 @@ class DemoChatViewController: BaseChatViewController {
         }
     }
 
-    lazy private var baseMessageHandler: BaseMessageHandler = {
-        return BaseMessageHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -77,19 +73,19 @@ class DemoChatViewController: BaseChatViewController {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: self.createTextMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector),
             accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
