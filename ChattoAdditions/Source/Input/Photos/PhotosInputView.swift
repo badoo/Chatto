@@ -62,14 +62,15 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     fileprivate var collectionViewLayout: UICollectionViewFlowLayout!
     fileprivate var dataProvider: PhotosInputDataProviderProtocol!
     fileprivate var cellProvider: PhotosInputCellProviderProtocol!
+    fileprivate var permissionsRequester: PhotosInputPermissionsRequesterProtocol!
     fileprivate var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
 
     var cameraAuthorizationStatus: AVAuthorizationStatus {
-        return AVCaptureDevice.authorizationStatus(for: .video)
+        return self.permissionsRequester.cameraAuthorizationStatus
     }
 
     var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
-        return PHPhotoLibrary.authorizationStatus()
+        return self.permissionsRequester.photoLibraryAuthorizationStatus
     }
 
     public weak var delegate: PhotosInputViewDelegate?
@@ -116,9 +117,11 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.configureItemSizeCalculator()
         self.dataProvider = PhotosInputPlaceholderDataProvider()
         self.cellProvider = PhotosInputPlaceholderCellProvider(collectionView: self.collectionView)
+        self.permissionsRequester = PhotosInputPermissionsRequester()
+        self.permissionsRequester.delegate = self
         self.collectionViewQueue.start()
-        self.requestAccessToVideo()
         self.requestAccessToPhoto()
+        self.requestAccessToVideo()
     }
 
     private func configureItemSizeCalculator() {
@@ -129,12 +132,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     private func requestAccessToVideo() {
         guard self.cameraAuthorizationStatus != .authorized else { return }
-
-        AVCaptureDevice.requestAccess(for: .video) { (_) -> Void in
-            DispatchQueue.main.async(execute: { () -> Void in
-                self.reloadVideoItem()
-            })
-        }
+        self.permissionsRequester.requestAccessToCamera()
     }
 
     private func reloadVideoItem() {
@@ -154,14 +152,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
             self.replacePlaceholderItemsWithPhotoItems()
             return
         }
-
-        PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
-            if status == PHAuthorizationStatus.authorized {
-                DispatchQueue.main.async(execute: { () -> Void in
-                    self.replacePlaceholderItemsWithPhotoItems()
-                })
-            }
-        }
+        self.permissionsRequester.requestAccessToPhotos()
     }
 
     private func replacePlaceholderItemsWithPhotoItems() {
@@ -298,6 +289,17 @@ extension PhotosInputView: PhotosInputDataProviderDelegate {
         }
     }
 
+}
+
+extension PhotosInputView: PhotosInputPermissionsRequesterDelegate {
+    public func requester(_ requester: PhotosInputPermissionsRequesterProtocol, didReceiveUpdatedCameraPermissionStatus status: AVAuthorizationStatus) {
+        self.reloadVideoItem()
+    }
+
+    public func requester(_ requester: PhotosInputPermissionsRequesterProtocol, didReceiveUpdatedPhotosPermissionStatus status: PHAuthorizationStatus) {
+        guard status == .authorized else { return }
+        self.replacePlaceholderItemsWithPhotoItems()
+    }
 }
 
 private class PhotosInputCollectionViewLayout: UICollectionViewFlowLayout {
