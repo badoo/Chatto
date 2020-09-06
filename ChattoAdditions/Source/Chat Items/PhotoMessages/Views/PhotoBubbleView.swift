@@ -176,7 +176,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         }
         self.borderView.image = self.photoMessageStyle.borderImage(viewModel: photoMessageViewModel)
 
-        self.imageView.bma_addLayerMask(self.photoMessageStyle.maskingImage(viewModel: self.photoMessageViewModel))
+        self.imageView.layer.mask = .bma_maskLayer(from: self.photoMessageStyle.maskingImage(viewModel: self.photoMessageViewModel))
     }
 
     // MARK: Layout
