@@ -116,4 +116,8 @@ open class BaseChatItemPresenter<CellT: UICollectionViewCell>: ChatItemPresenter
     open func performMenuControllerAction(_ action: Selector) {
         assert(self.canPerformMenuControllerAction(action))
     }
+
+    // MARK: - ChatItemSpotlighting
+
+    open func spotlight() {}
 }
