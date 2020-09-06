@@ -27,6 +27,7 @@ public protocol CompoundBubbleViewStyleProtocol {
     typealias ViewModel = MessageViewModelProtocol
     var hideBubbleForSingleContent: Bool { get }
     func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor?
+    func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor?
     func maskingImage(forViewModel viewModel: ViewModel) -> UIImage?
     func borderImage(forViewModel viewModel: ViewModel) -> UIImage?
     func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat
@@ -55,13 +56,16 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
 
     private let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     private let bubbleMasks: BubbleMasks
+    private let spotlightBrightnessScale: CGFloat
 
     public init(baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle(),
                 bubbleMasks: BubbleMasks = .default,
-                hideBubbleForSingleContent: Bool = false) {
+                hideBubbleForSingleContent: Bool = false,
+                spotlightBrightnessScale: CGFloat = 0.85) {
         self.baseStyle = baseStyle
         self.bubbleMasks = bubbleMasks
         self.hideBubbleForSingleContent = hideBubbleForSingleContent
+        self.spotlightBrightnessScale = spotlightBrightnessScale
     }
 
     // MARK: CompoundBubbleViewStyleProtocol
@@ -70,6 +74,10 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
 
     public func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
         return viewModel.isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
+    }
+
+    public func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
+        self.backgroundColor(forViewModel: viewModel)?.changeBrightness(to: self.spotlightBrightnessScale)
     }
 
     public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
@@ -109,5 +117,25 @@ extension DefaultCompoundBubbleViewStyle.BubbleMasks {
             outgoingNoTail: UIImage(named: "bubble-outgoing", in: bundle, compatibleWith: nil)!,
             tailWidth: 6
         )
+    }
+}
+
+private extension UIColor {
+    func changeBrightness(to scale: CGFloat) -> UIColor {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        guard self.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+            assertionFailure("Couldn't get colors of: \(self)")
+            return self
+        }
+
+        red *= scale
+        green *= scale
+        blue *= scale
+
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
