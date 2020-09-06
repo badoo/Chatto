@@ -28,6 +28,7 @@ public protocol CompoundBubbleViewStyleProtocol {
     var hideBubbleForSingleContent: Bool { get }
     func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor?
     func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor?
+    func spotlightDuration(forViewModel viewModel: ViewModel) -> TimeInterval
     func maskingImage(forViewModel viewModel: ViewModel) -> UIImage?
     func borderImage(forViewModel viewModel: ViewModel) -> UIImage?
     func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat
@@ -57,15 +58,18 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
     private let baseStyle: BaseMessageCollectionViewCellDefaultStyle
     private let bubbleMasks: BubbleMasks
     private let spotlightBrightnessScale: CGFloat
+    private let spotlightDuration: TimeInterval
 
     public init(baseStyle: BaseMessageCollectionViewCellDefaultStyle = BaseMessageCollectionViewCellDefaultStyle(),
                 bubbleMasks: BubbleMasks = .default,
                 hideBubbleForSingleContent: Bool = false,
-                spotlightBrightnessScale: CGFloat = 0.85) {
+                spotlightBrightnessScale: CGFloat = 0.85,
+                spotlightDuration: TimeInterval = 0.5) {
         self.baseStyle = baseStyle
         self.bubbleMasks = bubbleMasks
         self.hideBubbleForSingleContent = hideBubbleForSingleContent
         self.spotlightBrightnessScale = spotlightBrightnessScale
+        self.spotlightDuration = spotlightDuration
     }
 
     // MARK: CompoundBubbleViewStyleProtocol
@@ -78,6 +82,10 @@ public final class DefaultCompoundBubbleViewStyle: CompoundBubbleViewStyleProtoc
 
     public func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
         self.backgroundColor(forViewModel: viewModel)?.changeBrightness(to: self.spotlightBrightnessScale)
+    }
+
+    public func spotlightDuration(forViewModel viewModel: ViewModel) -> TimeInterval {
+        self.spotlightDuration
     }
 
     public func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
