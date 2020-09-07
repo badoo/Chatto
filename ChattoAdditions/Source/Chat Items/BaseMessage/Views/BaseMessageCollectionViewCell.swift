@@ -83,9 +83,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             updateClosure()
             self.isUpdating = false
             self.updateViews()
-            if animated {
-                self.layoutIfNeeded()
-            }
         }
         if animated {
             UIView.animate(withDuration: self.animationDuration, animations: updateAndRefreshViews, completion: { (_) -> Void in
