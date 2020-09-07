@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 
 @available(iOS 11, *)
 public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
@@ -142,7 +143,7 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
 
         if let maskImage = style.maskingImage(forViewModel: viewModel) {
             self.borderImageView.layer.mask = self.borderMaskLayer
-            self.layer.mask = UIImageView(image: maskImage).layer
+            self.layer.mask = .bma_maskLayer(from: maskImage)
         } else {
             self.borderImageView.layer.mask = nil
             self.layer.mask = nil
