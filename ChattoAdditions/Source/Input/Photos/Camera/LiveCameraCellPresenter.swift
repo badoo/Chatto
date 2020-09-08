@@ -44,6 +44,8 @@ public final class LiveCameraCellPresenter {
     private let cameraSettings: LiveCameraSettings
     private let cellAppearance: LiveCameraCellAppearance
     private let authorizationStatusProvider: () -> AVAuthorizationStatus
+    private var isCellAddedToWindow: Bool = false
+
     public init(cameraSettings: LiveCameraSettings = LiveCameraSettings.makeDefaultSettings(),
                 cellAppearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance(),
                 authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
@@ -100,6 +102,8 @@ public final class LiveCameraCellPresenter {
         guard let cameraCell = self.cell else { return }
 
         self.cameraAuthorizationStatus = self.authorizationStatusProvider()
+        self.isCellAddedToWindow = cameraCell.window != nil
+
         cameraCell.updateWithAuthorizationStatus(self.cameraAuthorizationStatus)
         cameraCell.appearance = self.cellAppearance
 
@@ -111,6 +115,7 @@ public final class LiveCameraCellPresenter {
 
         cameraCell.onWasAddedToWindow = { [weak self] (cell) in
             guard let sSelf = self, sSelf.cell === cell else { return }
+            sSelf.isCellAddedToWindow = true
             if !sSelf.cameraPickerIsVisible {
                 sSelf.startCapturing()
             }
@@ -118,6 +123,7 @@ public final class LiveCameraCellPresenter {
 
         cameraCell.onWasRemovedFromWindow = { [weak self] (cell) in
             guard let sSelf = self, sSelf.cell === cell else { return }
+            sSelf.isCellAddedToWindow = false
             if !sSelf.cameraPickerIsVisible {
                 sSelf.stopCapturing()
             }
@@ -162,7 +168,9 @@ public final class LiveCameraCellPresenter {
 
     func cameraPickerDidDisappear() {
         self.cameraPickerIsVisible = false
-        self.startCapturing()
+        if self.isCellAddedToWindow {
+            self.startCapturing()
+        }
     }
 
     func startCapturing() {
