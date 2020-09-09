@@ -82,6 +82,32 @@ public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, B
         didSet { self.setNeedsLayout() }
     }
 
+    // MARK: - Spotlighting
+
+    public func spotlight() {
+        // Covers the case when bubble is hidden
+        guard self.backgroundColor != nil else { return }
+
+        guard let viewModel = self.viewModel,
+              let style = self.style,
+              let spotlightedColor = style.spotlightedBackgroundColor(forViewModel: viewModel),
+              let originalColor = style.backgroundColor(forViewModel: viewModel) else { return }
+
+        let durationInMs = Int(style.spotlightDuration(forViewModel: viewModel) * 1000)
+
+        self.animateBackgroundColorChange(to: spotlightedColor)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(durationInMs)) { [weak self] in
+            self?.animateBackgroundColorChange(to: originalColor)
+        }
+    }
+
+    private static let backgroundColorChangeAnimationDuration: TimeInterval = 0.1
+    private func animateBackgroundColorChange(to color: UIColor) {
+        UIView.animate(withDuration: Self.backgroundColorChangeAnimationDuration) { [weak self] in
+            self?.backgroundColor = color
+        }
+    }
+
     // MARK: - MaximumLayoutWidthSpecificable
 
     public var preferredMaxLayoutWidth: CGFloat = 0

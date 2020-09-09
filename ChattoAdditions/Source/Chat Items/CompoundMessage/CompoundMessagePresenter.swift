@@ -264,6 +264,12 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.menuPresenter?.performMenuControllerAction(action)
     }
 
+    // MARK: - ChatItemSpotlighting
+
+    override open func spotlight() {
+        self.cell?.bubbleView?.spotlight()
+    }
+
     // MARK: - MessageContentPresenterDelegate
 
     public func presenterDidInvalidateLayout(_ presenter: MessageContentPresenterProtocol) {

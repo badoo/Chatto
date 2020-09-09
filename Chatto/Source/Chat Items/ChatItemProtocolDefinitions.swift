@@ -40,7 +40,15 @@ public protocol ChatItemMenuPresenterProtocol {
     func performMenuControllerAction(_ action: Selector)
 }
 
-public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol {
+public protocol ChatItemSpotlighting {
+    func spotlight()
+}
+
+extension ChatItemSpotlighting {
+    public func spotlight() {}
+}
+
+public protocol ChatItemPresenterProtocol: AnyObject, ChatItemMenuPresenterProtocol, ChatItemSpotlighting {
     static func registerCells(_ collectionView: UICollectionView)
 
     var isItemUpdateSupported: Bool { get }
