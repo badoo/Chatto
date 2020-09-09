@@ -35,6 +35,12 @@ extension CGFloat {
 
 extension BaseChatViewController {
 
+    private static var nextDidEndScrollingAnimationHandlersKey: Int = 0
+    private var nextDidEndScrollingAnimationHandlers: [() -> Void] {
+        get { objc_getAssociatedObject(self, &Self.nextDidEndScrollingAnimationHandlersKey) as? [() -> Void] ?? [] }
+        set { objc_setAssociatedObject(self, &Self.nextDidEndScrollingAnimationHandlersKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+    }
+
     public func isScrolledAtBottom() -> Bool {
         guard let collectionView = self.collectionView else { return true }
         guard collectionView.numberOfSections > 0 && collectionView.numberOfItems(inSection: 0) > 0 else { return true }
@@ -113,7 +119,10 @@ extension BaseChatViewController {
         collectionView.contentOffset = CGPoint(x: 0, y: collectionView.contentOffset.y + diffY)
     }
 
-    public func scrollToItem(withId itemId: String, position: UICollectionView.ScrollPosition = .centeredVertically, animated: Bool = false) {
+    public func scrollToItem(withId itemId: String,
+                             position: UICollectionView.ScrollPosition = .centeredVertically,
+                             animated: Bool = false,
+                             spotlight: Bool = false) {
         guard let collectionView = self.collectionView else { return }
         guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else { return }
 
@@ -143,7 +152,26 @@ extension BaseChatViewController {
             }
         }
 
+        if spotlight {
+            guard let presenter = self.chatItemCompanionCollection[itemId]?.presenter else { return }
+            let contentOffsetWillBeChanged = !collectionView.indexPathsForVisibleItems.contains(indexPath)
+            if contentOffsetWillBeChanged {
+                self.nextDidEndScrollingAnimationHandlers.append { [weak presenter] in
+                    presenter?.spotlight()
+                }
+            } else {
+                presenter.spotlight()
+            }
+        }
+
         collectionView.scrollToItem(at: indexPath, at: position, animated: animated)
+    }
+
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        for handler in self.nextDidEndScrollingAnimationHandlers {
+            handler()
+        }
+        self.nextDidEndScrollingAnimationHandlers = []
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
