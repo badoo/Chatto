@@ -93,6 +93,7 @@ public final class LiveCameraCellPresenter {
 
         if self.cell === cell {
             cell.captureLayer = nil
+            self.isCellAddedToWindow = false
             self.cell = nil
             self.stopCapturing()
         }
