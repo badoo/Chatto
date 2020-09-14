@@ -30,6 +30,11 @@ public protocol AccessoryViewRevealable {
     var allowAccessoryViewRevealing: Bool { get }
 }
 
+public protocol ReplyIndicatorRevealable {
+    func canShowReply() -> Bool
+    func revealReplyIndicator(withOffset offset: CGFloat, animated: Bool) -> Bool
+}
+
 public struct AccessoryViewRevealerConfig {
     public let angleThresholdInRads: CGFloat
     public let translationTransform: (_ rawTranslation: CGFloat) -> CGFloat
