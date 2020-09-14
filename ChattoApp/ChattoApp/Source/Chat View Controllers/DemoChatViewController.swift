@@ -32,8 +32,6 @@ class DemoChatViewController: BaseChatViewController {
     var messageSender: DemoChatMessageSender!
     let messagesSelector = BaseMessagesSelector()
 
-    private var demoReplyHandler: DemoReplyActionHandler!
-
     var dataSource: DemoChatDataSource! {
         didSet {
             self.chatDataSource = self.dataSource
@@ -47,10 +45,7 @@ class DemoChatViewController: BaseChatViewController {
         self.title = "Chat"
         self.messagesSelector.delegate = self
         self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
-
-        // Just to have a strong reference to it
-        self.demoReplyHandler = DemoReplyActionHandler(presentingViewController: self)
-        self.replyActionHandler = self.demoReplyHandler
+        self.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
     }
 
     var chatInputPresenter: AnyObject!

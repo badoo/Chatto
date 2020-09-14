@@ -46,7 +46,7 @@ open class BaseChatViewController: UIViewController,
 
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
-    open weak var replyActionHandler: ReplyActionHandler?
+    open var replyActionHandler: ReplyActionHandler?
 
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
