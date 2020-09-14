@@ -25,6 +25,8 @@ import ChattoAdditions
 import UIKit
 
 final class StubMessageCollectionViewCellStyle: BaseMessageCollectionViewCellStyleProtocol {
+    var replyIndicatorStyle: ReplyIndicatorStyle?
+
     var stubbedFailedIcon: UIImage!
     var failedIcon: UIImage {
         return stubbedFailedIcon
