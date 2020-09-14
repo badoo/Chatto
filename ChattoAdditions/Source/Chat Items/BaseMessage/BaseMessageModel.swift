@@ -88,7 +88,7 @@ open class MessageModel: MessageModelProtocol {
                 isIncoming: Bool,
                 date: Date,
                 status: MessageStatus,
-                canReply: Bool) {
+                canReply: Bool = false) {
         self.uid = uid
         self.senderId = senderId
         self.type = type
