@@ -33,10 +33,20 @@ public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
 }
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, InputPositionControlling {
+public protocol ReplyActionHandler: AnyObject {
+    func handleReply(for: ChatItemProtocol)
+}
+
+open class BaseChatViewController: UIViewController,
+                                   UICollectionViewDataSource,
+                                   UICollectionViewDelegate,
+                                   ChatDataSourceDelegateProtocol,
+                                   InputPositionControlling,
+                                   ReplyIndicatorRevealerDelegate {
 
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
+    open weak var replyActionHandler: ReplyActionHandler?
 
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
@@ -186,6 +196,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.chatto_setIsPrefetchingEnabled(false)
         
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
+        self.cellPanGestureHandler.replyDelegate = self
         self.collectionView = collectionView
 
         if !self.customPresentersConfigurationPoint {
@@ -451,6 +462,17 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }
+
+    // MARK: ReplyIndicatorRevealerDelegate
+
+    open func didPassTreshold(at: IndexPath) {}
+
+    open func didFinishReplyGesture(at indexPath: IndexPath) {
+        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
+        self.replyActionHandler?.handleReply(for: item)
+    }
+
+    open func didCancelReplyGesture(at: IndexPath) {}
 
     // MARK: ChatDataSourceDelegateProtocol
 
