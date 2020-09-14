@@ -80,13 +80,21 @@ open class MessageModel: MessageModelProtocol {
     open var isIncoming: Bool
     open var date: Date
     open var status: MessageStatus
+    open var canReply: Bool
 
-    public init(uid: String, senderId: String, type: String, isIncoming: Bool, date: Date, status: MessageStatus) {
+    public init(uid: String,
+                senderId: String,
+                type: String,
+                isIncoming: Bool,
+                date: Date,
+                status: MessageStatus,
+                canReply: Bool) {
         self.uid = uid
         self.senderId = senderId
         self.type = type
         self.isIncoming = isIncoming
         self.date = date
         self.status = status
+        self.canReply = canReply
     }
 }

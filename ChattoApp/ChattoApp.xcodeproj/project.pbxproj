@@ -16,6 +16,7 @@
 		268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */; };
 		268CD57A22034A9900DEE2C2 /* DemoImageMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */; };
 		268CD57E220377D500DEE2C2 /* DemoDateMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57D220377D500DEE2C2 /* DemoDateMessageContentFactory.swift */; };
+		26D63B4C250F3154007BC13C /* DemoReplyActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D63B4B250F3154007BC13C /* DemoReplyActionHandler.swift */; };
 		26D6D524220CAAE2006232B4 /* UpdateItemTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */; };
 		26FAADC423747B1300F62D01 /* AsyncAvatarLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FAADC323747B1300F62D01 /* AsyncAvatarLoadingViewController.swift */; };
 		5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5587302D1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift */; };
@@ -85,6 +86,7 @@
 		268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTextMessageContentFactory.swift; sourceTree = "<group>"; };
 		268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoImageMessageContentFactory.swift; sourceTree = "<group>"; };
 		268CD57D220377D500DEE2C2 /* DemoDateMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDateMessageContentFactory.swift; sourceTree = "<group>"; };
+		26D63B4B250F3154007BC13C /* DemoReplyActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoReplyActionHandler.swift; sourceTree = "<group>"; };
 		26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateItemTypeViewController.swift; sourceTree = "<group>"; };
 		26FAADC323747B1300F62D01 /* AsyncAvatarLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAvatarLoadingViewController.swift; sourceTree = "<group>"; };
 		2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				C3F91DAA1C75EF9E00D461D2 /* DemoChatMessageFactory.swift */,
 				C3F91DAB1C75EF9E00D461D2 /* DemoChatMessageSender.swift */,
 				C3F91DA81C75EF9E00D461D2 /* DemoChatViewController.swift */,
+				26D63B4B250F3154007BC13C /* DemoReplyActionHandler.swift */,
 				26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */,
 				EAE6345622EB0CAD0053E21A /* TestItemsReloadingViewController.swift */,
 				26FAADC323747B1300F62D01 /* AsyncAvatarLoadingViewController.swift */,
@@ -510,6 +513,7 @@
 				26FAADC423747B1300F62D01 /* AsyncAvatarLoadingViewController.swift in Sources */,
 				268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
+				26D63B4C250F3154007BC13C /* DemoReplyActionHandler.swift in Sources */,
 				C3F91DB71C75EF9E00D461D2 /* DemoChatItemsDecorator.swift in Sources */,
 				EAE6345722EB0CAD0053E21A /* TestItemsReloadingViewController.swift in Sources */,
 				0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */,
