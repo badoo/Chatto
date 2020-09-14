@@ -42,6 +42,8 @@ class DemoChatViewController: BaseChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.cellPanGestureHandlerConfig.allowReplyRevealing = true
+
         self.title = "Chat"
         self.messagesSelector.delegate = self
         self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
