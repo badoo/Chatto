@@ -109,24 +109,6 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     let outgoingAvatarStyle: AvatarStyle
     let selectionIndicatorStyle: SelectionIndicatorStyle
 
-    public convenience init(
-        colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
-        bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
-        failedIconImages: FailedIconImages = BaseMessageCollectionViewCellDefaultStyle.createDefaultFailedIconImages(),
-        layoutConstants: BaseMessageCollectionViewCellLayoutConstants = BaseMessageCollectionViewCellDefaultStyle.createDefaultLayoutConstants(),
-        dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
-        avatarStyle: AvatarStyle = AvatarStyle(),
-        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()) {
-        self.init(colors: colors,
-                  bubbleBorderImages: bubbleBorderImages,
-                  failedIconImages: failedIconImages,
-                  layoutConstants: layoutConstants,
-                  dateTextStyle: dateTextStyle,
-                  incomingAvatarStyle: avatarStyle,
-                  outgoingAvatarStyle: avatarStyle,
-                  selectionIndicatorStyle: selectionIndicatorStyle)
-    }
-
     public init(
         colors: Colors = BaseMessageCollectionViewCellDefaultStyle.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = BaseMessageCollectionViewCellDefaultStyle.createDefaultBubbleBorderImages(),
