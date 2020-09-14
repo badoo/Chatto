@@ -36,6 +36,11 @@ public protocol MessageModelProtocol: ChatItemProtocol {
     var isIncoming: Bool { get }
     var date: Date { get }
     var status: MessageStatus { get }
+    var canReply: Bool { get }
+}
+
+extension MessageModelProtocol {
+    public var canReply: Bool { false }
 }
 
 public protocol DecoratedMessageModelProtocol: MessageModelProtocol {
