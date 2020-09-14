@@ -24,13 +24,16 @@
 
 import UIKit
 
-public protocol AccessoryViewRevealable {
-    func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)
-    func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
-    var allowAccessoryViewRevealing: Bool { get }
+public protocol CellRevealing {
+    var allowRevealing: Bool { get }
 }
 
-public protocol ReplyIndicatorRevealable {
+public protocol AccessoryViewRevealable: CellRevealing {
+    func revealAccessoryView(withOffset offset: CGFloat, animated: Bool)
+    func preferredOffsetToRevealAccessoryView() -> CGFloat? // This allows to sync size in case cells have different sizes for the accessory view. Nil -> no restriction
+}
+
+public protocol ReplyIndicatorRevealable: CellRevealing {
     func canShowReply() -> Bool
     func revealReplyIndicator(withOffset offset: CGFloat, animated: Bool) -> Bool
 }
@@ -105,6 +108,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
             } else {
                 guard let indexPath = self.collectionView.indexPathForItem(at: panRecognizer.location(in: self.collectionView)),
                     let cell = self.collectionView.cellForItem(at: indexPath) as? ReplyIndicatorRevealable,
+                    cell.allowRevealing,
                     cell.canShowReply() else { return }
 
                 if self.replyIndexPath == nil, translation.x > self.config.treshold {
@@ -148,7 +152,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
         })
 
         for cell in self.collectionView.visibleCells {
-            if let cell = cell as? AccessoryViewRevealable, cell.allowAccessoryViewRevealing {
+            if let cell = cell as? AccessoryViewRevealable, cell.allowRevealing {
                 cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }

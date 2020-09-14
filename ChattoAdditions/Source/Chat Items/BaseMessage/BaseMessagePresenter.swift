@@ -126,7 +126,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
 
-            cell.allowAccessoryViewRevealing = !decorationAttributes.messageDecorationAttributes.isShowingSelectionIndicator
+            cell.allowRevealing = !decorationAttributes.messageDecorationAttributes.isShowingSelectionIndicator
             cell.onBubbleTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleTapped()
