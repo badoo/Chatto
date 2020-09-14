@@ -197,6 +197,7 @@ open class BaseChatViewController: UIViewController,
         
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
         self.cellPanGestureHandler.replyDelegate = self
+        self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
         self.collectionView = collectionView
 
         if !self.customPresentersConfigurationPoint {
@@ -473,6 +474,12 @@ open class BaseChatViewController: UIViewController,
     }
 
     open func didCancelReplyGesture(at: IndexPath) {}
+
+    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
+        didSet {
+            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
+        }
+    }
 
     // MARK: ChatDataSourceDelegateProtocol
 

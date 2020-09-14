@@ -33,13 +33,4 @@ public extension BaseChatViewController { // Cell Pan Gesture Handler
             self.cellPanGestureHandler.isEnabled = newValue
         }
     }
-
-    final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig {
-        get {
-            return self.cellPanGestureHandler.config
-        } set {
-            self.cellPanGestureHandler.config = newValue
-        }
-    }
-
 }
