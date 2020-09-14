@@ -49,6 +49,7 @@ public struct CellPanGestureHandlerConfig {
     public let treshold: CGFloat
     public let accessoryViewTranslationMultiplier: CGFloat
     public let replyIndicatorTranslationMultiplier: CGFloat
+    public var allowReplyRevealing: Bool = false
 
     public static func defaultConfig() -> CellPanGestureHandlerConfig {
         .init(
@@ -109,6 +110,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
                 guard let indexPath = self.collectionView.indexPathForItem(at: panRecognizer.location(in: self.collectionView)),
                     let cell = self.collectionView.cellForItem(at: indexPath) as? ReplyIndicatorRevealable,
                     cell.allowRevealing,
+                    self.config.allowReplyRevealing,
                     cell.canShowReply() else { return }
 
                 if self.replyIndexPath == nil, translation.x > self.config.treshold {
