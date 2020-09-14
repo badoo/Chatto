@@ -26,6 +26,17 @@ import Foundation
 import ChattoAdditions
 
 class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDefaultStyle {
+
+    init() {
+        super.init(
+            replyIndicatorStyle: .init(
+                image: UIImage(named: "reply-indicator")!,
+                size: .init(width: 38, height: 38),
+                maxOffset: 48
+            )
+        )
+    }
+
     override func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize {
         // Display avatar for both incoming and outgoing messages for demo purpose
         return CGSize(width: 35, height: 35)
