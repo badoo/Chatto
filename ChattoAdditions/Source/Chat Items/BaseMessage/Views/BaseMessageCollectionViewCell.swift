@@ -28,13 +28,15 @@ import Chatto
 public struct ReplyIndicatorStyle {
     let image: UIImage
     let size: CGSize
-    let maxOffset: CGFloat
+    let maxOffsetToReplyIndicator: CGFloat
 
-    public init(image: UIImage, size: CGSize, maxOffset: CGFloat) {
+    public init(image: UIImage, size: CGSize, maxOffsetToReplyIndicator: CGFloat) {
         self.image = image
         self.size = size
-        self.maxOffset = maxOffset
+        self.maxOffsetToReplyIndicator = maxOffsetToReplyIndicator
     }
+
+    var maxOffset: CGFloat { self.maxOffsetToReplyIndicator + size.width }
 }
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {

@@ -32,7 +32,7 @@ class BaseMessageCollectionViewCellAvatarStyle: BaseMessageCollectionViewCellDef
             replyIndicatorStyle: .init(
                 image: UIImage(named: "reply-indicator")!,
                 size: .init(width: 38, height: 38),
-                maxOffset: 48
+                maxOffsetToReplyIndicator: 48
             )
         )
     }
