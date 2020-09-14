@@ -25,6 +25,18 @@
 import UIKit
 import Chatto
 
+public struct ReplyIndicatorStyle {
+    let image: UIImage
+    let size: CGSize
+    let maxOffset: CGFloat
+
+    public init(image: UIImage, size: CGSize, maxOffset: CGFloat) {
+        self.image = image
+        self.size = size
+        self.maxOffset = maxOffset
+    }
+}
+
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
     func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
@@ -34,6 +46,7 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
+    var replyIndicatorStyle: ReplyIndicatorStyle? { get }
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {

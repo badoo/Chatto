@@ -117,7 +117,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         dateTextStyle: DateTextStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultDateTextStyle(),
         incomingAvatarStyle: AvatarStyle = AvatarStyle(),
         outgoingAvatarStyle: AvatarStyle = AvatarStyle(),
-        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle()
+        selectionIndicatorStyle: SelectionIndicatorStyle = BaseMessageCollectionViewCellDefaultStyle.createDefaultSelectionIndicatorStyle(),
+        replyIndicatorStyle: ReplyIndicatorStyle? = nil
     ) {
         self.colors = colors
         self.bubbleBorderImages = bubbleBorderImages
@@ -127,6 +128,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         self.incomingAvatarStyle = incomingAvatarStyle
         self.outgoingAvatarStyle = outgoingAvatarStyle
         self.selectionIndicatorStyle = selectionIndicatorStyle
+        self.replyIndicatorStyle = replyIndicatorStyle
 
         self.dateStringAttributes = [
             NSAttributedString.Key.font: self.dateTextStyle.font(),
@@ -144,6 +146,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     public lazy var failedIcon: UIImage = self.failedIconImages.normal()
     public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
+    public let replyIndicatorStyle: ReplyIndicatorStyle?
 
     private let dateStringAttributes: [NSAttributedString.Key: AnyObject]
 
