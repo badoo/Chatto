@@ -35,25 +35,37 @@ public protocol ReplyIndicatorRevealable {
     func revealReplyIndicator(withOffset offset: CGFloat, animated: Bool) -> Bool
 }
 
-public struct AccessoryViewRevealerConfig {
+public protocol ReplyIndicatorRevealerDelegate: AnyObject {
+    func didPassTreshold()
+    func didFinishReplyGesture()
+    func didCancelReplyGesture()
+}
+
+public struct CellPanGestureHandlerConfig {
     public let angleThresholdInRads: CGFloat
-    public let translationTransform: (_ rawTranslation: CGFloat) -> CGFloat
-    public init(angleThresholdInRads: CGFloat, translationTransform: @escaping (_ rawTranslation: CGFloat) -> CGFloat) {
-        self.angleThresholdInRads = angleThresholdInRads
-        self.translationTransform = translationTransform
+    public let treshold: CGFloat
+    public let accessoryViewTranslationMultiplier: CGFloat
+    public let replyIndicatorTranslationMultiplier: CGFloat
+
+    public static func defaultConfig() -> CellPanGestureHandlerConfig {
+        .init(
+            angleThresholdInRads: 0.0872665, // ~5 degrees
+            treshold: 30,
+            accessoryViewTranslationMultiplier: 1/2,
+            replyIndicatorTranslationMultiplier: 2/3
+        )
     }
 
-    public static func defaultConfig() -> AccessoryViewRevealerConfig {
-        return self.init(
-            angleThresholdInRads: 0.0872665, // ~5 degrees
-            translationTransform: { (rawTranslation) -> CGFloat in
-                let threshold: CGFloat = 30
-                return max(0, rawTranslation - threshold) / 2
-        })
+    func transformAccessoryViewTranslation(_ translation: CGFloat) -> CGFloat {
+        (translation - self.treshold) * self.accessoryViewTranslationMultiplier
+    }
+
+    func transformReplyIndicatorTranslation(_ translation: CGFloat) -> CGFloat {
+        (translation - self.treshold) * self.replyIndicatorTranslationMultiplier
     }
 }
 
-class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
+final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
 
     private let panRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer()
     private let collectionView: UICollectionView
@@ -62,7 +74,7 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         self.collectionView = collectionView
         super.init()
         self.collectionView.addGestureRecognizer(self.panRecognizer)
-        self.panRecognizer.addTarget(self, action: #selector(AccessoryViewRevealer.handlePan(_:)))
+        self.panRecognizer.addTarget(self, action: #selector(CellPanGestureHandler.handlePan(_:)))
         self.panRecognizer.delegate = self
     }
 
@@ -77,7 +89,9 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
         }
     }
 
-    var config = AccessoryViewRevealerConfig.defaultConfig()
+    var config = CellPanGestureHandlerConfig.defaultConfig()
+
+    public weak var replyDelegate: ReplyIndicatorRevealerDelegate?
 
     @objc
     private func handlePan(_ panRecognizer: UIPanGestureRecognizer) {
@@ -86,9 +100,27 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
             break
         case .changed:
             let translation = panRecognizer.translation(in: self.collectionView)
-            self.revealAccessoryView(atOffset: self.config.translationTransform(-translation.x))
-        case .ended, .cancelled, .failed:
+            if translation.x < 0 {
+                self.revealAccessoryView(atOffset: self.config.transformAccessoryViewTranslation(-translation.x))
+            } else {
+                guard let indexPath = self.collectionView.indexPathForItem(at: panRecognizer.location(in: self.collectionView)),
+                    let cell = self.collectionView.cellForItem(at: indexPath) as? ReplyIndicatorRevealable,
+                    cell.canShowReply() else { return }
+
+                if self.replyIndexPath == nil, translation.x > self.config.treshold {
+                    self.replyIndexPath = indexPath
+                    self.collectionView.isScrollEnabled = false
+                    self.didStartHandlingReply = true
+                }
+                self.revealReplyIndicator(atOffset: self.config.transformReplyIndicatorTranslation(translation.x))
+            }
+        case .ended:
             self.revealAccessoryView(atOffset: 0)
+            self.finishRevealingReply()
+
+        case .failed, .cancelled:
+            self.revealAccessoryView(atOffset: 0)
+            self.cancelRevealingReply()
         default:
             break
         }
@@ -121,5 +153,44 @@ class AccessoryViewRevealer: NSObject, UIGestureRecognizerDelegate {
                 cell.revealAccessoryView(withOffset: offset, animated: offset == 0)
             }
         }
+    }
+
+    private var replyIndexPath: IndexPath?
+    private var didStartHandlingReply = false
+    private var overReplyTreshold = false
+
+    private func revealReplyIndicator(atOffset offset: CGFloat) {
+        guard let indexPath = self.replyIndexPath,
+              let cell = self.collectionView.cellForItem(at: indexPath) as? ReplyIndicatorRevealable else { return }
+        self.didStartHandlingReply = true
+        let maxOffsetReached = cell.revealReplyIndicator(withOffset: offset, animated: offset == 0)
+        if maxOffsetReached != overReplyTreshold {
+            self.replyDelegate?.didPassTreshold()
+            self.overReplyTreshold = maxOffsetReached
+        }
+    }
+
+    private func finishRevealingReply() {
+        defer { self.cleanUpRevealingReply() }
+        guard self.didStartHandlingReply else { return }
+        if self.overReplyTreshold {
+            self.replyDelegate?.didFinishReplyGesture()
+        } else {
+            self.replyDelegate?.didCancelReplyGesture()
+        }
+    }
+
+    private func cancelRevealingReply() {
+        defer { self.cleanUpRevealingReply() }
+        guard self.didStartHandlingReply else { return }
+        self.replyDelegate?.didCancelReplyGesture()
+    }
+
+    private func cleanUpRevealingReply() {
+        self.overReplyTreshold = false
+        self.revealReplyIndicator(atOffset: 0)
+        self.collectionView.isScrollEnabled = true
+        self.replyIndexPath = nil
+        self.didStartHandlingReply = false
     }
 }

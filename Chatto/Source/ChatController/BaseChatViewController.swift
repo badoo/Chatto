@@ -185,7 +185,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
         collectionView.chatto_setIsPrefetchingEnabled(false)
         
-        self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
+        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
         self.collectionView = collectionView
 
         if !self.customPresentersConfigurationPoint {
@@ -401,7 +401,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var autoLoadingEnabled: Bool = false
-    var accessoryViewRevealer: AccessoryViewRevealer!
+    var cellPanGestureHandler: CellPanGestureHandler!
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
     public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!

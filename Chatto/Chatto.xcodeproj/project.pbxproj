@@ -24,8 +24,8 @@
 		C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281EA1BF0F62F004D6BCE /* DummyChatItemPresenter.swift */; };
 		C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */; };
 		C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281F11BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift */; };
-		C38352D11CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38352D01CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift */; };
-		C3C7C3971CAC4BAC00A49929 /* AccessoryViewRevealer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3921CAC4BAC00A49929 /* AccessoryViewRevealer.swift */; };
+		C38352D11CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38352D01CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift */; };
+		C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3921CAC4BAC00A49929 /* CellPanGestureHandler.swift */; };
 		C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3931CAC4BAC00A49929 /* ChatCollectionViewLayout.swift */; };
 		C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3941CAC4BAC00A49929 /* ChatDataSourceProtocol.swift */; };
 		C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3951CAC4BAC00A49929 /* CollectionChanges.swift */; };
@@ -68,8 +68,8 @@
 		C36281EA1BF0F62F004D6BCE /* DummyChatItemPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyChatItemPresenter.swift; sourceTree = "<group>"; };
 		C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialTaskQueue.swift; sourceTree = "<group>"; };
 		C36281F11BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
-		C38352D01CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+AccessoryViewRevealer.swift"; sourceTree = "<group>"; };
-		C3C7C3921CAC4BAC00A49929 /* AccessoryViewRevealer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessoryViewRevealer.swift; sourceTree = "<group>"; };
+		C38352D01CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+CellPanGestureHandler.swift"; sourceTree = "<group>"; };
+		C3C7C3921CAC4BAC00A49929 /* CellPanGestureHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellPanGestureHandler.swift; sourceTree = "<group>"; };
 		C3C7C3931CAC4BAC00A49929 /* ChatCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayout.swift; sourceTree = "<group>"; };
 		C3C7C3941CAC4BAC00A49929 /* ChatDataSourceProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDataSourceProtocol.swift; sourceTree = "<group>"; };
 		C3C7C3951CAC4BAC00A49929 /* CollectionChanges.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionChanges.swift; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 		C3C7C3911CAC4BAC00A49929 /* Collaborators */ = {
 			isa = PBXGroup;
 			children = (
-				C3C7C3921CAC4BAC00A49929 /* AccessoryViewRevealer.swift */,
+				C3C7C3921CAC4BAC00A49929 /* CellPanGestureHandler.swift */,
 				C3C7C39C1CAC4BC500A49929 /* BaseChatViewControllerView.swift */,
 				C3C7C3931CAC4BAC00A49929 /* ChatCollectionViewLayout.swift */,
 				C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */,
@@ -202,7 +202,7 @@
 			children = (
 				C3C7C3911CAC4BAC00A49929 /* Collaborators */,
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
-				C38352D01CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift */,
+				C38352D01CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift */,
 				C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */,
 				C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */,
 				C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */,
@@ -342,7 +342,7 @@
 				C3C7C39D1CAC4BC500A49929 /* BaseChatViewControllerView.swift in Sources */,
 				C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */,
 				C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */,
-				C3C7C3971CAC4BAC00A49929 /* AccessoryViewRevealer.swift in Sources */,
+				C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */,
 				EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
@@ -351,7 +351,7 @@
 				C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
 				C36281E51BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift in Sources */,
-				C38352D11CC6514B006C359C /* BaseChatViewController+AccessoryViewRevealer.swift in Sources */,
+				C38352D11CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,
 				C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
