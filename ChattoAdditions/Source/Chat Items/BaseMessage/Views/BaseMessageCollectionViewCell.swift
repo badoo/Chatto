@@ -256,6 +256,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
         self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
         self.selectionTapGestureRecognizer?.isEnabled = viewModel.decorationAttributes.isShowingSelectionIndicator
+        self.selectionIndicator.isHidden = !viewModel.decorationAttributes.isShowingSelectionIndicator
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
