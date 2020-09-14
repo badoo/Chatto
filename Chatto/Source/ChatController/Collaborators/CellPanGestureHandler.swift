@@ -39,14 +39,14 @@ public protocol ReplyIndicatorRevealable: CellRevealing {
 }
 
 public protocol ReplyIndicatorRevealerDelegate: AnyObject {
-    func didPassTreshold(at: IndexPath)
+    func didPassThreshold(at: IndexPath)
     func didFinishReplyGesture(at: IndexPath)
     func didCancelReplyGesture(at: IndexPath)
 }
 
 public struct CellPanGestureHandlerConfig {
     public let angleThresholdInRads: CGFloat
-    public let treshold: CGFloat
+    public let threshold: CGFloat
     public let accessoryViewTranslationMultiplier: CGFloat
     public let replyIndicatorTranslationMultiplier: CGFloat
     public var allowReplyRevealing: Bool = false
@@ -54,18 +54,18 @@ public struct CellPanGestureHandlerConfig {
     public static func defaultConfig() -> CellPanGestureHandlerConfig {
         .init(
             angleThresholdInRads: 0.0872665, // ~5 degrees
-            treshold: 30,
+            threshold: 30,
             accessoryViewTranslationMultiplier: 1/2,
             replyIndicatorTranslationMultiplier: 2/3
         )
     }
 
     func transformAccessoryViewTranslation(_ translation: CGFloat) -> CGFloat {
-        (translation - self.treshold) * self.accessoryViewTranslationMultiplier
+        (translation - self.threshold) * self.accessoryViewTranslationMultiplier
     }
 
     func transformReplyIndicatorTranslation(_ translation: CGFloat) -> CGFloat {
-        (translation - self.treshold) * self.replyIndicatorTranslationMultiplier
+        (translation - self.threshold) * self.replyIndicatorTranslationMultiplier
     }
 }
 
@@ -113,7 +113,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
                     self.config.allowReplyRevealing,
                     cell.canShowReply() else { return }
 
-                if self.replyIndexPath == nil, translation.x > self.config.treshold {
+                if self.replyIndexPath == nil, translation.x > self.config.threshold {
                     self.replyIndexPath = indexPath
                     self.collectionView.isScrollEnabled = false
                 }
@@ -161,22 +161,22 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
     }
 
     private var replyIndexPath: IndexPath?
-    private var overReplyTreshold = false
+    private var overReplyThreshold = false
 
     private func revealReplyIndicator(atOffset offset: CGFloat) {
         guard let indexPath = self.replyIndexPath,
               let cell = self.collectionView.cellForItem(at: indexPath) as? ReplyIndicatorRevealable else { return }
         let maxOffsetReached = cell.revealReplyIndicator(withOffset: offset, animated: offset == 0)
-        if maxOffsetReached != overReplyTreshold {
-            self.replyDelegate?.didPassTreshold(at: indexPath)
-            self.overReplyTreshold = maxOffsetReached
+        if maxOffsetReached != overReplyThreshold {
+            self.replyDelegate?.didPassThreshold(at: indexPath)
+            self.overReplyThreshold = maxOffsetReached
         }
     }
 
     private func finishRevealingReply() {
         defer { self.cleanUpRevealingReply() }
         guard let indexPath = self.replyIndexPath else { return }
-        if self.overReplyTreshold {
+        if self.overReplyThreshold {
             self.replyDelegate?.didFinishReplyGesture(at: indexPath)
         } else {
             self.replyDelegate?.didCancelReplyGesture(at: indexPath)
@@ -190,7 +190,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
     }
 
     private func cleanUpRevealingReply() {
-        self.overReplyTreshold = false
+        self.overReplyThreshold = false
         self.revealReplyIndicator(atOffset: 0)
         self.collectionView.isScrollEnabled = true
         self.replyIndexPath = nil

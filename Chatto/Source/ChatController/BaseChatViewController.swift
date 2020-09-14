@@ -466,7 +466,7 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: ReplyIndicatorRevealerDelegate
 
-    open func didPassTreshold(at: IndexPath) {}
+    open func didPassThreshold(at: IndexPath) {}
 
     open func didFinishReplyGesture(at indexPath: IndexPath) {
         let item = self.chatItemCompanionCollection[indexPath.item].chatItem
