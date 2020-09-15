@@ -20,26 +20,28 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
 import UIKit
 
-open class PhotosChatInputItem: ChatInputItemProtocol {
+open class MediaChatInputItem: ChatInputItemProtocol {
     public private(set) var supportsExpandableState: Bool = false
     public private(set) var expandedStateTopMargin: CGFloat = 0.0
 
-    typealias Class = PhotosChatInputItem
+    typealias Class = MediaChatInputItem
 
-    public var photoInputHandler: ((UIImage, PhotosInputViewPhotoSource) -> Void)?
+    public var photoInputHandler: ((UIImage, MediaInputViewSource) -> Void)?
+    public var videoInputHandler: ((URL, MediaInputViewSource) -> Void)?
     public var cameraPermissionHandler: (() -> Void)?
     public var photosPermissionHandler: (() -> Void)?
     public weak var presentingController: UIViewController?
 
     let buttonAppearance: TabInputButtonAppearance
-    let inputViewAppearance: PhotosInputViewAppearance
+    let inputViewAppearance: MediaInputViewAppearance
+
     public init(presentingController: UIViewController?,
-                tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance(),
-                inputViewAppearance: PhotosInputViewAppearance = PhotosChatInputItem.createDefaultInputViewAppearance()) {
+                tabInputButtonAppearance: TabInputButtonAppearance = MediaChatInputItem.createDefaultButtonAppearance(),
+                inputViewAppearance: MediaInputViewAppearance = MediaChatInputItem.createDefaultInputViewAppearance()) {
         self.presentingController = presentingController
         self.buttonAppearance = tabInputButtonAppearance
         self.inputViewAppearance = inputViewAppearance
@@ -54,16 +56,18 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    public static func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
-        return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
+    public static func createDefaultInputViewAppearance() -> MediaInputViewAppearance {
+        return MediaInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
     }
 
     lazy private var internalTabView: UIButton = {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
 
-    lazy var photosInputView: PhotosInputViewProtocol = {
-        let photosInputView = PhotosInputView(presentingController: self.presentingController, appearance: self.inputViewAppearance)
+    lazy var mediaInputView: MediaInputViewProtocol = {
+        let photosInputView = MediaInputView(presentingControllerProvider: { [weak presentingController] in presentingController },
+                                             appearance: self.inputViewAppearance,
+                                             mediaTypes: [.image])
         photosInputView.delegate = self
         return photosInputView
     }()
@@ -85,7 +89,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }
 
     open var inputView: UIView? {
-        return self.photosInputView as? UIView
+        return self.mediaInputView as? UIView
     }
 
     open var tabView: UIView {
@@ -99,19 +103,25 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     }
 }
 
-// MARK: - PhotosInputViewDelegate
-extension PhotosChatInputItem: PhotosInputViewDelegate {
-    public func inputView(_ inputView: PhotosInputViewProtocol,
+// MARK: - MediaInputViewDelegate
+extension MediaChatInputItem: MediaInputViewDelegate {
+    public func inputView(_ inputView: MediaInputViewProtocol,
                           didSelectImage image: UIImage,
-                          source: PhotosInputViewPhotoSource) {
+                          source: MediaInputViewSource) {
         self.photoInputHandler?(image, source)
     }
 
-    public func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputView(_ inputView: MediaInputViewProtocol,
+                          didSelectVideo videoURL: URL,
+                          source: MediaInputViewSource) {
+        self.videoInputHandler?(videoURL, source)
+    }
+
+    public func inputViewDidRequestCameraPermission(_ inputView: MediaInputViewProtocol) {
         self.cameraPermissionHandler?()
     }
 
-    public func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol) {
+    public func inputViewDidRequestPhotoLibraryPermission(_ inputView: MediaInputViewProtocol) {
         self.photosPermissionHandler?()
     }
 }

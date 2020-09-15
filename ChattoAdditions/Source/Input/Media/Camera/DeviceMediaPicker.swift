@@ -24,35 +24,44 @@
 
 import UIKit
 
-final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+final class DeviceMediaPicker: NSObject, MediaPicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
-    private weak var delegate: ImagePickerDelegate?
+    private weak var delegate: MediaPickerDelegate?
 
-    init(_ delegate: ImagePickerDelegate) {
+    init(delegate: MediaPickerDelegate, mediaTypes: [String]) {
         let pickerController = UIImagePickerController()
         self.controller = pickerController
         self.delegate = delegate
         super.init()
         pickerController.delegate = self
         pickerController.sourceType = .camera
+        pickerController.mediaTypes = mediaTypes
     }
 
     @objc
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        self.delegate?.imagePickerDidFinish(self, mediaInfo: info)
+        self.delegate?.mediaPickerDidFinish(self, mediaInfo: info)
     }
 
     @objc
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.delegate?.imagePickerDidCancel(self)
+        self.delegate?.mediaPickerDidCancel(self)
     }
 }
 
-final class DeviceImagePickerFactory: ImagePickerFactory {
-    func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker? {
+public final class DeviceMediaPickerFactory: MediaPickerFactory {
+
+    private let mediaTypes: [String]
+
+    public init(mediaTypes: [String]) {
+        self.mediaTypes = mediaTypes
+    }
+
+    public func makeImagePicker(delegate: MediaPickerDelegate) -> MediaPicker? {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             return nil
         }
-        return DeviceImagePicker(delegate)
+        return DeviceMediaPicker(delegate: delegate,
+                                 mediaTypes: self.mediaTypes)
     }
 }

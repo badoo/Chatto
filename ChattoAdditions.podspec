@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.swift_version = '5.1'
   s.resources = ["ChattoAdditions/Source/**/*.xib", "ChattoAdditions/Source/**/*.storyboard", "ChattoAdditions/Source/**/*.xcassets"]
   s.dependency 'Chatto'
+  s.framework = 'CoreServices'
 end

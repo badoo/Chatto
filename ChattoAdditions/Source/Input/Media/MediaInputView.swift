@@ -20,38 +20,65 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
 import UIKit
 import Photos
 import Chatto
+import CoreServices
 
-public struct PhotosInputViewAppearance {
+public struct MediaInputViewAppearance {
     public var liveCameraCellAppearence: LiveCameraCellAppearance
     public init(liveCameraCellAppearence: LiveCameraCellAppearance) {
         self.liveCameraCellAppearence = liveCameraCellAppearence
     }
 }
 
-public protocol PhotosInputViewProtocol {
-    var delegate: PhotosInputViewDelegate? { get set }
+public protocol MediaInputViewProtocol {
+    var delegate: MediaInputViewDelegate? { get set }
     var presentingController: UIViewController? { get }
 }
 
-public enum PhotosInputViewPhotoSource {
+public enum MediaInputViewSource {
     case camera
     case gallery
 }
 
-public protocol PhotosInputViewDelegate: AnyObject {
-    func inputView(_ inputView: PhotosInputViewProtocol,
-                   didSelectImage image: UIImage,
-                   source: PhotosInputViewPhotoSource)
-    func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
-    func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
+public enum InputMediaType {
+    case image
+    case video
+
+    public var UTI: String {
+        switch self {
+        case .image:
+            return kUTTypeImage as String
+        case .video:
+            return kUTTypeMovie as String
+        }
+    }
+
+    public var assetType: PHAssetMediaType {
+        switch self {
+        case .image:
+            return .image
+        case .video:
+            return .video
+        }
+    }
 }
 
-public final class PhotosInputView: UIView, PhotosInputViewProtocol {
+public protocol MediaInputViewDelegate: AnyObject {
+    func inputView(_ inputView: MediaInputViewProtocol,
+                   didSelectImage image: UIImage,
+                   source: MediaInputViewSource)
+    func inputView(_ inputView: MediaInputViewProtocol,
+                   didSelectVideo videoURL: URL,
+                   source: MediaInputViewSource)
+    func inputViewDidRequestCameraPermission(_ inputView: MediaInputViewProtocol)
+    func inputViewDidRequestPhotoLibraryPermission(_ inputView: MediaInputViewProtocol)
+}
+
+public final class MediaInputView: UIView, MediaInputViewProtocol {
 
     fileprivate struct Constants {
         static let liveCameraItemIndex = 0
@@ -60,10 +87,10 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     fileprivate lazy var collectionViewQueue = SerialTaskQueue()
     fileprivate var collectionView: UICollectionView!
     fileprivate var collectionViewLayout: UICollectionViewFlowLayout!
-    fileprivate var dataProvider: PhotosInputDataProviderProtocol!
-    fileprivate var cellProvider: PhotosInputCellProviderProtocol!
+    fileprivate var dataProvider: MediaInputDataProviderProtocol!
+    fileprivate var cellProvider: MediaInputCellProviderProtocol!
     fileprivate var permissionsRequester: PhotosInputPermissionsRequesterProtocol!
-    fileprivate var itemSizeCalculator: PhotosInputViewItemSizeCalculator!
+    fileprivate var itemSizeCalculator: MediaInputViewItemSizeCalculator!
 
     var cameraAuthorizationStatus: AVAuthorizationStatus {
         return self.permissionsRequester.cameraAuthorizationStatus
@@ -73,16 +100,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         return self.permissionsRequester.photoLibraryAuthorizationStatus
     }
 
-    public weak var delegate: PhotosInputViewDelegate?
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.commonInit()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.commonInit()
-    }
+    public weak var delegate: MediaInputViewDelegate?
 
     public var presentingControllerProvider: () -> UIViewController? = { nil }
 
@@ -90,20 +108,22 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         return self.presentingControllerProvider()
     }
 
-    var appearance: PhotosInputViewAppearance?
+    var appearance: MediaInputViewAppearance?
+
+    private let mediaTypes: [InputMediaType]
 
     public init(presentingControllerProvider: @escaping () -> UIViewController?,
-                appearance: PhotosInputViewAppearance) {
+                appearance: MediaInputViewAppearance,
+                mediaTypes: [InputMediaType]) {
         self.presentingControllerProvider = presentingControllerProvider
+        self.mediaTypes = mediaTypes
         super.init(frame: CGRect.zero)
         self.appearance = appearance
         self.commonInit()
     }
 
-    public convenience init(presentingController: UIViewController?,
-                            appearance: PhotosInputViewAppearance) {
-        self.init(presentingControllerProvider: { [weak presentingController] in presentingController },
-                  appearance: appearance)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {
@@ -115,8 +135,8 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.configureCollectionView()
         self.configureItemSizeCalculator()
-        self.dataProvider = PhotosInputPlaceholderDataProvider()
-        self.cellProvider = PhotosInputPlaceholderCellProvider(collectionView: self.collectionView)
+        self.dataProvider = MediaInputPlaceholderDataProvider()
+        self.cellProvider = MediaInputPlaceholderCellProvider(collectionView: self.collectionView)
         self.permissionsRequester = PhotosInputPermissionsRequester()
         self.permissionsRequester.delegate = self
         self.collectionViewQueue.start()
@@ -125,7 +145,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func configureItemSizeCalculator() {
-        self.itemSizeCalculator = PhotosInputViewItemSizeCalculator()
+        self.itemSizeCalculator = MediaInputViewItemSizeCalculator()
         self.itemSizeCalculator.itemsPerRow = 3
         self.itemSizeCalculator.interitemSpace = 1
     }
@@ -156,17 +176,18 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     private func replacePlaceholderItemsWithPhotoItems() {
-        let photosDataProvider = PhotosInputDataProvider()
-        photosDataProvider.prepare { [weak self] in
+        let mediaDataProvider = MediaInputDataProvider(mediaTypes: self.mediaTypes.map({ $0.assetType }))
+        mediaDataProvider.prepare { [weak self] in
             guard let sSelf = self else { return }
 
             sSelf.collectionViewQueue.addTask { [weak self] (completion) in
                 guard let sSelf = self else { return }
 
-                let newDataProvider = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: photosDataProvider, placeholdersDataProvider: PhotosInputPlaceholderDataProvider())
+                let newDataProvider = MediaInputWithPlaceholdersDataProvider(mediaDataProvider: mediaDataProvider,
+                                                                             placeholdersDataProvider: MediaInputPlaceholderDataProvider())
                 newDataProvider.delegate = sSelf
                 sSelf.dataProvider = newDataProvider
-                sSelf.cellProvider = PhotosInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
+                sSelf.cellProvider = MediaInputCellProvider(collectionView: sSelf.collectionView, dataProvider: newDataProvider)
                 sSelf.collectionView.reloadData()
                 DispatchQueue.main.async(execute: completion)
             }
@@ -180,16 +201,19 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate lazy var cameraPicker: PhotosInputCameraPicker = {
-        return PhotosInputCameraPicker(presentingControllerProvider: self.presentingControllerProvider)
-    }()
+    fileprivate lazy var cameraPicker: MediaInputCameraPicker = self.makeCameraPicker()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenter = {
         return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence ?? LiveCameraCellAppearance.createDefaultAppearance())
     }()
+
+    private func makeCameraPicker() -> MediaInputCameraPicker {
+        return MediaInputCameraPicker(mediaPickerFactory: DeviceMediaPickerFactory(mediaTypes: self.mediaTypes.map({ $0.UTI })),
+                                      presentingControllerProvider: self.presentingControllerProvider)
+    }
 }
 
-extension PhotosInputView: UICollectionViewDataSource {
+extension MediaInputView: UICollectionViewDataSource {
 
     func configureCollectionView() {
         self.collectionViewLayout = PhotosInputCollectionViewLayout()
@@ -223,30 +247,48 @@ extension PhotosInputView: UICollectionViewDataSource {
     }
 }
 
-extension PhotosInputView: UICollectionViewDelegateFlowLayout {
+extension MediaInputView: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
             if self.cameraAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestCameraPermission(self)
             } else {
                 self.liveCameraPresenter.cameraPickerWillAppear()
-                self.cameraPicker.presentCameraPicker(onImageTaken: { [weak self] (image) in
-                    guard let sSelf = self else { return }
 
-                    if let image = image {
-                        sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .camera)
-                    }
-                }, onCameraPickerDismissed: { [weak self] in
-                    self?.liveCameraPresenter.cameraPickerDidDisappear()
+                let onImageTaken = { [weak self] (image: UIImage?) in
+                    guard let sSelf = self else { return }
+                    guard let image = image else { return }
+
+                    sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .camera)
+                }
+
+                let onVideoTaken = { [weak self] (videoURL: URL?) in
+                    guard let self = self else { return }
+                    guard let url = videoURL else { return }
+
+                    self.delegate?.inputView(self, didSelectVideo: url, source: .camera)
+                }
+
+                self.cameraPicker.presentCameraPicker(onImageTaken: onImageTaken,
+                                                      onVideoTaken: onVideoTaken,
+                                                      onCameraPickerDismissed: { [weak self] in
+                                                        self?.liveCameraPresenter.cameraPickerDidDisappear()
                 })
             }
         } else {
             if self.photoLibraryAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
-                let request = self.dataProvider.requestFullImage(at: indexPath.item - 1, progressHandler: nil, completion: { [weak self] result in
-                    guard let sSelf = self, let image = result.image else { return }
-                    sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .gallery)
+                let request = self.dataProvider.requestResource(at: indexPath.item - 1, progressHandler: nil, completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .successImage(let image):
+                        self.delegate?.inputView(self, didSelectImage: image, source: .gallery)
+                    case .successVideo(let url):
+                        self.delegate?.inputView(self, didSelectVideo: url, source: .gallery)
+                    default:
+                        break
+                    }
                 })
                 self.cellProvider.configureFullImageLoadingIndicator(at: indexPath, request: request)
             }
@@ -278,8 +320,8 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension PhotosInputView: PhotosInputDataProviderDelegate {
-    func handlePhotosInputDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
+extension MediaInputView: MediaInputDataProviderDelegate {
+    func handleMediaInputDataProviderUpdate(_ dataProvider: MediaInputDataProviderProtocol, updateBlock: @escaping () -> Void) {
         self.collectionViewQueue.addTask { [weak self] (completion) in
             guard let sSelf = self else { return }
 
@@ -288,10 +330,9 @@ extension PhotosInputView: PhotosInputDataProviderDelegate {
             DispatchQueue.main.async(execute: completion)
         }
     }
-
 }
 
-extension PhotosInputView: PhotosInputPermissionsRequesterDelegate {
+extension MediaInputView: PhotosInputPermissionsRequesterDelegate {
     public func requester(_ requester: PhotosInputPermissionsRequesterProtocol, didReceiveUpdatedCameraPermissionStatus status: AVAuthorizationStatus) {
         self.reloadVideoItem()
     }

@@ -24,23 +24,15 @@
 
 import UIKit
 
-struct PhotosInputViewItemSizeCalculator {
-    var itemsPerRow: Int = 0
-    var interitemSpace: CGFloat = 0
+public protocol MediaPickerDelegate: class {
+    func mediaPickerDidFinish(_ picker: MediaPicker, mediaInfo: [UIImagePickerController.InfoKey: Any])
+    func mediaPickerDidCancel(_ picker: MediaPicker)
+}
 
-    func itemSizeForWidth(_ width: CGFloat, atIndex index: Int) -> CGSize {
-        let availableWidth = width - self.interitemSpace * CGFloat((self.itemsPerRow - 1))
-        if availableWidth <= 0 {
-            return CGSize.zero
-        }
+public protocol MediaPicker: class {
+    var controller: UIViewController { get }
+}
 
-        var itemWidth = Int(floor(availableWidth / CGFloat(self.itemsPerRow)))
-        let itemHeigth = itemWidth
-        let extraPixels = Int(availableWidth) % self.itemsPerRow
-        let isItemWithExtraPixel = index % self.itemsPerRow < extraPixels
-        if isItemWithExtraPixel {
-            itemWidth += 1
-        }
-        return CGSize(width: itemWidth, height: itemHeigth)
-    }
+public protocol MediaPickerFactory: class {
+    func makeImagePicker(delegate: MediaPickerDelegate) -> MediaPicker?
 }

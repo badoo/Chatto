@@ -26,16 +26,16 @@ import XCTest
 @testable import ChattoAdditions
 
 class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
-    var fakePhotosProvider: FakePhotosInputDataProvider!
-    var fakePlaceholderProvider: FakePhotosInputDataProvider!
-    var sut: PhotosInputWithPlaceholdersDataProvider!
+    var fakePhotosProvider: FakeMediaInputDataProvider!
+    var fakePlaceholderProvider: FakeMediaInputDataProvider!
+    var sut: MediaInputWithPlaceholdersDataProvider!
 
     override func setUp() {
         super.setUp()
-        self.fakePhotosProvider = FakePhotosInputDataProvider()
-        self.fakePlaceholderProvider = FakePhotosInputDataProvider()
-        self.sut = PhotosInputWithPlaceholdersDataProvider(photosDataProvider: self.fakePhotosProvider,
-                                                           placeholdersDataProvider: self.fakePlaceholderProvider)
+        self.fakePhotosProvider = FakeMediaInputDataProvider()
+        self.fakePlaceholderProvider = FakeMediaInputDataProvider()
+        self.sut = MediaInputWithPlaceholdersDataProvider(mediaDataProvider: self.fakePhotosProvider,
+                                                          placeholdersDataProvider: self.fakePlaceholderProvider)
     }
 
     override func tearDown() {
@@ -76,12 +76,12 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         var placeholderProviderRequested = false
         self.fakePlaceholderProvider.onRequestPreviewImage = { (_, _, _) in
             placeholderProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         self.fakePhotosProvider.onRequestPreviewImage = { (index, _, _) in
             photoProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
         self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _ in
@@ -103,11 +103,11 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         self.fakePlaceholderProvider.onRequestPreviewImage = { (index, _, _) in
             placeholderProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         self.fakePhotosProvider.onRequestPreviewImage = { (_, _, _) in
             photoProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
         self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _ in
@@ -126,17 +126,17 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         self.fakePhotosProvider.count = numberOfPhotos
         var photoProviderRequested = false
         var placeholderProviderRequested = false
-        self.fakePlaceholderProvider.onRequestFullImage = { (index, _, _) in
+        self.fakePlaceholderProvider.onRequestResource = { (index, _, _) in
             placeholderProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
-        self.fakePhotosProvider.onRequestFullImage = { (_, _, _) in
+        self.fakePhotosProvider.onRequestResource = { (_, _, _) in
             photoProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
-        self.sut.requestFullImage(at: indexToRequest, progressHandler: nil) { _ in
+        self.sut.requestResource(at: indexToRequest, progressHandler: nil) { _ in
         }
         // Then
         XCTAssertTrue(photoProviderRequested)
@@ -152,17 +152,17 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         self.fakePhotosProvider.count = numberOfPhotos
         var photoProviderRequested = false
         var placeholderProviderRequested = false
-        self.fakePlaceholderProvider.onRequestFullImage = { (index, _, _) in
+        self.fakePlaceholderProvider.onRequestResource = { (index, _, _) in
             placeholderProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
-        self.fakePhotosProvider.onRequestFullImage = { (_, _, _) in
+        self.fakePhotosProvider.onRequestResource = { (_, _, _) in
             photoProviderRequested = true
-            return FakePhotosInputDataProviderImageRequest()
+            return FakeMediaInputDataProviderImageRequest()
         }
         // When
-        self.sut.requestFullImage(at: indexToRequest, progressHandler: nil) { _ in
+        self.sut.requestResource(at: indexToRequest, progressHandler: nil) { _ in
         }
         // Then
         XCTAssertFalse(photoProviderRequested)
@@ -170,7 +170,7 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
     }
 
     func testThat_GivenProviderWithNumberOfPlaceholdersGreaterThenNumberOfPhotos_WhenRequestExistedFullImageRequestAtIndexGreatThenNumberOfPhotos_ThenPlaceholderProviderReceivesCall() {
-        let existedRequest = FakePhotosInputDataProviderImageRequest()
+        let existedRequest = FakeMediaInputDataProviderImageRequest()
         let numberOfPlaceholders = 10
         let numberOfPhotos = 1
         let indexToRequest = 5
@@ -178,17 +178,17 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         self.fakePhotosProvider.count = numberOfPhotos
         var photoProviderRequested = false
         var placeholderProviderRequested = false
-        self.fakePhotosProvider.onFullImageRequest = { index in
+        self.fakePhotosProvider.onResourceRequest = { index in
             photoProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
             return nil
         }
-        self.fakePlaceholderProvider.onFullImageRequest = { _ in
+        self.fakePlaceholderProvider.onResourceRequest = { _ in
             placeholderProviderRequested = true
             return existedRequest
         }
         // When
-        let request = self.sut.fullImageRequest(at: indexToRequest)
+        let request = self.sut.resourceRequest(at: indexToRequest)
         // Then
         XCTAssertTrue(request === existedRequest)
         XCTAssertFalse(photoProviderRequested)
@@ -196,7 +196,7 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
     }
 
     func testThat_GivenProviderWithNumberOfPlaceholdersGreaterThenNumberOfPhotos_WhenRequestExistedFullImageRequestAtIndexLessThenNumberOfPhotos_ThenPhotosProviderReceivesCall() {
-        let existedRequest = FakePhotosInputDataProviderImageRequest()
+        let existedRequest = FakeMediaInputDataProviderImageRequest()
         let numberOfPlaceholders = 10
         let numberOfPhotos = 5
         let indexToRequest = 3
@@ -204,17 +204,17 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
         self.fakePhotosProvider.count = numberOfPhotos
         var photoProviderRequested = false
         var placeholderProviderRequested = false
-        self.fakePhotosProvider.onFullImageRequest = { index in
+        self.fakePhotosProvider.onResourceRequest = { index in
             photoProviderRequested = true
             XCTAssertTrue(index == indexToRequest)
             return existedRequest
         }
-        self.fakePlaceholderProvider.onFullImageRequest = { _ in
+        self.fakePlaceholderProvider.onResourceRequest = { _ in
             placeholderProviderRequested = true
             return nil
         }
         // When
-        let request = self.sut.fullImageRequest(at: indexToRequest)
+        let request = self.sut.resourceRequest(at: indexToRequest)
         // Then
         XCTAssertTrue(request === existedRequest)
         XCTAssertTrue(photoProviderRequested)

@@ -29,7 +29,7 @@ class PhotosInputPlaceholderDataProviderTests: XCTestCase {
 
     func testThat_ProviderWithNumberOfPlaceholder_ThenCountReturnsThisNumber() {
         let numberOfPlaceholders = 10
-        let dataProvider = PhotosInputPlaceholderDataProvider(numberOfPlaceholders: numberOfPlaceholders)
+        let dataProvider = MediaInputPlaceholderDataProvider(numberOfPlaceholders: numberOfPlaceholders)
         XCTAssertEqual(numberOfPlaceholders, dataProvider.count)
     }
 }

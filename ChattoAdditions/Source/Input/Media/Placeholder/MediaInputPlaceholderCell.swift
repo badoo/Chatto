@@ -24,7 +24,7 @@
 
 import UIKit
 
-final class PhotosInputPlaceholderCell: UICollectionViewCell {
+final class MediaInputPlaceholderCell: UICollectionViewCell {
 
     private struct Constants {
         static let backgroundColor = UIColor(red: 231.0/255.0, green: 236.0/255.0, blue: 242.0/255.0, alpha: 1)
@@ -46,7 +46,7 @@ final class PhotosInputPlaceholderCell: UICollectionViewCell {
     private func commonInit() {
         self.imageView = UIImageView()
         self.imageView.contentMode = .center
-        self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
+        self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: MediaInputPlaceholderCell.self), compatibleWith: nil)
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
         self.accessibilityIdentifier = Constants.accessibilityIdentifier
