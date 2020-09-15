@@ -47,6 +47,7 @@ open class BaseChatViewController: UIViewController,
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
     open var replyActionHandler: ReplyActionHandler?
+    open var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
@@ -466,7 +467,9 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: ReplyIndicatorRevealerDelegate
 
-    open func didPassThreshold(at: IndexPath) {}
+    open func didPassThreshold(at: IndexPath) {
+        self.replyFeedbackGenerator?.generateFeedback()
+    }
 
     open func didFinishReplyGesture(at indexPath: IndexPath) {
         let item = self.chatItemCompanionCollection[indexPath.item].chatItem
@@ -479,6 +482,13 @@ open class BaseChatViewController: UIViewController,
         didSet {
             self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
         }
+    }
+
+    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
+        if #available(iOS 10, *) {
+            return ReplyFeedbackGenerator()
+        }
+        return nil
     }
 
     // MARK: ChatDataSourceDelegateProtocol
