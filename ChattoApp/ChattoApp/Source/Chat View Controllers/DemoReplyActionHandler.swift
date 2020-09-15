@@ -21,31 +21,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import ChattoAdditions
-import UIKit
 
-final class StubCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
-    func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor? { nil }
-    func spotlightDuration(forViewModel viewModel: ViewModel) -> TimeInterval { 0 }
+import Chatto
 
-    var stubbedHideBubbleForSingleContent: Bool! = false
-    var hideBubbleForSingleContent: Bool {
-        return stubbedHideBubbleForSingleContent
+final class DemoReplyActionHandler: ReplyActionHandler {
+
+    private weak var presentingViewController: UIViewController?
+
+    init(presentingViewController: UIViewController) {
+        self.presentingViewController = presentingViewController
     }
-    var stubbedBackgroundColorResult: UIColor!
-    func backgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
-        return stubbedBackgroundColorResult
-    }
-    var stubbedMaskingImageResult: UIImage!
-    func maskingImage(forViewModel viewModel: ViewModel) -> UIImage? {
-        return stubbedMaskingImageResult
-    }
-    var stubbedBorderImageResult: UIImage!
-    func borderImage(forViewModel viewModel: ViewModel) -> UIImage? {
-        return stubbedBorderImageResult
-    }
-    var stubbedTailWidthResult: CGFloat!
-    func tailWidth(forViewModel viewModel: ViewModel) -> CGFloat {
-        return stubbedTailWidthResult
+
+    func handleReply(for: ChatItemProtocol) {
+        let alert = UIAlertController(
+            title: "Reply message with swipe",
+            message: nil,
+            preferredStyle: .alert
+        )
+        alert.addAction(.init(title: "OK", style: .cancel, handler: nil))
+        presentingViewController?.present(alert, animated: true, completion: nil)
     }
 }

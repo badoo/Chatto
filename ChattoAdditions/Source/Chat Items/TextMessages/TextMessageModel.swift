@@ -34,6 +34,7 @@ open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageMod
         return self._messageModel
     }
     public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+    public var canReply: Bool { self.messageModel.canReply }
     public let text: String
     public init(messageModel: MessageModelT, text: String) {
         self._messageModel = messageModel
