@@ -84,7 +84,7 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
             return FakeMediaInputDataProviderImageRequest()
         }
         // When
-        self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _ in
+        self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _,_  in
         }
         // Then
         XCTAssertTrue(photoProviderRequested)
@@ -110,7 +110,7 @@ class PhotosInputWithPlaceholderDataProviderTests: XCTestCase {
             return FakeMediaInputDataProviderImageRequest()
         }
         // When
-        self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _ in
+        self.sut.requestPreviewImage(at: indexToRequest, targetSize: .zero) { _,_  in
         }
         // Then
         XCTAssertFalse(photoProviderRequested)
