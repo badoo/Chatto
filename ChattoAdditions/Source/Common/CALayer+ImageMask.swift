@@ -59,8 +59,8 @@ private extension CGRect {
         relative.bottom /= size.height
 
         return CGRect(
-            x: relative.top,
-            y: relative.left,
+            x: relative.left,
+            y: relative.top,
             width: 1 - (relative.left + relative.right),
             height: 1 - (relative.top + relative.bottom)
         )
