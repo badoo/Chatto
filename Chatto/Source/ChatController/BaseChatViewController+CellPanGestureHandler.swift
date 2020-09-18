@@ -24,22 +24,13 @@
 
 import Foundation
 
-public extension BaseChatViewController { // Accessory view revealer
+public extension BaseChatViewController { // Cell Pan Gesture Handler
 
-    final var accessoryViewRevealerIsEnabled: Bool {
+    final var cellPanGestureHandlerIsEnabled: Bool {
         get {
-            return self.accessoryViewRevealer.isEnabled
+            return self.cellPanGestureHandler.isEnabled
         } set {
-            self.accessoryViewRevealer.isEnabled = newValue
+            self.cellPanGestureHandler.isEnabled = newValue
         }
     }
-
-    final var accessoryViewRevealerConfig: AccessoryViewRevealerConfig {
-        get {
-            return self.accessoryViewRevealer.config
-        } set {
-            self.accessoryViewRevealer.config = newValue
-        }
-    }
-
 }

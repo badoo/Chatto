@@ -33,10 +33,21 @@ public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
 }
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, InputPositionControlling {
+public protocol ReplyActionHandler: AnyObject {
+    func handleReply(for: ChatItemProtocol)
+}
+
+open class BaseChatViewController: UIViewController,
+                                   UICollectionViewDataSource,
+                                   UICollectionViewDelegate,
+                                   ChatDataSourceDelegateProtocol,
+                                   InputPositionControlling,
+                                   ReplyIndicatorRevealerDelegate {
 
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
+    open var replyActionHandler: ReplyActionHandler?
+    open var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
@@ -185,7 +196,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
         collectionView.chatto_setIsPrefetchingEnabled(false)
         
-        self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
+        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
+        self.cellPanGestureHandler.replyDelegate = self
+        self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
         self.collectionView = collectionView
 
         if !self.customPresentersConfigurationPoint {
@@ -246,7 +259,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func updateInputContainerBottomBaseOffset() {
         if #available(iOS 11.0, *) {
-            self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
+            let offset = self.bottomLayoutGuide.length
+            if self.inputContainerBottomBaseOffset != offset {
+                self.inputContainerBottomBaseOffset = offset
+            }
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -401,7 +417,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var autoLoadingEnabled: Bool = false
-    var accessoryViewRevealer: AccessoryViewRevealer!
+    var cellPanGestureHandler: CellPanGestureHandler!
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
     public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
@@ -450,6 +466,32 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
+    }
+
+    // MARK: ReplyIndicatorRevealerDelegate
+
+    open func didPassThreshold(at: IndexPath) {
+        self.replyFeedbackGenerator?.generateFeedback()
+    }
+
+    open func didFinishReplyGesture(at indexPath: IndexPath) {
+        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
+        self.replyActionHandler?.handleReply(for: item)
+    }
+
+    open func didCancelReplyGesture(at: IndexPath) {}
+
+    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
+        didSet {
+            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
+        }
+    }
+
+    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
+        if #available(iOS 10, *) {
+            return ReplyFeedbackGenerator()
+        }
+        return nil
     }
 
     // MARK: ChatDataSourceDelegateProtocol
