@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.source_files = "Chatto/Source/**/*.{h,m,swift}"
   s.public_header_files = "Chatto/Source/**/*.h"
   s.requires_arc = true
-  s.swift_version = '5.1'
+  s.swift_version = '5.3'
 end
