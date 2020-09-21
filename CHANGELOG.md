@@ -1,3 +1,34 @@
+### 4.0.0 (September 20, 2020)
+
+#### Features
+
+- Swipe to reply #672 by [@wiruzx](https://github.com/wiruzx)
+- Ability to highlight message when scrolling to it #670 by [@wiruzx](https://github.com/wiruzx)
+- Add ability to show decoration views on compound bubble #657 by [@wiruzx](https://github.com/wiruzx)
+
+#### Improvements
+
+- Update of compound views #666 by [@wiruzx](https://github.com/wiruzx)
+- BaseMessageInteractionHandlerProtocol methods are extended with a message parameter #665 by [@magic146](https://github.com/magic146)
+- Fix project warnings, migrate to Xcode 11 #662 by [@petrpavlik](https://github.com/petrpavlik)
+- Add safe area insets for decoration views #660 by [@wiruzx](https://github.com/wiruzx)
+- Bump xcode version in travis config #661 by [@wiruzx](https://github.com/wiruzx)
+- Compound bubble styling simplification #653 by [@magic146](https://github.com/magic146)
+- Add removing random item to demo project #652 by [@wiruzx](https://github.com/wiruzx)
+- Fix autolayout support for BaseMessageCollrctionViewCell #651 by [@wiruzx](https://github.com/wiruzx)
+- Determine UI orientation without shared UIApplication object #637 by [@FabioTacke](https://github.com/FabioTacke)
+- Safe area support for BaseChatViewController #632 by [@esilverberg](https://github.com/esilverberg)
+
+#### Bugfixes
+
+- iOS 14: Fix infinite layout loop when chat is empty #674 by [@nalexn](https://github.com/nalexn)
+- Fix image stretching #673 by [@wiruzx](https://github.com/wiruzx)
+- Do not restart camera capture when camera picker is presented #671 by [@leonspok](https://github.com/leonspok)
+- Set frame with disabled animation #659 by [@wiruzx](https://github.com/wiruzx)
+- Fix typo in CGSize extension #655 by [@95krasovsky](https://github.com/95krasovsky)
+- Fix crash, if BaseChatViewController destroyed too early #549 by [@freedbrt](https://github.com/freedbrt)
+- Fix masking in iOS 14 #667 by [@esilverberg](https://github.com/esilverberg)
+
 ### 3.6.0 (April 24, 2020)
 
 #### Features
