@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.swift_version = '5.3'
   s.resources = ["ChattoAdditions/Source/**/*.xib", "ChattoAdditions/Source/**/*.storyboard", "ChattoAdditions/Source/**/*.xcassets"]
-  s.dependency 'Chatto'
+  s.dependency 'Chatto', s.version.to_s
 end
