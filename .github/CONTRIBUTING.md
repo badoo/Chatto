@@ -3,7 +3,7 @@
 ## Asking a Question
 
 Please don't file an issue just to ask a question.
-You'll get a faster response in [Our Gitter Room](https://gitter.im/chatto-framework/community)
+You'll get a faster response in [our Gitter room](https://gitter.im/chatto-framework/community)
 
 ## Reporting a Bug
 
@@ -30,7 +30,7 @@ Explain the problem and include additional details to help maintainers reproduce
 
 ## Contributing Changes
 
-If you'd like to introduce new functionality or fix a bug, it's always best to discuss it with us in [our gitter room](https://gitter.im/chatto-framework/community).
+If you'd like to introduce new functionality or fix a bug, it's always best to discuss it with us in [our Gitter room](https://gitter.im/chatto-framework/community).
 
 When creating a pull request please consider following:
 
