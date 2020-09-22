@@ -26,6 +26,7 @@ Explain the problem and include additional details to help maintainers reproduce
     - Chatto version
     - iOS version
     - Xcode version
+- **Add info how Chatto is intergrated** to your project. Is it CocoaPods, Carthage or manual?
 
 ## Contributing Changes
 
