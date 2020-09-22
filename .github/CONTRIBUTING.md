@@ -11,7 +11,7 @@ You'll get a faster response in [our Gitter room](https://gitter.im/chatto-frame
 
 - **Make sure you're on the latest version.** If you're not on the most recent version, your problem may have been solved already. Upgrading is always the best first step.
 - **Try older versions.** If you're already on the latest release, try rolling back a few minor versions and see if the problem goes away. This will help devs narrow down when the problem first arose in the commit log.
-- **Try searching the [list of opened issues](https://github.com/badoo/Chatto/issues)** to see if the problem has already been reported. If it has, please add a comment to the existing issue instead of opening a new one.
+- **Try searching the [list of opened issues](https://github.com/badoo/Chatto/issues?q=is%3Aissue+is%3Aopen)** to see if the problem has already been reported. If it has, please add a comment to the existing issue instead of opening a new one.
 
 ### What To Put In Your Bug Report
 
