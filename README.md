@@ -23,6 +23,12 @@
 
 Check the [wiki!](https://github.com/badoo/Chatto/wiki)
 
+## How to contribute
+
+If you **just have a question**, please reach us in [our gitter room](https://gitter.im/chatto-framework/community)
+
+If you'd like to file a bug report, suggest changes or submit a pull request, please [check our contribution guide](.github/CONTRIBUTING.md)
+
 ## How to install
 ### CocoaPods
 
