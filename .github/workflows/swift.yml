@@ -13,7 +13,11 @@ jobs:
             - uses: actions/checkout@v2
             - name: Test Chatto
               run: ./scripts/test.sh chatto
+            - name: Coverage for Chatto
+              run: bash <(curl -s https://codecov.io/bash) -J 'Chatto'
             - name: Test ChattoAdditions
               run: ./scripts/test.sh additions
+            - name: Coverage for ChattoAdditions
+              run: bash <(curl -s https://codecov.io/bash) -J 'ChattoAdditions'
             - name: Test ChattoApp
               run: ./scripts/test.sh app
