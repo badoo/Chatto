@@ -335,6 +335,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2656B28D251FF6CF00D7E04F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CBEA1BFE496A0052747C /* PhotoMessageAssets.xcassets */,
+				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
+				C3C0CC181BFE496A0052747C /* Text.xcassets */,
+				C3C0CBDC1BFE496A0052747C /* BaseMessageAssets.xcassets */,
+				C3C0CC0E1BFE496A0052747C /* Photos.xcassets */,
+				C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		266C7ADB24B2A55600DB0F61 /* Decoration */ = {
 			isa = PBXGroup;
 			children = (
@@ -457,6 +470,7 @@
 		C3C0CBD21BFE496A0052747C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2656B28D251FF6CF00D7E04F /* Resources */,
 				C3C0CC021BFE496A0052747C /* Info.plist */,
 				55ABA5521FC738E300923302 /* Common */,
 				C3C0CBD51BFE496A0052747C /* Chat Items */,
@@ -492,7 +506,6 @@
 		C3C0CBDB1BFE496A0052747C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C3C0CBDC1BFE496A0052747C /* BaseMessageAssets.xcassets */,
 				C3C0CBDD1BFE496A0052747C /* BaseMessageCollectionViewCell.swift */,
 				C3C0CBDF1BFE496A0052747C /* ViewDefinitions.swift */,
 				3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */,
@@ -516,7 +529,6 @@
 			isa = PBXGroup;
 			children = (
 				C3C0CBE91BFE496A0052747C /* PhotoBubbleView.swift */,
-				C3C0CBEA1BFE496A0052747C /* PhotoMessageAssets.xcassets */,
 				C3C0CBEB1BFE496A0052747C /* PhotoMessageCollectionViewCell.swift */,
 				C3C0CBEC1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift */,
 			);
@@ -551,7 +563,6 @@
 			children = (
 				DE51010C21B5670A009BC61C /* InputContainerView.swift */,
 				C3C0CC041BFE496A0052747C /* ChatInputBar.swift */,
-				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
 				C3C0CC061BFE496A0052747C /* ChatInputBarAppearance.swift */,
 				C3C0CC071BFE496A0052747C /* ChatInputBarPresenter.swift */,
 				C3C0CC081BFE496A0052747C /* ChatInputItem.swift */,
@@ -574,7 +585,6 @@
 				CDC610021FD80B5900C2588E /* Placeholder */,
 				CDC610011FD80B4A00C2588E /* Photo */,
 				CDC610001FD80B4200C2588E /* Camera */,
-				C3C0CC0E1BFE496A0052747C /* Photos.xcassets */,
 				C3C0CC0F1BFE496A0052747C /* PhotosChatInputItem.swift */,
 				C3C0CC131BFE496A0052747C /* PhotosInputWithPlaceholdersDataProvider.swift */,
 				C3C0CC141BFE496A0052747C /* PhotosInputView.swift */,
@@ -587,7 +597,6 @@
 		C3C0CC171BFE496A0052747C /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				C3C0CC181BFE496A0052747C /* Text.xcassets */,
 				C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */,
 			);
 			path = Text;
@@ -607,7 +616,6 @@
 				EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */,
 				EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */,
 				EA13CAF3229EE985009340C5 /* CircleProgressView.swift */,
-				C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */,
 			);
 			path = CircleProgressIndicatorView;
 			sourceTree = "<group>";
