@@ -113,7 +113,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     }()
 
     lazy private var placeholderIcon: UIImage = {
-        return UIImage(named: "photo-bubble-placeholder-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
+        return UIImage(named: "photo-bubble-placeholder-icon", in: Bundle.module, compatibleWith: nil)!
     }()
 
     open func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage {
@@ -175,11 +175,12 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
 public extension PhotoMessageCollectionViewCellDefaultStyle { // Default values
 
     static func createDefaultBubbleMasks() -> BubbleMasks {
+        let bundle = Bundle.module
         return BubbleMasks(
-            incomingTail: UIImage(named: "bubble-incoming-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
-            incomingNoTail: UIImage(named: "bubble-incoming", in: Bundle(for: Class.self), compatibleWith: nil)!,
-            outgoingTail: UIImage(named: "bubble-outgoing-tail", in: Bundle(for: Class.self), compatibleWith: nil)!,
-            outgoingNoTail: UIImage(named: "bubble-outgoing", in: Bundle(for: Class.self), compatibleWith: nil)!,
+            incomingTail: UIImage(named: "bubble-incoming-tail", in: bundle, compatibleWith: nil)!,
+            incomingNoTail: UIImage(named: "bubble-incoming", in: bundle, compatibleWith: nil)!,
+            outgoingTail: UIImage(named: "bubble-outgoing-tail", in: bundle, compatibleWith: nil)!,
+            outgoingNoTail: UIImage(named: "bubble-outgoing", in: bundle, compatibleWith: nil)!,
             tailWidth: 6
         )
     }
