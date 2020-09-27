@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o pipefail
+
 WORKSPACE='Chatto.xcworkspace'
 SCHEME='Chatto'
 
