@@ -88,8 +88,5 @@ github "badoo/Chatto" "swift-2"
 ## License
 Source code is distributed under MIT license.
 
-## Android
-Check our colleagues' project [Chateau]( https://github.com/badoo/Chateau)!
-
 ## Blog
-Read more on our [tech blog](http://techblog.badoo.com/) or explore our other [open source projects](https://github.com/badoo)
+Read more on our [tech blog](https://medium.com/bumble-tech) or explore our other [open source projects](https://github.com/badoo)
