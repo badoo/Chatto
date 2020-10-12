@@ -68,7 +68,26 @@ class DemoChatMessageFactory {
         let image = UIImage(named: imageName)!
         return DemoCompoundMessageModel(text: text,
                                         image: image,
+                                        showInvisibleSplitter: false,
+                                        text2: nil,
                                         emoji: emoji,
+                                        messageModel: messageModel)
+    }
+
+    static func makeCompoundMessage2(isIncoming: Bool,
+                                     text: String? = nil,
+                                     imageName: String? = nil,
+                                     showInvisibleSplitter: Bool = false,
+                                     text2: String? = nil) -> DemoCompoundMessageModel {
+        let messageModel = self.makeMessageModel(UUID().uuidString,
+                                                 isIncoming: isIncoming,
+                                                 type: .compoundItemType2,
+                                                 status: .success)
+        return DemoCompoundMessageModel(text: text,
+                                        image: imageName.flatMap(UIImage.init(named:)),
+                                        showInvisibleSplitter: showInvisibleSplitter,
+                                        text2: text2,
+                                        emoji: nil,
                                         messageModel: messageModel)
     }
 
@@ -103,9 +122,13 @@ class DemoChatMessageFactory {
         return self.makePhotoMessage(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
     }
 
-    private class func makeMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
+    private class func makeMessageModel(_ uid: String, isIncoming: Bool, type: String, status: MessageStatus? = nil) -> MessageModel {
         let senderId = isIncoming ? "1" : "2"
-        let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
+        let messageStatus: MessageStatus = {
+            guard !isIncoming else { return .success }
+            guard let status = status else { return (arc4random_uniform(100) % 3 == 0) ? .success : .failed }
+            return status
+        }()
         return MessageModel(
             uid: uid,
             senderId: senderId,
@@ -132,6 +155,7 @@ extension PhotoMessageModel {
 
 extension ChatItemType {
     static var compoundItemType = "compound"
+    static var compoundItemType2 = "compound2"
 }
 
 extension DemoChatMessageFactory {
@@ -174,7 +198,7 @@ extension DemoChatMessageFactory {
         return self.messages(fromDemoMessages: self.overviewMessages)
     }
 
-    static func makeCompoundMessages() -> [MessageModelProtocol] {
+    static func makeMessagesForCompoundMessageExamples() -> [MessageModelProtocol] {
         return [
             self.makeCompoundMessage(isIncoming: true),
             self.makeCompoundMessage(isIncoming: false),
@@ -184,6 +208,36 @@ extension DemoChatMessageFactory {
             self.makeCompoundMessage(emoji: "😍", isIncoming: true),
             self.makeCompoundMessage(isIncoming: false),
             self.makeCompoundMessage(emoji: "👍", isIncoming: false)
+        ].reversed()
+    }
+
+    static func makeMessagesForCompoundMessageLayout() -> [MessageModelProtocol] {
+        return [
+            self.makeCompoundMessage2(
+                isIncoming: true,
+                text: "It's just a text content block affected by compound bubble insets. And the next message is an image content block ignoring bubble's insets."
+            ),
+            self.makeCompoundMessage2(
+                isIncoming: false,
+                imageName: "pic-test-2"
+            ),
+            self.makeCompoundMessage2(
+                isIncoming: true,
+                text: "There are both text and image content blocks in one message.",
+                imageName: "pic-test-2",
+                text2: "And this is how it works if the text content block goes after the image."
+            ),
+            self.makeCompoundMessage2(
+                isIncoming: false,
+                text: "There are two text content blocks in one message.",
+                text2: "And it's important that content inset isn't doubled between them."
+            ),
+            self.makeCompoundMessage2(
+                isIncoming: true,
+                text: "But it's needed to be doubled,",
+                showInvisibleSplitter: true,
+                text2: "you can use a special invisible splitter content block between them."
+            )
         ].reversed()
     }
 

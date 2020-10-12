@@ -28,19 +28,23 @@ final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, 
 
     // MARK: - Instantiation
 
-    init(text: String, image: UIImage?, emoji: String?, messageModel: MessageModelProtocol) {
+    init(text: String?, image: UIImage?, showInvisibleSplitter: Bool, text2: String?, emoji: String?, messageModel: MessageModelProtocol) {
         self.text = text
         self.image = image
+        self.text2 = text2
         self.emoji = emoji
         self.messageModel = messageModel
         self.status = messageModel.status
+        self.showInvisibleSplitter = showInvisibleSplitter
     }
 
     // MARK: - Public properties
 
-    let text: String
+    let text: String?
+    let text2: String?
     let image: UIImage?
     let emoji: String?
+    let showInvisibleSplitter: Bool
 
     // MARK: - DecoratedMessageModelProtocol
 
@@ -64,6 +68,8 @@ final class DemoCompoundMessageModel: Equatable, DecoratedMessageModelProtocol, 
         guard let anotherModel = anotherItem as? DemoCompoundMessageModel else { return false }
         return self.text == anotherModel.text
             && self.image == anotherModel.image
+            && self.text2 == anotherModel.text2
             && self.emoji == anotherModel.emoji
+            && self.showInvisibleSplitter == anotherModel.showInvisibleSplitter
     }
 }
