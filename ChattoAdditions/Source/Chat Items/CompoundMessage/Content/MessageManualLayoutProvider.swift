@@ -24,7 +24,7 @@
 import UIKit
 import Chatto
 
-public struct LayoutResult {
+public struct LayoutInfo {
 
     public let size: CGSize
     public let contentInsets: UIEdgeInsets
@@ -36,7 +36,7 @@ public struct LayoutResult {
 }
 
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
-    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutResult
+    func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo
 }
 
 // MARK: - Text
@@ -58,9 +58,9 @@ public protocol TextMessageLayoutProviderProtocol: MessageManualLayoutProviderPr
 }
 
 extension TextMessageLayoutProviderProtocol {
-    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutResult {
+    public func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo {
         let layout = self.layout(for: size, safeAreaInsets: safeAreaInsets)
-        return LayoutResult(size: layout.size, contentInsets: layout.contentInsets)
+        return LayoutInfo(size: layout.size, contentInsets: layout.contentInsets)
     }
 }
 
@@ -138,10 +138,10 @@ public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderP
         self.imageSize = imageSize
     }
 
-    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutResult {
+    public func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo {
         let ratio = self.imageSize.width / self.imageSize.height
         let size = CGSize(width: size.width, height: size.width / ratio).bma_round()
-        return LayoutResult(size: size, contentInsets: .zero)
+        return LayoutInfo(size: size, contentInsets: .zero)
     }
 }
 

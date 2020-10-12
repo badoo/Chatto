@@ -54,6 +54,6 @@ struct DemoInvisibleSplitterFactory: MessageContentFactoryProtocol {
 
 private final class InvisibleSplitterLayoutProvider: Hashable, MessageManualLayoutProviderProtocol {
     static func == (lhs: InvisibleSplitterLayoutProvider, rhs: InvisibleSplitterLayoutProvider) -> Bool { true }
-    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutResult { LayoutResult(size: .zero, contentInsets: .zero) }
+    func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo { LayoutInfo(size: .zero, contentInsets: .zero) }
     func hash(into hasher: inout Hasher) { }
 }

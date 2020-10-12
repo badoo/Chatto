@@ -92,15 +92,15 @@ public struct CompoundBubbleLayoutProvider {
         var previousItemBottomInset: CGFloat = 0
         self.configuration.layoutProviders.forEach { layoutProvider in
             let frame: CGRect
-            let layoutResult = layoutProvider.sizeThatFits(size: CGSize(width: width, height: .greatestFiniteMagnitude), safeAreaInsets: safeAreaInsets)
-            let viewWidth = max(layoutResult.size.width, resultWidth)
+            let layoutInfo = layoutProvider.layoutThatFits(size: CGSize(width: width, height: .greatestFiniteMagnitude), safeAreaInsets: safeAreaInsets)
+            let viewWidth = max(layoutInfo.size.width, resultWidth)
             resultWidth = min(viewWidth, width)
-            let currentItemTopInset = layoutResult.contentInsets.top
+            let currentItemTopInset = layoutInfo.contentInsets.top
             let y = maxY - min(previousItemBottomInset, currentItemTopInset)
-            frame = CGRect(x: 0, y: y, width: viewWidth, height: layoutResult.size.height)
+            frame = CGRect(x: 0, y: y, width: viewWidth, height: layoutInfo.size.height)
             subviewsFramesWithProviders.append((frame, layoutProvider))
             maxY = frame.maxY
-            previousItemBottomInset = layoutResult.contentInsets.bottom
+            previousItemBottomInset = layoutInfo.contentInsets.bottom
         }
 
         subviewsFramesWithProviders = subviewsFramesWithProviders.map { frameWithProvider in
