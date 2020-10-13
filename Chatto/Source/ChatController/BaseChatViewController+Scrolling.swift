@@ -190,6 +190,9 @@ extension BaseChatViewController {
         self.autoLoadMoreContentIfNeeded()
     }
 
+    open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {}
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
+
     public func autoLoadMoreContentIfNeeded() {
         guard self.autoLoadingEnabled, let dataSource = self.chatDataSource else { return }
 
