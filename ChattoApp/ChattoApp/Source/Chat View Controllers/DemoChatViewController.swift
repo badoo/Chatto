@@ -101,12 +101,29 @@ class DemoChatViewController: BaseChatViewController {
             baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
         )
 
+        let compoundPresenterBuilder2 = CompoundMessagePresenterBuilder(
+            viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector),
+            accessibilityIdentifier: nil,
+            contentFactories: [
+                .init(DemoTextMessageContentFactory()),
+                .init(DemoImageMessageContentFactory()),
+                .init(DemoInvisibleSplitterFactory()),
+                .init(DemoText2MessageContentFactory())
+            ],
+            decorationFactories: [
+                .init(DemoEmojiDecorationViewFactory())
+            ],
+            baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
+        )
+
         return [
             DemoTextMessageModel.chatItemType: [textMessagePresenter],
             DemoPhotoMessageModel.chatItemType: [photoMessagePresenter],
             SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()],
-            ChatItemType.compoundItemType: [compoundPresenterBuilder]
+            ChatItemType.compoundItemType: [compoundPresenterBuilder],
+            ChatItemType.compoundItemType2: [compoundPresenterBuilder2]
         ]
     }
 

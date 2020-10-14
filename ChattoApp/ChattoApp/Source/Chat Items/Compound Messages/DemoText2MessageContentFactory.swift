@@ -25,13 +25,13 @@ import UIKit
 import Chatto
 import ChattoAdditions
 
-struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
+struct DemoText2MessageContentFactory: MessageContentFactoryProtocol {
 
     private let font = UIFont.systemFont(ofSize: 17)
     private let textInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
-        return model.text != nil
+        return model.text2 != nil
     }
 
     func createContentView() -> UIView {
@@ -48,7 +48,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
             showBorder: false,
             onBinding: { message, textView in
                 guard let textView = textView else { return }
-                textView.label.text = message.text
+                textView.label.text = message.text2
                 textView.label.textColor = message.isIncoming ? .black : .white
                 textView.layoutProvider = layoutProvider
             }
@@ -64,7 +64,7 @@ struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
     }
 
     private func createTextLayoutProvider(forModel model: DemoCompoundMessageModel) -> TextMessageLayoutProviderProtocol {
-        TextMessageLayoutProvider(text: model.text!,
+        TextMessageLayoutProvider(text: model.text2!,
                                   font: self.font,
                                   textInsets: self.textInsets)
     }

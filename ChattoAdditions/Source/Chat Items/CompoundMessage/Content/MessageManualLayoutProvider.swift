@@ -24,8 +24,19 @@
 import UIKit
 import Chatto
 
+public struct LayoutInfo {
+
+    public let size: CGSize
+    public let contentInsets: UIEdgeInsets
+
+    public init(size: CGSize, contentInsets: UIEdgeInsets) {
+        self.size = size
+        self.contentInsets = contentInsets
+    }
+}
+
 public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
-    func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize
+    func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo
 }
 
 // MARK: - Text
@@ -33,10 +44,12 @@ public protocol MessageManualLayoutProviderProtocol: HashableRepresentible {
 public struct TextMessageLayout {
     public let frame: CGRect
     public let size: CGSize
+    public let contentInsets: UIEdgeInsets
 
-    public init(frame: CGRect, size: CGSize) {
+    public init(frame: CGRect, size: CGSize, contentInsets: UIEdgeInsets) {
         self.frame = frame
         self.size = size
+        self.contentInsets = contentInsets
     }
 }
 
@@ -45,8 +58,9 @@ public protocol TextMessageLayoutProviderProtocol: MessageManualLayoutProviderPr
 }
 
 extension TextMessageLayoutProviderProtocol {
-    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
-        self.layout(for: size, safeAreaInsets: safeAreaInsets).size
+    public func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo {
+        let layout = self.layout(for: size, safeAreaInsets: safeAreaInsets)
+        return LayoutInfo(size: layout.size, contentInsets: layout.contentInsets)
     }
 }
 
@@ -98,7 +112,8 @@ public struct TextMessageLayoutProvider: Hashable, TextMessageLayoutProviderProt
                 origin: combinedInsets.origin,
                 size: textSize
             ),
-            size: resultSize
+            size: resultSize,
+            contentInsets: self.textInsets
         )
     }
 
@@ -123,9 +138,10 @@ public struct ImageMessageLayoutProvider: Hashable, MessageManualLayoutProviderP
         self.imageSize = imageSize
     }
 
-    public func sizeThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> CGSize {
+    public func layoutThatFits(size: CGSize, safeAreaInsets: UIEdgeInsets) -> LayoutInfo {
         let ratio = self.imageSize.width / self.imageSize.height
-        return CGSize(width: size.width, height: size.width / ratio).bma_round()
+        let size = CGSize(width: size.width, height: size.width / ratio).bma_round()
+        return LayoutInfo(size: size, contentInsets: .zero)
     }
 }
 

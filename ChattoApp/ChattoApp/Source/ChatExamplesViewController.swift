@@ -39,7 +39,8 @@ class ChatExamplesViewController: CellsViewController {
             self.makeMessageSelectionCellItem(),
             self.makeOpenWithTabBarCellItem(),
             self.makeScrollToBottomCellItem(),
-            self.makeCompoundDemoViewController(),
+            self.makeCompoundMessageExamplesViewController(),
+            self.makeCompoundMessageLayoutViewController(),
             self.makeUpdateItemTypeViewController(),
             self.makeTestItemsReloadingCellItem(),
             self.makeAsyncAvatarLoadingCellItem()
@@ -109,9 +110,19 @@ class ChatExamplesViewController: CellsViewController {
         }
     }
 
-    private func makeCompoundDemoViewController() -> CellItem {
+    private func makeCompoundMessageExamplesViewController() -> CellItem {
         return CellItem(title: "Compound message examples") { [unowned self] in
-            let messages = DemoChatMessageFactory.makeCompoundMessages()
+            let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageExamples()
+            let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
+            let viewController = DemoChatViewController()
+            viewController.dataSource = dataSource
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+
+    private func makeCompoundMessageLayoutViewController() -> CellItem {
+        return CellItem(title: "Compound message layout") { [unowned self] in
+            let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageLayout()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
             let viewController = DemoChatViewController()
             viewController.dataSource = dataSource

@@ -87,7 +87,9 @@ private final class DemoEmojiDecorationViewLayoutProvider: Hashable, MessageDeco
         let textLayoutProvider = TextMessageLayoutProvider(text: self.emoji,
                                                            font: self.font,
                                                            textInsets: .zero)
-        return textLayoutProvider.sizeThatFits(size: UIView.layoutFittingExpandedSize, safeAreaInsets: .zero)
+        let layoutInfo = textLayoutProvider.layoutThatFits(size: UIView.layoutFittingExpandedSize,
+                                                           safeAreaInsets: .zero)
+        return layoutInfo.size
     }()
 
     static func == (lhs: DemoEmojiDecorationViewLayoutProvider, rhs: DemoEmojiDecorationViewLayoutProvider) -> Bool {
