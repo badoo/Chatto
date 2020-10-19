@@ -13,6 +13,7 @@
 		20585091253D6FAF002B1153 /* Photos.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC0E1BFE496A0052747C /* Photos.xcassets */; };
 		20585092253D6FAF002B1153 /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC181BFE496A0052747C /* Text.xcassets */; };
 		20585093253D6FAF002B1153 /* CircleProgressIndicator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */; };
+		20585095253D6FEF002B1153 /* ChatInputBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC051BFE496A0052747C /* ChatInputBar.xib */; };
 		261D26922505B99000973CD6 /* CALayer+ImageMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261D26912505B99000973CD6 /* CALayer+ImageMask.swift */; };
 		26438961240D72C800427D14 /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2643895C240D72B400427D14 /* Chatto.framework */; };
 		2645F90D2209C11C004CB829 /* HashableRepresentible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2645F90C2209C11C004CB829 /* HashableRepresentible.swift */; };
@@ -76,7 +77,6 @@
 		C3C0CC421BFE496A0052747C /* TextMessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CBF51BFE496A0052747C /* TextMessageCollectionViewCell.swift */; };
 		C3C0CC431BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CBF61BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift */; };
 		C3C0CC4F1BFE496A0052747C /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC041BFE496A0052747C /* ChatInputBar.swift */; };
-		C3C0CC501BFE496A0052747C /* ChatInputBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC051BFE496A0052747C /* ChatInputBar.xib */; };
 		C3C0CC511BFE496A0052747C /* ChatInputBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC061BFE496A0052747C /* ChatInputBarAppearance.swift */; };
 		C3C0CC521BFE496A0052747C /* ChatInputBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC071BFE496A0052747C /* ChatInputBarPresenter.swift */; };
 		C3C0CC531BFE496A0052747C /* ChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC081BFE496A0052747C /* ChatInputItem.swift */; };
@@ -871,6 +871,7 @@
 			files = (
 				2058508F253D6FAF002B1153 /* BaseMessageAssets.xcassets in Resources */,
 				20585090253D6FAF002B1153 /* PhotoMessageAssets.xcassets in Resources */,
+				20585095253D6FEF002B1153 /* ChatInputBar.xib in Resources */,
 				20585093253D6FAF002B1153 /* CircleProgressIndicator.xcassets in Resources */,
 				20585092253D6FAF002B1153 /* Text.xcassets in Resources */,
 				20585091253D6FAF002B1153 /* Photos.xcassets in Resources */,
@@ -881,7 +882,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3C0CC501BFE496A0052747C /* ChatInputBar.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
