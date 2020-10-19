@@ -136,6 +136,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		20585096253D723F002B1153 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C3C0CBAF1BFE49320052747C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 20585087253D6F58002B1153;
+			remoteInfo = ChattoAdditionsResources;
+		};
 		2643895B240D72B400427D14 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 26438956240D72B400427D14 /* Chatto.xcodeproj */;
@@ -773,6 +780,7 @@
 			);
 			dependencies = (
 				26438960240D72C000427D14 /* PBXTargetDependency */,
+				20585097253D723F002B1153 /* PBXTargetDependency */,
 			);
 			name = ChattoAdditions;
 			productName = ChattoAdditions;
@@ -1053,6 +1061,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		20585097253D723F002B1153 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 20585087253D6F58002B1153 /* ChattoAdditionsResources */;
+			targetProxy = 20585096253D723F002B1153 /* PBXContainerItemProxy */;
+		};
 		26438960240D72C000427D14 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Chatto;
