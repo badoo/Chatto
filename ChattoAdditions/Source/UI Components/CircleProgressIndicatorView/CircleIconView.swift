@@ -200,7 +200,7 @@ final class CircleIconView: UIView {
                 return nil
             }
             }() else { return }
-        self.iconView.image = UIImage(named: imageName, in: Bundle(for: CircleIconView.self), compatibleWith: nil)
+        self.iconView.image = UIImage(named: imageName, in: Bundle.resources, compatibleWith: nil)
     }
 
     private func setupIconPoints(with type: CircleIconType) {
