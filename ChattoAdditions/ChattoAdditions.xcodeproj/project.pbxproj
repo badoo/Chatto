@@ -168,6 +168,8 @@
 
 /* Begin PBXFileReference section */
 		0B44651420347C11001ED5F1 /* DeviceImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceImagePicker.swift; sourceTree = "<group>"; };
+		20585088253D6F58002B1153 /* ChattoAdditionsResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChattoAdditionsResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		2058508A253D6F58002B1153 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		261D26912505B99000973CD6 /* CALayer+ImageMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+ImageMask.swift"; sourceTree = "<group>"; };
 		26438956240D72B400427D14 /* Chatto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chatto.xcodeproj; path = ../Chatto/Chatto.xcodeproj; sourceTree = "<group>"; };
 		2645F90C2209C11C004CB829 /* HashableRepresentible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableRepresentible.swift; sourceTree = "<group>"; };
@@ -299,6 +301,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		20585085253D6F58002B1153 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C3C0CBB41BFE49320052747C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,6 +327,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20585089253D6F58002B1153 /* ChattoAdditionsResources */ = {
+			isa = PBXGroup;
+			children = (
+				2058508A253D6F58002B1153 /* Info.plist */,
+			);
+			path = ChattoAdditionsResources;
+			sourceTree = "<group>";
+		};
 		26438955240D72AB00427D14 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				26438955240D72AB00427D14 /* Dependencies */,
+				20585089253D6F58002B1153 /* ChattoAdditionsResources */,
 				C3C0CBB91BFE49320052747C /* Products */,
 				C3C0CBD21BFE496A0052747C /* Source */,
 				C3C0CC6E1BFE49700052747C /* Tests */,
@@ -450,6 +468,7 @@
 			children = (
 				C3C0CBB81BFE49320052747C /* ChattoAdditions.framework */,
 				C3C0CBC21BFE49320052747C /* ChattoAdditionsTests.xctest */,
+				20585088253D6F58002B1153 /* ChattoAdditionsResources.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -723,6 +742,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		20585087253D6F58002B1153 /* ChattoAdditionsResources */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2058508E253D6F58002B1153 /* Build configuration list for PBXNativeTarget "ChattoAdditionsResources" */;
+			buildPhases = (
+				20585084253D6F58002B1153 /* Sources */,
+				20585085253D6F58002B1153 /* Frameworks */,
+				20585086253D6F58002B1153 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChattoAdditionsResources;
+			productName = ChattoAdditionsResources;
+			productReference = 20585088253D6F58002B1153 /* ChattoAdditionsResources.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 		C3C0CBB71BFE49320052747C /* ChattoAdditions */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C3C0CBCC1BFE49320052747C /* Build configuration list for PBXNativeTarget "ChattoAdditions" */;
@@ -771,6 +807,10 @@
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Badoo;
 				TargetAttributes = {
+					20585087253D6F58002B1153 = {
+						CreatedOnToolsVersion = 11.7;
+						ProvisioningStyle = Automatic;
+					};
 					C3C0CBB71BFE49320052747C = {
 						CreatedOnToolsVersion = 7.2;
 						LastSwiftMigration = 1000;
@@ -801,6 +841,7 @@
 			projectRoot = "";
 			targets = (
 				C3C0CBB71BFE49320052747C /* ChattoAdditions */,
+				20585087253D6F58002B1153 /* ChattoAdditionsResources */,
 				C3C0CBC11BFE49320052747C /* ChattoAdditionsTests */,
 			);
 		};
@@ -824,6 +865,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		20585086253D6F58002B1153 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C3C0CBB61BFE49320052747C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -863,6 +911,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		20585084253D6F58002B1153 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C3C0CBB31BFE49320052747C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1011,6 +1066,55 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		2058508B253D6F58002B1153 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ChattoAdditionsResources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAdditions.ChattoAdditionsResources;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		2058508C253D6F58002B1153 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ChattoAdditionsResources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAdditions.ChattoAdditionsResources;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		C3C0CBCA1BFE49320052747C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1186,6 +1290,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2058508E253D6F58002B1153 /* Build configuration list for PBXNativeTarget "ChattoAdditionsResources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2058508B253D6F58002B1153 /* Debug */,
+				2058508C253D6F58002B1153 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C3C0CBB21BFE49320052747C /* Build configuration list for PBXProject "ChattoAdditions" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
