@@ -43,8 +43,8 @@ public struct LiveCameraCellAppearance {
     public static func createDefaultAppearance() -> LiveCameraCellAppearance {
         return LiveCameraCellAppearance(
             backgroundColor: UIColor(red: 24.0/255.0, green: 101.0/255.0, blue: 245.0/255.0, alpha: 1),
-            cameraImage: UIImage(named: "camera", in: Bundle(for: LiveCameraCell.self), compatibleWith: nil),
-            cameraLockImage: UIImage(named: "camera_lock", in: Bundle(for: LiveCameraCell.self), compatibleWith: nil)
+            cameraImage: UIImage(named: "camera", in: Bundle.resources, compatibleWith: nil),
+            cameraLockImage: UIImage(named: "camera_lock", in: Bundle.resources, compatibleWith: nil)
         )
     }
 }
