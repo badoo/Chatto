@@ -90,6 +90,9 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
     // Must be set before loadView is called.
     public var substitutesMainViewAutomatically = true
+    
+    // If true, don't display keyboard
+    public var disabledKeyboard: Bool = false
 
     // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
     public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
@@ -139,11 +142,13 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.keyboardTracker.startTracking()
     }
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
         self.keyboardTracker?.stopTracking()
     }
 
@@ -203,29 +208,37 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputBarContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
-        self.view.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
+        
+        if !disabledKeyboard {
+            self.view.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
+            let leadingAnchor: NSLayoutXAxisAnchor
+            let trailingAnchor: NSLayoutXAxisAnchor
+            if #available(iOS 11.0, *) {
+                let guide = self.view.safeAreaLayoutGuide
+                leadingAnchor = guide.leadingAnchor
+                trailingAnchor = guide.trailingAnchor
+            } else {
+                leadingAnchor = self.view.leadingAnchor
+                trailingAnchor = self.view.trailingAnchor
+            }
+            
+            NSLayoutConstraint.activate([
+                self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+                self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
         }
 
-        NSLayoutConstraint.activate([
-            self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
         self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0)
-        self.view.addConstraint(self.inputContainerBottomConstraint)
+        
+        if !disabledKeyboard {
+            self.view.addConstraint(self.inputContainerBottomConstraint)
+        }
     }
 
     private func addInputView() {
         let inputView = self.createChatInputView()
         self.inputBarContainer.addSubview(inputView)
+        
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .equal, toItem: inputView, attribute: .top, multiplier: 1, constant: 0))
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
@@ -238,6 +251,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputContentContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputContentContainer.backgroundColor = .white
         self.view.addSubview(self.inputContentContainer)
+        
         self.view.addConstraint(NSLayoutConstraint(item: self.inputContentContainer, attribute: .top, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .leading, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .trailing, multiplier: 1, constant: 0))
