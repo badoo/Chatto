@@ -136,7 +136,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     private weak var currentInputView: InputContainerView?
 
     private var defaultKeyboardHeight: CGFloat {
-        if UIApplication.shared.statusBarOrientation.isPortrait {
+        if UIScreen.main.portraitOrientation {
             return UIScreen.main.defaultPortraitKeyboardHeight
         } else {
             return UIScreen.main.defaultLandscapeKeyboardHeight

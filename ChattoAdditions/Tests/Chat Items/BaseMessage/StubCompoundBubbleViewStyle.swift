@@ -25,6 +25,17 @@ import ChattoAdditions
 import UIKit
 
 final class StubCompoundBubbleViewStyle: CompoundBubbleViewStyleProtocol {
+
+    var stubbedSpotlightedBackgroundColor: UIColor?
+    func spotlightedBackgroundColor(forViewModel viewModel: ViewModel) -> UIColor? {
+        return self.stubbedSpotlightedBackgroundColor
+    }
+
+    var stubbedSpotlightDuration: TimeInterval!
+    func spotlightDuration(forViewModel viewModel: ViewModel) -> TimeInterval {
+        return self.stubbedSpotlightDuration
+    }
+
     var stubbedHideBubbleForSingleContent: Bool! = false
     var hideBubbleForSingleContent: Bool {
         return stubbedHideBubbleForSingleContent

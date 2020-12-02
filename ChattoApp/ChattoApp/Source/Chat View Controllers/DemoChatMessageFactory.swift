@@ -55,7 +55,11 @@ class DemoChatMessageFactory {
         return photoMessageModel
     }
 
-    static func makeCompoundMessage(uid: String = UUID().uuidString, text: String? = nil, imageName: String? = nil, isIncoming: Bool) -> DemoCompoundMessageModel {
+    static func makeCompoundMessage(uid: String = UUID().uuidString,
+                                    text: String? = nil,
+                                    imageName: String? = nil,
+                                    emoji: String? = nil,
+                                    isIncoming: Bool) -> DemoCompoundMessageModel {
         let messageModel = self.makeMessageModel(uid,
                                                  isIncoming: isIncoming,
                                                  type: .compoundItemType)
@@ -64,6 +68,7 @@ class DemoChatMessageFactory {
         let image = UIImage(named: imageName)!
         return DemoCompoundMessageModel(text: text,
                                         image: image,
+                                        emoji: emoji,
                                         messageModel: messageModel)
     }
 
@@ -101,7 +106,15 @@ class DemoChatMessageFactory {
     private class func makeMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
         let senderId = isIncoming ? "1" : "2"
         let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
-        return MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
+        return MessageModel(
+            uid: uid,
+            senderId: senderId,
+            type: type,
+            isIncoming: isIncoming,
+            date: Date(),
+            status: messageStatus,
+            canReply: true
+        )
     }
 }
 
@@ -168,9 +181,9 @@ extension DemoChatMessageFactory {
             self.makeCompoundMessage(isIncoming: true),
             self.makeCompoundMessage(isIncoming: false),
             self.makeCompoundMessage(isIncoming: true),
-            self.makeCompoundMessage(isIncoming: true),
+            self.makeCompoundMessage(emoji: "😍", isIncoming: true),
             self.makeCompoundMessage(isIncoming: false),
-            self.makeCompoundMessage(isIncoming: false)
+            self.makeCompoundMessage(emoji: "👍", isIncoming: false)
         ].reversed()
     }
 

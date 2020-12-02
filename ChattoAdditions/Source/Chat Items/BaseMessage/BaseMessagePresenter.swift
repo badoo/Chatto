@@ -33,20 +33,24 @@ public protocol ViewModelBuilderProtocol {
 }
 
 public protocol BaseMessageInteractionHandlerProtocol {
-    associatedtype ViewModelT
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView)
-    func userDidTapOnAvatar(viewModel: ViewModelT)
-    func userDidTapOnBubble(viewModel: ViewModelT)
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT)
-    func userDidSelectMessage(viewModel: ViewModelT)
-    func userDidDeselectMessage(viewModel: ViewModelT)
+
+    associatedtype MessageType
+    associatedtype ViewModelType
+
+    func userDidTapOnFailIcon(message: MessageType, viewModel: ViewModelType, failIconView: UIView)
+    func userDidTapOnAvatar(message: MessageType, viewModel: ViewModelType)
+    func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType)
+    func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType)
+    func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType)
+    func userDidSelectMessage(message: MessageType, viewModel: ViewModelType)
+    func userDidDeselectMessage(message: MessageType, viewModel: ViewModelType)
 }
 
 open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT>: BaseChatItemPresenter<BaseMessageCollectionViewCell<BubbleViewT>> where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT,
+    InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
+    InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT,
     BubbleViewT: UIView,
     BubbleViewT: MaximumLayoutWidthSpecificable,
     BubbleViewT: BackgroundSizingQueryable {
@@ -122,7 +126,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
 
-            cell.allowAccessoryViewRevealing = !decorationAttributes.messageDecorationAttributes.isShowingSelectionIndicator
+            cell.allowRevealing = !decorationAttributes.messageDecorationAttributes.isShowingSelectionIndicator
             cell.onBubbleTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleTapped()
@@ -202,30 +206,30 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     }
 
     open func onCellBubbleTapped() {
-        self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel)
+        self.interactionHandler?.userDidTapOnBubble(message: self.messageModel, viewModel: self.messageViewModel)
     }
 
     open func onCellBubbleLongPressBegan() {
-        self.interactionHandler?.userDidBeginLongPressOnBubble(viewModel: self.messageViewModel)
+        self.interactionHandler?.userDidBeginLongPressOnBubble(message: self.messageModel, viewModel: self.messageViewModel)
     }
 
     open func onCellBubbleLongPressEnded() {
-        self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
+        self.interactionHandler?.userDidEndLongPressOnBubble(message: self.messageModel, viewModel: self.messageViewModel)
     }
 
     open func onCellAvatarTapped() {
-        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
+        self.interactionHandler?.userDidTapOnAvatar(message: self.messageModel, viewModel: self.messageViewModel)
     }
 
     open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
-        self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel, failIconView: failedButtonView)
+        self.interactionHandler?.userDidTapOnFailIcon(message: self.messageModel, viewModel: self.messageViewModel, failIconView: failedButtonView)
     }
 
     open func onCellSelection() {
         if self.messageViewModel.decorationAttributes.isSelected {
-            self.interactionHandler?.userDidDeselectMessage(viewModel: self.messageViewModel)
+            self.interactionHandler?.userDidDeselectMessage(message: self.messageModel, viewModel: self.messageViewModel)
         } else {
-            self.interactionHandler?.userDidSelectMessage(viewModel: self.messageViewModel)
+            self.interactionHandler?.userDidSelectMessage(message: self.messageModel, viewModel: self.messageViewModel)
         }
     }
 }

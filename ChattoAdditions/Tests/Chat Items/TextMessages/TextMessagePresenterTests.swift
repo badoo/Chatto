@@ -101,26 +101,21 @@ class TextMessagePresenterTests: XCTestCase, UICollectionViewDataSource {
 }
 
 class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
-    typealias ViewModelT = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView) {
-    }
+    typealias MessageType = TextMessageModel<MessageModel>
+    typealias ViewModelType = TextMessageViewModel<TextMessageModel<MessageModel>>
 
-    func userDidTapOnAvatar(viewModel: ViewModelT) {
-    }
+    func userDidTapOnFailIcon(message: MessageType, viewModel: ViewModelType, failIconView: UIView) {}
 
-    func userDidTapOnBubble(viewModel: ViewModelT) {
-    }
+    func userDidTapOnAvatar(message: MessageType, viewModel: ViewModelType) {}
 
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT) {
-    }
+    func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType) {}
 
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT) {
-    }
+    func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {}
 
-    func userDidSelectMessage(viewModel: ViewModelT) {
-    }
+    func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {}
 
-    func userDidDeselectMessage(viewModel: ViewModelT) {
-    }
+    func userDidSelectMessage(message: MessageType, viewModel: ViewModelType) {}
+
+    func userDidDeselectMessage(message: MessageType, viewModel: ViewModelType) {}
 }

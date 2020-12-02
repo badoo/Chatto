@@ -25,6 +25,20 @@
 import UIKit
 import Chatto
 
+public struct ReplyIndicatorStyle {
+    let image: UIImage
+    let size: CGSize
+    let maxOffsetToReplyIndicator: CGFloat
+
+    public init(image: UIImage, size: CGSize, maxOffsetToReplyIndicator: CGFloat) {
+        self.image = image
+        self.size = size
+        self.maxOffsetToReplyIndicator = maxOffsetToReplyIndicator
+    }
+
+    var maxOffset: CGFloat { self.maxOffsetToReplyIndicator + size.width }
+}
+
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
     func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
@@ -34,6 +48,7 @@ public protocol BaseMessageCollectionViewCellStyleProtocol {
     func selectionIndicatorIcon(for viewModel: MessageViewModelProtocol) -> UIImage
     func attributedStringForDate(_ date: String) -> NSAttributedString
     func layoutConstants(viewModel: MessageViewModelProtocol) -> BaseMessageCollectionViewCellLayoutConstants
+    var replyIndicatorStyle: ReplyIndicatorStyle? { get }
 }
 
 public struct BaseMessageCollectionViewCellLayoutConstants {
@@ -68,7 +83,7 @@ public struct BaseMessageCollectionViewCellLayoutConstants {
         - Have a BubbleViewType that responds properly to sizeThatFits:
 */
 
-open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, UIGestureRecognizerDelegate where
+open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, BackgroundSizingQueryable, AccessoryViewRevealable, ReplyIndicatorRevealable, UIGestureRecognizerDelegate where
     BubbleViewType: UIView,
     BubbleViewType: MaximumLayoutWidthSpecificable,
     BubbleViewType: BackgroundSizingQueryable {
@@ -83,9 +98,6 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             updateClosure()
             self.isUpdating = false
             self.updateViews()
-            if animated {
-                self.layoutIfNeeded()
-            }
         }
         if animated {
             UIView.animate(withDuration: self.animationDuration, animations: updateAndRefreshViews, completion: { (_) -> Void in
@@ -101,14 +113,17 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             oldValue?.avatarImage.removeObserver(self)
             self.updateViews()
             self.observeAvatar()
+            self.addBubbleViewConstraintsIfNeeded()
         }
     }
 
     public var baseStyle: BaseMessageCollectionViewCellStyleProtocol! {
         didSet {
             self.updateViews()
+            self.addBubbleViewConstraintsIfNeeded()
         }
     }
+
     private var shouldShowFailedIcon: Bool {
         return self.messageViewModel?.decorationAttributes.canShowFailedIcon == true && self.messageViewModel?.isShowingFailedIcon == true
     }
@@ -120,6 +135,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             }
         }
     }
+
+    open var useAutolayoutForBubbleView: Bool { false }
 
     open var canCalculateSizeInBackground: Bool {
         return self.bubbleView.canCalculateSizeInBackground
@@ -178,6 +195,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
         self.contentView.addSubview(self.selectionIndicator)
+        self.contentView.addSubview(self.replyIndicator)
+        self.replyIndicator.alpha = 0
         self.contentView.isExclusiveTouch = true
         self.isExclusiveTouch = true
 
@@ -241,6 +260,12 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
         self.contentView.isUserInteractionEnabled = !viewModel.decorationAttributes.isShowingSelectionIndicator
         self.selectionTapGestureRecognizer?.isEnabled = viewModel.decorationAttributes.isShowingSelectionIndicator
+        self.selectionIndicator.isHidden = !viewModel.decorationAttributes.isShowingSelectionIndicator
+
+        if let replyIndicatorStyle = style.replyIndicatorStyle {
+            replyIndicator.image = replyIndicatorStyle.image
+            replyIndicator.bounds.size = replyIndicatorStyle.size
+        }
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -258,14 +283,40 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     }
 
     // MARK: layout
+
+    private var didAddConstraintsForBubbleView = false
+    private func addBubbleViewConstraintsIfNeeded() {
+        guard !self.didAddConstraintsForBubbleView, let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
+        guard self.useAutolayoutForBubbleView else { return }
+        self.didAddConstraintsForBubbleView = true
+        let layoutConstants = style.layoutConstants(viewModel: viewModel)
+        let percentage = layoutConstants.maxContainerWidthPercentageForBubbleView
+        let offset = layoutConstants.horizontalMargin + layoutConstants.horizontalInterspacing
+        let xConstraint: NSLayoutConstraint
+        if viewModel.isIncoming {
+            xConstraint = bubbleView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: offset)
+        } else {
+            xConstraint = bubbleView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -offset)
+        }
+
+        NSLayoutConstraint.activate([
+            bubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            bubbleView.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: percentage),
+            bubbleView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            xConstraint
+        ])
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
 
         let layout = self.calculateLayout(availableWidth: self.contentView.bounds.width)
         self.failedButton.bma_rect = layout.failedButtonFrame
-        self.bubbleView.bma_rect = layout.bubbleViewFrame
-        self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
-        self.bubbleView.layoutIfNeeded()
+        if !self.useAutolayoutForBubbleView {
+            self.bubbleView.bma_rect = layout.bubbleViewFrame
+            self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
+            self.bubbleView.layoutIfNeeded()
+        }
 
         self.avatarView.bma_rect = layout.avatarViewFrame
         self.selectionIndicator.bma_rect = layout.selectionIndicatorFrame
@@ -285,10 +336,26 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.contentView.frame = contentViewframe
             self.accessoryTimestampView.center = CGPoint(x: self.bounds.width - leftOffsetForAccessoryView + accessoryViewWidth / 2, y: self.contentView.center.y)
         }
+
+        if let style = self.baseStyle?.replyIndicatorStyle, offsetToRevealAccessoryView == 0 {
+            let offset = self.offsetToRevealReplyIndicator
+            let width = style.size.width
+            self.replyIndicator.center = CGPoint(
+                x: min(style.maxOffset - offset, 0) - width / 2,
+                y: self.bounds.height / 2
+            )
+            self.contentView.frame.origin.x = offset
+        }
     }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return self.calculateLayout(availableWidth: size.width).size
+        if self.useAutolayoutForBubbleView {
+            return contentView.systemLayoutSizeFitting(.init(width: size.width, height: 0),
+                                                       withHorizontalFittingPriority: .required,
+                                                       verticalFittingPriority: .defaultLow)
+        } else {
+            return self.calculateLayout(availableWidth: size.width).size
+        }
     }
 
     private func calculateLayout(availableWidth: CGFloat) -> Layout {
@@ -323,7 +390,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
     }
 
-    public var allowAccessoryViewRevealing: Bool = true
+    public var allowRevealing: Bool = true
 
     open func preferredOffsetToRevealAccessoryView() -> CGFloat? {
         let layoutConstants = baseStyle.layoutConstants(viewModel: messageViewModel)
@@ -358,6 +425,35 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     func removeAccessoryView() {
         self.accessoryTimestampView.removeFromSuperview()
+    }
+
+    // MARK: Reply revealing
+
+    private let replyIndicator = UIImageView()
+
+    private var offsetToRevealReplyIndicator: CGFloat = 0 {
+        didSet { self.setNeedsLayout() }
+    }
+
+    open func canShowReply() -> Bool {
+        self.messageViewModel?.canReply ?? false
+    }
+
+    open func revealReplyIndicator(withOffset offset: CGFloat, animated: Bool) -> Bool {
+        guard let maxOffset = self.baseStyle?.replyIndicatorStyle?.maxOffset else { return false }
+        self.offsetToRevealReplyIndicator = offset
+        let updateAlpha = { [weak self] in
+            self?.replyIndicator.alpha = min(offset, maxOffset) / maxOffset
+        }
+        if animated {
+            UIView.animate(withDuration: self.animationDuration) {
+                self.layoutIfNeeded()
+                updateAlpha()
+            }
+        } else {
+            updateAlpha()
+        }
+        return offset >= maxOffset
     }
 
     // MARK: Selection

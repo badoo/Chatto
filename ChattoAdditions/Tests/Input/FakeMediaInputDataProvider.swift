@@ -25,9 +25,14 @@
 import UIKit
 @testable import ChattoAdditions
 
-final class FakeMediaInputDataProviderImageRequest: MediaInputDataProviderResourceRequestProtocol {
+final class FakeMediaInputDataProviderImageRequest: MediaInputDataProviderPreviewRequestProtocol, MediaInputDataProviderResourceRequestProtocol {
     var requestId: Int32 = 1
     var progress: Double = 0
+
+    var onObserveMediaProgress: ((MediaInputDataProviderProgressHandler?, MediaInputDataProviderPreviewCompletion?) -> Void)?
+    func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?, completion: MediaInputDataProviderPreviewCompletion?) {
+        self.onObserveMediaProgress?(progressHandler, completion)
+    }
 
     var onObserveProgress: ((MediaInputDataProviderProgressHandler?, MediaInputDataProviderCompletion?) -> Void)?
     func observeProgress(with progressHandler: MediaInputDataProviderProgressHandler?,
@@ -45,10 +50,10 @@ final class FakeMediaInputDataProvider: MediaInputDataProviderProtocol {
     weak var delegate: MediaInputDataProviderDelegate?
     var count: Int = 0
 
-    var onRequestPreviewImage: ((Int, CGSize, MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol)?
+    var onRequestPreviewImage: ((Int, CGSize, MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol)?
     func requestPreviewImage(at index: Int,
                              targetSize: CGSize,
-                             completion: @escaping MediaInputDataProviderCompletion) -> MediaInputDataProviderResourceRequestProtocol {
+                             completion: @escaping MediaInputDataProviderPreviewCompletion) -> MediaInputDataProviderPreviewRequestProtocol {
         return self.onRequestPreviewImage?(index, targetSize, completion) ?? FakeMediaInputDataProviderImageRequest()
     }
 

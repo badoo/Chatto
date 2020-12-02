@@ -28,52 +28,70 @@ import ChattoAdditions
 struct DemoTextMessageContentFactory: MessageContentFactoryProtocol {
 
     private let font = UIFont.systemFont(ofSize: 17)
-    private let textInsets = UIEdgeInsets.zero
+    private let textInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
     func canCreateMessageContent(forModel model: DemoCompoundMessageModel) -> Bool {
         return true
     }
 
     func createContentView() -> UIView {
-        let label = LabelWithInsets()
-        label.numberOfLines = 0
-        label.font = self.font
-        label.textInsets = self.textInsets
-        return label
+        let textView = TextView()
+        textView.label.numberOfLines = 0
+        textView.label.font = self.font
+        return textView
     }
 
     func createContentPresenter(forModel model: DemoCompoundMessageModel) -> MessageContentPresenterProtocol {
-        return DefaultMessageContentPresenter<DemoCompoundMessageModel, LabelWithInsets>(
+        let layoutProvider = self.createTextLayoutProvider(forModel: model)
+        return DefaultMessageContentPresenter<DemoCompoundMessageModel, TextView>(
             message: model,
             showBorder: false,
-            onBinding: { message, label in
-                label?.text = message.text
-                label?.textColor = message.isIncoming ? .black : .white
+            onBinding: { message, textView in
+                guard let textView = textView else { return }
+                textView.label.text = message.text
+                textView.label.textColor = message.isIncoming ? .black : .white
+                textView.layoutProvider = layoutProvider
             }
         )
     }
 
     func createLayoutProvider(forModel model: DemoCompoundMessageModel) -> MessageManualLayoutProviderProtocol {
-        return TextMessageLayoutProvider(text: model.text,
-                                         font: self.font,
-                                         textInsets: self.textInsets)
+        self.createTextLayoutProvider(forModel: model)
     }
 
     func createMenuPresenter(forModel model: DemoCompoundMessageModel) -> ChatItemMenuPresenterProtocol? {
         return nil
     }
-}
 
-private final class LabelWithInsets: UILabel {
-    var textInsets: UIEdgeInsets = .zero
-    override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: self.textInsets + self.safeAreaInsets))
+    private func createTextLayoutProvider(forModel model: DemoCompoundMessageModel) -> TextMessageLayoutProviderProtocol {
+        TextMessageLayoutProvider(text: model.text,
+                                  font: self.font,
+                                  textInsets: self.textInsets)
     }
 }
 
-private func + (lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> UIEdgeInsets {
-    return UIEdgeInsets(top: lhs.top + rhs.top,
-                        left: lhs.left + rhs.left,
-                        bottom: lhs.bottom + rhs.bottom,
-                        right: lhs.right + rhs.right)
+private final class TextView: UIView {
+
+    let label = UILabel()
+    var layoutProvider: TextMessageLayoutProviderProtocol? {
+        didSet {
+            guard self.layoutProvider != nil else { return }
+            self.setNeedsLayout()
+        }
+    }
+
+    init() {
+        super.init(frame: .zero)
+        self.addSubview(label)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let layoutProvider = self.layoutProvider else { return }
+        self.label.frame = layoutProvider.layout(for: self.bounds.size, safeAreaInsets: self.safeAreaInsets).frame
+    }
 }

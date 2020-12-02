@@ -33,10 +33,21 @@ public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
 }
 
-open class BaseChatViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, ChatDataSourceDelegateProtocol, InputPositionControlling {
+public protocol ReplyActionHandler: AnyObject {
+    func handleReply(for: ChatItemProtocol)
+}
+
+open class BaseChatViewController: UIViewController,
+                                   UICollectionViewDataSource,
+                                   UICollectionViewDelegate,
+                                   ChatDataSourceDelegateProtocol,
+                                   InputPositionControlling,
+                                   ReplyIndicatorRevealerDelegate {
 
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
+    open var replyActionHandler: ReplyActionHandler?
+    open var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
     open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
@@ -144,7 +155,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.keyboardTracker.stopTracking()
+        self.keyboardTracker?.stopTracking()
     }
 
     private func addCollectionView() {
@@ -161,16 +172,33 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         collectionView.autoresizingMask = []
         self.view.addSubview(collectionView)
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: collectionView, attribute: .top, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: collectionView, attribute: .leading, multiplier: 1, constant: 0))
         self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: collectionView, attribute: .trailing, multiplier: 1, constant: 0))
+
+        let leadingAnchor: NSLayoutXAxisAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+            leadingAnchor = guide.leadingAnchor
+            trailingAnchor = guide.trailingAnchor
+        } else {
+            leadingAnchor = self.view.leadingAnchor
+            trailingAnchor = self.view.trailingAnchor
+        }
+
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
         collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
         collectionView.chatto_setIsPrefetchingEnabled(false)
         
-        self.accessoryViewRevealer = AccessoryViewRevealer(collectionView: collectionView)
+        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
+        self.cellPanGestureHandler.replyDelegate = self
+        self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
         self.collectionView = collectionView
 
         if !self.customPresentersConfigurationPoint {
@@ -189,8 +217,21 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
         self.view.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .leading, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .trailing, multiplier: 1, constant: 0))
+        let leadingAnchor: NSLayoutXAxisAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+            leadingAnchor = guide.leadingAnchor
+            trailingAnchor = guide.trailingAnchor
+        } else {
+            leadingAnchor = self.view.leadingAnchor
+            trailingAnchor = self.view.trailingAnchor
+        }
+
+        NSLayoutConstraint.activate([
+            self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
         self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0)
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
@@ -199,8 +240,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         let inputView = self.createChatInputView()
         self.inputBarContainer.addSubview(inputView)
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .equal, toItem: inputView, attribute: .top, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
+        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
         self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
     }
 
@@ -218,7 +259,10 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func updateInputContainerBottomBaseOffset() {
         if #available(iOS 11.0, *) {
-            self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
+            let offset = self.bottomLayoutGuide.length
+            if self.inputContainerBottomBaseOffset != offset {
+                self.inputContainerBottomBaseOffset = offset
+            }
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
             // because it has incorrect value when we actually have a bottom bar (tabbar)
@@ -373,7 +417,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     }
 
     var autoLoadingEnabled: Bool = false
-    var accessoryViewRevealer: AccessoryViewRevealer!
+    var cellPanGestureHandler: CellPanGestureHandler!
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
     public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
@@ -422,6 +466,32 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
         let firstItemMoved = changes.movedIndexPaths.first
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
+    }
+
+    // MARK: ReplyIndicatorRevealerDelegate
+
+    open func didPassThreshold(at: IndexPath) {
+        self.replyFeedbackGenerator?.generateFeedback()
+    }
+
+    open func didFinishReplyGesture(at indexPath: IndexPath) {
+        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
+        self.replyActionHandler?.handleReply(for: item)
+    }
+
+    open func didCancelReplyGesture(at: IndexPath) {}
+
+    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
+        didSet {
+            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
+        }
+    }
+
+    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
+        if #available(iOS 10, *) {
+            return ReplyFeedbackGenerator()
+        }
+        return nil
     }
 
     // MARK: ChatDataSourceDelegateProtocol

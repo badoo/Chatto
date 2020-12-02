@@ -28,17 +28,30 @@ class AddRandomMessagesChatViewController: DemoChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let button = UIBarButtonItem(
-            title: "Add message",
+        let addButton = UIBarButtonItem(
+            title: "Add",
             style: .plain,
             target: self,
             action: #selector(addRandomMessage)
         )
-        self.navigationItem.rightBarButtonItem = button
+
+        let removeButton = UIBarButtonItem(
+            title: "Remove",
+            style: .plain,
+            target: self,
+            action: #selector(removeRandomMessage)
+        )
+
+        self.navigationItem.rightBarButtonItems = [addButton, removeButton]
     }
 
     @objc
     private func addRandomMessage() {
         self.dataSource.addRandomIncomingMessage()
+    }
+
+    @objc
+    private func removeRandomMessage() {
+        self.dataSource.removeRandomMessage()
     }
 }

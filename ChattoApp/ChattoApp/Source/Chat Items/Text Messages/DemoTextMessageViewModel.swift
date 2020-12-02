@@ -25,16 +25,7 @@
 import Foundation
 import ChattoAdditions
 
-public class DemoTextMessageViewModel: TextMessageViewModel<DemoTextMessageModel>, DemoMessageViewModelProtocol {
-
-    public override init(textMessage: DemoTextMessageModel, messageViewModel: MessageViewModelProtocol) {
-        super.init(textMessage: textMessage, messageViewModel: messageViewModel)
-    }
-
-    public var messageModel: DemoMessageModelProtocol {
-        return self.textMessage
-    }
-}
+public typealias DemoTextMessageViewModel = TextMessageViewModel<DemoTextMessageModel>
 
 public class DemoTextMessageViewModelBuilder: ViewModelBuilderProtocol {
 

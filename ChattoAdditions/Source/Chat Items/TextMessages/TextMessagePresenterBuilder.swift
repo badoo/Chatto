@@ -29,7 +29,8 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: 
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
-    InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
+    InteractionHandlerT.MessageType == ViewModelBuilderT.ModelT,
+    InteractionHandlerT.ViewModelType == ViewModelBuilderT.ViewModelT {
 
     typealias ViewModelT = ViewModelBuilderT.ViewModelT
     typealias ModelT = ViewModelBuilderT.ModelT

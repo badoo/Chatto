@@ -51,7 +51,7 @@ public extension CGSize {
         case .center:
             originX = containerRect.midX - self.width / 2.0
         case .right:
-            originX = containerRect.maxY - self.width
+            originX = containerRect.maxX - self.width
         }
 
         // Vertical alignment

@@ -23,7 +23,7 @@
 
 import ChattoAdditions
 
-final class DemoCompoundMessageViewModel: DecoratedMessageViewModelProtocol, DemoMessageViewModelProtocol {
+final class DemoCompoundMessageViewModel: DecoratedMessageViewModelProtocol {
 
     init(message: DemoCompoundMessageModel, messageViewModel: MessageViewModelProtocol) {
         self.messageViewModel = messageViewModel

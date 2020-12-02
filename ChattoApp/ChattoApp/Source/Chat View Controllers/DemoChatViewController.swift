@@ -39,16 +39,15 @@ class DemoChatViewController: BaseChatViewController {
         }
     }
 
-    lazy private var baseMessageHandler: BaseMessageHandler = {
-        return BaseMessageHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.cellPanGestureHandlerConfig.allowReplyRevealing = true
 
         self.title = "Chat"
         self.messagesSelector.delegate = self
         self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
+        self.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
     }
 
     var chatInputPresenter: AnyObject!
@@ -77,26 +76,28 @@ class DemoChatViewController: BaseChatViewController {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: self.createTextMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler)
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
-            interactionHandler: GenericMessageHandler(baseHandler: self.baseMessageHandler),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector),
             accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
                 .init(DemoImageMessageContentFactory()),
                 .init(DemoDateMessageContentFactory())
             ],
-            compoundCellDimensions: .defaultDimensions,
+            decorationFactories: [
+                .init(DemoEmojiDecorationViewFactory())
+            ],
             baseCellStyle: BaseMessageCollectionViewCellAvatarStyle()
         )
 
@@ -155,11 +156,5 @@ extension DemoChatViewController: MessagesSelectorDelegate {
 
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol) {
         self.enqueueModelUpdate(updateType: .normal)
-    }
-}
-
-extension CompoundBubbleLayoutProvider.Dimensions {
-    static var defaultDimensions: CompoundBubbleLayoutProvider.Dimensions {
-        return .init(spacing: 8, contentInsets: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
     }
 }
