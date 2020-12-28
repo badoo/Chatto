@@ -27,8 +27,10 @@ import Foundation
 extension Bundle {
     static let resources: Bundle = {
         let bundle = Bundle(for: BundleToken.self)
-        let path = bundle.path(forResource: "ChattoAdditionsResources", ofType: "bundle")
-        return Bundle(path: path!)!
+        guard let path = bundle.path(forResource: "ChattoAdditionsResources", ofType: "bundle") else {
+            return Bundle.module
+        }
+        return Bundle(path: path)!
     }()
 }
 

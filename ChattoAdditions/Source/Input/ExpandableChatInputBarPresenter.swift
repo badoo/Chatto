@@ -22,6 +22,8 @@
  THE SOFTWARE.
  */
 
+import Foundation
+import UIKit
 import Chatto
 
 @objc
