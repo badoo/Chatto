@@ -21,16 +21,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 import Foundation
 
 extension Bundle {
     static let resources: Bundle = {
         let bundle = Bundle(for: BundleToken.self)
-        guard let path = bundle.path(forResource: "ChattoAdditionsResources", ofType: "bundle") else {
+        #if SWIFT_PACKAGE
             return Bundle.module
-        }
-        return Bundle(path: path)!
+        #else
+            let path = bundle.path(forResource: "ChattoAdditionsResources", ofType: "bundle")
+            return Bundle(path: path!)!
+        #endif
     }()
 }
 
