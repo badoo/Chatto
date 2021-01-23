@@ -40,6 +40,7 @@ public protocol BaseMessageInteractionHandlerProtocol {
     func userDidTapOnFailIcon(message: MessageType, viewModel: ViewModelType, failIconView: UIView)
     func userDidTapOnAvatar(message: MessageType, viewModel: ViewModelType)
     func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType)
+    func userDidDoubleTapOnBubble(message: MessageType, viewModel: ViewModelType)
     func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType)
     func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType)
     func userDidSelectMessage(message: MessageType, viewModel: ViewModelType)
@@ -131,6 +132,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleTapped()
             }
+            cell.onBubbleDoubleTapped = { [weak self] (cell) in
+                guard let sSelf = self else { return }
+                sSelf.onCellBubbleDoubleTapped()
+            }
             cell.onBubbleLongPressBegan = { [weak self] (cell) in
                 guard let sSelf = self else { return }
                 sSelf.onCellBubbleLongPressBegan()
@@ -207,6 +212,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     open func onCellBubbleTapped() {
         self.interactionHandler?.userDidTapOnBubble(message: self.messageModel, viewModel: self.messageViewModel)
+    }
+
+    open func onCellBubbleDoubleTapped() {
+        self.interactionHandler?.userDidDoubleTapOnBubble(message: self.messageModel, viewModel: self.messageViewModel)
     }
 
     open func onCellBubbleLongPressBegan() {

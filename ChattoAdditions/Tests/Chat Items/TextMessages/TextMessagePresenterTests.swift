@@ -111,6 +111,8 @@ class TextMessageTestHandler: BaseMessageInteractionHandlerProtocol {
 
     func userDidTapOnBubble(message: MessageType, viewModel: ViewModelType) {}
 
+    func userDidDoubleTapOnBubble(message: MessageType, viewModel: ViewModelType) {}
+
     func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {}
 
     func userDidEndLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {}

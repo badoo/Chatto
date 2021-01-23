@@ -48,6 +48,7 @@ public final class FakeMessageInteractionHandler: BaseMessageInteractionHandlerP
     var _userDidTapOnFailIcon = _UserDidTapOnFailIcon()
     var _userDidTapOnAvatar = _UserDidTapOnAvatar()
     var _userDidTapOnBubble = _UserDidTapOnBubble()
+    var _userDidDoubleTapOnBubble = _UserDidDoubleTapOnBubble()
     var _userDidBeginLongPressOnBubble = _UserDidBeginLongPressOnBubble()
     var _userDidEndLongPressOnBubble = _UserDidEndLongPressOnBubble()
     var _userDidSelectMessage = _UserDidSelectMessage()
@@ -80,6 +81,16 @@ public final class FakeMessageInteractionHandler: BaseMessageInteractionHandlerP
         } else {
             if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
             self._userDidTapOnBubble.history.append((message, viewModel))
+        }
+    }
+
+    var onUserDidDoubleTapOnBubble: ((MessageType, ViewModelType) -> Void)? = nil
+    public func userDidDoubleTapOnBubble(message: MessageType, viewModel: ViewModelType) -> Void {
+        if let fakeImplementation = self.onUserDidDoubleTapOnBubble {
+            fakeImplementation(message, viewModel)
+        } else {
+            if !self.isNiceMock { fatalError("\(String(describing: self)) \(#function) is not implemented. Add your implementation or use .niceMock()") }
+            self._userDidDoubleTapOnBubble.history.append((message, viewModel))
         }
     }
 
@@ -141,6 +152,13 @@ public extension FakeMessageInteractionHandler {
     }
 
     struct _UserDidTapOnBubble {
+        var history: [(message: MessageType, viewModel: ViewModelType)] = []
+        var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
+        var callsCount: Int { return self.history.count }
+        var wasCalled: Bool { return self.callsCount > 0 }
+    }
+
+    struct _UserDidDoubleTapOnBubble {
         var history: [(message: MessageType, viewModel: ViewModelType)] = []
         var lastArgs: (message: MessageType, viewModel: ViewModelType)! { return self.history.last }
         var callsCount: Int { return self.history.count }
