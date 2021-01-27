@@ -167,8 +167,16 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     public private(set) lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleTapped(_:)))
+        tapGestureRecognizer.numberOfTapsRequired = 1
         tapGestureRecognizer.delegate = self
         return tapGestureRecognizer
+    }()
+
+    public private(set) lazy var doubleTapGestureRecognizer: UITapGestureRecognizer = {
+        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(BaseMessageCollectionViewCell.bubbleDoubleTapped(_:)))
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        doubleTapGestureRecognizer.delegate = self
+        return doubleTapGestureRecognizer
     }()
 
     public private (set) lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
@@ -190,7 +198,9 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.bubbleView.isExclusiveTouch = true
         self.bubbleView.addGestureRecognizer(self.tapGestureRecognizer)
         self.bubbleView.addGestureRecognizer(self.longPressGestureRecognizer)
+        self.bubbleView.addGestureRecognizer(self.doubleTapGestureRecognizer)
         self.tapGestureRecognizer.require(toFail: self.longPressGestureRecognizer)
+        self.tapGestureRecognizer.require(toFail: self.doubleTapGestureRecognizer)
         self.contentView.addSubview(self.avatarView)
         self.contentView.addSubview(self.bubbleView)
         self.contentView.addSubview(self.failedButton)
@@ -211,7 +221,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
     open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizersExceptTapGestures = gestureRecognizer === self.longPressGestureRecognizer && !(otherGestureRecognizer is UITapGestureRecognizer)
-        let allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures = gestureRecognizer === self.tapGestureRecognizer && otherGestureRecognizer is UITapGestureRecognizer
+        let allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures = [self.tapGestureRecognizer, self.doubleTapGestureRecognizer].contains(gestureRecognizer) && otherGestureRecognizer is UITapGestureRecognizer
         return allowLongPressGestureRecognizerToBeRecognizedWithAnyOtherGestureRecognizersExceptTapGestures
             || allowTapGestureRecognizerToBeRecognizedWithOtherTapGestures
     }
@@ -505,6 +515,12 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
     @objc
     func bubbleTapped(_ tapGestureRecognizer: UITapGestureRecognizer) {
         self.onBubbleTapped?(self)
+    }
+
+    public var onBubbleDoubleTapped: ((_ cell: BaseMessageCollectionViewCell) -> Void)?
+    @objc
+    func bubbleDoubleTapped(_ tapGestureRecognizer: UITapGestureRecognizer) {
+        self.onBubbleDoubleTapped?(self)
     }
 
     public var onBubbleLongPressBegan: ((_ cell: BaseMessageCollectionViewCell) -> Void)?

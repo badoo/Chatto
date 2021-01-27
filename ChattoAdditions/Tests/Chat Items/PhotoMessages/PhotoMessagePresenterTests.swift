@@ -106,6 +106,11 @@ class PhotoMessageTestHandler: BaseMessageInteractionHandlerProtocol {
         self.didHandleTapOnBubble = true
     }
 
+    var didHandleDoubleTapOnBubble = false
+    func userDidDoubleTapOnBubble(message: MessageType, viewModel: ViewModelType) {
+        self.didHandleDoubleTapOnBubble = true
+    }
+
     var didHandleBeginLongPressOnBubble = false
     func userDidBeginLongPressOnBubble(message: MessageType, viewModel: ViewModelType) {
         self.didHandleBeginLongPressOnBubble = true

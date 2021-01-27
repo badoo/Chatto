@@ -46,6 +46,10 @@ final class DemoMessageInteractionHandler<Model: DemoMessageModelProtocol, ViewM
         print(#function)
     }
 
+    func userDidDoubleTapOnBubble(message: Model, viewModel: ViewModel) {
+        print(#function)
+    }
+
     func userDidBeginLongPressOnBubble(message: Model, viewModel: ViewModel) {
         print(#function)
     }

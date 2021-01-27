@@ -58,6 +58,13 @@ class BaseMessagePresenterTests: XCTestCase {
         XCTAssertTrue(self.interactionHandler.didHandleTapOnBubble)
     }
 
+    func testThat_WhenCellIsDoubleTappedOnBubble_ThenInteractionHandlerHandlesEvent() {
+        let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
+        self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
+        cell.bubbleDoubleTapped(UITapGestureRecognizer())
+        XCTAssertTrue(self.interactionHandler.didHandleDoubleTapOnBubble)
+    }
+
     func testThat_WhenCellIsBeginLongPressOnBubble_ThenInteractionHandlerHandlesEvent() {
         let cell = PhotoMessageCollectionViewCell(frame: CGRect.zero)
         self.presenter.configureCell(cell, decorationAttributes: self.decorationAttributes)
