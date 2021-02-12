@@ -73,6 +73,7 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     public func contentWillBeShown() { self.onContentWillBeShown?(self.message, self.view) }
     public func contentWasHidden() { self.onContentWasHidden?(self.message, self.view) }
     public func contentWasTapped_deprecated() { self.onContentWasTapped_deprecated?(self.message, self.view) }
+    public func handleFailedIconTap() {}
 
     public func bindToView(with viewReference: ViewReference) {
         self.viewReference = viewReference

@@ -51,6 +51,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var date: String { get }
     var status: MessageViewModelStatus { get }
     var avatarImage: Observable<UIImage?> { get set }
+    var messageContentTransferStatus: TransferStatus? { get set }
     var canReply: Bool { get }
     func willBeShown() // Optional
     func wasHidden() // Optional
@@ -95,6 +96,14 @@ extension DecoratedMessageViewModelProtocol {
         return self.messageViewModel.date
     }
 
+    public var messageContentTransferStatus: TransferStatus? {
+        get {
+            return nil
+        }
+        set {
+        }
+    }
+
     public var status: MessageViewModelStatus {
         return self.messageViewModel.status
     }
@@ -124,8 +133,15 @@ open class MessageViewModel: MessageViewModelProtocol {
     open var decorationAttributes: BaseMessageDecorationAttributes
     open var isUserInteractionEnabled: Bool = true
 
+    public var messageContentTransferStatus: TransferStatus?
+
     open var status: MessageViewModelStatus {
-        return self.messageModel.status.viewModelStatus()
+        let deliveryStatus = self.messageModel.status.viewModelStatus()
+        guard let contentLoadStatus = self.messageContentTransferStatus else { return deliveryStatus }
+        if contentLoadStatus == .failed {
+            return .failed
+        }
+        return deliveryStatus
     }
 
     open lazy var date: String = {
