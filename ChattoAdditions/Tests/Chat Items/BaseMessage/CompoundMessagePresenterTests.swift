@@ -67,8 +67,8 @@ final class CompoundMessagePresenterTests: XCTestCase {
         let (presenter, viewModel) = try self.makeRealPresenter(contentTransferStatus: contentTransferStatus)
         contentTransferStatus.value = .failed
         XCTAssertEqual(viewModel.messageContentTransferStatus, .failed)
-        // to get rid of the warning about not used variable
-        XCTAssert(presenter === presenter)
+        // to avoid the warning about not used variable
+        _ = presenter
     }
 
     func test_GivenFailableContentPresenter_WhenItsContentTurnsToFailedToSuccess_ThenViewModelStatusUpdatedToSuccess() throws {
@@ -76,8 +76,8 @@ final class CompoundMessagePresenterTests: XCTestCase {
         let (presenter, viewModel) = try self.makeRealPresenter(contentTransferStatus: contentTransferStatus)
         contentTransferStatus.value = .success
         XCTAssertEqual(viewModel.messageContentTransferStatus, .success)
-        // to get rid of the warning about not used variable
-        XCTAssert(presenter === presenter)
+        // to avoid the warning about not used variable
+        _ = presenter
     }
 
     func test_GivenContentPresenterWithFailedContentAndMessageWithFailedDeliveryStauts_WhenFailIconTapped_ThenInteractionHandlerCalled() throws {
