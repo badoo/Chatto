@@ -61,4 +61,78 @@ final class CompoundMessagePresenterTests: XCTestCase {
         XCTAssertEqual(0, presenter.invokedUpdateContentCount)
         XCTAssertEqual(1, presenter.invokedUpdateExistingContentPresentersCount)
     }
+
+    func test_GivenFailableContentPresenter_WhenItsContentIsFailedToLoad_ThenViewModelStatusUpdatedToFailed() throws {
+        let contentTransferStatus = Observable<TransferStatus>(.idle)
+        let (presenter, viewModel) = try self.makeRealPresenter(contentTransferStatus: contentTransferStatus)
+        contentTransferStatus.value = .failed
+        XCTAssertEqual(viewModel.messageContentTransferStatus, .failed)
+        // to get rid of the warning about not used variable
+        XCTAssert(presenter === presenter)
+    }
+
+    func test_GivenFailableContentPresenter_WhenItsContentTurnsToFailedToSuccess_ThenViewModelStatusUpdatedToSuccess() throws {
+        let contentTransferStatus = Observable<TransferStatus>(.failed)
+        let (presenter, viewModel) = try self.makeRealPresenter(contentTransferStatus: contentTransferStatus)
+        contentTransferStatus.value = .success
+        XCTAssertEqual(viewModel.messageContentTransferStatus, .success)
+        // to get rid of the warning about not used variable
+        XCTAssert(presenter === presenter)
+    }
+
+    func test_GivenContentPresenterWithFailedContentAndMessageWithFailedDeliveryStauts_WhenFailIconTapped_ThenInteractionHandlerCalled() throws {
+        let fakeMessage = MessageModel(uid: "111",
+                                       senderId: "123",
+                                       type: "text",
+                                       isIncoming: true,
+                                       date: Date(timeIntervalSince1970: 0),
+                                       status: .failed)
+        let interactionHandler = FakeMessageInteractionHandler.niceMock()
+        let (presenter, _) = try self.makeRealPresenter(
+            message: fakeMessage,
+            interactionHandler: interactionHandler,
+            contentTransferStatus: .init(.failed)
+        )
+
+        presenter.onCellFailedButtonTapped(UIView())
+        XCTAssert(interactionHandler._userDidTapOnFailIcon.wasCalled)
+    }
+
+    func test_GivenContentPresenterWithFailedContentAndMessageWithSuccessDeliveryStauts_WhenFailIconTapped_ThenContentPresenterCalled() throws {
+        let contentPresenter = FakeMessageContentPresenter()
+        let (presenter, _) = try self.makeRealPresenter(
+            contentPresenter: contentPresenter,
+            contentTransferStatus: .init(.failed)
+        )
+
+        presenter.onCellFailedButtonTapped(UIView())
+        XCTAssert(contentPresenter.wasHandleFailedIconTapCalled)
+    }
+
+    private func makeRealPresenter(
+        message: MessageModel = TestHelpers.makeMessage(withId: "123"),
+        contentPresenter: FakeMessageContentPresenter = FakeMessageContentPresenter(),
+        interactionHandler: FakeMessageInteractionHandler? = nil,
+        contentTransferStatus: Observable<TransferStatus> = .init(.success)
+    ) throws -> (CompoundMessagePresenter<FakeViewModelBuilder, FakeMessageInteractionHandler>, MessageViewModel) {
+        let viewModelBuilder = TestHelpers.makeFakeViewModelBuilder()
+        contentPresenter.contentTransferStatus = contentTransferStatus
+
+        let contentFactory = FakeMessageContentFactory<MessageModel>()
+        contentFactory.fakeContentPresenter = contentPresenter
+        let viewModel = try XCTUnwrap(viewModelBuilder.stubbedCreateViewModelResult)
+
+        let presenter = CompoundMessagePresenter<FakeViewModelBuilder, FakeMessageInteractionHandler>(
+            messageModel: message,
+            viewModelBuilder: viewModelBuilder,
+            interactionHandler: interactionHandler,
+            contentFactories: [.init(contentFactory)],
+            sizingCell: CompoundMessageCollectionViewCell(frame: .zero),
+            baseCellStyle: StubMessageCollectionViewCellStyle(),
+            compoundCellStyle: StubCompoundBubbleViewStyle(),
+            cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>(),
+            accessibilityIdentifier: nil
+        )
+        return (presenter, viewModel)
+    }
 }

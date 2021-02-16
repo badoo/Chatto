@@ -59,7 +59,7 @@ public protocol MessageContentPresenterProtocol {
     func updateMessage(_ newMessage: Any)
 }
 
-public protocol FailableMessageContentPresenter: MessageContentPresenterProtocol {
+public protocol FailableMessageContentPresenterProtocol: MessageContentPresenterProtocol {
     var contentTransferStatus: Observable<TransferStatus>? { get }
     func handleFailedIconTap()
 }

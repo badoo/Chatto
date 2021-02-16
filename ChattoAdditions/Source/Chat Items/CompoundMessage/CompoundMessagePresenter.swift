@@ -45,7 +45,6 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let initialContentFactories: [AnyMessageContentFactory<ModelT>]
     private var contentFactories: [AnyMessageContentFactory<ModelT>]!
     private var contentPresenters: [MessageContentPresenterProtocol]!
-    private var contentPresentersWithFailedContent: [MessageContentPresenterProtocol] = []
     private let initialDecorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     private var decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = []
     private var menuPresenter: ChatItemMenuPresenterProtocol?
@@ -266,7 +265,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             super.onCellFailedButtonTapped(failedButtonView)
         } else {
             for presenter in self.contentPresenters {
-                guard let failablePresenter = presenter as? FailableMessageContentPresenter,
+                guard let failablePresenter = presenter as? FailableMessageContentPresenterProtocol,
                       failablePresenter.contentTransferStatus?.value == .failed else {
                     continue
                 }
@@ -313,7 +312,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private func createContentPresenter(using factory: AnyMessageContentFactory<ModelT>) -> MessageContentPresenterProtocol {
         var presenter = factory.createContentPresenter(forModel: self.messageModel)
         presenter.delegate = self
-        if let failablePresenter = presenter as? FailableMessageContentPresenter {
+        if let failablePresenter = presenter as? FailableMessageContentPresenterProtocol {
             failablePresenter.contentTransferStatus?.observe(self, closure: { [weak self] (_, _) in
                 self?.handleContentTransferStatusUpdate()
             })
@@ -322,7 +321,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     }
 
     private func handleContentTransferStatusUpdate() {
-        let aggregatedContentStatus = self.contentPresenters.compactMap { $0 as? FailableMessageContentPresenter }
+        let aggregatedContentStatus = self.contentPresenters.compactMap { $0 as? FailableMessageContentPresenterProtocol }
             .reduce(TransferStatus.success, { (result, presenter) in
             guard let status = presenter.contentTransferStatus?.value else { return result }
             switch status {
