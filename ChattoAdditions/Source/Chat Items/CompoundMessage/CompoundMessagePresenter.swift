@@ -337,10 +337,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         let currentContentStatus = self.messageViewModel.messageContentTransferStatus
         guard currentContentStatus != aggregatedContentStatus else { return }
 
-        let shouldUpdateCell = !((currentContentStatus == .failed) && (aggregatedContentStatus == .transfering))
         self.messageViewModel.messageContentTransferStatus = aggregatedContentStatus
-        if shouldUpdateCell {
-            self.cell?.updateFailedIconState()
-        }
+        self.cell?.updateFailedIconState()
     }
 }
