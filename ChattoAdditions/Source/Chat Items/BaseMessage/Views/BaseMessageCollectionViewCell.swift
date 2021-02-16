@@ -285,6 +285,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
             self.failedButton.alpha = 0
         }
         if oldAlpha != self.failedButton.alpha {
+            // to recalculate bubble offsets
             self.setNeedsLayout()
         }
     }
