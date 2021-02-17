@@ -70,12 +70,28 @@ class PhotosInputCameraPickerTests: XCTestCase {
         XCTAssertTrue(onCameraPickerDismissedCalled)
     }
 
-    func testThat_GivenPresentedPicker_WhenPickerFinishedWithImage_ThenOnImageTakenCallbackReceivedImage() {
+    func testThat_GivenPresentedPicker_WhenPickerFinishedWithImageFromFrontCamera_ThenOnImageTakenCallbackReceivedImage() {
         // Given
         var onImageTakenCalled = false
         self.sut.presentCameraPicker(onImageTaken: { (image) in
             onImageTakenCalled = true
             XCTAssertNotNil(image)
+            XCTAssertEqual(image?.cameraType, .front)
+        }, onCameraPickerDismissed: {})
+        // When
+        self.fakeImagePicker.finish(with: [UIImagePickerController.InfoKey.originalImage: UIImage()])
+        // Then
+        XCTAssertTrue(onImageTakenCalled)
+    }
+
+    func testThat_GivenPresentedPicker_WhenPickerFinishedWithImageFromRearCamera_ThenOnImageTakenCallbackReceivedImage() {
+        // Given
+        var onImageTakenCalled = false
+        self.fakeImagePicker.cameraType = .rear
+        self.sut.presentCameraPicker(onImageTaken: { (image) in
+            onImageTakenCalled = true
+            XCTAssertNotNil(image)
+            XCTAssertEqual(image?.cameraType, .rear)
         }, onCameraPickerDismissed: {})
         // When
         self.fakeImagePicker.finish(with: [UIImagePickerController.InfoKey.originalImage: UIImage()])
@@ -111,6 +127,8 @@ class PhotosInputCameraPickerTests: XCTestCase {
 }
 
 private class FakeImagePicker: ImagePicker {
+    var cameraType: CameraType = .front
+
     let controller: UIViewController = DummyViewController()
     weak var delegate: ImagePickerDelegate?
 
