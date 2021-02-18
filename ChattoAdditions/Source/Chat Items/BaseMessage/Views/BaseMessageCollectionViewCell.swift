@@ -258,13 +258,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         if self.isUpdating { return }
         guard let viewModel = self.messageViewModel, let style = self.baseStyle else { return }
         self.bubbleView.isUserInteractionEnabled = viewModel.isUserInteractionEnabled
-        if self.shouldShowFailedIcon {
-            self.failedButton.setImage(self.baseStyle.failedIcon, for: .normal)
-            self.failedButton.setImage(self.baseStyle.failedIconHighlighted, for: .highlighted)
-            self.failedButton.alpha = 1
-        } else {
-            self.failedButton.alpha = 0
-        }
+        self.updateFailedIconState()
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         self.updateSelectionIndicator(with: style)
 
@@ -279,6 +273,21 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
+    }
+
+    public func updateFailedIconState() {
+        let oldAlpha = self.failedButton.alpha
+        if self.shouldShowFailedIcon {
+            self.failedButton.setImage(self.baseStyle.failedIcon, for: .normal)
+            self.failedButton.setImage(self.baseStyle.failedIconHighlighted, for: .highlighted)
+            self.failedButton.alpha = 1
+        } else {
+            self.failedButton.alpha = 0
+        }
+        if oldAlpha != self.failedButton.alpha {
+            // to recalculate bubble offsets
+            self.setNeedsLayout()
+        }
     }
 
     private func observeAvatar() {

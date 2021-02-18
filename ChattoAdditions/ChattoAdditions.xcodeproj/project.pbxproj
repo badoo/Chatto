@@ -114,6 +114,9 @@
 		CDC6100B1FD8268200C2588E /* FakePhotosInputDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */; };
 		CDC6100D1FD8376000C2588E /* PhotosInputCellProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */; };
 		CDE15F43205993FB005D86DD /* PhotosInputCameraPickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */; };
+		D6E3AEF625D6DF6000819A56 /* MessageViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E3AEF525D6DF6000819A56 /* MessageViewModelTests.swift */; };
+		D6E3AEFC25D6E01900819A56 /* FakeMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E3AEFB25D6E01900819A56 /* FakeMessageModel.swift */; };
+		D6E3AF0125D6E6C500819A56 /* FakeMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E3AF0025D6E6C500819A56 /* FakeMessageContentFactory.swift */; };
 		DE51010D21B5670A009BC61C /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE51010C21B5670A009BC61C /* InputContainerView.swift */; };
 		E376C10524F8160B00069ECA /* PhotosInputPermissionsRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = E376C10324F8160B00069ECA /* PhotosInputPermissionsRequester.swift */; };
 		E3E0D60322EA1AA2006E2053 /* Comparable+Clamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */; };
@@ -287,6 +290,9 @@
 		CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakePhotosInputDataProvider.swift; sourceTree = "<group>"; };
 		CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCellProviderTests.swift; sourceTree = "<group>"; };
 		CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCameraPickerTests.swift; sourceTree = "<group>"; };
+		D6E3AEF525D6DF6000819A56 /* MessageViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelTests.swift; sourceTree = "<group>"; };
+		D6E3AEFB25D6E01900819A56 /* FakeMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMessageModel.swift; sourceTree = "<group>"; };
+		D6E3AF0025D6E6C500819A56 /* FakeMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMessageContentFactory.swift; sourceTree = "<group>"; };
 		DE51010C21B5670A009BC61C /* InputContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
 		E376C10324F8160B00069ECA /* PhotosInputPermissionsRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputPermissionsRequester.swift; sourceTree = "<group>"; };
 		E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamp.swift"; sourceTree = "<group>"; };
@@ -690,12 +696,15 @@
 				EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */,
 				EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */,
 				EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */,
+				D6E3AEFB25D6E01900819A56 /* FakeMessageModel.swift */,
 				EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */,
 				EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */,
+				D6E3AEF525D6DF6000819A56 /* MessageViewModelTests.swift */,
 				EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */,
 				EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */,
 				EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */,
 				EA7525512302FB930069D1AF /* TestHelpers.swift */,
+				D6E3AF0025D6E6C500819A56 /* FakeMessageContentFactory.swift */,
 			);
 			path = BaseMessage;
 			sourceTree = "<group>";
@@ -1029,6 +1038,7 @@
 			files = (
 				C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */,
 				CDC6100B1FD8268200C2588E /* FakePhotosInputDataProvider.swift in Sources */,
+				D6E3AEFC25D6E01900819A56 /* FakeMessageModel.swift in Sources */,
 				EAAFBCEB2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift in Sources */,
 				EAAFBCEF2302DB22004F553D /* FakeViewModelBuilder.swift in Sources */,
 				EA75279A2302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift in Sources */,
@@ -1043,6 +1053,7 @@
 				C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */,
 				55ABA5731FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift in Sources */,
 				C3C0CC8A1BFE49700052747C /* PhotosChatInputItemTests.swift in Sources */,
+				D6E3AF0125D6E6C500819A56 /* FakeMessageContentFactory.swift in Sources */,
 				EA7525502302E94B0069D1AF /* MessageModel+Helpers.swift in Sources */,
 				EAAFBCED2302D8C8004F553D /* CompoundMessagePresenterTests.swift in Sources */,
 				55ABA5691FC7498700923302 /* CGRect+AdditionsTests.swift in Sources */,
@@ -1054,6 +1065,7 @@
 				E3E0D60522EA1AEE006E2053 /* Comparable+ClampTests.swift in Sources */,
 				55ABA5591FC73B5600923302 /* CGSize+AdditionsTests.swift in Sources */,
 				C3C0CC871BFE49700052747C /* ChatInputItemViewTests.swift in Sources */,
+				D6E3AEF625D6DF6000819A56 /* MessageViewModelTests.swift in Sources */,
 				CDC6100D1FD8376000C2588E /* PhotosInputCellProviderTests.swift in Sources */,
 				C35FE3C81C033E7800D42980 /* PhotoMessagePresenterTests.swift in Sources */,
 				C3EFA6B01C03607A0063CE22 /* BaseMessagePresenterTests.swift in Sources */,

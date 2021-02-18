@@ -120,11 +120,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         let currentIds = contentFactories.map { $0.identifier }
         self.contentFactories = contentFactories
 
-        self.contentPresenters = self.contentFactories.compactMap {
-            var presenter = $0.createContentPresenter(forModel: self.messageModel)
-            presenter.delegate = self
-            return presenter
-        }
+        self.contentPresenters = self.contentFactories.compactMap(self.createContentPresenter)
 
         self.menuPresenter = self.contentFactories.lazy.compactMap { $0.createMenuPresenter(forModel: self.messageModel) }.first
 
@@ -264,6 +260,20 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.menuPresenter?.performMenuControllerAction(action)
     }
 
+    open override func onCellFailedButtonTapped(_ failedButtonView: UIView) {
+        if self.messageModel.status == .failed {
+            super.onCellFailedButtonTapped(failedButtonView)
+        } else {
+            for presenter in self.contentPresenters {
+                guard let failablePresenter = presenter as? FailableMessageContentPresenterProtocol,
+                      failablePresenter.contentTransferStatus?.value == .failed else {
+                    continue
+                }
+                failablePresenter.handleFailedIconTap()
+            }
+        }
+    }
+
     // MARK: - ChatItemSpotlighting
 
     override open func spotlight() {
@@ -297,5 +307,37 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 action()
             }
         }
+    }
+
+    private func createContentPresenter(using factory: AnyMessageContentFactory<ModelT>) -> MessageContentPresenterProtocol {
+        var presenter = factory.createContentPresenter(forModel: self.messageModel)
+        presenter.delegate = self
+        if let failablePresenter = presenter as? FailableMessageContentPresenterProtocol {
+            failablePresenter.contentTransferStatus?.observe(self, closure: { [weak self] (_, _) in
+                self?.handleContentTransferStatusUpdate()
+            })
+        }
+        return presenter
+    }
+
+    private func handleContentTransferStatusUpdate() {
+        let aggregatedContentStatus = self.contentPresenters.compactMap { $0 as? FailableMessageContentPresenterProtocol }
+            .reduce(TransferStatus.success, { (result, presenter) in
+            guard let status = presenter.contentTransferStatus?.value else { return result }
+            switch status {
+            case .failed:
+                return .failed
+            case .transfering:
+                return result == .success ? status : result
+            case .idle, .success:
+                return result
+            }
+        })
+
+        let currentContentStatus = self.messageViewModel.messageContentTransferStatus
+        guard currentContentStatus != aggregatedContentStatus else { return }
+
+        self.messageViewModel.messageContentTransferStatus = aggregatedContentStatus
+        self.cell?.updateFailedIconState()
     }
 }
