@@ -38,8 +38,12 @@ public protocol PhotosInputViewProtocol {
     var presentingController: UIViewController? { get }
 }
 
-public enum PhotosInputViewPhotoSource {
-    case camera
+public enum CameraType {
+    case front, rear
+}
+
+public enum PhotosInputViewPhotoSource: Equatable {
+    case camera(CameraType)
     case gallery
 }
 
@@ -230,11 +234,10 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
                 self.delegate?.inputViewDidRequestCameraPermission(self)
             } else {
                 self.liveCameraPresenter.cameraPickerWillAppear()
-                self.cameraPicker.presentCameraPicker(onImageTaken: { [weak self] (image) in
+                self.cameraPicker.presentCameraPicker(onImageTaken: { [weak self] (result) in
                     guard let sSelf = self else { return }
-
-                    if let image = image {
-                        sSelf.delegate?.inputView(sSelf, didSelectImage: image, source: .camera)
+                    if let result = result {
+                        sSelf.delegate?.inputView(sSelf, didSelectImage: result.image, source: .camera(result.cameraType))
                     }
                 }, onCameraPickerDismissed: { [weak self] in
                     self?.liveCameraPresenter.cameraPickerDidDisappear()

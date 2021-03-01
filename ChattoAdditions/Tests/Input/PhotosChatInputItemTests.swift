@@ -49,7 +49,7 @@ class PhotosChatInputItemTests: XCTestCase {
         XCTAssertFalse(handled)
     }
 
-    func testThat_WhenInputViewSelectsImage_ItemPassedImageIntoPhotoHandler() {
+    func testThat_WhenInputViewSelectsImageFromFrontCamera_ItemPassedImageIntoPhotoHandler() {
         var handledImage: UIImage?
         var handledSource: PhotosInputViewPhotoSource?
         self.inputItem.photoInputHandler = { image, source in
@@ -57,7 +57,23 @@ class PhotosChatInputItemTests: XCTestCase {
             handledSource = source
         }
         let image = UIImage()
-        let source = PhotosInputViewPhotoSource.camera
+        let source = PhotosInputViewPhotoSource.camera(.front)
+        let inputView = MockPhotosInputView()
+        self.inputItem.inputView(inputView, didSelectImage: image, source: source)
+
+        XCTAssertEqual(handledImage!, image)
+        XCTAssertEqual(handledSource!, source)
+    }
+
+    func testThat_WhenInputViewSelectsImageFromRearCamera_ItemPassedImageIntoPhotoHandler() {
+        var handledImage: UIImage?
+        var handledSource: PhotosInputViewPhotoSource?
+        self.inputItem.photoInputHandler = { image, source in
+            handledImage = image
+            handledSource = source
+        }
+        let image = UIImage()
+        let source = PhotosInputViewPhotoSource.camera(.rear)
         let inputView = MockPhotosInputView()
         self.inputItem.inputView(inputView, didSelectImage: image, source: source)
 

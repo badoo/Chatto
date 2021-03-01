@@ -26,11 +26,13 @@ import UIKit
 
 final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
+    var cameraType: CameraType { CameraType(self.pickerController.cameraDevice) }
+    
     private weak var delegate: ImagePickerDelegate?
+    private let pickerController = UIImagePickerController()
 
     init(_ delegate: ImagePickerDelegate) {
-        let pickerController = UIImagePickerController()
-        self.controller = pickerController
+        self.controller = self.pickerController
         self.delegate = delegate
         super.init()
         pickerController.delegate = self
@@ -54,5 +56,16 @@ final class DeviceImagePickerFactory: ImagePickerFactory {
             return nil
         }
         return DeviceImagePicker(delegate)
+    }
+}
+
+private extension CameraType {
+
+    init(_ device: UIImagePickerController.CameraDevice) {
+        switch device {
+        case .front: self = .front
+        case .rear: self = .rear
+        @unknown default: fatalError("Unable to map unknown device type \(device.rawValue). Do you have a fancy device with a third camera type?!")
+        }
     }
 }

@@ -31,6 +31,7 @@ public protocol ImagePickerDelegate: class {
 
 public protocol ImagePicker: class {
     var controller: UIViewController { get }
+    var cameraType: CameraType { get }
 }
 
 public protocol ImagePickerFactory: class {
