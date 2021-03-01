@@ -46,7 +46,7 @@ final class PhotosInputPlaceholderCell: UICollectionViewCell {
     private func commonInit() {
         self.imageView = UIImageView()
         self.imageView.contentMode = .center
-        self.imageView.image = UIImage(named: Constants.imageName, in: Bundle.resources, compatibleWith: nil)
+        self.imageView.image = UIImage(named: Constants.imageName, in: Bundle(for: PhotosInputPlaceholderCell.self), compatibleWith: nil)
         self.contentView.addSubview(self.imageView)
         self.contentView.backgroundColor = Constants.backgroundColor
         self.accessibilityIdentifier = Constants.accessibilityIdentifier

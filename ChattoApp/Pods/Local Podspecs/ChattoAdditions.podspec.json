@@ -22,13 +22,11 @@
   "public_header_files": "ChattoAdditions/Source/**/*.h",
   "requires_arc": true,
   "swift_versions": "5.3",
-  "resource_bundles": {
-    "ChattoAdditionsResources": [
-      "ChattoAdditions/Source/**/*.xib",
-      "ChattoAdditions/Source/**/*.storyboard",
-      "ChattoAdditions/Source/**/*.xcassets"
-    ]
-  },
+  "resources": [
+    "ChattoAdditions/Source/**/*.xib",
+    "ChattoAdditions/Source/**/*.storyboard",
+    "ChattoAdditions/Source/**/*.xcassets"
+  ],
   "dependencies": {
     "Chatto": [
       "4.0.0"
