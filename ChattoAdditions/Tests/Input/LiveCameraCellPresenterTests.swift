@@ -31,21 +31,21 @@ class LiveCameraCellPresenterTests: XCTestCase {
     var presenter: LiveCameraCellPresenter!
     var cell: LiveCameraCell!
     var cameraAuthorizationStatus: AVAuthorizationStatus = .notDetermined
-    var cameraAuthorizationStatusProvider: LiveCameraCellPresenter.AVAuthorizationStatusProvider!
 
     override func setUp() {
         super.setUp()
-        self.cameraAuthorizationStatusProvider = { [unowned self] in
-            return self.cameraAuthorizationStatus
-        }
-        self.presenter = LiveCameraCellPresenter(authorizationStatusProvider: self.cameraAuthorizationStatusProvider)
+        self.presenter = {
+            let factory = LiveCameraCellPresenterFactory(
+                authorizationStatusProvider: { [unowned self] in return self.cameraAuthorizationStatus }
+            )
+            return factory.makeLiveCameraCellPresenter() as? LiveCameraCellPresenter
+        }()
         self.cell = LiveCameraCell()
     }
 
     override func tearDown() {
         self.presenter = nil
         self.cell = nil
-        self.cameraAuthorizationStatusProvider = nil
         super.tearDown()
     }
 

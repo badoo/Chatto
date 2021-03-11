@@ -26,13 +26,6 @@ import UIKit
 import Photos
 import Chatto
 
-public struct PhotosInputViewAppearance {
-    public var liveCameraCellAppearence: LiveCameraCellAppearance
-    public init(liveCameraCellAppearence: LiveCameraCellAppearance) {
-        self.liveCameraCellAppearence = liveCameraCellAppearence
-    }
-}
-
 public protocol PhotosInputViewProtocol {
     var delegate: PhotosInputViewDelegate? { get set }
     var presentingController: UIViewController? { get }
@@ -78,6 +71,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     public weak var delegate: PhotosInputViewDelegate?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
@@ -89,25 +83,20 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     public var presentingControllerProvider: () -> UIViewController? = { nil }
+    public var presentingController: UIViewController? { self.presentingControllerProvider() }
 
-    public var presentingController: UIViewController? {
-        return self.presentingControllerProvider()
-    }
+    private lazy var liveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol = {
+        return LiveCameraCellPresenterFactory()
+    }()
 
-    var appearance: PhotosInputViewAppearance?
-
-    public init(presentingControllerProvider: @escaping () -> UIViewController?,
-                appearance: PhotosInputViewAppearance) {
-        self.presentingControllerProvider = presentingControllerProvider
+    public init(presentingController: @escaping @autoclosure () -> UIViewController?,
+                customLiveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol?) {
+        self.presentingControllerProvider = presentingController
         super.init(frame: CGRect.zero)
-        self.appearance = appearance
+        if let customLiveCameraCellPresenterFactory = customLiveCameraCellPresenterFactory {
+            self.liveCameraCellPresenterFactory = customLiveCameraCellPresenterFactory
+        }
         self.commonInit()
-    }
-
-    public convenience init(presentingController: UIViewController?,
-                            appearance: PhotosInputViewAppearance) {
-        self.init(presentingControllerProvider: { [weak presentingController] in presentingController },
-                  appearance: appearance)
     }
 
     deinit {
@@ -189,7 +178,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenterProtocol = {
-        return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence ?? LiveCameraCellAppearance.createDefaultAppearance())
+        return self.liveCameraCellPresenterFactory.makeLiveCameraCellPresenter()
     }()
 }
 

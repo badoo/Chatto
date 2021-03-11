@@ -23,17 +23,13 @@
 */
 
 import UIKit
-import Photos
+import AVFoundation
 
 public struct LiveCameraSettings {
     public let cameraPosition: AVCaptureDevice.Position
 
     public init(cameraPosition: AVCaptureDevice.Position) {
         self.cameraPosition = cameraPosition
-    }
-
-    public static func makeDefaultSettings() -> LiveCameraSettings {
-        return LiveCameraSettings(cameraPosition: .unspecified)
     }
 }
 
@@ -49,18 +45,19 @@ public protocol LiveCameraCellPresenterProtocol {
     func cameraPickerDidDisappear()
 }
 
+public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
+
 public final class LiveCameraCellPresenter: LiveCameraCellPresenterProtocol {
     private typealias Class = LiveCameraCellPresenter
-    public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
 
     private let cameraSettings: LiveCameraSettings
     private let cellAppearance: LiveCameraCellAppearance
     private let authorizationStatusProvider: () -> AVAuthorizationStatus
     private var isCellAddedToWindow: Bool = false
 
-    public init(cameraSettings: LiveCameraSettings = LiveCameraSettings.makeDefaultSettings(),
-                cellAppearance: LiveCameraCellAppearance = LiveCameraCellAppearance.createDefaultAppearance(),
-                authorizationStatusProvider: @escaping AVAuthorizationStatusProvider = LiveCameraCellPresenter.createDefaultCameraAuthorizationStatusProvider()) {
+    public init(cameraSettings: LiveCameraSettings,
+                cellAppearance: LiveCameraCellAppearance,
+                authorizationStatusProvider: @escaping AVAuthorizationStatusProvider) {
         self.cameraSettings = cameraSettings
         self.cellAppearance = cellAppearance
         self.authorizationStatusProvider = authorizationStatusProvider
@@ -71,11 +68,6 @@ public final class LiveCameraCellPresenter: LiveCameraCellPresenterProtocol {
     }
 
     private static let reuseIdentifier = "LiveCameraCell"
-    public static func createDefaultCameraAuthorizationStatusProvider() -> AVAuthorizationStatusProvider {
-        return {
-            return AVCaptureDevice.authorizationStatus(for: .video)
-        }
-    }
 
     public func registerCells(collectionView: UICollectionView) {
         collectionView.register(LiveCameraCell.self, forCellWithReuseIdentifier: Class.reuseIdentifier)
