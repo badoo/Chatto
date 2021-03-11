@@ -37,7 +37,19 @@ public struct LiveCameraSettings {
     }
 }
 
-public final class LiveCameraCellPresenter {
+public protocol LiveCameraCellPresenterProtocol {
+
+    func registerCells(collectionView: UICollectionView)
+    func dequeueCell(collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell
+
+    func cellWillBeShown(_ cell: UICollectionViewCell)
+    func cellWasHidden(_ cell: UICollectionViewCell)
+
+    func cameraPickerWillAppear()
+    func cameraPickerDidDisappear()
+}
+
+public final class LiveCameraCellPresenter: LiveCameraCellPresenterProtocol {
     private typealias Class = LiveCameraCellPresenter
     public typealias AVAuthorizationStatusProvider = () -> AVAuthorizationStatus
 
@@ -65,7 +77,7 @@ public final class LiveCameraCellPresenter {
         }
     }
 
-    public static func registerCells(collectionView: UICollectionView) {
+    public func registerCells(collectionView: UICollectionView) {
         collectionView.register(LiveCameraCell.self, forCellWithReuseIdentifier: Class.reuseIdentifier)
     }
 
@@ -162,12 +174,12 @@ public final class LiveCameraCellPresenter {
     }
 
     var cameraPickerIsVisible = false
-    func cameraPickerWillAppear() {
+    public func cameraPickerWillAppear() {
         self.cameraPickerIsVisible = true
         self.stopCapturing()
     }
 
-    func cameraPickerDidDisappear() {
+    public func cameraPickerDidDisappear() {
         self.cameraPickerIsVisible = false
         if self.isCellAddedToWindow {
             self.startCapturing()

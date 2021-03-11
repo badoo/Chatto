@@ -188,7 +188,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         return PhotosInputCameraPicker(presentingControllerProvider: self.presentingControllerProvider)
     }()
 
-    fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenter = {
+    fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenterProtocol = {
         return LiveCameraCellPresenter(cellAppearance: self.appearance?.liveCameraCellAppearence ?? LiveCameraCellAppearance.createDefaultAppearance())
     }()
 }
@@ -200,7 +200,7 @@ extension PhotosInputView: UICollectionViewDataSource {
         self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.collectionViewLayout)
         self.collectionView.backgroundColor = UIColor.white
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        LiveCameraCellPresenter.registerCells(collectionView: self.collectionView)
+        self.liveCameraPresenter.registerCells(collectionView: self.collectionView)
 
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
