@@ -116,7 +116,7 @@ open class BaseChatViewController: UIViewController,
         self.collectionView?.dataSource = nil
     }
 
-    open override func loadView() {
+    open override func loadView() { // swiftlint:disable:this prohibited_super_call
         if substitutesMainViewAutomatically {
             self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
             self.view.backgroundColor = UIColor.white

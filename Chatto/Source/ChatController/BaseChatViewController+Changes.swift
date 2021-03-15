@@ -145,7 +145,7 @@ extension BaseChatViewController {
         case preservePosition(rectForReferenceIndexPathBeforeUpdate: CGRect?, referenceIndexPathAfterUpdate: IndexPath?)
     }
 
-    func performBatchUpdates(updateModelClosure: @escaping () -> Void,
+    func performBatchUpdates(updateModelClosure: @escaping () -> Void, // swiftlint:disable:this cyclomatic_complexity
                              changes: CollectionChanges,
                              updateType: UpdateType,
                              completion: @escaping () -> Void) {
@@ -324,8 +324,10 @@ extension BaseChatViewController {
     }
 
     private func createLayoutModel(_ items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
+        // swiftlint:disable:next nesting
         typealias IntermediateItemLayoutData = (height: CGFloat?, bottomMargin: CGFloat)
         typealias ItemLayoutData = (height: CGFloat, bottomMargin: CGFloat)
+        // swiftlint:disable:previous nesting
 
         func createLayoutModel(intermediateLayoutData: [IntermediateItemLayoutData]) -> ChatCollectionViewLayoutModel {
             let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
