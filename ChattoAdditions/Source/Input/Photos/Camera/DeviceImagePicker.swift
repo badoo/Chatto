@@ -27,7 +27,7 @@ import UIKit
 final class DeviceImagePicker: NSObject, ImagePicker, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let controller: UIViewController
     var cameraType: CameraType { CameraType(self.pickerController.cameraDevice) }
-    
+
     private weak var delegate: ImagePickerDelegate?
     private let pickerController = UIImagePickerController()
 

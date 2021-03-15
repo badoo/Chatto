@@ -37,7 +37,7 @@ open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageM
     public let _messageModel: MessageModelT // Can't make messageModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
     public let image: UIImage
     public let imageSize: CGSize
-    public var canReply: Bool  { self.messageModel.canReply }
+    public var canReply: Bool { self.messageModel.canReply }
     public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
         self._messageModel = messageModel
         self.imageSize = imageSize

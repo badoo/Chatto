@@ -187,7 +187,7 @@ open class BaseChatViewController: UIViewController,
 
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
 
         collectionView.dataSource = self
@@ -195,7 +195,7 @@ open class BaseChatViewController: UIViewController,
         collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
         collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
         collectionView.chatto_setIsPrefetchingEnabled(false)
-        
+
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
         self.cellPanGestureHandler.replyDelegate = self
         self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
@@ -230,7 +230,7 @@ open class BaseChatViewController: UIViewController,
 
         NSLayoutConstraint.activate([
             self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
         self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0)
         self.view.addConstraint(self.inputContainerBottomConstraint)
@@ -340,7 +340,7 @@ open class BaseChatViewController: UIViewController,
         return availableHeight >= contentSize.height
     }
 
-    private var previousBoundsUsedForInsetsAdjustment: CGRect? = nil
+    private var previousBoundsUsedForInsetsAdjustment: CGRect?
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard let collectionView = self.collectionView else { return }
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
