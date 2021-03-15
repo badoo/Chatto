@@ -36,13 +36,11 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
     public weak var presentingController: UIViewController?
 
     let buttonAppearance: TabInputButtonAppearance
-    let inputViewAppearance: PhotosInputViewAppearance
+
     public init(presentingController: UIViewController?,
-                tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance(),
-                inputViewAppearance: PhotosInputViewAppearance = PhotosChatInputItem.createDefaultInputViewAppearance()) {
+                tabInputButtonAppearance: TabInputButtonAppearance = PhotosChatInputItem.createDefaultButtonAppearance()) {
         self.presentingController = presentingController
         self.buttonAppearance = tabInputButtonAppearance
-        self.inputViewAppearance = inputViewAppearance
     }
 
     public static func createDefaultButtonAppearance() -> TabInputButtonAppearance {
@@ -54,16 +52,15 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
         return TabInputButtonAppearance(images: images, size: nil)
     }
 
-    public static func createDefaultInputViewAppearance() -> PhotosInputViewAppearance {
-        return PhotosInputViewAppearance(liveCameraCellAppearence: LiveCameraCellAppearance.createDefaultAppearance())
-    }
-
     lazy private var internalTabView: UIButton = {
         return TabInputButton.makeInputButton(withAppearance: self.buttonAppearance, accessibilityID: "photos.chat.input.view")
     }()
 
     lazy var photosInputView: PhotosInputViewProtocol = {
-        let photosInputView = PhotosInputView(presentingController: self.presentingController, appearance: self.inputViewAppearance)
+        let photosInputView = PhotosInputView(
+            presentingController: self.presentingController,
+            customLiveCameraCellPresenterFactory: nil
+        )
         photosInputView.delegate = self
         return photosInputView
     }()
