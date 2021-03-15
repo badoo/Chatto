@@ -171,8 +171,10 @@ open class BaseChatViewController: UIViewController,
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.autoresizingMask = []
         self.view.addSubview(collectionView)
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: collectionView, attribute: .top, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: collectionView, attribute: .bottom, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([
+            self.view.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
+        ])
 
         let leadingAnchor: NSLayoutXAxisAnchor
         let trailingAnchor: NSLayoutXAxisAnchor
@@ -216,7 +218,9 @@ open class BaseChatViewController: UIViewController,
         self.inputBarContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
-        self.view.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.topLayoutGuide.bottomAnchor)
+        ])
         let leadingAnchor: NSLayoutXAxisAnchor
         let trailingAnchor: NSLayoutXAxisAnchor
         if #available(iOS 11.0, *) {
@@ -232,17 +236,19 @@ open class BaseChatViewController: UIViewController,
             self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-        self.inputContainerBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0)
+        self.inputContainerBottomConstraint = self.view.bottomAnchor.constraint(equalTo: self.inputBarContainer.bottomAnchor)
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
 
     private func addInputView() {
         let inputView = self.createChatInputView()
         self.inputBarContainer.addSubview(inputView)
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .top, relatedBy: .equal, toItem: inputView, attribute: .top, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .bottom, relatedBy: .equal, toItem: inputView, attribute: .bottom, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .leading, relatedBy: .equal, toItem: inputView, attribute: .leading, multiplier: 1, constant: 0))
-        self.inputBarContainer.addConstraint(NSLayoutConstraint(item: self.inputBarContainer, attribute: .trailing, relatedBy: .equal, toItem: inputView, attribute: .trailing, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([
+            self.inputBarContainer.topAnchor.constraint(equalTo: inputView.topAnchor),
+            self.inputBarContainer.bottomAnchor.constraint(equalTo: inputView.bottomAnchor),
+            self.inputBarContainer.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
+            self.inputBarContainer.trailingAnchor.constraint(equalTo: inputView.trailingAnchor)
+        ])
     }
 
     private func addInputContentContainer() {
@@ -251,10 +257,12 @@ open class BaseChatViewController: UIViewController,
         self.inputContentContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputContentContainer.backgroundColor = .white
         self.view.addSubview(self.inputContentContainer)
-        self.view.addConstraint(NSLayoutConstraint(item: self.inputContentContainer, attribute: .top, relatedBy: .equal, toItem: self.inputBarContainer, attribute: .bottom, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .leading, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .trailing, multiplier: 1, constant: 0))
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.inputContentContainer, attribute: .bottom, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([
+            self.view.bottomAnchor.constraint(equalTo: self.inputContentContainer.bottomAnchor),
+            self.view.leadingAnchor.constraint(equalTo: self.inputContentContainer.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.inputContentContainer.trailingAnchor),
+            self.inputContentContainer.topAnchor.constraint(equalTo: self.inputBarContainer.bottomAnchor)
+        ])
     }
 
     private func updateInputContainerBottomBaseOffset() {
