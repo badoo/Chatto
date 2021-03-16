@@ -122,6 +122,7 @@
 		E3E0D60322EA1AA2006E2053 /* Comparable+Clamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */; };
 		E3E0D60522EA1AEE006E2053 /* Comparable+ClampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */; };
 		E54D4DA423DEDD5F0090FD1D /* InterfaceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54D4DA323DEDD5F0090FD1D /* InterfaceOrientation.swift */; };
+		EA130DD42600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA130DD32600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift */; };
 		EA13CAF2229EE8C8009340C5 /* CircleIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */; };
 		EA13CAF4229EE985009340C5 /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF3229EE985009340C5 /* CircleProgressView.swift */; };
 		EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */; };
@@ -299,6 +300,7 @@
 		E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamp.swift"; sourceTree = "<group>"; };
 		E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+ClampTests.swift"; sourceTree = "<group>"; };
 		E54D4DA323DEDD5F0090FD1D /* InterfaceOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceOrientation.swift; sourceTree = "<group>"; };
+		EA130DD32600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosInputCameraPickerFactory.swift; sourceTree = "<group>"; };
 		EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconView.swift; sourceTree = "<group>"; };
 		EA13CAF3229EE985009340C5 /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressIndicatorView.swift; sourceTree = "<group>"; };
@@ -715,12 +717,13 @@
 			isa = PBXGroup;
 			children = (
 				0B44651420347C11001ED5F1 /* DeviceImagePicker.swift */,
+				CD240FA7D32306EC2284C287 /* ImagePicker.swift */,
 				C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */,
 				C3C0CC0D1BFE496A0052747C /* LiveCameraCell.swift */,
 				C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */,
 				EA6D0D2F25FA1BFA00A03C5C /* LiveCameraCellPresenterFactory.swift */,
 				C3C0CC101BFE496A0052747C /* PhotosInputCameraPicker.swift */,
-				CD240FA7D32306EC2284C287 /* ImagePicker.swift */,
+				EA130DD32600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -935,6 +938,7 @@
 				261D26922505B99000973CD6 /* CALayer+ImageMask.swift in Sources */,
 				C3C9BC8F1D11540D00F3A54E /* TabInputButton.swift in Sources */,
 				C3C0CC3B1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift in Sources */,
+				EA130DD42600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift in Sources */,
 				C38658B21BFE55620012F181 /* AnimationUtils.swift in Sources */,
 				C3C0CC381BFE496A0052747C /* PhotoBubbleView.swift in Sources */,
 				2058509A253D7294002B1153 /* Bundle+ChattoAdditionsResources.swift in Sources */,

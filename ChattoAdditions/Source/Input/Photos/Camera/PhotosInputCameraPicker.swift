@@ -24,12 +24,17 @@
 
 import UIKit
 
-struct TakenImage {
-    let image: UIImage
-    let cameraType: CameraType
+public struct TakenImage {
+    public let image: UIImage
+    public let cameraType: CameraType
+
+    public init(image: UIImage, cameraType: CameraType) {
+        self.image = image
+        self.cameraType = cameraType
+    }
 }
 
-protocol PhotosInputCameraPickerProtocol {
+public protocol PhotosInputCameraPickerProtocol {
     func presentCameraPicker(onImageTaken: @escaping (TakenImage?) -> Void, onCameraPickerDismissed: @escaping () -> Void)
 }
 
