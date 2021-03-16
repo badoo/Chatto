@@ -173,7 +173,7 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate lazy var cameraPicker: PhotosInputCameraPicker = {
+    fileprivate lazy var cameraPicker: PhotosInputCameraPickerProtocol = {
         return PhotosInputCameraPicker(presentingControllerProvider: self.presentingControllerProvider)
     }()
 
