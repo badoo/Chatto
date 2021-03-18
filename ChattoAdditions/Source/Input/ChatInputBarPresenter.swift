@@ -24,7 +24,7 @@
 
 import UIKit
 
-protocol ChatInputBarPresenter: class {
+public protocol ChatInputBarPresenter: class {
     var focusedItem: ChatInputItemProtocol? { get }
     var chatInputBar: ChatInputBar { get }
     func onDidBeginEditing()
@@ -61,7 +61,7 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         self.notificationCenter.removeObserver(self)
     }
 
-    fileprivate(set) var focusedItem: ChatInputItemProtocol? {
+    fileprivate(set) public var focusedItem: ChatInputItemProtocol? {
         willSet {
             self.focusedItem?.selected = false
         }
@@ -172,7 +172,7 @@ extension BasicChatInputBarPresenter {
         }
     }
 
-    func onSendButtonPressed() {
+    public func onSendButtonPressed() {
         if let focusedItem = self.focusedItem {
             focusedItem.handleInput(self.chatInputBar.inputText as AnyObject)
         } else if let keyboardItem = self.firstKeyboardInputItem() {
@@ -181,7 +181,7 @@ extension BasicChatInputBarPresenter {
         self.chatInputBar.inputText = ""
     }
 
-    func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
+    public func onDidReceiveFocusOnItem(_ item: ChatInputItemProtocol) {
         guard item.presentationMode != .none else { return }
         guard item !== self.focusedItem else { return }
 

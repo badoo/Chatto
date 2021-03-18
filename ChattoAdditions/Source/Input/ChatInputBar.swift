@@ -46,7 +46,7 @@ open class ChatInputBar: ReusableXibView {
     }
 
     public weak var delegate: ChatInputBarDelegate?
-    weak var presenter: ChatInputBarPresenter?
+    public weak var presenter: ChatInputBarPresenter?
 
     public var shouldEnableSendButton = { (inputBar: ChatInputBar) -> Bool in
         return !inputBar.textView.text.isEmpty
@@ -289,7 +289,7 @@ extension ChatInputBar: UITextViewDelegate {
         self.delegate?.inputBarDidChangeText(self)
     }
 
-    public func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
+    open func textView(_ textView: UITextView, shouldChangeTextIn nsRange: NSRange, replacementText text: String) -> Bool {
         guard let maxCharactersCount = self.maxCharactersCount else { return true }
         let currentText: NSString = textView.text as NSString
         let currentCount = currentText.length
