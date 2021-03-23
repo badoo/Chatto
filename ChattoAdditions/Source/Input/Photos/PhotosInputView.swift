@@ -28,7 +28,6 @@ import Chatto
 
 public protocol PhotosInputViewProtocol {
     var delegate: PhotosInputViewDelegate? { get set }
-    var presentingController: UIViewController? { get }
 }
 
 public enum CameraType {
@@ -72,31 +71,22 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
 
     public weak var delegate: PhotosInputViewDelegate?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.commonInit()
-    }
+    private let cameraPickerFactory: PhotosInputCameraPickerFactoryProtocol
+    private let liveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.commonInit()
-    }
+    public init(cameraPickerFactory: PhotosInputCameraPickerFactoryProtocol,
+                liveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol) {
+        self.cameraPickerFactory = cameraPickerFactory
+        self.liveCameraCellPresenterFactory = liveCameraCellPresenterFactory
 
-    public var presentingControllerProvider: () -> UIViewController? = { nil }
-    public var presentingController: UIViewController? { self.presentingControllerProvider() }
-
-    private lazy var liveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol = {
-        return LiveCameraCellPresenterFactory()
-    }()
-
-    public init(presentingController: @escaping @autoclosure () -> UIViewController?,
-                customLiveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol?) {
-        self.presentingControllerProvider = presentingController
         super.init(frame: CGRect.zero)
-        if let customLiveCameraCellPresenterFactory = customLiveCameraCellPresenterFactory {
-            self.liveCameraCellPresenterFactory = customLiveCameraCellPresenterFactory
-        }
+
         self.commonInit()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {
@@ -173,8 +163,8 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
         }
     }
 
-    fileprivate lazy var cameraPicker: PhotosInputCameraPicker = {
-        return PhotosInputCameraPicker(presentingControllerProvider: self.presentingControllerProvider)
+    fileprivate lazy var cameraPicker: PhotosInputCameraPickerProtocol = {
+        return self.cameraPickerFactory.makePhotosInputCameraPicker()
     }()
 
     fileprivate lazy var liveCameraPresenter: LiveCameraCellPresenterProtocol = {
@@ -195,10 +185,12 @@ extension PhotosInputView: UICollectionViewDataSource {
         self.collectionView.delegate = self
 
         self.addSubview(self.collectionView)
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: self.collectionView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([
+            self.collectionView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
     }
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

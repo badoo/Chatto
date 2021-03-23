@@ -24,9 +24,21 @@
 
 import UIKit
 
-final class PhotosInputCameraPicker: ImagePickerDelegate {
+public struct TakenImage {
+    public let image: UIImage
+    public let cameraType: CameraType
 
-    typealias TakenImage = (image: UIImage, cameraType: CameraType)
+    public init(image: UIImage, cameraType: CameraType) {
+        self.image = image
+        self.cameraType = cameraType
+    }
+}
+
+public protocol PhotosInputCameraPickerProtocol {
+    func presentCameraPicker(onImageTaken: @escaping (TakenImage?) -> Void, onCameraPickerDismissed: @escaping () -> Void)
+}
+
+final class PhotosInputCameraPicker: PhotosInputCameraPickerProtocol, ImagePickerDelegate {
 
     private let presentingControllerProvider: () -> UIViewController?
     private var imagePicker: ImagePicker?
@@ -64,7 +76,7 @@ final class PhotosInputCameraPicker: ImagePickerDelegate {
     private func finishPickingImage(_ image: UIImage?, fromPicker picker: ImagePicker) {
         picker.controller.dismiss(animated: true, completion: self.completionBlocks?.onCameraPickerDismissed)
         if let image = image {
-            self.completionBlocks?.onImageTaken((image, picker.cameraType))
+            self.completionBlocks?.onImageTaken(TakenImage(image: image, cameraType: picker.cameraType))
         } else {
             self.completionBlocks?.onImageTaken(nil)
         }

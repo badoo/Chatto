@@ -23,29 +23,22 @@
 */
 
 import UIKit
-import Chatto
 
-public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol, ContentEquatableChatItemProtocol {
-    var image: UIImage { get }
-    var imageSize: CGSize { get }
+public protocol PhotosInputCameraPickerFactoryProtocol {
+    func makePhotosInputCameraPicker() -> PhotosInputCameraPickerProtocol
 }
 
-open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageModelProtocol {
-    public var messageModel: MessageModelProtocol {
-        return self._messageModel
+public struct PhotosInputCameraPickerFactory: PhotosInputCameraPickerFactoryProtocol {
+
+    private weak var presentingController: UIViewController?
+
+    public init(presentingController: UIViewController?) {
+        self.presentingController = presentingController
     }
-    public let _messageModel: MessageModelT // Can't make messageModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let image: UIImage
-    public let imageSize: CGSize
-    public var canReply: Bool { self.messageModel.canReply }
-    public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
-        self._messageModel = messageModel
-        self.imageSize = imageSize
-        self.image = image
-    }
-    public func hasSameContent(as anotherItem: ChatItemProtocol) -> Bool {
-        guard let anotherMessageModel = anotherItem as? PhotoMessageModel else { return false }
-        return self.image == anotherMessageModel.image
-            && self.imageSize == anotherMessageModel.imageSize
+
+    public func makePhotosInputCameraPicker() -> PhotosInputCameraPickerProtocol {
+        return PhotosInputCameraPicker(
+            presentingController: self.presentingController
+        )
     }
 }

@@ -109,7 +109,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
 
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attributesArray = [UICollectionViewLayoutAttributes]()
-        
+
         // Find any cell that sits within the query rect.
         guard let firstMatchIndex = self.layoutModel.layoutAttributes.binarySearch(predicate: { attribute in
             if attribute.frame.intersects(rect) {
@@ -120,19 +120,19 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
             }
             return .orderedAscending
         }) else { return attributesArray }
-        
+
         // Starting from the match, loop up and down through the array until all the attributes
         // have been added within the query rect.
         for attributes in self.layoutModel.layoutAttributes[..<firstMatchIndex].reversed() {
             guard attributes.frame.maxY >= rect.minY else { break }
             attributesArray.append(attributes)
         }
-        
+
         for attributes in self.layoutModel.layoutAttributes[firstMatchIndex...] {
             guard attributes.frame.minY <= rect.maxY else { break }
             attributesArray.append(attributes)
         }
-        
+
         return attributesArray
     }
 
@@ -150,11 +150,11 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
 }
 
 private extension Array {
-    
+
     func binarySearch(predicate: (Element) -> ComparisonResult) -> Index? {
         var lowerBound = startIndex
         var upperBound = endIndex
-        
+
         while lowerBound < upperBound {
             let midIndex = lowerBound + (upperBound - lowerBound) / 2
             if predicate(self[midIndex]) == .orderedSame {
