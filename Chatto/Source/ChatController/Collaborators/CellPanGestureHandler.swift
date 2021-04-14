@@ -50,6 +50,7 @@ public struct CellPanGestureHandlerConfig {
     public let accessoryViewTranslationMultiplier: CGFloat
     public let replyIndicatorTranslationMultiplier: CGFloat
     public var allowReplyRevealing: Bool = false
+    public var allowTimestampRevealing: Bool = true
 
     public static func defaultConfig() -> CellPanGestureHandlerConfig {
         .init(
@@ -105,6 +106,7 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
         case .changed:
             let translation = panRecognizer.translation(in: self.collectionView)
             if translation.x < 0 {
+                guard self.config.allowTimestampRevealing else { return }
                 self.revealAccessoryView(atOffset: self.config.transformAccessoryViewTranslation(-translation.x))
             } else {
                 guard let indexPath = self.collectionView.indexPathForItem(at: panRecognizer.location(in: self.collectionView)),
