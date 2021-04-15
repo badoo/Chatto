@@ -209,6 +209,7 @@ final class MediaInputDataProvider: NSObject, MediaInputDataProviderProtocol, PH
                 })
             } else if asset.mediaType == .video {
                 let videoOptions = PHVideoRequestOptions()
+                videoOptions.isNetworkAccessAllowed = true
                 videoOptions.deliveryMode = .fastFormat
                 requestId = imageManager.requestAVAsset(forVideo: asset, options: videoOptions, resultHandler: { [weak self] (avAsset, _, info) in
                     let result: MediaInputDataProviderResult
