@@ -58,7 +58,7 @@ open class PhotosChatInputItem: ChatInputItemProtocol {
 
     lazy var photosInputView: PhotosInputViewProtocol = {
         let photosInputView = PhotosInputView(
-            cameraPickerFactory: PhotosInputCameraPickerFactory(presentingController: self.presentingController),
+            cameraPickerFactory: PhotosInputCameraPickerFactory(presentingViewControllerProvider: { [weak self] in self?.presentingController }),
             liveCameraCellPresenterFactory: LiveCameraCellPresenterFactory()
         )
         photosInputView.delegate = self

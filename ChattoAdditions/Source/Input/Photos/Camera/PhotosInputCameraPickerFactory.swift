@@ -30,15 +30,17 @@ public protocol PhotosInputCameraPickerFactoryProtocol {
 
 public struct PhotosInputCameraPickerFactory: PhotosInputCameraPickerFactoryProtocol {
 
-    private weak var presentingController: UIViewController?
+    public typealias ViewControllerProvider = () -> UIViewController?
 
-    public init(presentingController: UIViewController?) {
-        self.presentingController = presentingController
+    private var presentingViewControllerProvider: ViewControllerProvider
+
+    public init(presentingViewControllerProvider: @escaping ViewControllerProvider) {
+        self.presentingViewControllerProvider = presentingViewControllerProvider
     }
 
     public func makePhotosInputCameraPicker() -> PhotosInputCameraPickerProtocol {
         return PhotosInputCameraPicker(
-            presentingController: self.presentingController
+            presentingController: self.presentingViewControllerProvider()
         )
     }
 }
