@@ -49,6 +49,9 @@ public protocol PhotosInputViewDelegate: AnyObject {
 
 public final class PhotosInputView: UIView, PhotosInputViewProtocol {
 
+    public typealias LiveCameraCellPressedAction = () -> Void
+    public typealias PhotoCellPressedAction = () -> Void
+
     fileprivate struct Constants {
         static let liveCameraItemIndex = 0
     }
@@ -70,6 +73,8 @@ public final class PhotosInputView: UIView, PhotosInputViewProtocol {
     }
 
     public weak var delegate: PhotosInputViewDelegate?
+    public var onLiveCameraCellPressed: LiveCameraCellPressedAction?
+    public var onPhotoCellPressed: PhotoCellPressedAction?
 
     private let cameraPickerFactory: PhotosInputCameraPickerFactoryProtocol
     private let liveCameraCellPresenterFactory: LiveCameraCellPresenterFactoryProtocol
@@ -211,6 +216,7 @@ extension PhotosInputView: UICollectionViewDataSource {
 extension PhotosInputView: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item == Constants.liveCameraItemIndex {
+            self.onLiveCameraCellPressed?()
             if self.cameraAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestCameraPermission(self)
             } else {
@@ -225,6 +231,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
                 })
             }
         } else {
+            self.onPhotoCellPressed?()
             if self.photoLibraryAuthorizationStatus != .authorized {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
