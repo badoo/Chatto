@@ -37,8 +37,8 @@ If you'd like to file a bug report, suggest changes or submit a pull request, pl
 2. Include the following in your `Podfile`:
   ```
   # Swift 5
-  pod 'Chatto', '= 4.0.0'
-  pod 'ChattoAdditions', '= 4.0.0' # if you want to use the cells or the input component
+  pod 'Chatto', '= 4.1.0'
+  pod 'ChattoAdditions', '= 4.1.0' # if you want to use the cells or the input component
   ```
   ```
   # Swift 4.2
