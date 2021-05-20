@@ -1,3 +1,32 @@
+### 4.1.0 (May 20, 2021)
+
+#### Features
+
+- Dynamic content insets for compond bubble #685 by [@magic146](https://github.com/magic146)
+- Added support for Swift Package Manager #690 by [@NicholasMata](https://github.com/NicholasMata)
+- Add double tap handler #692 by [@AKoulabukhov](https://github.com/AKoulabukhov)
+- Add support of failed loading icon to compound bubble #695 by [@azatZul](https://github.com/azatZul)
+- Added camera type to callback when a photo is taken #696 by [@KaneCheshire](https://github.com/KaneCheshire)
+- Introduce custom live camera cell behaviour #698 by [@magic146](https://github.com/magic146)
+- Custom input camera picker #699 by [@magic146](https://github.com/magic146)
+- Make timestamp revealing optional #704 by [@simoneBumble](https://github.com/simoneBumble)
+- Handle live camera and photo cells taps #705 by [@magic146](https://github.com/magic146)
+
+#### Improvements
+
+- Contribution guide #676 by [@wiruzx](https://github.com/wiruzx)
+- Enabling library evolution support #677 by [@dive](https://github.com/dive)
+- Add github actions #678 by [@wiruzx](https://github.com/wiruzx)
+- Make presenter public to fire send #701 by [@ChaosCoder](https://github.com/ChaosCoder)
+- Replace presentingController with presentingViewControllerProvider #703 by [@magic146](https://github.com/magic146)
+
+#### Bugfixes
+
+- Fix false positive test runs #680 by [@wiruzx](https://github.com/wiruzx)
+- Add empty scroll view delegate methods #684 by [@wiruzx](https://github.com/wiruzx)
+- Fix resource name collision #686 by [@khramtsoff](https://github.com/khramtsoff)
+- Fix the resources bundle signing #697 by [@azatZul](https://github.com/azatZul)
+
 ### 4.0.0 (September 20, 2020)
 
 #### Features
