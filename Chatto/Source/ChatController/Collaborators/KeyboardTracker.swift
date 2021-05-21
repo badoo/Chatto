@@ -53,6 +53,7 @@ class KeyboardTracker {
     var isTracking = false
     var inputBarContainer: UIView
     private var notificationCenter: NotificationCenter
+    private var bottomConstraintSizeAtKeyboardShow: CGFloat?
 
     private var heightBlock: KeyboardHeightBlock
 
@@ -121,19 +122,30 @@ class KeyboardTracker {
         guard !self.isPerformingForcedLayout else { return }
 
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
+
         guard bottomConstraint > 0 else { return } // Some keyboards may report initial willShow/DidShow notifications with invalid positions
-        self.keyboardStatus = .shown
-        self.layoutInputContainer(withBottomConstraint: bottomConstraint)
-        self.adjustTrackingViewSizeIfNeeded()
+
+        // Some keyboards report sizes during keyboardDidShow that change
+        // only after they have fully rendered, such as Microsoft Swiftkey
+        self.bottomConstraintSizeAtKeyboardShow = bottomConstraint
+
+        self.showKeyboard(withBottomConstraint: bottomConstraint)
     }
 
     @objc
     private func keyboardWillChangeFrame(_ notification: Notification) {
         guard self.isTracking else { return }
         let bottomConstraint = self.bottomConstraintFromNotification(notification)
+
+        // In the event that our keyboard has changed its frame from the first
+        // time it was displayed, we will want to trigger another layout
+        let didBottomConstraintChange = bottomConstraint != (self.bottomConstraintSizeAtKeyboardShow ?? -1)
+
         if bottomConstraint == 0 {
             self.keyboardStatus = .hiding
             self.layoutInputAtBottom()
+        } else if didBottomConstraintChange {
+            self.showKeyboard(withBottomConstraint: bottomConstraint)
         }
     }
 
@@ -202,6 +214,12 @@ class KeyboardTracker {
         self.isPerformingForcedLayout = true
         self.heightBlock(constraint, self.keyboardStatus)
         self.isPerformingForcedLayout = false
+    }
+
+    private func showKeyboard(withBottomConstraint bottomConstraint: CGFloat) {
+        self.keyboardStatus = .shown
+        self.layoutInputContainer(withBottomConstraint: bottomConstraint)
+        self.adjustTrackingViewSizeIfNeeded()
     }
 }
 
