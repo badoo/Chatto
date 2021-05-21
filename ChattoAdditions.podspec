@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ChattoAdditions"
-  s.version      = "4.0.0"
+  s.version      = "4.1.0"
   s.summary      = "UI componentes for Chatto"
   s.description  = <<-DESC
                    Text and photo bubbles
