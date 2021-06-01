@@ -24,7 +24,7 @@
 
 import UIKit
 
-protocol PhotosInputCellProviderProtocol: class {
+protocol PhotosInputCellProviderProtocol: AnyObject {
     func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell
     func configureFullImageLoadingIndicator(at indexPath: IndexPath,
                                             request: PhotosInputDataProviderImageRequestProtocol)

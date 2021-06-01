@@ -24,17 +24,17 @@
 
 import UIKit
 
-public protocol ImagePickerDelegate: class {
+public protocol ImagePickerDelegate: AnyObject {
     func imagePickerDidFinish(_ picker: ImagePicker, mediaInfo: [UIImagePickerController.InfoKey: Any])
     func imagePickerDidCancel(_ picker: ImagePicker)
 }
 
-public protocol ImagePicker: class {
+public protocol ImagePicker: AnyObject {
     var controller: UIViewController { get }
     var cameraType: CameraType { get }
 }
 
-public protocol ImagePickerFactory: class {
+public protocol ImagePickerFactory: AnyObject {
     func makeImagePicker(delegate: ImagePickerDelegate) -> ImagePicker?
 }
 

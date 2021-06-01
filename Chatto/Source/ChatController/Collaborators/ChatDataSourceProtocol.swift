@@ -32,12 +32,12 @@ public enum UpdateType: CaseIterable {
     case messageCountReduction
 }
 
-public protocol ChatDataSourceDelegateProtocol: class {
+public protocol ChatDataSourceDelegateProtocol: AnyObject {
     func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol)
     func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType)
 }
 
-public protocol ChatDataSourceProtocol: class {
+public protocol ChatDataSourceProtocol: AnyObject {
     var hasMoreNext: Bool { get }
     var hasMorePrevious: Bool { get }
     var chatItems: [ChatItemProtocol] { get }

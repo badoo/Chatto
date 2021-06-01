@@ -24,7 +24,7 @@
 
 import UIKit
 
-public protocol ChatInputBarDelegate: class {
+public protocol ChatInputBarDelegate: AnyObject {
     func inputBarShouldBeginTextEditing(_ inputBar: ChatInputBar) -> Bool
     func inputBarDidBeginEditing(_ inputBar: ChatInputBar)
     func inputBarDidEndEditing(_ inputBar: ChatInputBar)

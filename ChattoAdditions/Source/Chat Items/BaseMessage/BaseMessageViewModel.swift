@@ -43,7 +43,7 @@ public extension MessageStatus {
     }
 }
 
-public protocol MessageViewModelProtocol: class { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
+public protocol MessageViewModelProtocol: AnyObject { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
     var decorationAttributes: BaseMessageDecorationAttributes { get set }
     var isIncoming: Bool { get }
     var isUserInteractionEnabled: Bool { get set }

@@ -24,7 +24,7 @@
 
 import UIKit
 
-public protocol ExpandableTextViewPlaceholderDelegate: class {
+public protocol ExpandableTextViewPlaceholderDelegate: AnyObject {
     func expandableTextViewDidShowPlaceholder(_ textView: ExpandableTextView)
     func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView)
 }

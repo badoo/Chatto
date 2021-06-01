@@ -24,11 +24,11 @@
 
 import PhotosUI
 
-protocol PhotosInputDataProviderDelegate: class {
+protocol PhotosInputDataProviderDelegate: AnyObject {
     func handlePhotosInputDataProviderUpdate(_ dataProvider: PhotosInputDataProviderProtocol, updateBlock: @escaping () -> Void)
 }
 
-protocol PhotosInputDataProviderProtocol: class {
+protocol PhotosInputDataProviderProtocol: AnyObject {
     var delegate: PhotosInputDataProviderDelegate? { get set }
     var count: Int { get }
     @discardableResult
@@ -55,7 +55,7 @@ enum PhotosInputDataProviderResult {
     }
 }
 
-protocol PhotosInputDataProviderImageRequestProtocol: class {
+protocol PhotosInputDataProviderImageRequestProtocol: AnyObject {
     var requestId: Int32 { get }
     var progress: Double { get }
 

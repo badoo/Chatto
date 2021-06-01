@@ -24,7 +24,7 @@
 
 import UIKit
 
-protocol ChatInputItemViewDelegate: class {
+protocol ChatInputItemViewDelegate: AnyObject {
     func inputItemViewTapped(_ view: ChatInputItemView)
 }
 
