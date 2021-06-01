@@ -29,6 +29,11 @@ public protocol ExpandableTextViewPlaceholderDelegate: AnyObject {
     func expandableTextViewDidHidePlaceholder(_ textView: ExpandableTextView)
 }
 
+extension Notification.Name {
+    public static let didBecomeFirstResponder = Notification.Name("DidBecomeFirstResponder")
+    public static let didResignFirstResponder = Notification.Name("DidResignFirstResponder")
+}
+
 open class ExpandableTextView: UITextView {
 
     private let placeholder: UITextView = UITextView()
@@ -39,6 +44,36 @@ open class ExpandableTextView: UITextView {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
+    }
+
+    public lazy var notificationCenter: NotificationCenter = .default {
+        willSet { self.removeTextDidChangeObserver() }
+        didSet { self.setupTextDidChangeObserver() }
+    }
+
+    @discardableResult
+    open override func becomeFirstResponder() -> Bool {
+        defer { self.notificationCenter.post(Notification(name: .didBecomeFirstResponder, object: self)) }
+        return super.becomeFirstResponder()
+    }
+
+    @discardableResult
+    open override func resignFirstResponder() -> Bool {
+        defer { self.notificationCenter.post(Notification(name: .didResignFirstResponder, object: self)) }
+        return super.resignFirstResponder()
+    }
+
+    private func setupTextDidChangeObserver() {
+        self.notificationCenter.addObserver(self,
+                                            selector: #selector(ExpandableTextView.textDidChange),
+                                            name: UITextView.textDidChangeNotification,
+                                            object: self)
+    }
+
+    private func removeTextDidChangeObserver() {
+        self.notificationCenter.removeObserver(self,
+                                               name: UITextView.textDidChangeNotification,
+                                               object: self)
     }
 
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -58,7 +93,7 @@ open class ExpandableTextView: UITextView {
     }
 
     private func commonInit() {
-        NotificationCenter.default.addObserver(self, selector: #selector(ExpandableTextView.textDidChange), name: UITextView.textDidChangeNotification, object: self)
+        self.setupTextDidChangeObserver()
         self.configurePlaceholder()
         self.updatePlaceholderVisibility()
     }
