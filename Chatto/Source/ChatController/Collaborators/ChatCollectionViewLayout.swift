@@ -24,7 +24,7 @@
 
 import UIKit
 
-public protocol ChatCollectionViewLayoutDelegate: class {
+public protocol ChatCollectionViewLayoutDelegate: AnyObject {
     func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel
 }
 

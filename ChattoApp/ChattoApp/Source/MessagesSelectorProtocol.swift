@@ -25,12 +25,12 @@
 import ChattoAdditions
 import Foundation
 
-public protocol MessagesSelectorDelegate: class {
+public protocol MessagesSelectorDelegate: AnyObject {
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol)
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol)
 }
 
-public protocol MessagesSelectorProtocol: class {
+public protocol MessagesSelectorProtocol: AnyObject {
     var delegate: MessagesSelectorDelegate? { get set }
     var isActive: Bool { get set }
     func canSelectMessage(_ message: MessageModelProtocol) -> Bool
