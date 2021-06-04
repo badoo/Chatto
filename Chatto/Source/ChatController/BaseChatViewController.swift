@@ -588,6 +588,7 @@ extension BaseChatViewController { // Rotation
         let shouldScrollToBottom = self.isScrolledAtBottom()
         let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
         let oldRect = self.rectAtIndexPath(referenceIndexPath)
+        collectionView.collectionViewLayout.invalidateLayout()
         coordinator.animate(alongsideTransition: { (_) -> Void in
             if shouldScrollToBottom {
                 self.scrollToBottom(animated: false)
