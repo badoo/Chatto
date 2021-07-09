@@ -26,6 +26,8 @@ import UIKit
 
 class ChatWithTabBarExamplesViewController: CellsViewController {
 
+    var shouldUseNewMessageArchitecture: Bool = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,7 +53,7 @@ class ChatWithTabBarExamplesViewController: CellsViewController {
 
     private func pushChatViewController(hidesBottomBar: Bool) {
         let dataSource = DemoChatDataSource(count: 0, pageSize: 50)
-        let viewController = AddRandomMessagesChatViewController(dataSource: dataSource)
+        let viewController = AddRandomMessagesChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.shouldUseNewMessageArchitecture)
 
         viewController.hidesBottomBarWhenPushed = hidesBottomBar
         self.navigationController?.pushViewController(viewController, animated: true)

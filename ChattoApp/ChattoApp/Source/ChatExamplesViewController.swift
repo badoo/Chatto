@@ -26,6 +26,8 @@ import UIKit
 
 class ChatExamplesViewController: CellsViewController {
 
+    private var useNewMessageArchitecture: Bool = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -45,64 +47,86 @@ class ChatExamplesViewController: CellsViewController {
             self.makeTestItemsReloadingCellItem(),
             self.makeAsyncAvatarLoadingCellItem()
         ]
+
+        let toggle = self.makeToggle()
+        toggle.isOn = self.useNewMessageArchitecture
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: toggle)
+    }
+
+    // MARK: - Toggle
+
+    @objc
+    private func didToggle(_ sender: UISwitch) {
+        self.useNewMessageArchitecture = sender.isOn
+    }
+
+    private func makeToggle() -> UISwitch {
+        let toggle = UISwitch()
+        toggle.addTarget(self, action: #selector(didToggle), for: .valueChanged)
+        return toggle
     }
 
     // MARK: - Cells
 
     private func makeOverviewCellItem() -> CellItem {
         return CellItem(title: "Overview", action: { [weak self] in
+            guard let self = self else { return }
             let dataSource = DemoChatDataSource(messages: DemoChatMessageFactory.makeOverviewMessages(), pageSize: 50)
-            let viewController = AddRandomMessagesChatViewController(dataSource: dataSource)
+            let viewController = AddRandomMessagesChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.useNewMessageArchitecture)
 
-            self?.navigationController?.pushViewController(viewController, animated: true)
+            self.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 
     private func makeChatCellItem(title: String, messagesCount: Int, shouldUseAlternativePresenter: Bool = false) -> CellItem {
         return CellItem(title: title, action: { [weak self] in
+            guard let self = self else { return }
             let dataSource = DemoChatDataSource(count: messagesCount, pageSize: 50)
             let viewController = AddRandomMessagesChatViewController(
                 dataSource: dataSource,
-                shouldUseAlternativePresenter: shouldUseAlternativePresenter
+                shouldUseAlternativePresenter: self.useNewMessageArchitecture
             )
 
-            self?.navigationController?.pushViewController(viewController, animated: true)
+            self.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 
     private func makeMessageSelectionCellItem() -> CellItem {
         return CellItem(title: "Chat with message selection", action: { [weak self] in
+            guard let self = self else { return }
             let messages = DemoChatMessageFactory.makeMessagesSelectionMessages()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = MessagesSelectionChatViewController(dataSource: dataSource)
+            let viewController = MessagesSelectionChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.useNewMessageArchitecture)
 
-            self?.navigationController?.pushViewController(viewController, animated: true)
+            self.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 
     private func makeOpenWithTabBarCellItem() -> CellItem {
         return CellItem(title: "UITabBarController examples", action: { [weak self] in
-            guard let sSelf = self else { return }
+            guard let self = self else { return }
             let viewController = ChatWithTabBarExamplesViewController()
+            viewController.shouldUseNewMessageArchitecture = self.useNewMessageArchitecture
             viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
                 title: "Close",
                 style: .done,
-                target: sSelf,
-                action: #selector(sSelf.dismissPresentedController)
+                target: self,
+                action: #selector(self.dismissPresentedController)
             )
             let navigationController = UINavigationController(rootViewController: viewController)
             let tabBarViewController = UITabBarController()
             tabBarViewController.setViewControllers([navigationController], animated: false)
-            sSelf.present(tabBarViewController, animated: true, completion: nil)
+            self.present(tabBarViewController, animated: true, completion: nil)
         })
     }
 
     private func makeScrollToBottomCellItem() -> CellItem {
         return CellItem(title: "Scroll To Bottom Button Example", action: { [weak self] in
+            guard let self = self else { return }
             let dataSource = DemoChatDataSource(count: 10_000, pageSize: 50)
-            let viewController = ScrollToBottomButtonChatViewController(dataSource: dataSource)
+            let viewController = ScrollToBottomButtonChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.useNewMessageArchitecture)
 
-            self?.navigationController?.pushViewController(viewController, animated: true)
+            self.navigationController?.pushViewController(viewController, animated: true)
         })
     }
 
@@ -119,7 +143,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Compound message examples") { [unowned self] in
             let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageExamples()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = DemoChatViewController(dataSource: dataSource)
+            let viewController = DemoChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.useNewMessageArchitecture)
 
             self.navigationController?.pushViewController(viewController, animated: true)
         }
@@ -129,7 +153,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Compound message layout") { [unowned self] in
             let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageLayout()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = DemoChatViewController(dataSource: dataSource)
+            let viewController = DemoChatViewController(dataSource: dataSource, shouldUseNewMessageArchitecture: self.useNewMessageArchitecture)
 
             self.navigationController?.pushViewController(viewController, animated: true)
         }

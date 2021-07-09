@@ -46,7 +46,8 @@ class DemoChatViewController: UIViewController {
     var messageSender: DemoChatMessageSender
 
     init(dataSource: DemoChatDataSource,
-         shouldUseAlternativePresenter: Bool = false) {
+         shouldUseAlternativePresenter: Bool = false,
+         shouldUseNewMessageArchitecture: Bool = false) {
         self.dataSource = dataSource
         self.messageSender = dataSource.messageSender
 
@@ -185,7 +186,19 @@ class DemoChatViewController: UIViewController {
 
     static private func createPresenterBuilders(messageSender: DemoChatMessageSender,
                                                 messageSelector: BaseMessagesSelector) -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+        if self.shouldUseNewMessageArchitecture {
+            self.makeNewPresenterBuilders()
+        } else {
+            self.makeOldPresenterBuilders(messageSender: messageSender, messageSelector: messageSelector)
+        }
+    }
 
+    func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+        return DemoTextMessageViewModelBuilder()
+    }
+
+    private func makeOldPresenterBuilders(messageSender: DemoChatMessageSender,
+                                          messageSelector: BaseMessagesSelector) -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: Self.createTextMessageViewModelBuilder(),
             interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector)
@@ -239,8 +252,8 @@ class DemoChatViewController: UIViewController {
         ]
     }
 
-    class func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
-        return DemoTextMessageViewModelBuilder()
+    private func makeNewPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+        fatalError()
     }
 
     private static func createTextInputItem(dataSource: DemoChatDataSource) -> TextChatInputItem {
