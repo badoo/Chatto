@@ -30,10 +30,16 @@ public protocol ChatItemPresenterFactoryProtocol {
 }
 
 public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
-    let presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
 
-    public init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
+    public typealias PresenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]
+
+    private let presenterBuildersByType: PresenterBuildersByType
+    private let fallbackItemPresenterFactory: ChatItemPresenterFactoryProtocol
+
+    public init(presenterBuildersByType: PresenterBuildersByType,
+                fallbackItemPresenterFactory: ChatItemPresenterFactoryProtocol = DummyItemPresenterFactory()) {
         self.presenterBuildersByType = presenterBuildersByType
+        self.fallbackItemPresenterFactory = fallbackItemPresenterFactory
     }
 
     public func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
@@ -42,13 +48,26 @@ public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
                 return builder.createPresenterWithChatItem(chatItem)
             }
         }
-        return DummyChatItemPresenter()
+        return self.fallbackItemPresenterFactory.createChatItemPresenter(chatItem)
     }
 
     public func configure(withCollectionView collectionView: UICollectionView) {
         for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
             presenterBuilder.presenterType.registerCells(collectionView)
         }
+        self.fallbackItemPresenterFactory.configure(withCollectionView: collectionView)
+    }
+}
+
+public final class DummyItemPresenterFactory: ChatItemPresenterFactoryProtocol {
+
+    public init() {}
+
+    public func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        DummyChatItemPresenter()
+    }
+
+    public func configure(withCollectionView collectionView: UICollectionView) {
         DummyChatItemPresenter.registerCells(collectionView)
     }
 }
