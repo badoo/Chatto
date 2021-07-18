@@ -53,8 +53,17 @@ class DemoChatViewController: UIViewController {
 
         let adapterConfig = ChatMessageCollectionAdapter.Configuration.default
         let presentersBuilder = Self.createPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
+
+        let fallbackItemPresenterFactory: ChatItemPresenterFactoryProtocol
+        if self.shouldUseNewMessageArchitecture {
+            fallbackItemPresenterFactory = self.makeNewFallbackItemPresenterFactory()
+        } else {
+            fallbackItemPresenterFactory = DummyItemPresenterFactory()
+        }
+
         let chatItemPresenterFactory = ChatItemPresenterFactory(
-            presenterBuildersByType: presentersBuilder
+            presenterBuildersByType: presentersBuilder,
+            fallbackItemPresenterFactory: fallbackItemPresenterFactory
         )
         let chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
         let chatMessageCollectionAdapter = ChatMessageCollectionAdapter(
@@ -250,6 +259,10 @@ class DemoChatViewController: UIViewController {
             ChatItemType.compoundItemType: [compoundPresenterBuilder],
             ChatItemType.compoundItemType2: [compoundPresenterBuilder2]
         ]
+    }
+
+    private func makeNewFallbackItemPresenterFactory() -> ChatItemPresenterFactoryProtocol {
+        fatalError()
     }
 
     private func makeNewPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
