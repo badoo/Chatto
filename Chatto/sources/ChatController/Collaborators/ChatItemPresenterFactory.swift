@@ -53,7 +53,11 @@ public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
 
     public func configure(withCollectionView collectionView: UICollectionView) {
         for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
-            presenterBuilder.presenterType.registerCells(collectionView)
+            if let configurablePresenterBuilder = presenterBuilder as? ChatItemPresenterBuilderCollectionViewConfigurable {
+                configurablePresenterBuilder.configure(with: collectionView)
+            } else {
+                presenterBuilder.presenterType.registerCells(collectionView)
+            }
         }
         self.fallbackItemPresenterFactory.configure(withCollectionView: collectionView)
     }

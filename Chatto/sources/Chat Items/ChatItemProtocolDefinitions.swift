@@ -77,6 +77,10 @@ public protocol ChatItemPresenterBuilderProtocol {
     var presenterType: ChatItemPresenterProtocol.Type { get }
 }
 
+public protocol ChatItemPresenterBuilderCollectionViewConfigurable {
+    func configure(with collectionView: UICollectionView)
+}
+
 // MARK: - Updatable Chat Items
 
 public protocol ContentEquatableChatItemProtocol: ChatItemProtocol {
