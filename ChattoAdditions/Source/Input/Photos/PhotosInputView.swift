@@ -30,10 +30,12 @@ public protocol PhotosInputViewProtocol {
     var delegate: PhotosInputViewDelegate? { get set }
 }
 
+@frozen
 public enum CameraType {
     case front, rear
 }
 
+@frozen
 public enum PhotosInputViewPhotoSource: Equatable {
     case camera(CameraType)
     case gallery

@@ -24,6 +24,7 @@
 
 import UIKit
 
+@frozen
 public enum TransferDirection {
     case upload
     case download
