@@ -108,8 +108,7 @@ class LiveCameraCaptureSession: LiveCameraCaptureSessionProtocol {
         assert(!Thread.isMainThread, "This can be very slow, make sure it happens in a background thread")
         guard self.captureSession?.inputs.count == 0 else { return }
 
-        let captureDevices = AVCaptureDevice.devices(for: .video)
-        guard let device = captureDevices.first(where: { $0.position == self.settings.cameraPosition }) ?? AVCaptureDevice.default(for: .video) else {
+        guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: self.settings.cameraPosition) else {
             return
         }
         do {

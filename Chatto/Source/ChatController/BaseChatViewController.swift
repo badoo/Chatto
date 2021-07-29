@@ -212,7 +212,7 @@ open class BaseChatViewController: UIViewController,
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
         NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.topLayoutGuide.bottomAnchor)
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor)
         ])
         let guide = self.view.safeAreaLayoutGuide
         let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
@@ -252,7 +252,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func updateInputContainerBottomBaseOffset() {
-        let offset = self.bottomLayoutGuide.length
+        let offset = self.view.safeAreaInsets.bottom
         if self.inputContainerBottomBaseOffset != offset {
             self.inputContainerBottomBaseOffset = offset
         }
@@ -308,7 +308,7 @@ open class BaseChatViewController: UIViewController,
     public var allContentFits: Bool {
         guard let collectionView = self.collectionView else { return false }
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
-        let insetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
@@ -325,7 +325,7 @@ open class BaseChatViewController: UIViewController,
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - collectionView.contentInset.bottom
-        var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        var newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
 
         let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
@@ -368,7 +368,7 @@ open class BaseChatViewController: UIViewController,
         collectionView.chatto_setVerticalScrollIndicatorInsets({
             var currentInsets = collectionView.scrollIndicatorInsets
             currentInsets.bottom = self.layoutConfiguration.scrollIndicatorInsets.bottom + inputHeightWithKeyboard
-            currentInsets.top = self.topLayoutGuide.length + self.layoutConfiguration.scrollIndicatorInsets.top
+            currentInsets.top = self.view.safeAreaInsets.top + self.layoutConfiguration.scrollIndicatorInsets.top
             return currentInsets
         }())
 
