@@ -27,7 +27,6 @@ public protocol ReplyFeedbackGeneratorProtocol {
     func generateFeedback()
 }
 
-@available(iOS 10, *)
 struct ReplyFeedbackGenerator: ReplyFeedbackGeneratorProtocol {
 
     private let impactFeedbackGenerator = UIImpactFeedbackGenerator()

@@ -176,16 +176,9 @@ open class BaseChatViewController: UIViewController,
             self.view.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
         ])
 
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
-        }
+        let guide = self.view.safeAreaLayoutGuide
+        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
 
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -221,16 +214,9 @@ open class BaseChatViewController: UIViewController,
         NSLayoutConstraint.activate([
             self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.topLayoutGuide.bottomAnchor)
         ])
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
-        }
+        let guide = self.view.safeAreaLayoutGuide
+        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
 
         NSLayoutConstraint.activate([
             self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -266,28 +252,9 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func updateInputContainerBottomBaseOffset() {
-        if #available(iOS 11.0, *) {
-            let offset = self.bottomLayoutGuide.length
-            if self.inputContainerBottomBaseOffset != offset {
-                self.inputContainerBottomBaseOffset = offset
-            }
-        } else {
-            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
-            // because it has incorrect value when we actually have a bottom bar (tabbar)
-            // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
-            // UPD: Fixed in iOS 11.0
-            let navigatedController: UIViewController
-            if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
-                navigatedController = parent
-            } else {
-                navigatedController = self
-            }
-
-            if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-                self.inputContainerBottomBaseOffset = 0
-            } else {
-                self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
-            }
+        let offset = self.bottomLayoutGuide.length
+        if self.inputContainerBottomBaseOffset != offset {
+            self.inputContainerBottomBaseOffset = offset
         }
     }
 
@@ -496,10 +463,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
-        if #available(iOS 10, *) {
-            return ReplyFeedbackGenerator()
-        }
-        return nil
+        return ReplyFeedbackGenerator()
     }
 
     // MARK: ChatDataSourceDelegateProtocol

@@ -24,7 +24,6 @@
 import UIKit
 import Chatto
 
-@available(iOS 11, *)
 public final class CompoundBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
 
     // MARK: - Type declarations
