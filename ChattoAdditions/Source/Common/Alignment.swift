@@ -22,12 +22,14 @@
  THE SOFTWARE.
 */
 
+@frozen
 public enum HorizontalAlignment {
     case left
     case center
     case right
 }
 
+@frozen
 public enum VerticalAlignment {
     case top
     case center
