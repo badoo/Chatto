@@ -8,11 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0B44651620347C11001ED5F1 /* DeviceImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B44651420347C11001ED5F1 /* DeviceImagePicker.swift */; };
-		2058508F253D6FAF002B1153 /* BaseMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CBDC1BFE496A0052747C /* BaseMessageAssets.xcassets */; };
-		20585090253D6FAF002B1153 /* PhotoMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CBEA1BFE496A0052747C /* PhotoMessageAssets.xcassets */; };
+		1F478F2BA25DD17516899CD7 /* Chatto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2643895C240D72B400427D14 /* Chatto.framework */; };
 		20585091253D6FAF002B1153 /* Photos.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC0E1BFE496A0052747C /* Photos.xcassets */; };
-		20585092253D6FAF002B1153 /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC181BFE496A0052747C /* Text.xcassets */; };
-		20585093253D6FAF002B1153 /* CircleProgressIndicator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */; };
 		20585095253D6FEF002B1153 /* ChatInputBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3C0CC051BFE496A0052747C /* ChatInputBar.xib */; };
 		20585098253D726C002B1153 /* ChattoAdditionsResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 20585088253D6F58002B1153 /* ChattoAdditionsResources.bundle */; };
 		2058509A253D7294002B1153 /* Bundle+ChattoAdditionsResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20585099253D7294002B1153 /* Bundle+ChattoAdditionsResources.swift */; };
@@ -33,6 +30,7 @@
 		26D07FA4220791AE007C1534 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D07FA3220791AE007C1534 /* Cache.swift */; };
 		26DA3358226F140500EF38A6 /* TextMessageMenuItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DA3357226F140500EF38A6 /* TextMessageMenuItemPresenter.swift */; };
 		3907DBAF27F9A201978EDDC1 /* BaseMessageCollectionViewCellDefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */; };
+		3C825F4DD2EBCE81CBB10C00 /* ChattoAdditionsResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 20585088253D6F58002B1153 /* ChattoAdditionsResources.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		55127638218C9FF900731463 /* ScreenMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55127637218C9FF800731463 /* ScreenMetric.swift */; };
 		55ABA5541FC739C300923302 /* Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5531FC739C300923302 /* Alignment.swift */; };
 		55ABA5561FC73A3C00923302 /* CGSize+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5551FC73A3C00923302 /* CGSize+Additions.swift */; };
@@ -50,6 +48,11 @@
 		55ABA5711FC74DB400923302 /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5701FC74DB400923302 /* UIView+Additions.swift */; };
 		55ABA5731FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5721FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift */; };
 		55ABA5771FC74F8D00923302 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55ABA5761FC74F8D00923302 /* ObservableTests.swift */; };
+		A4F77D0E26BAE7E400008F24 /* PhotoMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4F77D0326BAE40A00008F24 /* PhotoMessageAssets.xcassets */; };
+		A4F77D0F26BAE7E400008F24 /* CircleProgressIndicator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4F77D0526BAE41400008F24 /* CircleProgressIndicator.xcassets */; };
+		A4F77D1026BAE7E400008F24 /* BaseMessageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4F77D0126BAE37500008F24 /* BaseMessageAssets.xcassets */; };
+		A4F77D1126BAE7E400008F24 /* Text.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4F77D0726BAE45E00008F24 /* Text.xcassets */; };
+		A4F77D1626BAEABF00008F24 /* ExpandableChatInputBarPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F77D1426BAEABF00008F24 /* ExpandableChatInputBarPresenter.swift */; };
 		C33DEA451D23F825002AAD26 /* LiveCameraCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */; };
 		C33DEA471D23F8C8002AAD26 /* LiveCameraCaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */; };
 		C35FE3C51C0331CF00D42980 /* TextMessagePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */; };
@@ -219,9 +222,14 @@
 		55ABA5701FC74DB400923302 /* UIView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
 		55ABA5721FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInets+AdditionsTests.swift"; sourceTree = "<group>"; };
 		55ABA5761FC74F8D00923302 /* ObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
+		A4F77D0126BAE37500008F24 /* BaseMessageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BaseMessageAssets.xcassets; sourceTree = "<group>"; };
+		A4F77D0326BAE40A00008F24 /* PhotoMessageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoMessageAssets.xcassets; sourceTree = "<group>"; };
+		A4F77D0526BAE41400008F24 /* CircleProgressIndicator.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CircleProgressIndicator.xcassets; sourceTree = "<group>"; };
+		A4F77D0726BAE45E00008F24 /* Text.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Text.xcassets; sourceTree = "<group>"; };
+		A4F77D1426BAEABF00008F24 /* ExpandableChatInputBarPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableChatInputBarPresenter.swift; sourceTree = "<group>"; };
 		C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCellPresenter.swift; sourceTree = "<group>"; };
 		C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCaptureSession.swift; sourceTree = "<group>"; };
-		C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextMessagePresenterTests.swift; path = "Tests/Chat Items/TextMessages/TextMessagePresenterTests.swift"; sourceTree = SOURCE_ROOT; };
+		C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMessagePresenterTests.swift; sourceTree = "<group>"; };
 		C35FE3C71C033E7800D42980 /* PhotoMessagePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessagePresenterTests.swift; sourceTree = "<group>"; };
 		C363C33E1D2405F800599FF5 /* LiveCameraCellPresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveCameraCellPresenterTests.swift; sourceTree = "<group>"; };
 		C3815CFF1C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessagePresenterBuilderTests.swift; sourceTree = "<group>"; };
@@ -232,7 +240,6 @@
 		C3C0CBD81BFE496A0052747C /* BaseMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageModel.swift; sourceTree = "<group>"; };
 		C3C0CBD91BFE496A0052747C /* BaseMessagePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessagePresenter.swift; sourceTree = "<group>"; };
 		C3C0CBDA1BFE496A0052747C /* BaseMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageViewModel.swift; sourceTree = "<group>"; };
-		C3C0CBDC1BFE496A0052747C /* BaseMessageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BaseMessageAssets.xcassets; sourceTree = "<group>"; };
 		C3C0CBDD1BFE496A0052747C /* BaseMessageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3C0CBDF1BFE496A0052747C /* ViewDefinitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDefinitions.swift; sourceTree = "<group>"; };
 		C3C0CBE01BFE496A0052747C /* ChatItemDecorationAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemDecorationAttributes.swift; sourceTree = "<group>"; };
@@ -241,7 +248,6 @@
 		C3C0CBE61BFE496A0052747C /* PhotoMessagePresenterBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessagePresenterBuilder.swift; sourceTree = "<group>"; };
 		C3C0CBE71BFE496A0052747C /* PhotoMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessageViewModel.swift; sourceTree = "<group>"; };
 		C3C0CBE91BFE496A0052747C /* PhotoBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoBubbleView.swift; sourceTree = "<group>"; };
-		C3C0CBEA1BFE496A0052747C /* PhotoMessageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PhotoMessageAssets.xcassets; sourceTree = "<group>"; };
 		C3C0CBEB1BFE496A0052747C /* PhotoMessageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3C0CBEC1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMessageCollectionViewCellDefaultStyle.swift; sourceTree = "<group>"; };
 		C3C0CBEE1BFE496A0052747C /* TextMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextMessageModel.swift; sourceTree = "<group>"; };
@@ -270,10 +276,8 @@
 		C3C0CC141BFE496A0052747C /* PhotosInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputView.swift; sourceTree = "<group>"; };
 		C3C0CC151BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputViewItemSizeCalculator.swift; sourceTree = "<group>"; };
 		C3C0CC161BFE496A0052747C /* ReusableXibView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableXibView.swift; sourceTree = "<group>"; };
-		C3C0CC181BFE496A0052747C /* Text.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Text.xcassets; sourceTree = "<group>"; };
 		C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChatInputItem.swift; sourceTree = "<group>"; };
 		C3C0CC1B1BFE496A0052747C /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
-		C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CircleProgressIndicator.xcassets; sourceTree = "<group>"; };
 		C3C0CC751BFE49700052747C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputBarTests.swift; sourceTree = "<group>"; };
 		C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputItemTests.swift; sourceTree = "<group>"; };
@@ -334,18 +338,84 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3C0CBC31BFE49320052747C /* ChattoAdditions.framework in Frameworks */,
+				1F478F2BA25DD17516899CD7 /* Chatto.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		025B08EE8EEEAACFAEE67609 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CC121BFE496A0052747C /* PhotosInputCellProvider.swift */,
+				CDC610071FD80CDA00C2588E /* PhotosInputDataProvider.swift */,
+				C3C0CC111BFE496A0052747C /* PhotosInputCell.swift */,
+			);
+			path = Photo;
+			sourceTree = "<group>";
+		};
+		0ADE4F463C28F62E251D677C /* UI Components */ = {
+			isa = PBXGroup;
+			children = (
+				C342FFA283B8EE4DAC1F4761 /* CircleProgressIndicatorView */,
+			);
+			path = "UI Components";
+			sourceTree = "<group>";
+		};
+		0AE4F61F7EEC9732CA99F689 /* PhotoMessages */ = {
+			isa = PBXGroup;
+			children = (
+				C3815CFF1C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift */,
+				C35FE3C71C033E7800D42980 /* PhotoMessagePresenterTests.swift */,
+			);
+			path = PhotoMessages;
+			sourceTree = "<group>";
+		};
+		0DC4402F69B272AD6E30CAD0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				90B640CFD5F2EC856F186523 /* UI Components */,
+				8F1BC418CFD68F3A8B87D6BA /* Input */,
+				632ABC81D2B76078C63EE268 /* Chat Items */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1FABF9C038CC46487C4927CA /* TextMessages */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CBEF1BFE496A0052747C /* TextMessagePresenter.swift */,
+				C3C0CBF11BFE496A0052747C /* TextMessageViewModel.swift */,
+				C3C0CBEE1BFE496A0052747C /* TextMessageModel.swift */,
+				4C5517F308D68348AAA19359 /* Views */,
+				C3C0CBF01BFE496A0052747C /* TextMessagePresenterBuilder.swift */,
+				26DA3357226F140500EF38A6 /* TextMessageMenuItemPresenter.swift */,
+			);
+			path = TextMessages;
+			sourceTree = "<group>";
+		};
 		20585089253D6F58002B1153 /* ChattoAdditionsResources */ = {
 			isa = PBXGroup;
 			children = (
 				2058508A253D6F58002B1153 /* Info.plist */,
 			);
 			path = ChattoAdditionsResources;
+			sourceTree = "<group>";
+		};
+		20802F92BE49BE42C4183CCF /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				EA130DD32600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift */,
+				C3C0CC0D1BFE496A0052747C /* LiveCameraCell.swift */,
+				EA6D0D2F25FA1BFA00A03C5C /* LiveCameraCellPresenterFactory.swift */,
+				C3C0CC101BFE496A0052747C /* PhotosInputCameraPicker.swift */,
+				C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */,
+				C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */,
+				0B44651420347C11001ED5F1 /* DeviceImagePicker.swift */,
+				CD240FA7D32306EC2284C287 /* ImagePicker.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 		26438955240D72AB00427D14 /* Dependencies */ = {
@@ -365,104 +435,271 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		266C7ADB24B2A55600DB0F61 /* Decoration */ = {
+		2E0E76322C2AACE8CD25C21D /* BaseMessage */ = {
 			isa = PBXGroup;
 			children = (
-				266C7ADC24B2A56400DB0F61 /* MessageDecorationViewFactory.swift */,
-				266C7ADE24B2A60F00DB0F61 /* MessageDecorationViewLayout.swift */,
+				D6E3AEFB25D6E01900819A56 /* FakeMessageModel.swift */,
+				EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */,
+				EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */,
+				EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */,
+				EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */,
+				EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */,
+				EA7525512302FB930069D1AF /* TestHelpers.swift */,
+				D6E3AF0025D6E6C500819A56 /* FakeMessageContentFactory.swift */,
+				EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */,
+				EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */,
+				EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */,
+				D6E3AEF525D6DF6000819A56 /* MessageViewModelTests.swift */,
+				C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */,
 			);
-			path = Decoration;
+			path = BaseMessage;
 			sourceTree = "<group>";
 		};
-		268CD55D21F9F8F500DEE2C2 /* CompoundMessage */ = {
+		355A9C1A6F12FDE0937C3C68 /* Text */ = {
 			isa = PBXGroup;
 			children = (
-				266C7ADB24B2A55600DB0F61 /* Decoration */,
-				268CD55E21F9F91000DEE2C2 /* Views */,
-				268CD574220334C800DEE2C2 /* Content */,
-				268CD56521FA260800DEE2C2 /* CompoundMessagePresenter.swift */,
-				268CD56721FA29F300DEE2C2 /* CompoundMessagePresenterBuilder.swift */,
+				A4F77D0726BAE45E00008F24 /* Text.xcassets */,
 			);
-			path = CompoundMessage;
+			path = Text;
 			sourceTree = "<group>";
 		};
-		268CD55E21F9F91000DEE2C2 /* Views */ = {
+		377C5C4A4B0D31DAEACD7551 /* PhotoMessages */ = {
 			isa = PBXGroup;
 			children = (
-				268CD57F2204876B00DEE2C2 /* CompoundBubbleLayout.swift */,
-				268CD56121F9F92C00DEE2C2 /* CompoundBubbleView.swift */,
-				268CD56021F9F92C00DEE2C2 /* CompoundBubbleViewStyle.swift */,
-				268CD55F21F9F92B00DEE2C2 /* CompoundMessageCollectionViewCell.swift */,
+				FB1F60D6AC25DB1715F568CC /* Views */,
+				C3C0CBE61BFE496A0052747C /* PhotoMessagePresenterBuilder.swift */,
+				C3C0CBE51BFE496A0052747C /* PhotoMessagePresenter.swift */,
+				C3C0CBE41BFE496A0052747C /* PhotoMessageModel.swift */,
+				C3C0CBE71BFE496A0052747C /* PhotoMessageViewModel.swift */,
+			);
+			path = PhotoMessages;
+			sourceTree = "<group>";
+		};
+		4C5517F308D68348AAA19359 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CBF61BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift */,
+				C3C0CBF31BFE496A0052747C /* TextBubbleView.swift */,
+				C3C0CBF51BFE496A0052747C /* TextMessageCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		268CD574220334C800DEE2C2 /* Content */ = {
+		4D01E65A94C732A1A1F8408F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EAF2678F22BD2625006B3455 /* DefaultMessageContentPresenter.swift */,
+				C3C0CBDD1BFE496A0052747C /* BaseMessageCollectionViewCell.swift */,
+				C3C0CBDF1BFE496A0052747C /* ViewDefinitions.swift */,
+				3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		51253720A4AAC62BC0ADB851 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */,
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
+		55F22DFB6FE49B2528465275 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				55ABA5761FC74F8D00923302 /* ObservableTests.swift */,
+				55ABA5721FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift */,
+				55ABA5681FC7498700923302 /* CGRect+AdditionsTests.swift */,
+				E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */,
+				55ABA5581FC73B5600923302 /* CGSize+AdditionsTests.swift */,
+				55ABA55E1FC742E400923302 /* CGFloat+AdditionsTests.swift */,
+				55ABA5641FC7446B00923302 /* CGPoint+AdditionsTests.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		5885A5016066712D80AFC4B5 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				A4F77D1426BAEABF00008F24 /* ExpandableChatInputBarPresenter.swift */,
+				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
+				C3C9BC8E1D11540D00F3A54E /* TabInputButton.swift */,
+				84592512FEECB3A57E9B93B7 /* Photos */,
+				C3C0CC041BFE496A0052747C /* ChatInputBar.swift */,
+				C3C0CC091BFE496A0052747C /* ChatInputItemView.swift */,
+				C3C0CC161BFE496A0052747C /* ReusableXibView.swift */,
+				C3C0CC071BFE496A0052747C /* ChatInputBarPresenter.swift */,
+				51253720A4AAC62BC0ADB851 /* Text */,
+				C3C0CC061BFE496A0052747C /* ChatInputBarAppearance.swift */,
+				C3C0CC0A1BFE496A0052747C /* ExpandableTextView.swift */,
+				E54D4DA323DEDD5F0090FD1D /* InterfaceOrientation.swift */,
+				C3C0CC0B1BFE496A0052747C /* HorizontalStackScrollView.swift */,
+				265E22EA2256398E005330E4 /* PasteActionInterceptor.swift */,
+				C3C0CC081BFE496A0052747C /* ChatInputItem.swift */,
+				DE51010C21B5670A009BC61C /* InputContainerView.swift */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		632ABC81D2B76078C63EE268 /* Chat Items */ = {
+			isa = PBXGroup;
+			children = (
+				75B151CA99ADFD73B3B0EE72 /* PhotoMessages */,
+				D186BCE0BCD5BAE4B4618A7B /* BaseMessage */,
+			);
+			path = "Chat Items";
+			sourceTree = "<group>";
+		};
+		65CC81497AD339B3A71CE668 /* Content */ = {
+			isa = PBXGroup;
+			children = (
 				268CD5722203340A00DEE2C2 /* MessageContentFactoryProtocol.swift */,
+				EAF2678F22BD2625006B3455 /* DefaultMessageContentPresenter.swift */,
 				EAF2678D22BD1524006B3455 /* MessageContentPresenterProtocol.swift */,
 				268CD57B22034FDB00DEE2C2 /* MessageManualLayoutProvider.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
 		};
-		55ABA5521FC738E300923302 /* Common */ = {
+		6CB2215CC5E3904C543DE416 /* CircleProgressIndicatorView */ = {
 			isa = PBXGroup;
 			children = (
-				55ABA5531FC739C300923302 /* Alignment.swift */,
+				A4F77D0526BAE41400008F24 /* CircleProgressIndicator.xcassets */,
+			);
+			path = CircleProgressIndicatorView;
+			sourceTree = "<group>";
+		};
+		74CFBBD2F7AE0842AEB1934E /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				C89993097E447BA8DC93C832 /* Input */,
+				DFBBD992B82D3766D47FFAEC /* Chat Items */,
+				55F22DFB6FE49B2528465275 /* Common */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		75B151CA99ADFD73B3B0EE72 /* PhotoMessages */ = {
+			isa = PBXGroup;
+			children = (
+				FC01CA7948542D0CA4BBFE7B /* Views */,
+			);
+			path = PhotoMessages;
+			sourceTree = "<group>";
+		};
+		84592512FEECB3A57E9B93B7 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CC0E1BFE496A0052747C /* Photos.xcassets */,
+				20802F92BE49BE42C4183CCF /* Camera */,
+				E376C10324F8160B00069ECA /* PhotosInputPermissionsRequester.swift */,
+				C3C0CC0F1BFE496A0052747C /* PhotosChatInputItem.swift */,
+				C3C0CC131BFE496A0052747C /* PhotosInputWithPlaceholdersDataProvider.swift */,
+				025B08EE8EEEAACFAEE67609 /* Photo */,
+				C3C0CC141BFE496A0052747C /* PhotosInputView.swift */,
+				F8742AC33975F04AC1D97EA7 /* Placeholder */,
+				C3C0CC151BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		8EC58DB42A3C040EEF163EAA /* Decoration */ = {
+			isa = PBXGroup;
+			children = (
+				266C7ADE24B2A60F00DB0F61 /* MessageDecorationViewLayout.swift */,
+				266C7ADC24B2A56400DB0F61 /* MessageDecorationViewFactory.swift */,
+			);
+			path = Decoration;
+			sourceTree = "<group>";
+		};
+		8F1BC418CFD68F3A8B87D6BA /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				355A9C1A6F12FDE0937C3C68 /* Text */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		90B640CFD5F2EC856F186523 /* UI Components */ = {
+			isa = PBXGroup;
+			children = (
+				6CB2215CC5E3904C543DE416 /* CircleProgressIndicatorView */,
+			);
+			path = "UI Components";
+			sourceTree = "<group>";
+		};
+		987B8572EE8CDE1BB2CA54F0 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				55ABA5621FC7444700923302 /* CGPoint+Additions.swift */,
+				261D26912505B99000973CD6 /* CALayer+ImageMask.swift */,
 				C38658B11BFE55620012F181 /* AnimationUtils.swift */,
 				20585099253D7294002B1153 /* Bundle+ChattoAdditionsResources.swift */,
 				26D07FA3220791AE007C1534 /* Cache.swift */,
-				55ABA55C1FC742A600923302 /* CGFloat+Additions.swift */,
-				55ABA5621FC7444700923302 /* CGPoint+Additions.swift */,
 				55ABA5661FC748B600923302 /* CGRect+Additions.swift */,
-				55ABA5551FC73A3C00923302 /* CGSize+Additions.swift */,
-				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
-				55127637218C9FF800731463 /* ScreenMetric.swift */,
-				55ABA56E1FC74D8F00923302 /* UIColor+Additions.swift */,
-				55ABA56A1FC74CB400923302 /* UIEdgeInsets+Additions.swift */,
-				55ABA56C1FC74D0400923302 /* UIImage+Additions.swift */,
-				55ABA55A1FC73EF100923302 /* UIScreen+Scale.swift */,
-				55ABA5701FC74DB400923302 /* UIView+Additions.swift */,
 				2645F90C2209C11C004CB829 /* HashableRepresentible.swift */,
+				55ABA55C1FC742A600923302 /* CGFloat+Additions.swift */,
+				55ABA5551FC73A3C00923302 /* CGSize+Additions.swift */,
+				55127637218C9FF800731463 /* ScreenMetric.swift */,
+				55ABA5531FC739C300923302 /* Alignment.swift */,
+				55ABA55A1FC73EF100923302 /* UIScreen+Scale.swift */,
+				55ABA56A1FC74CB400923302 /* UIEdgeInsets+Additions.swift */,
+				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
+				55ABA56E1FC74D8F00923302 /* UIColor+Additions.swift */,
 				E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */,
-				261D26912505B99000973CD6 /* CALayer+ImageMask.swift */,
+				55ABA5701FC74DB400923302 /* UIView+Additions.swift */,
+				55ABA56C1FC74D0400923302 /* UIImage+Additions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
 		};
-		55ABA5751FC74F8D00923302 /* Common */ = {
+		A7118AFA51C6975FC269BE84 /* Chat Items */ = {
 			isa = PBXGroup;
 			children = (
-				55ABA55E1FC742E400923302 /* CGFloat+AdditionsTests.swift */,
-				55ABA5641FC7446B00923302 /* CGPoint+AdditionsTests.swift */,
-				55ABA5681FC7498700923302 /* CGRect+AdditionsTests.swift */,
-				55ABA5581FC73B5600923302 /* CGSize+AdditionsTests.swift */,
-				55ABA5761FC74F8D00923302 /* ObservableTests.swift */,
-				55ABA5721FC74E0400923302 /* UIEdgeInets+AdditionsTests.swift */,
-				E3E0D60422EA1AEE006E2053 /* Comparable+ClampTests.swift */,
+				377C5C4A4B0D31DAEACD7551 /* PhotoMessages */,
+				1FABF9C038CC46487C4927CA /* TextMessages */,
+				E8B19A3925EAB40F0610CF46 /* CompoundMessage */,
+				F547974B2CA07B4D821FFF0D /* BaseMessage */,
+				C3C0CBE01BFE496A0052747C /* ChatItemDecorationAttributes.swift */,
 			);
-			path = Common;
+			path = "Chat Items";
 			sourceTree = "<group>";
 		};
-		C35FE3C31C0331AE00D42980 /* TextMessages */ = {
+		AB56C4D233EB8D89755B44FF /* TextMessages */ = {
 			isa = PBXGroup;
 			children = (
-				C3815D011C036D1700DF95CA /* TextMessagePresenterBuilderTests.swift */,
 				C35FE3C41C0331CF00D42980 /* TextMessagePresenterTests.swift */,
+				C3815D011C036D1700DF95CA /* TextMessagePresenterBuilderTests.swift */,
 			);
 			path = TextMessages;
 			sourceTree = "<group>";
 		};
-		C35FE3C61C033E7800D42980 /* PhotoMessages */ = {
+		B5E7AE7209E40A0AFE235EB2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C35FE3C71C033E7800D42980 /* PhotoMessagePresenterTests.swift */,
-				C3815CFF1C036B3000DF95CA /* PhotoMessagePresenterBuilderTests.swift */,
+				268CD57F2204876B00DEE2C2 /* CompoundBubbleLayout.swift */,
+				268CD56021F9F92C00DEE2C2 /* CompoundBubbleViewStyle.swift */,
+				268CD56121F9F92C00DEE2C2 /* CompoundBubbleView.swift */,
+				268CD55F21F9F92B00DEE2C2 /* CompoundMessageCollectionViewCell.swift */,
 			);
-			path = PhotoMessages;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BFAE564FD69440734D810595 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A4F77D0126BAE37500008F24 /* BaseMessageAssets.xcassets */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C342FFA283B8EE4DAC1F4761 /* CircleProgressIndicatorView */ = {
+			isa = PBXGroup;
+			children = (
+				EA13CAF3229EE985009340C5 /* CircleProgressView.swift */,
+				EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */,
+				EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */,
+			);
+			path = CircleProgressIndicatorView;
 			sourceTree = "<group>";
 		};
 		C3C0CBAE1BFE49320052747C = {
@@ -471,9 +708,10 @@
 				26438955240D72AB00427D14 /* Dependencies */,
 				20585089253D6F58002B1153 /* ChattoAdditionsResources */,
 				C3C0CBB91BFE49320052747C /* Products */,
-				C3C0CBD21BFE496A0052747C /* Source */,
 				C3C0CC6E1BFE49700052747C /* Tests */,
 				CDC60FFF1FD727CA00C2588E /* Frameworks */,
+				74CFBBD2F7AE0842AEB1934E /* tests */,
+				F76CAE64D8F1C5F303860390 /* sources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -487,223 +725,32 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C3C0CBD21BFE496A0052747C /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CC021BFE496A0052747C /* Info.plist */,
-				55ABA5521FC738E300923302 /* Common */,
-				C3C0CBD51BFE496A0052747C /* Chat Items */,
-				C3C0CC031BFE496A0052747C /* Input */,
-				C3C0CC1D1BFE496A0052747C /* UI Components */,
-			);
-			path = Source;
-			sourceTree = "<group>";
-		};
-		C3C0CBD51BFE496A0052747C /* Chat Items */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBE01BFE496A0052747C /* ChatItemDecorationAttributes.swift */,
-				C3C0CBD71BFE496A0052747C /* BaseMessage */,
-				C3C0CBE31BFE496A0052747C /* PhotoMessages */,
-				C3C0CBED1BFE496A0052747C /* TextMessages */,
-				268CD55D21F9F8F500DEE2C2 /* CompoundMessage */,
-			);
-			path = "Chat Items";
-			sourceTree = "<group>";
-		};
-		C3C0CBD71BFE496A0052747C /* BaseMessage */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBD81BFE496A0052747C /* BaseMessageModel.swift */,
-				C3C0CBD91BFE496A0052747C /* BaseMessagePresenter.swift */,
-				C3C0CBDA1BFE496A0052747C /* BaseMessageViewModel.swift */,
-				C3C0CBDB1BFE496A0052747C /* Views */,
-			);
-			path = BaseMessage;
-			sourceTree = "<group>";
-		};
-		C3C0CBDB1BFE496A0052747C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBDC1BFE496A0052747C /* BaseMessageAssets.xcassets */,
-				C3C0CBDD1BFE496A0052747C /* BaseMessageCollectionViewCell.swift */,
-				C3C0CBDF1BFE496A0052747C /* ViewDefinitions.swift */,
-				3907D74597451AA0F6DAE924 /* BaseMessageCollectionViewCellDefaultStyle.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		C3C0CBE31BFE496A0052747C /* PhotoMessages */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBE41BFE496A0052747C /* PhotoMessageModel.swift */,
-				C3C0CBE51BFE496A0052747C /* PhotoMessagePresenter.swift */,
-				C3C0CBE61BFE496A0052747C /* PhotoMessagePresenterBuilder.swift */,
-				C3C0CBE71BFE496A0052747C /* PhotoMessageViewModel.swift */,
-				C3C0CBE81BFE496A0052747C /* Views */,
-			);
-			path = PhotoMessages;
-			sourceTree = "<group>";
-		};
-		C3C0CBE81BFE496A0052747C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBE91BFE496A0052747C /* PhotoBubbleView.swift */,
-				C3C0CBEA1BFE496A0052747C /* PhotoMessageAssets.xcassets */,
-				C3C0CBEB1BFE496A0052747C /* PhotoMessageCollectionViewCell.swift */,
-				C3C0CBEC1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		C3C0CBED1BFE496A0052747C /* TextMessages */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBEE1BFE496A0052747C /* TextMessageModel.swift */,
-				C3C0CBEF1BFE496A0052747C /* TextMessagePresenter.swift */,
-				26DA3357226F140500EF38A6 /* TextMessageMenuItemPresenter.swift */,
-				C3C0CBF01BFE496A0052747C /* TextMessagePresenterBuilder.swift */,
-				C3C0CBF11BFE496A0052747C /* TextMessageViewModel.swift */,
-				C3C0CBF21BFE496A0052747C /* Views */,
-			);
-			path = TextMessages;
-			sourceTree = "<group>";
-		};
-		C3C0CBF21BFE496A0052747C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CBF31BFE496A0052747C /* TextBubbleView.swift */,
-				C3C0CBF51BFE496A0052747C /* TextMessageCollectionViewCell.swift */,
-				C3C0CBF61BFE496A0052747C /* TextMessageCollectionViewCellDefaultStyle.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		C3C0CC031BFE496A0052747C /* Input */ = {
-			isa = PBXGroup;
-			children = (
-				DE51010C21B5670A009BC61C /* InputContainerView.swift */,
-				C3C0CC041BFE496A0052747C /* ChatInputBar.swift */,
-				C3C0CC051BFE496A0052747C /* ChatInputBar.xib */,
-				C3C0CC061BFE496A0052747C /* ChatInputBarAppearance.swift */,
-				C3C0CC071BFE496A0052747C /* ChatInputBarPresenter.swift */,
-				C3C0CC081BFE496A0052747C /* ChatInputItem.swift */,
-				C3C0CC091BFE496A0052747C /* ChatInputItemView.swift */,
-				265E22EA2256398E005330E4 /* PasteActionInterceptor.swift */,
-				C3C0CC0A1BFE496A0052747C /* ExpandableTextView.swift */,
-				C3C0CC0B1BFE496A0052747C /* HorizontalStackScrollView.swift */,
-				E54D4DA323DEDD5F0090FD1D /* InterfaceOrientation.swift */,
-				C3C0CC0C1BFE496A0052747C /* Photos */,
-				C3C0CC161BFE496A0052747C /* ReusableXibView.swift */,
-				C3C9BC8E1D11540D00F3A54E /* TabInputButton.swift */,
-				C3C0CC171BFE496A0052747C /* Text */,
-			);
-			path = Input;
-			sourceTree = "<group>";
-		};
-		C3C0CC0C1BFE496A0052747C /* Photos */ = {
-			isa = PBXGroup;
-			children = (
-				CDC610021FD80B5900C2588E /* Placeholder */,
-				CDC610011FD80B4A00C2588E /* Photo */,
-				CDC610001FD80B4200C2588E /* Camera */,
-				C3C0CC0E1BFE496A0052747C /* Photos.xcassets */,
-				C3C0CC0F1BFE496A0052747C /* PhotosChatInputItem.swift */,
-				C3C0CC131BFE496A0052747C /* PhotosInputWithPlaceholdersDataProvider.swift */,
-				C3C0CC141BFE496A0052747C /* PhotosInputView.swift */,
-				E376C10324F8160B00069ECA /* PhotosInputPermissionsRequester.swift */,
-				C3C0CC151BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift */,
-			);
-			path = Photos;
-			sourceTree = "<group>";
-		};
-		C3C0CC171BFE496A0052747C /* Text */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CC181BFE496A0052747C /* Text.xcassets */,
-				C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */,
-			);
-			path = Text;
-			sourceTree = "<group>";
-		};
-		C3C0CC1D1BFE496A0052747C /* UI Components */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CC1E1BFE496A0052747C /* CircleProgressIndicatorView */,
-			);
-			path = "UI Components";
-			sourceTree = "<group>";
-		};
-		C3C0CC1E1BFE496A0052747C /* CircleProgressIndicatorView */ = {
-			isa = PBXGroup;
-			children = (
-				EA13CAF1229EE8C8009340C5 /* CircleIconView.swift */,
-				EA13CAF5229EE9A6009340C5 /* CircleProgressIndicatorView.swift */,
-				EA13CAF3229EE985009340C5 /* CircleProgressView.swift */,
-				C3C0CC251BFE496A0052747C /* CircleProgressIndicator.xcassets */,
-			);
-			path = CircleProgressIndicatorView;
-			sourceTree = "<group>";
-		};
 		C3C0CC6E1BFE49700052747C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				C3C0CC751BFE49700052747C /* Info.plist */,
-				55ABA5751FC74F8D00923302 /* Common */,
-				C3C0CC6F1BFE49700052747C /* Chat Items */,
-				C3C0CC761BFE49700052747C /* Input */,
 			);
 			path = Tests;
 			sourceTree = SOURCE_ROOT;
 		};
-		C3C0CC6F1BFE49700052747C /* Chat Items */ = {
+		C89993097E447BA8DC93C832 /* Input */ = {
 			isa = PBXGroup;
 			children = (
-				C3EFA6AE1C03607A0063CE22 /* BaseMessage */,
-				C35FE3C61C033E7800D42980 /* PhotoMessages */,
-				C35FE3C31C0331AE00D42980 /* TextMessages */,
-			);
-			path = "Chat Items";
-			sourceTree = "<group>";
-		};
-		C3C0CC761BFE49700052747C /* Input */ = {
-			isa = PBXGroup;
-			children = (
-				C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */,
 				C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */,
-				C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */,
-				C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */,
 				CDC610091FD8267D00C2588E /* FakePhotosInputDataProvider.swift */,
+				C3C0CC7A1BFE49700052747C /* ChatInputPresenterTests.swift */,
 				C363C33E1D2405F800599FF5 /* LiveCameraCellPresenterTests.swift */,
-				C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */,
-				CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */,
-				CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */,
-				F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */,
-				C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */,
 				F6D04BA81CA46D5000E803FA /* PhotosInputWithPlaceholdersDataProviderTests.swift */,
+				C3C0CC7C1BFE49700052747C /* PhotosChatInputItemTests.swift */,
+				C3C0CC7D1BFE49700052747C /* PhotosInputViewItemSizeCalculatorTests.swift */,
+				CDE15F42205993FB005D86DD /* PhotosInputCameraPickerTests.swift */,
+				F6D04BA61CA46C0200E803FA /* PhotosInputPlaceholderDataProviderTests.swift */,
+				C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */,
+				C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */,
+				CDC6100C1FD8376000C2588E /* PhotosInputCellProviderTests.swift */,
 				C3C0CC7E1BFE49700052747C /* TextChatInputItemTests.swift */,
 			);
 			path = Input;
-			sourceTree = "<group>";
-		};
-		C3EFA6AE1C03607A0063CE22 /* BaseMessage */ = {
-			isa = PBXGroup;
-			children = (
-				C3EFA6AF1C03607A0063CE22 /* BaseMessagePresenterTests.swift */,
-				EAAFBCEC2302D8C8004F553D /* CompoundMessagePresenterTests.swift */,
-				EAAFBCEA2302BBD3004F553D /* DefaultMessageContentPresenterTests.swift */,
-				EAAFBCF02302DBAF004F553D /* FakeMessageInteractionHandler.swift */,
-				D6E3AEFB25D6E01900819A56 /* FakeMessageModel.swift */,
-				EAAFBCEE2302DB22004F553D /* FakeViewModelBuilder.swift */,
-				EA75254F2302E94B0069D1AF /* MessageModel+Helpers.swift */,
-				D6E3AEF525D6DF6000819A56 /* MessageViewModelTests.swift */,
-				EA7527972302FD790069D1AF /* StubCompoundBubbleViewStyle.swift */,
-				EA7527992302FD980069D1AF /* StubMessageCollectionViewCellStyle.swift */,
-				EA75279B23031FE60069D1AF /* TestableCompoundMessagePresenter.swift */,
-				EA7525512302FB930069D1AF /* TestHelpers.swift */,
-				D6E3AF0025D6E6C500819A56 /* FakeMessageContentFactory.swift */,
-			);
-			path = BaseMessage;
 			sourceTree = "<group>";
 		};
 		CDC60FFF1FD727CA00C2588E /* Frameworks */ = {
@@ -713,39 +760,86 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CDC610001FD80B4200C2588E /* Camera */ = {
+		D186BCE0BCD5BAE4B4618A7B /* BaseMessage */ = {
 			isa = PBXGroup;
 			children = (
-				0B44651420347C11001ED5F1 /* DeviceImagePicker.swift */,
-				CD240FA7D32306EC2284C287 /* ImagePicker.swift */,
-				C33DEA461D23F8C8002AAD26 /* LiveCameraCaptureSession.swift */,
-				C3C0CC0D1BFE496A0052747C /* LiveCameraCell.swift */,
-				C33DEA441D23F825002AAD26 /* LiveCameraCellPresenter.swift */,
-				EA6D0D2F25FA1BFA00A03C5C /* LiveCameraCellPresenterFactory.swift */,
-				C3C0CC101BFE496A0052747C /* PhotosInputCameraPicker.swift */,
-				EA130DD32600BDC900A30DAC /* PhotosInputCameraPickerFactory.swift */,
+				BFAE564FD69440734D810595 /* Views */,
 			);
-			path = Camera;
+			path = BaseMessage;
 			sourceTree = "<group>";
 		};
-		CDC610011FD80B4A00C2588E /* Photo */ = {
+		DFBBD992B82D3766D47FFAEC /* Chat Items */ = {
 			isa = PBXGroup;
 			children = (
-				C3C0CC111BFE496A0052747C /* PhotosInputCell.swift */,
-				C3C0CC121BFE496A0052747C /* PhotosInputCellProvider.swift */,
-				CDC610071FD80CDA00C2588E /* PhotosInputDataProvider.swift */,
+				2E0E76322C2AACE8CD25C21D /* BaseMessage */,
+				0AE4F61F7EEC9732CA99F689 /* PhotoMessages */,
+				AB56C4D233EB8D89755B44FF /* TextMessages */,
 			);
-			path = Photo;
+			path = "Chat Items";
 			sourceTree = "<group>";
 		};
-		CDC610021FD80B5900C2588E /* Placeholder */ = {
+		E8B19A3925EAB40F0610CF46 /* CompoundMessage */ = {
+			isa = PBXGroup;
+			children = (
+				8EC58DB42A3C040EEF163EAA /* Decoration */,
+				65CC81497AD339B3A71CE668 /* Content */,
+				B5E7AE7209E40A0AFE235EB2 /* Views */,
+				268CD56521FA260800DEE2C2 /* CompoundMessagePresenter.swift */,
+				268CD56721FA29F300DEE2C2 /* CompoundMessagePresenterBuilder.swift */,
+			);
+			path = CompoundMessage;
+			sourceTree = "<group>";
+		};
+		F547974B2CA07B4D821FFF0D /* BaseMessage */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CBD81BFE496A0052747C /* BaseMessageModel.swift */,
+				C3C0CBD91BFE496A0052747C /* BaseMessagePresenter.swift */,
+				C3C0CBDA1BFE496A0052747C /* BaseMessageViewModel.swift */,
+				4D01E65A94C732A1A1F8408F /* Views */,
+			);
+			path = BaseMessage;
+			sourceTree = "<group>";
+		};
+		F76CAE64D8F1C5F303860390 /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CC021BFE496A0052747C /* Info.plist */,
+				987B8572EE8CDE1BB2CA54F0 /* Common */,
+				5885A5016066712D80AFC4B5 /* Input */,
+				A7118AFA51C6975FC269BE84 /* Chat Items */,
+				0ADE4F463C28F62E251D677C /* UI Components */,
+				0DC4402F69B272AD6E30CAD0 /* Resources */,
+			);
+			path = sources;
+			sourceTree = "<group>";
+		};
+		F8742AC33975F04AC1D97EA7 /* Placeholder */ = {
 			isa = PBXGroup;
 			children = (
 				CDC60FFC1FD7259200C2588E /* PhotosInputPlaceholderCell.swift */,
-				CDC610031FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift */,
 				CDC610051FD80C2B00C2588E /* PhotosInputPlaceholderDataProvider.swift */,
+				CDC610031FD80BB900C2588E /* PhotosInputPlaceholderCellProvider.swift */,
 			);
 			path = Placeholder;
+			sourceTree = "<group>";
+		};
+		FB1F60D6AC25DB1715F568CC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C3C0CBEC1BFE496A0052747C /* PhotoMessageCollectionViewCellDefaultStyle.swift */,
+				C3C0CBE91BFE496A0052747C /* PhotoBubbleView.swift */,
+				C3C0CBEB1BFE496A0052747C /* PhotoMessageCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FC01CA7948542D0CA4BBFE7B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A4F77D0326BAE40A00008F24 /* PhotoMessageAssets.xcassets */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -887,11 +981,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2058508F253D6FAF002B1153 /* BaseMessageAssets.xcassets in Resources */,
-				20585090253D6FAF002B1153 /* PhotoMessageAssets.xcassets in Resources */,
+				A4F77D1026BAE7E400008F24 /* BaseMessageAssets.xcassets in Resources */,
+				A4F77D0F26BAE7E400008F24 /* CircleProgressIndicator.xcassets in Resources */,
+				A4F77D1126BAE7E400008F24 /* Text.xcassets in Resources */,
+				A4F77D0E26BAE7E400008F24 /* PhotoMessageAssets.xcassets in Resources */,
 				20585095253D6FEF002B1153 /* ChatInputBar.xib in Resources */,
-				20585093253D6FAF002B1153 /* CircleProgressIndicator.xcassets in Resources */,
-				20585092253D6FAF002B1153 /* Text.xcassets in Resources */,
 				20585091253D6FAF002B1153 /* Photos.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -908,6 +1002,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C825F4DD2EBCE81CBB10C00 /* ChattoAdditionsResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1007,6 +1102,7 @@
 				C3C0CC371BFE496A0052747C /* PhotoMessageViewModel.swift in Sources */,
 				EA13CAF6229EE9A6009340C5 /* CircleProgressIndicatorView.swift in Sources */,
 				268CD56221F9F92C00DEE2C2 /* CompoundMessageCollectionViewCell.swift in Sources */,
+				A4F77D1626BAEABF00008F24 /* ExpandableChatInputBarPresenter.swift in Sources */,
 				E54D4DA423DEDD5F0090FD1D /* InterfaceOrientation.swift in Sources */,
 				C3C0CC5B1BFE496A0052747C /* PhotosInputCell.swift in Sources */,
 				C3C0CC561BFE496A0052747C /* HorizontalStackScrollView.swift in Sources */,
@@ -1262,7 +1358,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAdditions;
@@ -1279,7 +1375,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.badoo.ChattoAdditions;
