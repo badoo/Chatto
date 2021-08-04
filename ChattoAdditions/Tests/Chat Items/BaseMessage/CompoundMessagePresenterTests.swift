@@ -24,7 +24,6 @@
 @testable import ChattoAdditions
 import XCTest
 
-@available(iOS 11, *)
 final class CompoundMessagePresenterTests: XCTestCase {
 
     func test_WhenPresenterIsUpdatedWithTheSameMessage_ThenUpdateContentNotCalled_AndUpdateExistingContentPresentersNotCalled() {

@@ -54,7 +54,6 @@ struct TestHelpers {
         return builder
     }
 
-    @available(iOS 11, *)
     static func makeTestableCompoundMessagePresenter(with message: MessageModel,
                                                      viewModelBuilder: FakeViewModelBuilder? = nil) -> TestableCompoundMessagePresenter {
         return TestableCompoundMessagePresenter(

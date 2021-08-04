@@ -176,16 +176,9 @@ open class BaseChatViewController: UIViewController,
             self.view.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
         ])
 
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
-        }
+        let guide = self.view.safeAreaLayoutGuide
+        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
 
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -219,18 +212,11 @@ open class BaseChatViewController: UIViewController,
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
         NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.topLayoutGuide.bottomAnchor)
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor)
         ])
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            leadingAnchor = guide.leadingAnchor
-            trailingAnchor = guide.trailingAnchor
-        } else {
-            leadingAnchor = self.view.leadingAnchor
-            trailingAnchor = self.view.trailingAnchor
-        }
+        let guide = self.view.safeAreaLayoutGuide
+        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
 
         NSLayoutConstraint.activate([
             self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -266,28 +252,9 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func updateInputContainerBottomBaseOffset() {
-        if #available(iOS 11.0, *) {
-            let offset = self.bottomLayoutGuide.length
-            if self.inputContainerBottomBaseOffset != offset {
-                self.inputContainerBottomBaseOffset = offset
-            }
-        } else {
-            // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
-            // because it has incorrect value when we actually have a bottom bar (tabbar)
-            // Also if instance of BaseChatViewController is added as childViewController to another view controller, we had to check all this stuf on parent instance instead of self
-            // UPD: Fixed in iOS 11.0
-            let navigatedController: UIViewController
-            if let parent = self.parent, !(parent is UINavigationController || parent is UITabBarController) {
-                navigatedController = parent
-            } else {
-                navigatedController = self
-            }
-
-            if navigatedController.hidesBottomBarWhenPushed && (navigationController?.viewControllers.count ?? 0) > 1 && navigationController?.viewControllers.last == navigatedController {
-                self.inputContainerBottomBaseOffset = 0
-            } else {
-                self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
-            }
+        let offset = self.view.safeAreaInsets.bottom
+        if self.inputContainerBottomBaseOffset != offset {
+            self.inputContainerBottomBaseOffset = offset
         }
     }
 
@@ -341,7 +308,7 @@ open class BaseChatViewController: UIViewController,
     public var allContentFits: Bool {
         guard let collectionView = self.collectionView else { return false }
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
-        let insetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
@@ -358,7 +325,7 @@ open class BaseChatViewController: UIViewController,
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - collectionView.contentInset.bottom
-        var newInsetTop = self.topLayoutGuide.length + self.layoutConfiguration.contentInsets.top
+        var newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
 
         let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
@@ -401,7 +368,7 @@ open class BaseChatViewController: UIViewController,
         collectionView.chatto_setVerticalScrollIndicatorInsets({
             var currentInsets = collectionView.scrollIndicatorInsets
             currentInsets.bottom = self.layoutConfiguration.scrollIndicatorInsets.bottom + inputHeightWithKeyboard
-            currentInsets.top = self.topLayoutGuide.length + self.layoutConfiguration.scrollIndicatorInsets.top
+            currentInsets.top = self.view.safeAreaInsets.top + self.layoutConfiguration.scrollIndicatorInsets.top
             return currentInsets
         }())
 
@@ -496,10 +463,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
-        if #available(iOS 10, *) {
-            return ReplyFeedbackGenerator()
-        }
-        return nil
+        return ReplyFeedbackGenerator()
     }
 
     // MARK: ChatDataSourceDelegateProtocol

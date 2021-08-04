@@ -24,7 +24,6 @@
 import UIKit
 import Chatto
 
-@available(iOS 11, *)
 open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     : BaseMessagePresenter<CompoundBubbleView, ViewModelBuilderT, InteractionHandlerT>, MessageContentPresenterDelegate where
     ViewModelBuilderT: ViewModelBuilderProtocol,

@@ -291,7 +291,7 @@ private final class ChatMessageTextView: UITextView {
                 if #available(iOS 13, *) {
                     return !ChatMessageTextView.notAllowedGestureRecognizerNames.contains(gestureRecognizer.name?.base64String ?? "")
                 }
-                if #available(iOS 11, *), gestureRecognizer.name?.base64String == SystemGestureRecognizerNames.linkTap.rawValue {
+                if gestureRecognizer.name?.base64String == SystemGestureRecognizerNames.linkTap.rawValue {
                     return true
                 }
                 if type(of: gestureRecognizer) == UILongPressGestureRecognizer.self, gestureRecognizer.delaysTouchesEnded {
@@ -327,9 +327,7 @@ private final class ChatMessageTextView: UITextView {
     }
 
     fileprivate func disableDragInteraction() {
-        if #available(iOS 11.0, *) {
-            self.textDragInteraction?.isEnabled = false
-        }
+        self.textDragInteraction?.isEnabled = false
     }
 
     fileprivate func disableLargeContentViewer() {

@@ -23,7 +23,6 @@
 
 import UIKit
 
-@available(iOS 11, *)
 open class CompoundMessageCollectionViewCell: BaseMessageCollectionViewCell<CompoundBubbleView> {
 
     open override func createBubbleView() -> CompoundBubbleView! {
