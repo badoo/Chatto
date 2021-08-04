@@ -44,6 +44,8 @@ open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
+    let configuration: Configuration
+
     open weak var keyboardEventsHandler: KeyboardEventsHandling?
     open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
     open var replyActionHandler: ReplyActionHandler?
@@ -54,27 +56,6 @@ open class BaseChatViewController: UIViewController,
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
     }
-
-    public struct Constants {
-        public var updatesAnimationDuration: TimeInterval = 0.33
-        public var preferredMaxMessageCount: Int? = 500 // If not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
-        public var preferredMaxMessageCountAdjustment: Int = 400 // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
-        public var autoloadingFractionalThreshold: CGFloat = 0.05 // in [0, 1]
-    }
-
-    public var constants = Constants()
-
-    public struct UpdatesConfig {
-
-        // Allows another performBatchUpdates to be called before completion of a previous one (not recommended).
-        // Changing this value after viewDidLoad is not supported
-        public var fastUpdates = true
-
-        // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
-        public var coalesceUpdates = true
-    }
-
-    public var updatesConfig =  UpdatesConfig()
 
     open var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
 
@@ -109,6 +90,16 @@ open class BaseChatViewController: UIViewController,
         if let updateType = updateType {
             self.enqueueModelUpdate(updateType: updateType)
         }
+    }
+
+    public init(configuration: Configuration) {
+        self.configuration = configuration
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {
@@ -560,5 +551,101 @@ extension BaseChatViewController { // Rotation
                 self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
             }
         }, completion: nil)
+    }
+}
+
+public extension BaseChatViewController {
+
+    struct Configuration {
+
+        public struct Animations {
+            public var updatesAnimationDuration: TimeInterval
+
+            public init(updatesAnimationDuration: TimeInterval) {
+                self.updatesAnimationDuration = updatesAnimationDuration
+            }
+        }
+
+        public struct Messages {
+            // If not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
+            public var preferredMaxMessageCount: Int?
+            // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
+            public var preferredMaxMessageCountAdjustment: Int
+
+            public init(preferredMaxMessageCount: Int?,
+                        preferredMaxMessageCountAdjustment: Int) {
+                self.preferredMaxMessageCount = preferredMaxMessageCount
+                self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
+            }
+        }
+
+
+        public struct Updates {
+            // in [0, 1]
+            public var autoloadingFractionalThreshold: CGFloat
+            // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
+            public var coalesceUpdates: Bool
+            // Allows another performBatchUpdates to be called before completion of a previous one (not recommended).
+            // Changing this value after viewDidLoad is not supported
+            public var fastUpdates: Bool
+
+            public init(autoloadingFractionalThreshold: CGFloat,
+                        coalesceUpdates: Bool,
+                        fastUpdates: Bool) {
+                self.autoloadingFractionalThreshold = autoloadingFractionalThreshold
+                self.coalesceUpdates = coalesceUpdates
+                self.fastUpdates = fastUpdates
+            }
+        }
+
+        public var animation: Animations
+        public var messages: Messages
+        public var updates: Updates
+
+        public init(animation: Animations,
+                    messages: Messages,
+                    updates: Updates) {
+            self.animation = animation
+            self.messages = messages
+            self.updates = updates
+        }
+    }
+}
+
+public extension BaseChatViewController.Configuration.Animations {
+    static var `default`: Self {
+        return .init(
+            updatesAnimationDuration: 0.33
+        )
+    }
+}
+
+public extension BaseChatViewController.Configuration.Messages {
+    static var `default`: Self {
+        return .init(
+            preferredMaxMessageCount: 500,
+            preferredMaxMessageCountAdjustment: 400
+        )
+    }
+}
+
+
+public extension BaseChatViewController.Configuration.Updates {
+    static var `default`: Self {
+        return .init(
+            autoloadingFractionalThreshold: 0.05,
+            coalesceUpdates: true,
+            fastUpdates: true
+        )
+    }
+}
+
+public extension BaseChatViewController.Configuration {
+    static var `default`: Self {
+        return .init(
+            animation: .default,
+            messages: .default,
+            updates: .default
+        )
     }
 }

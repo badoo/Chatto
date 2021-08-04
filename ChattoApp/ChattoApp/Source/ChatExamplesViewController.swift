@@ -52,7 +52,7 @@ class ChatExamplesViewController: CellsViewController {
     private func makeOverviewCellItem() -> CellItem {
         return CellItem(title: "Overview", action: { [weak self] in
             let dataSource = DemoChatDataSource(messages: DemoChatMessageFactory.makeOverviewMessages(), pageSize: 50)
-            let viewController = AddRandomMessagesChatViewController()
+            let viewController = AddRandomMessagesChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
@@ -61,7 +61,7 @@ class ChatExamplesViewController: CellsViewController {
     private func makeChatCellItem(title: String, messagesCount: Int, shouldUseAlternativePresenter: Bool = false) -> CellItem {
         return CellItem(title: title, action: { [weak self] in
             let dataSource = DemoChatDataSource(count: messagesCount, pageSize: 50)
-            let viewController = AddRandomMessagesChatViewController()
+            let viewController = AddRandomMessagesChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             viewController.shouldUseAlternativePresenter = shouldUseAlternativePresenter
             self?.navigationController?.pushViewController(viewController, animated: true)
@@ -72,7 +72,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Chat with message selection", action: { [weak self] in
             let messages = DemoChatMessageFactory.makeMessagesSelectionMessages()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = MessagesSelectionChatViewController()
+            let viewController = MessagesSelectionChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
@@ -98,7 +98,7 @@ class ChatExamplesViewController: CellsViewController {
     private func makeScrollToBottomCellItem() -> CellItem {
         return CellItem(title: "Scroll To Bottom Button Example", action: { [weak self] in
             let dataSource = DemoChatDataSource(count: 10_000, pageSize: 50)
-            let viewController = ScrollToBottomButtonChatViewController()
+            let viewController = ScrollToBottomButtonChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
@@ -106,7 +106,10 @@ class ChatExamplesViewController: CellsViewController {
 
     private func makeUpdateItemTypeViewController() -> CellItem {
         return CellItem(title: "Dynamically change item type") { [unowned self] in
-            self.navigationController?.pushViewController(UpdateItemTypeViewController(), animated: true)
+            self.navigationController?.pushViewController(
+                UpdateItemTypeViewController(configuration: .default),
+                animated: true
+            )
         }
     }
 
@@ -114,7 +117,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Compound message examples") { [unowned self] in
             let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageExamples()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = DemoChatViewController()
+            let viewController = DemoChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             self.navigationController?.pushViewController(viewController, animated: true)
         }
@@ -124,7 +127,7 @@ class ChatExamplesViewController: CellsViewController {
         return CellItem(title: "Compound message layout") { [unowned self] in
             let messages = DemoChatMessageFactory.makeMessagesForCompoundMessageLayout()
             let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-            let viewController = DemoChatViewController()
+            let viewController = DemoChatViewController(configuration: .default)
             viewController.dataSource = dataSource
             self.navigationController?.pushViewController(viewController, animated: true)
         }
@@ -132,13 +135,13 @@ class ChatExamplesViewController: CellsViewController {
 
     private func makeTestItemsReloadingCellItem() -> CellItem {
         return CellItem(title: "Test items reloading") { [unowned self] in
-            self.navigationController?.pushViewController(TestItemsReloadingViewController(), animated: true)
+            self.navigationController?.pushViewController(TestItemsReloadingViewController(configuration: .default), animated: true)
         }
     }
 
     private func makeAsyncAvatarLoadingCellItem() -> CellItem {
         return CellItem(title: "Async avatar loading") { [unowned self] in
-            self.navigationController?.pushViewController(AsyncAvatarLoadingViewController(), animated: true)
+            self.navigationController?.pushViewController(AsyncAvatarLoadingViewController(configuration: .default), animated: true)
         }
     }
 

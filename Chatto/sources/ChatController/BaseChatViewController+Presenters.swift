@@ -48,7 +48,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
             oldPresenterForCell.cellWasHidden(cell)
         }
 
-        if self.updatesConfig.fastUpdates {
+        if self.configuration.updates.fastUpdates {
             if let visibleCell = self.visibleCells[indexPath], visibleCell === cell {
                 self.visibleCells[indexPath] = nil
             } else {
@@ -68,7 +68,7 @@ extension BaseChatViewController: ChatCollectionViewLayoutDelegate {
 
         let presenter = self.presenterForIndexPath(indexPath)
         self.presentersByCell.setObject(presenter, forKey: cell)
-        if self.updatesConfig.fastUpdates {
+        if self.configuration.updates.fastUpdates {
             self.visibleCells[indexPath] = cell
         }
 

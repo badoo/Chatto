@@ -233,8 +233,9 @@ class ChatViewControllerTests: XCTestCase {
     }
 
     func testThat_GivenCoalescingIsEnabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreCoalesced() {
-        let controller = TesteableChatViewController()
-        controller.updatesConfig.coalesceUpdates = true
+        var configuration = BaseChatViewController.Configuration.default
+        configuration.updates.coalesceUpdates = true
+        let controller = TesteableChatViewController(configuration: configuration)
         self.fakeDidAppearAndLayout(controller: controller)
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()
@@ -250,8 +251,9 @@ class ChatViewControllerTests: XCTestCase {
     }
 
     func testThat_GivenCoalescingIsDisabled_WhenMultipleUpdatesAreRequested_ThenUpdatesAreQueued() {
-        let controller = TesteableChatViewController()
-        controller.updatesConfig.coalesceUpdates = false
+        var configuration = BaseChatViewController.Configuration.default
+        configuration.updates.coalesceUpdates = false
+        let controller = TesteableChatViewController(configuration: configuration)
         self.fakeDidAppearAndLayout(controller: controller)
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()

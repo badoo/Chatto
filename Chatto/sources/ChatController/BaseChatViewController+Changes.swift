@@ -44,7 +44,7 @@ extension BaseChatViewController {
     public func enqueueModelUpdate(updateType: UpdateType, completion: (() -> Void)? = nil) {
         let newItems = self.chatDataSource?.chatItems ?? []
 
-        if self.updatesConfig.coalesceUpdates {
+        if self.configuration.updates.coalesceUpdates {
             self.updateQueue.flushQueue()
         }
 
@@ -67,10 +67,10 @@ extension BaseChatViewController {
     }
 
     public func enqueueMessageCountReductionIfNeeded() {
-        guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount, (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
+        guard let preferredMaxMessageCount = self.configuration.messages.preferredMaxMessageCount, (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
         self.updateQueue.addTask { [weak self] (completion) -> Void in
             guard let sSelf = self else { return }
-            sSelf.chatDataSource?.adjustNumberOfMessages(preferredMaxCount: sSelf.constants.preferredMaxMessageCountAdjustment, focusPosition: sSelf.focusPosition, completion: { (didAdjust) -> Void in
+            sSelf.chatDataSource?.adjustNumberOfMessages(preferredMaxCount: sSelf.configuration.messages.preferredMaxMessageCountAdjustment, focusPosition: sSelf.focusPosition, completion: { (didAdjust) -> Void in
                 guard didAdjust, let sSelf = self else {
                     completion()
                     return
@@ -133,7 +133,7 @@ extension BaseChatViewController {
         // if self.updatesConfig.fastUpdates is enabled, very fast updates could result in `updateVisibleCells` updating wrong cells.
         // See more: https://github.com/diegosanchezr/UICollectionViewStressing
 
-        if self.updatesConfig.fastUpdates {
+        if self.configuration.updates.fastUpdates {
             return updated(collection: self.visibleCells, withChanges: changes) == updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
         } else {
             return true // never seen inconsistency without fastUpdates
@@ -199,7 +199,7 @@ extension BaseChatViewController {
         }
 
         if usesBatchUpdates {
-            UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
+            UIView.animate(withDuration: self.configuration.animation.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
                 collectionView.performBatchUpdates({ () -> Void in
                     updateModelClosure()
@@ -240,7 +240,7 @@ extension BaseChatViewController {
             self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
         }
 
-        if !usesBatchUpdates || self.updatesConfig.fastUpdates {
+        if !usesBatchUpdates || self.configuration.updates.fastUpdates {
             myCompletion()
         }
     }
