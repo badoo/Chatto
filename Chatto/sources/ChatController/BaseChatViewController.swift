@@ -145,7 +145,7 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(configuration: Configuration) {
+    public init(configuration: Configuration = .default) {
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
