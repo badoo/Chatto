@@ -44,23 +44,51 @@ open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
-    let configuration: Configuration
+    public let configuration: Configuration
+    let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
-    open weak var keyboardEventsHandler: KeyboardEventsHandling?
-    open weak var scrollViewEventsHandler: ScrollViewEventsHandling?
-    open var replyActionHandler: ReplyActionHandler?
-    open var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
+    public weak var keyboardEventsHandler: KeyboardEventsHandling?
+    public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
+    public var replyActionHandler: ReplyActionHandler?
+    public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
+    public var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
+    public private(set) var collectionView: UICollectionView?
+    public private(set) var inputBarContainer: UIView!
+    public private(set) var inputContentContainer: UIView!
+    public private(set) var isFirstLayout: Bool = true
+    public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
+    public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
+    public final internal(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
+    // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
+    // Must be set before loadView is called.
+    public var substitutesMainViewAutomatically = true
+    /**
+     - You can use a decorator to:
+        - Provide the ChatCollectionViewLayout with margins between messages
+        - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
+        - You can also add new items (for instance time markers or failed cells)
+    */
+    public var chatItemsDecorator: ChatItemsDecoratorProtocol?
 
-    open var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
+    var inputContainerBottomConstraint: NSLayoutConstraint!
+    var unfinishedBatchUpdatesCount: Int = 0
+    var onAllBatchUpdatesFinished: (() -> Void)?
+    var autoLoadingEnabled: Bool = false
+    var cellPanGestureHandler: CellPanGestureHandler!
+    var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
+    var isAdjustingInputContainer: Bool = false
+    var notificationCenter = NotificationCenter.default
+    var keyboardTracker: KeyboardTracker!
+    var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
+
+    private var previousBoundsUsedForInsetsAdjustment: CGRect?
+
+    public var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
     }
 
-    open var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
-
-    public private(set) var collectionView: UICollectionView?
-    public final internal(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
     private var _chatDataSource: ChatDataSourceProtocol?
     public final var chatDataSource: ChatDataSourceProtocol? {
         get {
@@ -79,18 +107,43 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
-    // Must be set before loadView is called.
-    public var substitutesMainViewAutomatically = true
-
-    // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
-    public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
-        self._chatDataSource = dataSource
-        self._chatDataSource?.delegate = self
-        if let updateType = updateType {
-            self.enqueueModelUpdate(updateType: updateType)
+    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
+        didSet {
+            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
         }
     }
+
+    public var keyboardStatus: KeyboardStatus {
+        return self.keyboardTracker.keyboardStatus
+    }
+
+    public var maximumInputSize: CGSize {
+        return self.view.bounds.size
+    }
+
+    public var inputContentBottomMargin: CGFloat {
+        return self.inputContainerBottomConstraint.constant
+    }
+
+    private var inputContainerBottomBaseOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    private var inputContainerBottomAdditionalOffset: CGFloat = 0 {
+        didSet { self.updateInputContainerBottomConstraint() }
+    }
+
+    public var allContentFits: Bool {
+        guard let collectionView = self.collectionView else { return false }
+        let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
+        let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
+        let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
+        let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
+        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
+        return availableHeight >= contentSize.height
+    }
+
+    // MARK: - Init
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -107,6 +160,8 @@ open class BaseChatViewController: UIViewController,
         self.collectionView?.dataSource = nil
     }
 
+    // MARK: - Lifecycle
+
     open override func loadView() { // swiftlint:disable:this prohibited_super_call
         if substitutesMainViewAutomatically {
             self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
@@ -114,29 +169,17 @@ open class BaseChatViewController: UIViewController,
         } else {
             super.loadView()
         }
-
     }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+
         self.addCollectionView()
         self.addInputBarContainer()
         self.addInputView()
         self.addInputContentContainer()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
-    }
-
-    private func setupTapGestureRecognizer() {
-        self.collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
-    }
-
-    public var endsEditingWhenTappingOnChatBackground = true
-    @objc
-    open func userDidTapOnCollectionView() {
-        if self.endsEditingWhenTappingOnChatBackground {
-            self.view.endEditing(true)
-        }
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -147,6 +190,52 @@ open class BaseChatViewController: UIViewController,
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.keyboardTracker?.stopTracking()
+    }
+
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
+        self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
+
+        if self.isFirstLayout {
+            self.updateQueue.start()
+            self.isFirstLayout = false
+        }
+
+        self.updateInputContainerBottomBaseOffset()
+    }
+
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        guard self.isViewLoaded else { return }
+        guard let collectionView = self.collectionView else { return }
+
+        let shouldScrollToBottom = self.isScrolledAtBottom()
+        let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
+        let oldRect = self.rectAtIndexPath(referenceIndexPath)
+        coordinator.animate(alongsideTransition: { (_) -> Void in
+            if shouldScrollToBottom {
+                self.scrollToBottom(animated: false)
+            } else {
+                let newRect = self.rectAtIndexPath(referenceIndexPath)
+                self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+            }
+        }, completion: nil)
+    }
+
+    // MARK: - Setup
+
+    private func setupTapGestureRecognizer() {
+        self.collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
+    }
+
+    @objc
+    open func userDidTapOnCollectionView() {
+        if self.configuration.editing.endsEditingWhenTappingOnChatBackground {
+            self.view.endEditing(true)
+        }
     }
 
     private func addCollectionView() {
@@ -192,10 +281,6 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    var unfinishedBatchUpdatesCount: Int = 0
-    var onAllBatchUpdatesFinished: (() -> Void)?
-
-    var inputContainerBottomConstraint: NSLayoutConstraint!
     private func addInputBarContainer() {
         self.inputBarContainer = UIView(frame: CGRect.zero)
         self.inputBarContainer.autoresizingMask = UIView.AutoresizingMask()
@@ -249,21 +334,6 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    private var inputContainerBottomBaseOffset: CGFloat = 0 {
-        didSet { self.updateInputContainerBottomConstraint() }
-    }
-
-    private var inputContainerBottomAdditionalOffset: CGFloat = 0 {
-        didSet { self.updateInputContainerBottomConstraint() }
-    }
-
-    private func updateInputContainerBottomConstraint() {
-        self.inputContainerBottomConstraint.constant = max(self.inputContainerBottomBaseOffset, self.inputContainerBottomAdditionalOffset)
-        self.view.setNeedsLayout()
-    }
-
-    var isAdjustingInputContainer: Bool = false
-
     open func setupKeyboardTracker() {
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
@@ -278,35 +348,21 @@ open class BaseChatViewController: UIViewController,
         (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
     }
 
-    var notificationCenter = NotificationCenter.default
-    var keyboardTracker: KeyboardTracker!
+    private func updateInputContainerBottomConstraint() {
+        self.inputContainerBottomConstraint.constant = max(self.inputContainerBottomBaseOffset, self.inputContainerBottomAdditionalOffset)
+        self.view.setNeedsLayout()
+    }
 
-    public private(set) var isFirstLayout: Bool = true
-    override open func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
 
-        self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
-        self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
-
-        if self.isFirstLayout {
-            self.updateQueue.start()
-            self.isFirstLayout = false
+    // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
+    public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
+        self._chatDataSource = dataSource
+        self._chatDataSource?.delegate = self
+        if let updateType = updateType {
+            self.enqueueModelUpdate(updateType: updateType)
         }
-
-        self.updateInputContainerBottomBaseOffset()
     }
 
-    public var allContentFits: Bool {
-        guard let collectionView = self.collectionView else { return false }
-        let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
-        let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
-        let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
-        let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
-        let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
-        return availableHeight >= contentSize.height
-    }
-
-    private var previousBoundsUsedForInsetsAdjustment: CGRect?
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard let collectionView = self.collectionView else { return }
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
@@ -382,31 +438,11 @@ open class BaseChatViewController: UIViewController,
         return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
     }
 
-    var autoLoadingEnabled: Bool = false
-    var cellPanGestureHandler: CellPanGestureHandler!
-    public private(set) var inputBarContainer: UIView!
-    public private(set) var inputContentContainer: UIView!
-    public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
-    let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
-    var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
-
-    public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
-
-    /**
-     - You can use a decorator to:
-        - Provide the ChatCollectionViewLayout with margins between messages
-        - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
-        - You can also add new items (for instance time markers or failed cells)
-    */
-    public var chatItemsDecorator: ChatItemsDecoratorProtocol?
-
     open func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = ChatCollectionViewLayout()
         layout.delegate = self
         return layout
     }
-
-    var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
 
     // MARK: Subclass overrides
 
@@ -434,8 +470,6 @@ open class BaseChatViewController: UIViewController,
         return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }
 
-    // MARK: ReplyIndicatorRevealerDelegate
-
     open func didPassThreshold(at: IndexPath) {
         self.replyFeedbackGenerator?.generateFeedback()
     }
@@ -447,40 +481,8 @@ open class BaseChatViewController: UIViewController,
 
     open func didCancelReplyGesture(at: IndexPath) {}
 
-    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
-        didSet {
-            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
-        }
-    }
-
-    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
-        return ReplyFeedbackGenerator()
-    }
-
-    // MARK: ChatDataSourceDelegateProtocol
-
     open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
         self.enqueueModelUpdate(updateType: updateType)
-    }
-
-    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
-        self.enqueueModelUpdate(updateType: .normal)
-    }
-
-    public var keyboardStatus: KeyboardStatus {
-        return self.keyboardTracker.keyboardStatus
-    }
-
-    public var maximumInputSize: CGSize {
-        return self.view.bounds.size
-    }
-
-    open var inputContentBottomMargin: CGFloat {
-        return self.inputContainerBottomConstraint.constant
-    }
-
-    open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
-        self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
     }
 
     open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
@@ -525,32 +527,26 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
+    // MARK: ReplyIndicatorRevealerDelegate
+
+    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
+        return ReplyFeedbackGenerator()
+    }
+
+    public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
+        self.enqueueModelUpdate(updateType: .normal)
+    }
+
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
+        self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
+    }
+
     private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
         self.isAdjustingInputContainer = true
         self.inputContainerBottomAdditionalOffset = newValue
         self.view.layoutIfNeeded()
         callback?()
         self.isAdjustingInputContainer = false
-    }
-}
-
-extension BaseChatViewController { // Rotation
-
-    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        guard isViewLoaded else { return }
-        guard let collectionView = self.collectionView else { return }
-        let shouldScrollToBottom = self.isScrolledAtBottom()
-        let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
-        let oldRect = self.rectAtIndexPath(referenceIndexPath)
-        coordinator.animate(alongsideTransition: { (_) -> Void in
-            if shouldScrollToBottom {
-                self.scrollToBottom(animated: false)
-            } else {
-                let newRect = self.rectAtIndexPath(referenceIndexPath)
-                self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
-            }
-        }, completion: nil)
     }
 }
 
@@ -563,6 +559,14 @@ public extension BaseChatViewController {
 
             public init(updatesAnimationDuration: TimeInterval) {
                 self.updatesAnimationDuration = updatesAnimationDuration
+            }
+        }
+
+        public struct Editing {
+            public var endsEditingWhenTappingOnChatBackground: Bool
+
+            public init(endsEditingWhenTappingOnChatBackground: Bool) {
+                self.endsEditingWhenTappingOnChatBackground = endsEditingWhenTappingOnChatBackground
             }
         }
 
@@ -599,13 +603,16 @@ public extension BaseChatViewController {
         }
 
         public var animation: Animations
+        public var editing: Editing
         public var messages: Messages
         public var updates: Updates
 
         public init(animation: Animations,
+                    editing: Editing,
                     messages: Messages,
                     updates: Updates) {
             self.animation = animation
+            self.editing = editing
             self.messages = messages
             self.updates = updates
         }
@@ -616,6 +623,14 @@ public extension BaseChatViewController.Configuration.Animations {
     static var `default`: Self {
         return .init(
             updatesAnimationDuration: 0.33
+        )
+    }
+}
+
+public extension BaseChatViewController.Configuration.Editing {
+    static var `default`: Self {
+        return .init(
+            endsEditingWhenTappingOnChatBackground: true
         )
     }
 }
@@ -644,6 +659,7 @@ public extension BaseChatViewController.Configuration {
     static var `default`: Self {
         return .init(
             animation: .default,
+            editing: .default,
             messages: .default,
             updates: .default
         )
