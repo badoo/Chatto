@@ -61,13 +61,13 @@ extension BaseChatViewController {
     public func isCloseToBottom() -> Bool {
         guard let collectionView = self.collectionView else { return true }
         guard collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.constants.autoloadingFractionalThreshold)
+        return (self.visibleRect().maxY / collectionView.contentSize.height) > (1 - self.configuration.updates.autoloadingFractionalThreshold)
     }
 
     public func isCloseToTop() -> Bool {
         guard let collectionView = self.collectionView else { return true }
         guard collectionView.contentSize.height > 0 else { return true }
-        return (self.visibleRect().minY / collectionView.contentSize.height) < self.constants.autoloadingFractionalThreshold
+        return (self.visibleRect().minY / collectionView.contentSize.height) < self.configuration.updates.autoloadingFractionalThreshold
     }
 
     public func isIndexPathVisible(_ indexPath: IndexPath, atEdge edge: CellVerticalEdge) -> Bool {
@@ -103,7 +103,7 @@ extension BaseChatViewController {
         // Don't use setContentOffset(:animated). If animated, contentOffset property will be updated along with the animation for each frame update
         // If a message is inserted while scrolling is happening (as in very fast typing), we want to take the "final" content offset (not the "real time" one) to check if we should scroll to bottom again
         if animated {
-            UIView.animate(withDuration: self.constants.updatesAnimationDuration, animations: { () -> Void in
+            UIView.animate(withDuration: self.configuration.animation.updatesAnimationDuration, animations: { () -> Void in
                 collectionView.contentOffset = CGPoint(x: 0, y: offsetY)
             })
         } else {
