@@ -18,15 +18,15 @@
     "git": "https://github.com/badoo/Chatto.git",
     "tag": "4.1.0"
   },
-  "source_files": "ChattoAdditions/Source/**/*.{h,m,swift}",
-  "public_header_files": "ChattoAdditions/Source/**/*.h",
+  "source_files": "ChattoAdditions/sources/**/*.{h,m,swift}",
+  "public_header_files": "ChattoAdditions/sources/**/*.h",
   "requires_arc": true,
   "swift_versions": "5.3",
   "resource_bundles": {
     "ChattoAdditionsResources": [
-      "ChattoAdditions/Source/**/*.xib",
-      "ChattoAdditions/Source/**/*.storyboard",
-      "ChattoAdditions/Source/**/*.xcassets"
+      "ChattoAdditions/sources/**/*.xib",
+      "ChattoAdditions/sources/**/*.storyboard",
+      "ChattoAdditions/sources/**/*.xcassets"
     ]
   },
   "dependencies": {
