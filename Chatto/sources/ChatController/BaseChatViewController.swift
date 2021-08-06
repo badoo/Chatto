@@ -44,6 +44,7 @@ open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
+    let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
@@ -51,12 +52,10 @@ open class BaseChatViewController: UIViewController,
     public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
-    public var customPresentersConfigurationPoint = false // If true then confugureCollectionViewWithPresenters() will not be called in viewDidLoad() method and has to be called manually
     public private(set) var collectionView: UICollectionView?
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
     public private(set) var isFirstLayout: Bool = true
-    public internal(set) var presenterFactory: ChatItemPresenterFactoryProtocol!
     public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
     public final internal(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
     // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
@@ -145,7 +144,9 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(configuration: Configuration = .default) {
+    public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
+                configuration: Configuration = .default) {
+        self.chatItemPresenterFactory = chatItemPresenterFactory
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
@@ -276,9 +277,7 @@ open class BaseChatViewController: UIViewController,
         self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
         self.collectionView = collectionView
 
-        if !self.customPresentersConfigurationPoint {
-            self.confugureCollectionViewWithPresenters()
-        }
+        self.configureCollectionViewWithPresenters()
     }
 
     private func addInputBarContainer() {
@@ -445,16 +444,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     // MARK: Subclass overrides
-
-    open func createPresenterFactory() -> ChatItemPresenterFactoryProtocol {
-        // Default implementation
-        return ChatItemPresenterFactory(presenterBuildersByType: self.createPresenterBuilders())
-    }
-
-    open func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
-        assert(false, "Override in subclass")
-        return [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
-    }
 
     open func createChatInputView() -> UIView {
         assert(false, "Override in subclass")
