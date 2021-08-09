@@ -44,6 +44,7 @@ open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
+    let chatItemsDecorator: ChatItemsDecoratorProtocol
     let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
@@ -67,7 +68,6 @@ open class BaseChatViewController: UIViewController,
         - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
         - You can also add new items (for instance time markers or failed cells)
     */
-    public var chatItemsDecorator: ChatItemsDecoratorProtocol?
 
     var inputContainerBottomConstraint: NSLayoutConstraint!
     var unfinishedBatchUpdatesCount: Int = 0
@@ -145,8 +145,10 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Init
 
     public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
+                chatItemsDecorator: ChatItemsDecoratorProtocol = ChatItemsDecorator(),
                 configuration: Configuration = .default) {
         self.chatItemPresenterFactory = chatItemPresenterFactory
+        self.chatItemsDecorator = chatItemsDecorator
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)

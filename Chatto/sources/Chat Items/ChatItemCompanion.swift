@@ -28,6 +28,15 @@ public protocol ChatItemsDecoratorProtocol {
     func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }
 
+public final class ChatItemsDecorator:  ChatItemsDecoratorProtocol {
+
+    public init() {}
+    
+    public func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
+        return chatItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
+    }
+}
+
 public struct DecoratedChatItem: UniqueIdentificable {
     public let uid: String
     public let chatItem: ChatItemProtocol
