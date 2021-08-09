@@ -46,6 +46,8 @@ open class BaseChatViewController: UIViewController,
 
     let chatItemsDecorator: ChatItemsDecoratorProtocol
     let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
+    let messagesViewController: UICollectionViewController
+
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
@@ -145,9 +147,11 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Init
 
     public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
+                messagesViewController: UICollectionViewController,
                 chatItemsDecorator: ChatItemsDecoratorProtocol = ChatItemsDecorator(),
                 configuration: Configuration = .default) {
         self.chatItemPresenterFactory = chatItemPresenterFactory
+        self.messagesViewController = messagesViewController
         self.chatItemsDecorator = chatItemsDecorator
         self.configuration = configuration
 
@@ -177,7 +181,7 @@ open class BaseChatViewController: UIViewController,
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.addCollectionView()
+        self.setupCollectionView()
         self.addInputBarContainer()
         self.addInputView()
         self.addInputContentContainer()
@@ -241,43 +245,24 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    private func addCollectionView() {
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: self.createCollectionViewLayout())
-        collectionView.contentInset = self.layoutConfiguration.contentInsets
-        collectionView.scrollIndicatorInsets = self.layoutConfiguration.scrollIndicatorInsets
-        collectionView.alwaysBounceVertical = true
-        collectionView.backgroundColor = UIColor.clear
-        collectionView.keyboardDismissMode = .interactive
-        collectionView.showsVerticalScrollIndicator = true
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.allowsSelection = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.autoresizingMask = []
-        self.view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            self.view.topAnchor.constraint(equalTo: collectionView.topAnchor),
-            self.view.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
-        ])
-
-        let guide = self.view.safeAreaLayoutGuide
-        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
+    private func setupCollectionView() {
+        self.messagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.messagesViewController.view)
 
         NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            self.view.topAnchor.constraint(equalTo: self.messagesViewController.view.topAnchor),
+            self.view.rightAnchor.constraint(equalTo: self.messagesViewController.view.rightAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.messagesViewController.view.bottomAnchor),
+            self.view.leftAnchor.constraint(equalTo: self.messagesViewController.view.leftAnchor)
         ])
 
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
-        collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
-        collectionView.chatto_setIsPrefetchingEnabled(false)
+        self.addChild(self.messagesViewController)
+        self.messagesViewController.didMove(toParent: self)
 
-        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: collectionView)
+        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
         self.cellPanGestureHandler.replyDelegate = self
         self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
-        self.collectionView = collectionView
+        self.collectionView = self.messagesViewController.collectionView
 
         self.configureCollectionViewWithPresenters()
     }

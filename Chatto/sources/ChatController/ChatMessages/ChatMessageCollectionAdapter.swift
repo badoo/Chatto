@@ -4,17 +4,19 @@
 
 import UIKit
 
-protocol ChatMessageCollectionAdapterProtocol {
+public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource {
     func setup(in collectionView: UICollectionView)
 }
 
-final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
+public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
 
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
     private let configuration: Configuration
-    private let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
+    private let presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
     private let updateQueue: SerialTaskQueueProtocol
+
+    private lazy var chatItemPresenterFactory: ChatItemPresenterFactory = ChatItemPresenterFactory(presenterBuildersByType: self.presenterBuildersByType)
 
     private weak var collectionView: UICollectionView?
 
@@ -28,15 +30,15 @@ final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapter
     private(set) var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
     private let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
-    init(chatItemsDecorator: ChatItemsDecoratorProtocol,
-         chatMessagesViewModel: ChatMessagesViewModelProtocol,
-         chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
-         configuration: Configuration,
-         updateQueue: SerialTaskQueueProtocol) {
+    public init(chatItemsDecorator: ChatItemsDecoratorProtocol,
+                chatMessagesViewModel: ChatMessagesViewModelProtocol,
+                configuration: Configuration,
+                presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]],
+                updateQueue: SerialTaskQueueProtocol) {
         self.chatItemsDecorator = chatItemsDecorator
         self.chatMessagesViewModel = chatMessagesViewModel
-        self.chatItemPresenterFactory = chatItemPresenterFactory
         self.configuration = configuration
+        self.presenterBuildersByType = presenterBuildersByType
         self.updateQueue = updateQueue
 
         self.isLoadingContents = true
@@ -47,18 +49,18 @@ final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapter
         self.chatMessagesViewModel.delegate = self
     }
 
-    func setup(in collectionView: UICollectionView) {
+    public func setup(in collectionView: UICollectionView) {
         self.collectionView?.dataSource = self
         self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
     }
 }
 
 extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
-    func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
+    public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
         self.enqueueModelUpdate(updateType: .normal)
     }
 
-    func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
+    public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
         self.enqueueModelUpdate(updateType: updateType)
     }
 
@@ -139,10 +141,10 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 
     private func enqueueMessageCountReductionIfNeeded() {
-        let preferredMaxMessageCount = self.configuration.preferredMaxMessageCount
         let chatItems = self.chatMessagesViewModel.chatItems
 
-        guard chatItems.count > preferredMaxMessageCount else { return }
+        guard let preferredMaxMessageCount = self.configuration.preferredMaxMessageCount,
+              chatItems.count > preferredMaxMessageCount else { return }
 
         self.updateQueue.addTask { [weak self] (completion) -> Void in
             guard let sSelf = self else { return }
@@ -426,13 +428,13 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 }
 
-extension ChatMessageCollectionAdapter: UICollectionViewDataSource {
+extension ChatMessageCollectionAdapter {
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.chatItemCompanionCollection.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let presenter = self.presenterForIndexPath(indexPath)
         let cell = presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         let decorationAttributes = self.chatItemCompanionCollection[indexPath.item].decorationAttributes
@@ -446,22 +448,19 @@ extension ChatMessageCollectionAdapter {
         var autoloadingFractionalThreshold: CGFloat
         var coalesceUpdates: Bool
         var fastUpdates: Bool
-        var placeMessagesFromBottom: Bool
-        var preferredMaxMessageCount: Int
+        var preferredMaxMessageCount: Int?
         var preferredMaxMessageCountAdjustment: Int
         var updatesAnimationDuration: TimeInterval
 
         public init(autoloadingFractionalThreshold: CGFloat,
                     coalesceUpdates: Bool,
                     fastUpdates: Bool,
-                    placeMessagesFromBottom: Bool,
-                    preferredMaxMessageCount: Int,
+                    preferredMaxMessageCount: Int?,
                     preferredMaxMessageCountAdjustment: Int,
                     updatesAnimationDuration: TimeInterval) {
             self.autoloadingFractionalThreshold = autoloadingFractionalThreshold
             self.coalesceUpdates = coalesceUpdates
             self.fastUpdates = fastUpdates
-            self.placeMessagesFromBottom = placeMessagesFromBottom
             self.preferredMaxMessageCount = preferredMaxMessageCount
             self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
             self.updatesAnimationDuration = updatesAnimationDuration

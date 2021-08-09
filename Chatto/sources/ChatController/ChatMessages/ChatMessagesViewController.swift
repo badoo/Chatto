@@ -6,11 +6,14 @@ import UIKit
 
 public final class ChatMessagesViewController: UICollectionViewController {
 
+    private let messagesAdapter: ChatMessageCollectionAdapterProtocol
     private let presenterFactory: ChatItemPresenterFactoryProtocol
     private let style: Style
 
-    init(presenterFactory: ChatItemPresenterFactoryProtocol,
-         style: Style) {
+    public init(messagesAdapter: ChatMessageCollectionAdapterProtocol,
+                presenterFactory: ChatItemPresenterFactoryProtocol,
+                style: Style) {
+        self.messagesAdapter = messagesAdapter
         self.presenterFactory = presenterFactory
         self.style = style
 
@@ -24,8 +27,15 @@ public final class ChatMessagesViewController: UICollectionViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        self.configureMessageAdapter()
         self.configurePresenterFactory()
         self.configureStyle()
+        self.configureView()
+    }
+
+    private func configureMessageAdapter() {
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self.messagesAdapter
     }
 
     private func configureStyle() {
@@ -42,16 +52,36 @@ public final class ChatMessagesViewController: UICollectionViewController {
     private func configurePresenterFactory() {
         self.presenterFactory.configure(withCollectionView: self.collectionView)
     }
+
+    private func configureView() {
+        self.collectionView.chatto_setContentInsetAdjustment(enabled: false, in: self)
+        self.collectionView.chatto_setAutomaticallyAdjustsScrollIndicatorInsets(false)
+        self.collectionView.chatto_setIsPrefetchingEnabled(false)
+    }
 }
 
 public extension ChatMessagesViewController {
     struct Style {
-        var alwaysBounceVertical: Bool
-        var backgroundColor: UIColor
-        var contentInsets: UIEdgeInsets
-        var keyboardDismissMode: UIScrollView.KeyboardDismissMode
-        var scrollIndicatorInsets: UIEdgeInsets
-        var shouldShowVerticalScrollView: Bool
+        public var alwaysBounceVertical: Bool
+        public var backgroundColor: UIColor
+        public var contentInsets: UIEdgeInsets
+        public var keyboardDismissMode: UIScrollView.KeyboardDismissMode
+        public var scrollIndicatorInsets: UIEdgeInsets
+        public var shouldShowVerticalScrollView: Bool
+
+        public init(alwaysBounceVertical: Bool,
+                    backgroundColor: UIColor,
+                    contentInsets: UIEdgeInsets,
+                    keyboardDismissMode: UIScrollView.KeyboardDismissMode,
+                    scrollIndicatorInsets: UIEdgeInsets,
+                    shouldShowVerticalScrollView: Bool) {
+            self.alwaysBounceVertical = alwaysBounceVertical
+            self.backgroundColor = backgroundColor
+            self.contentInsets = contentInsets
+            self.keyboardDismissMode = keyboardDismissMode
+            self.scrollIndicatorInsets = scrollIndicatorInsets
+            self.shouldShowVerticalScrollView = shouldShowVerticalScrollView
+        }
     }
 }
 
