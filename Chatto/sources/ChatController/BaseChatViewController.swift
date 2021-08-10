@@ -246,8 +246,11 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func setupCollectionView() {
-        self.messagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.addChild(self.messagesViewController)
+        defer { self.messagesViewController.didMove(toParent: self) }
+
         self.view.addSubview(self.messagesViewController.view)
+        self.messagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             self.view.topAnchor.constraint(equalTo: self.messagesViewController.view.topAnchor),
@@ -255,9 +258,6 @@ open class BaseChatViewController: UIViewController,
             self.view.bottomAnchor.constraint(equalTo: self.messagesViewController.view.bottomAnchor),
             self.view.leftAnchor.constraint(equalTo: self.messagesViewController.view.leftAnchor)
         ])
-
-        self.addChild(self.messagesViewController)
-        self.messagesViewController.didMove(toParent: self)
 
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
         self.cellPanGestureHandler.replyDelegate = self
@@ -342,15 +342,16 @@ open class BaseChatViewController: UIViewController,
 
     // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
     public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
-        self._chatDataSource = dataSource
-        self._chatDataSource?.delegate = self
-        if let updateType = updateType {
-            self.enqueueModelUpdate(updateType: updateType)
-        }
+//        self._chatDataSource = dataSource
+//        self._chatDataSource?.delegate = self
+//        if let updateType = updateType {
+//            self.enqueueModelUpdate(updateType: updateType)
+//        }
     }
 
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard let collectionView = self.collectionView else { return }
+
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && collectionView.contentOffset.y < -collectionView.contentInset.top
         if !self.placeMessagesFromBottom && isBouncingAtTop { return }

@@ -30,7 +30,7 @@ public protocol ChatItemPresenterFactoryProtocol {
 }
 
 public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
-    var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
+    let presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
 
     public init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
         self.presenterBuildersByType = presenterBuildersByType
@@ -50,5 +50,25 @@ public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
             presenterBuilder.presenterType.registerCells(collectionView)
         }
         DummyChatItemPresenter.registerCells(collectionView)
+    }
+}
+
+public final class LazyChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
+
+    private let presenterBuildersByTypeProviderBlock: () -> [ChatItemType: [ChatItemPresenterBuilderProtocol]]
+    private lazy var chatItemPresenterFactory: ChatItemPresenterFactory = .init(
+        presenterBuildersByType: self.presenterBuildersByTypeProviderBlock()
+    )
+
+    public init(presenterBuildersByTypeProviderBlock: @escaping () -> [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
+        self.presenterBuildersByTypeProviderBlock = presenterBuildersByTypeProviderBlock
+    }
+
+    public func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        self.chatItemPresenterFactory.createChatItemPresenter(chatItem)
+    }
+
+    public func configure(withCollectionView collectionView: UICollectionView) {
+        self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
     }
 }

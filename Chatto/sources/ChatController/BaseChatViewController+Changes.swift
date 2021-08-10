@@ -364,6 +364,7 @@ extension BaseChatViewController {
 
     public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
         guard let collectionView = self.collectionView else { return self.layoutModel }
+
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
             self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: collectionView.bounds.width)
         }

@@ -4,20 +4,31 @@
 
 import UIKit
 
+protocol ChatMessagesViewControllerDelegate: AnyObject {
+
+}
+
 public final class ChatMessagesViewController: UICollectionViewController {
 
+    private let layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol
     private let messagesAdapter: ChatMessageCollectionAdapterProtocol
     private let presenterFactory: ChatItemPresenterFactoryProtocol
     private let style: Style
 
-    public init(messagesAdapter: ChatMessageCollectionAdapterProtocol,
+    private var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
+
+    weak var delegate: ChatMessagesViewControllerDelegate?
+
+    public init(layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol,
+                messagesAdapter: ChatMessageCollectionAdapterProtocol,
                 presenterFactory: ChatItemPresenterFactoryProtocol,
                 style: Style) {
+        self.layout = layout
         self.messagesAdapter = messagesAdapter
         self.presenterFactory = presenterFactory
         self.style = style
 
-        super.init(nibName: nil, bundle: nil)
+        super.init(collectionViewLayout: layout)
     }
 
     required init?(coder: NSCoder) {
@@ -33,12 +44,25 @@ public final class ChatMessagesViewController: UICollectionViewController {
         self.configureView()
     }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.messagesAdapter.onViewDidAppear()
+    }
+
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        self.messagesAdapter.onViewDidDisappear()
+    }
+
     private func configureMessageAdapter() {
         self.collectionView.delegate = self
-        self.collectionView.dataSource = self.messagesAdapter
+        self.messagesAdapter.setup(in: self.collectionView)
     }
 
     private func configureStyle() {
+        self.collectionView.collectionViewLayout = self.layout
         self.collectionView.allowsSelection = false
         self.collectionView.alwaysBounceVertical = self.style.alwaysBounceVertical
         self.collectionView.backgroundColor = self.style.backgroundColor

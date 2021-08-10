@@ -5,18 +5,18 @@
 import UIKit
 
 public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource {
+    func onViewDidAppear()
+    func onViewDidDisappear()
     func setup(in collectionView: UICollectionView)
 }
 
 public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
 
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
+    private let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
     private let configuration: Configuration
-    private let presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
     private let updateQueue: SerialTaskQueueProtocol
-
-    private lazy var chatItemPresenterFactory: ChatItemPresenterFactory = ChatItemPresenterFactory(presenterBuildersByType: self.presenterBuildersByType)
 
     private weak var collectionView: UICollectionView?
 
@@ -31,18 +31,30 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
     public init(chatItemsDecorator: ChatItemsDecoratorProtocol,
+                chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
                 chatMessagesViewModel: ChatMessagesViewModelProtocol,
                 configuration: Configuration,
-                presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]],
                 updateQueue: SerialTaskQueueProtocol) {
         self.chatItemsDecorator = chatItemsDecorator
+        self.chatItemPresenterFactory = chatItemPresenterFactory
         self.chatMessagesViewModel = chatMessagesViewModel
         self.configuration = configuration
-        self.presenterBuildersByType = presenterBuildersByType
         self.updateQueue = updateQueue
 
         self.isLoadingContents = true
         self.isFirstLayout = true
+
+        super.init()
+
+        self.configureChatMessagesViewModel()
+    }
+
+    public func onViewDidAppear() {
+        self.updateQueue.start()
+    }
+
+    public func onViewDidDisappear() {
+        self.updateQueue.stop()
     }
 
     private func configureChatMessagesViewModel() {
@@ -50,8 +62,10 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     }
 
     public func setup(in collectionView: UICollectionView) {
-        self.collectionView?.dataSource = self
+        collectionView.dataSource = self
         self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
+
+        self.collectionView = collectionView
     }
 }
 
@@ -84,10 +98,10 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
                 completion?()
-                DispatchQueue.main.async(execute: { () -> Void in
+                DispatchQueue.main.async {
                     // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
                     runNextTask()
-                })
+                }
             }
         }
 
@@ -128,11 +142,11 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         if performInBackground {
-            DispatchQueue.global(qos: .userInitiated).async { () -> Void in
+            DispatchQueue.global(qos: .userInitiated).async {
                 let modelUpdate = createModelUpdate()
-                DispatchQueue.main.async(execute: { () -> Void in
+                DispatchQueue.main.async {
                     performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
-                })
+                }
             }
         } else {
             let modelUpdate = createModelUpdate()
@@ -266,9 +280,9 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 
     private func performBatchUpdates(updateModelClosure: @escaping () -> Void, // swiftlint:disable:this cyclomatic_complexity
-                             changes: CollectionChanges,
-                             updateType: UpdateType,
-                             completion: @escaping () -> Void) {
+                                     changes: CollectionChanges,
+                                     updateType: UpdateType,
+                                     completion: @escaping () -> Void) {
         guard let collectionView = self.collectionView else {
             completion()
             return
@@ -425,6 +439,17 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     func presenterForIndex(_ index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
         // This can happen from didEndDisplayingCell if we reloaded with less messages
         return index < items.count ? items[index].presenter : DummyChatItemPresenter()
+    }
+}
+
+extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutDelegate {
+    public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
+        guard let collectionView = self.collectionView else { return self.layoutModel }
+
+        if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
+            self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: collectionView.bounds.width)
+        }
+        return self.layoutModel
     }
 }
 
