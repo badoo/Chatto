@@ -44,7 +44,7 @@ open class BaseChatViewController: UIViewController,
     let chatItemsDecorator: ChatItemsDecoratorProtocol
     let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
 
-    public let messagesViewController: ChatMessagesViewController
+    public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
@@ -57,10 +57,9 @@ open class BaseChatViewController: UIViewController,
 
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
-    public private(set) var isFirstLayout: Bool = true
-    public internal(set) var updateQueue: SerialTaskQueueProtocol = SerialTaskQueue()
-    public final internal(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
-    // If set to false user is responsible to make sure that view provided in loadView() implements BaseChatViewContollerViewProtocol.
+    public var chatItemCompanionCollection: ChatItemCompanionCollection {
+        self.messagesViewController.chatItemCompanionCollection
+    }
     // Must be set before loadView is called.
     public var substitutesMainViewAutomatically = true
     /**
@@ -71,37 +70,14 @@ open class BaseChatViewController: UIViewController,
     */
 
     var inputContainerBottomConstraint: NSLayoutConstraint!
-    var unfinishedBatchUpdatesCount: Int = 0
-    var onAllBatchUpdatesFinished: (() -> Void)?
-    var autoLoadingEnabled: Bool = false
     var cellPanGestureHandler: CellPanGestureHandler!
-    var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
     var isAdjustingInputContainer: Bool = false
     var notificationCenter = NotificationCenter.default
     var keyboardTracker: KeyboardTracker!
-    var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
 
     public var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
-        didSet {
-            self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
-        }
-    }
-
-    private var _chatDataSource: ChatDataSourceProtocol?
-    public final var chatDataSource: ChatDataSourceProtocol? {
-        get {
-            return _chatDataSource
-        }
-        set {
-            self.setChatDataSource(newValue, triggeringUpdateType: .normal)
-        }
-    }
-
-    // If set to false messages will start appearing on top and goes down
-    // If true then messages will start from bottom and goes up.
-    public var placeMessagesFromBottom = false {
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
@@ -134,8 +110,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     public var allContentFits: Bool {
-        guard let collectionView = self.messagesViewController.collectionView else { return false }
-
+        let collectionView = self.collectionView
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
@@ -148,7 +123,7 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Init
 
     public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
-                messagesViewController: ChatMessagesViewController,
+                messagesViewController: ChatMessagesViewControllerProtocol,
                 chatItemsDecorator: ChatItemsDecoratorProtocol = ChatItemsDecorator(),
                 configuration: Configuration = .default) {
         self.chatItemPresenterFactory = chatItemPresenterFactory
@@ -201,18 +176,13 @@ open class BaseChatViewController: UIViewController,
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
         self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
 
-        if self.isFirstLayout {
-            self.updateQueue.start()
-            self.isFirstLayout = false
-        }
-
         self.updateInputContainerBottomBaseOffset()
     }
 
     // MARK: - Setup
 
     private func setupTapGestureRecognizer() {
-        guard let collectionView = self.messagesViewController.collectionView else { return }
+        let collectionView = self.collectionView
 
         collectionView.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView))
@@ -317,23 +287,14 @@ open class BaseChatViewController: UIViewController,
         self.view.setNeedsLayout()
     }
 
-
-    // Custom update on setting the data source. if triggeringUpdateType is nil it won't enqueue any update (you should do it later manually)
-    public final func setChatDataSource(_ dataSource: ChatDataSourceProtocol?, triggeringUpdateType updateType: UpdateType?) {
-//        self._chatDataSource = dataSource
-//        self._chatDataSource?.delegate = self
-//        if let updateType = updateType {
-//            self.enqueueModelUpdate(updateType: updateType)
-//        }
-    }
-
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard self.isViewLoaded else { return }
-        guard let collectionView = self.messagesViewController.collectionView else { return }
+
+        let collectionView = self.collectionView
 
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && collectionView.contentOffset.y < -collectionView.contentInset.top
-        if !self.placeMessagesFromBottom && isBouncingAtTop { return }
+        if isBouncingAtTop { return }
 
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
@@ -341,14 +302,11 @@ open class BaseChatViewController: UIViewController,
         var newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
 
-        let needToPlaceMessagesAtBottom = self.placeMessagesFromBottom && self.allContentFits
+        let needToPlaceMessagesAtBottom = self.allContentFits
         if needToPlaceMessagesAtBottom {
             let realContentHeight = contentSize.height + newInsetTop + newInsetBottom
             newInsetTop += collectionView.bounds.height - realContentHeight
         }
-
-        let insetTopDiff = newInsetTop - collectionView.contentInset.top
-        let needToUpdateContentInset = self.placeMessagesFromBottom && (insetTopDiff != 0 || insetBottomDiff != 0)
 
         let prevContentOffsetY = collectionView.contentOffset.y
 
@@ -388,7 +346,7 @@ open class BaseChatViewController: UIViewController,
         guard shouldUpdateContentOffset else { return }
 
         let inputIsAtBottom = self.view.bounds.maxY - self.inputBarContainer.frame.maxY <= 0
-        if isInteracting && (needToPlaceMessagesAtBottom || needToUpdateContentInset) {
+        if isInteracting && needToPlaceMessagesAtBottom {
             collectionView.contentOffset.y = prevContentOffsetY
         } else if self.allContentFits {
             collectionView.contentOffset.y = -collectionView.contentInset.top
@@ -396,13 +354,6 @@ open class BaseChatViewController: UIViewController,
             collectionView.contentOffset.y = newContentOffsetY
         }
     }
-//
-//    func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
-//        guard let collectionView = self.collectionView else { return nil }
-//        guard let indexPath = indexPath else { return nil }
-//
-//        return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
-//    }
 
     // MARK: Subclass overrides
 
@@ -522,8 +473,8 @@ open class BaseChatViewController: UIViewController,
                              position: UICollectionView.ScrollPosition = .centeredVertically,
                              animated: Bool = false,
                              spotlight: Bool = false) {
-        self.messagesViewController.scrollToItem(
-            withId: itemId,
+        self.messagesViewController.scroll(
+            toItemId: itemId,
             position: position,
             animated: animated,
             spotlight: spotlight

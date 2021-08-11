@@ -18,7 +18,21 @@ public protocol ChatMessagesViewControllerDelegate: AnyObject {
                                     targetContentOffset: UnsafeMutablePointer<CGPoint>)
 }
 
-public final class ChatMessagesViewController: UICollectionViewController {
+public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
+    var delegate: ChatMessagesViewControllerDelegate? { get set }
+
+    // TODO: Proxy
+    var chatItemCompanionCollection: ChatItemCompanionCollection { get }
+
+    func autoLoadMoreContentIfNeeded()
+    func refreshContent(completionBlock: (() -> Void)?)
+    func scroll(toItemId: String,
+                position: UICollectionView.ScrollPosition,
+                animated: Bool,
+                spotlight: Bool)
+}
+
+public final class ChatMessagesViewController: UICollectionViewController, ChatMessagesViewControllerProtocol {
 
     private let config: Config
     private let layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol
@@ -27,10 +41,14 @@ public final class ChatMessagesViewController: UICollectionViewController {
     private let style: Style
     private let viewModel: ChatMessagesViewModelProtocol
 
-    private var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
+    private var layoutModel: ChatCollectionViewLayoutModel
+    private var isFirstLayout: Bool
 
-    weak var delegate: ChatMessagesViewControllerDelegate?
-
+    public weak var delegate: ChatMessagesViewControllerDelegate?
+    public var chatItemCompanionCollection: ChatItemCompanionCollection {
+        self.messagesAdapter.chatItemCompanionCollection
+    }
+    
     public init(config: Config,
                 layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol,
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
@@ -44,6 +62,8 @@ public final class ChatMessagesViewController: UICollectionViewController {
         self.style = style
         self.viewModel = viewModel
 
+        self.layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
+        self.isFirstLayout = true
         super.init(collectionViewLayout: layout)
     }
 
@@ -61,16 +81,27 @@ public final class ChatMessagesViewController: UICollectionViewController {
         self.configureCollectionView()
     }
 
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        self.messagesAdapter.onViewDidAppear()
+        if !self.isFirstLayout {
+            self.messagesAdapter.startProcessingUpdates()
+        }
     }
 
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        self.messagesAdapter.onViewDidDisappear()
+        self.messagesAdapter.stopProcessingUpdates()
+    }
+
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if self.isFirstLayout {
+            self.messagesAdapter.startProcessingUpdates()
+        }
+        self.isFirstLayout = false
     }
 
     public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -141,6 +172,10 @@ public final class ChatMessagesViewController: UICollectionViewController {
 
 // Proxy
 public extension ChatMessagesViewController {
+    func indexPath(of itemId: String) -> IndexPath? {
+        return self.messagesAdapter.indexPath(of: itemId)
+    }
+
     func refreshContent(completionBlock: (() -> Void)? = nil) {
         self.messagesAdapter.refreshContent(completionBlock: completionBlock)
     }
@@ -163,10 +198,10 @@ public extension ChatMessagesViewController {
         }
     }
 
-    func scrollToItem(withId itemId: String,
-                      position: UICollectionView.ScrollPosition = .centeredVertically,
-                      animated: Bool = false,
-                      spotlight: Bool = false) {
+    func scroll(toItemId itemId: String,
+                position: UICollectionView.ScrollPosition,
+                animated: Bool,
+                spotlight: Bool) {
         guard let itemIndexPath = self.messagesAdapter.indexPath(of: itemId),
               let rect = self.collectionView.rect(at: itemIndexPath) else { return }
 
@@ -197,12 +232,11 @@ public extension ChatMessagesViewController {
             self.messagesAdapter.scheduleSpotlight(for: itemId)
         }
 
-        collectionView.scrollToItem(
+        self.collectionView.scrollToItem(
             at: itemIndexPath,
             at: position,
             animated: animated
         )
-
     }
 }
 
@@ -216,7 +250,6 @@ extension ChatMessagesViewController {
             forItemAt: indexPath
         )
     }
-
 
     public override func collectionView(_ collectionView: UICollectionView,
                                         willDisplay cell: UICollectionViewCell,
@@ -232,7 +265,6 @@ extension ChatMessagesViewController {
                                         shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return self.messagesAdapter.collectionView?(collectionView, shouldShowMenuForItemAt: indexPath) ?? false
     }
-
 
     public override func collectionView(_ collectionView: UICollectionView,
                                         canPerformAction action: Selector,
@@ -307,6 +339,8 @@ extension ChatMessagesViewController {
 }
 
 extension ChatMessagesViewController: ChatMessageCollectionAdapterDelegate {
+    public var isFirstLoad: Bool { self.isFirstLayout }
+
     public func chatMessageCollectionAdapter(_: ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath indexPath: IndexPath) {
         self.delegate?.chatMessagesViewController(self, onDisplayCellWithIndexPath: indexPath)
     }

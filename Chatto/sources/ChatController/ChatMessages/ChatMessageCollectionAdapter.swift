@@ -5,11 +5,12 @@
 import UIKit
 
 public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
-    func onViewDidAppear()
-    func onViewDidDisappear()
-    func setup(in collectionView: UICollectionView)
-
+    var chatItemCompanionCollection: ChatItemCompanionCollection { get }
     var delegate: ChatMessageCollectionAdapterDelegate? { get set }
+
+    func startProcessingUpdates()
+    func stopProcessingUpdates()
+    func setup(in collectionView: UICollectionView)
 
     func indexPath(of itemId: String) -> IndexPath?
     func refreshContent(completionBlock: (() -> Void)?)
@@ -17,6 +18,8 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
 }
 
 public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
+    var isFirstLoad: Bool { get }
+
     func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath: IndexPath)
     func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType: UpdateType)
 
@@ -39,13 +42,13 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 
     // TODO: Check properties that can be moved to private
     private(set) var isLoadingContents: Bool
-    private(set) var isFirstLayout: Bool
-    private(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
     private(set) var layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
     private(set) var onAllBatchUpdatesFinished: (() -> Void)?
     private(set) var unfinishedBatchUpdatesCount: Int = 0
     private(set) var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)
     private let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
+
+    public private(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
 
     public init(chatItemsDecorator: ChatItemsDecoratorProtocol,
                 chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
@@ -59,7 +62,6 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         self.updateQueue = updateQueue
 
         self.isLoadingContents = true
-        self.isFirstLayout = true
         self.nextDidEndScrollingAnimationHandlers = []
 
         super.init()
@@ -67,11 +69,11 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         self.configureChatMessagesViewModel()
     }
 
-    public func onViewDidAppear() {
+    public func startProcessingUpdates() {
         self.updateQueue.start()
     }
 
-    public func onViewDidDisappear() {
+    public func stopProcessingUpdates() {
         self.updateQueue.stop()
     }
 
@@ -170,7 +172,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         let collectionViewWidth = collectionView.bounds.width
-        let updateType: UpdateType = self.isFirstLayout ? .firstLoad : updateType
+        let updateType: UpdateType = (self.delegate?.isFirstLoad == true) ? .firstLoad : updateType
         let performInBackground = updateType != .firstLoad
 
         self.isLoadingContents = true
