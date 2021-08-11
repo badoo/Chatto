@@ -38,16 +38,13 @@ public protocol ReplyActionHandler: AnyObject {
 }
 
 open class BaseChatViewController: UIViewController,
-                                   UICollectionViewDataSource,
-                                   UICollectionViewDelegate,
-                                   ChatDataSourceDelegateProtocol,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
     let chatItemsDecorator: ChatItemsDecoratorProtocol
     let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
-    let messagesViewController: UICollectionViewController
 
+    public let messagesViewController: ChatMessagesViewController
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
@@ -55,7 +52,9 @@ open class BaseChatViewController: UIViewController,
     public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
-    public private(set) var collectionView: UICollectionView?
+
+    public var collectionView: UICollectionView { self.messagesViewController.collectionView }
+
     public private(set) var inputBarContainer: UIView!
     public private(set) var inputContentContainer: UIView!
     public private(set) var isFirstLayout: Bool = true
@@ -135,19 +134,21 @@ open class BaseChatViewController: UIViewController,
     }
 
     public var allContentFits: Bool {
-        guard let collectionView = self.collectionView else { return false }
+        guard let collectionView = self.messagesViewController.collectionView else { return false }
+
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let insetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let availableHeight = collectionView.bounds.height - (insetTop + insetBottom)
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
+
         return availableHeight >= contentSize.height
     }
 
     // MARK: - Init
 
     public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
-                messagesViewController: UICollectionViewController,
+                messagesViewController: ChatMessagesViewController,
                 chatItemsDecorator: ChatItemsDecoratorProtocol = ChatItemsDecorator(),
                 configuration: Configuration = .default) {
         self.chatItemPresenterFactory = chatItemPresenterFactory
@@ -160,11 +161,6 @@ open class BaseChatViewController: UIViewController,
 
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        self.collectionView?.delegate = nil
-        self.collectionView?.dataSource = nil
     }
 
     // MARK: - Lifecycle
@@ -213,29 +209,14 @@ open class BaseChatViewController: UIViewController,
         self.updateInputContainerBottomBaseOffset()
     }
 
-    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-
-        guard self.isViewLoaded else { return }
-        guard let collectionView = self.collectionView else { return }
-
-        let shouldScrollToBottom = self.isScrolledAtBottom()
-        let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
-        let oldRect = self.rectAtIndexPath(referenceIndexPath)
-        coordinator.animate(alongsideTransition: { (_) -> Void in
-            if shouldScrollToBottom {
-                self.scrollToBottom(animated: false)
-            } else {
-                let newRect = self.rectAtIndexPath(referenceIndexPath)
-                self.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
-            }
-        }, completion: nil)
-    }
-
     // MARK: - Setup
 
     private func setupTapGestureRecognizer() {
-        self.collectionView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView)))
+        guard let collectionView = self.messagesViewController.collectionView else { return }
+
+        collectionView.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(BaseChatViewController.userDidTapOnCollectionView))
+        )
     }
 
     @objc
@@ -262,9 +243,6 @@ open class BaseChatViewController: UIViewController,
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
         self.cellPanGestureHandler.replyDelegate = self
         self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
-        self.collectionView = self.messagesViewController.collectionView
-
-        self.configureCollectionViewWithPresenters()
     }
 
     private func addInputBarContainer() {
@@ -350,7 +328,8 @@ open class BaseChatViewController: UIViewController,
     }
 
     func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
-        guard let collectionView = self.collectionView else { return }
+        guard self.isViewLoaded else { return }
+        guard let collectionView = self.messagesViewController.collectionView else { return }
 
         let isInteracting = collectionView.panGestureRecognizer.numberOfTouches > 0
         let isBouncingAtTop = isInteracting && collectionView.contentOffset.y < -collectionView.contentInset.top
@@ -417,19 +396,13 @@ open class BaseChatViewController: UIViewController,
             collectionView.contentOffset.y = newContentOffsetY
         }
     }
-
-    func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
-        guard let collectionView = self.collectionView else { return nil }
-        guard let indexPath = indexPath else { return nil }
-
-        return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
-    }
-
-    open func createCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = ChatCollectionViewLayout()
-        layout.delegate = self
-        return layout
-    }
+//
+//    func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
+//        guard let collectionView = self.collectionView else { return nil }
+//        guard let indexPath = indexPath else { return nil }
+//
+//        return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
+//    }
 
     // MARK: Subclass overrides
 
@@ -457,10 +430,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     open func didCancelReplyGesture(at: IndexPath) {}
-
-    open func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
-        self.enqueueModelUpdate(updateType: updateType)
-    }
 
     open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
@@ -510,10 +479,6 @@ open class BaseChatViewController: UIViewController,
         return ReplyFeedbackGenerator()
     }
 
-    public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
-        self.enqueueModelUpdate(updateType: .normal)
-    }
-
     public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
         self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
     }
@@ -524,6 +489,60 @@ open class BaseChatViewController: UIViewController,
         self.view.layoutIfNeeded()
         callback?()
         self.isAdjustingInputContainer = false
+    }
+
+    // MARK: - ChatMessagesViewControllerDelegate
+
+    public func chatMessagesViewControllerShouldAnimateCellOnDisplay(_ : ChatMessagesViewController) -> Bool {
+        return !self.isAdjustingInputContainer
+    }
+
+    // Proxy APIs
+    public func refreshContent(completionBlock: (() -> Void)? = nil) {
+        self.messagesViewController.refreshContent(completionBlock: completionBlock)
+    }
+
+    public func chatMessagesViewController(_: ChatMessagesViewController,
+                                         scrollViewDidEndDragging scrollView: UIScrollView,
+                                         willDecelerate decelerate: Bool) {
+        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
+    }
+
+    open func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) { }
+
+    open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, didScroll: UIScrollView) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging: UIScrollView) { }
+
+    public func scrollToItem(withId itemId: String,
+                             position: UICollectionView.ScrollPosition = .centeredVertically,
+                             animated: Bool = false,
+                             spotlight: Bool = false) {
+        self.messagesViewController.scrollToItem(
+            withId: itemId,
+            position: position,
+            animated: animated,
+            spotlight: spotlight
+        )
+    }
+
+    public var isScrolledAtBottom: Bool {
+        return self.collectionView.isScrolledAtBottom()
+    }
+
+    public func scrollToBottom(animated: Bool) {
+        self.collectionView.scrollToBottom(
+            animated: animated,
+            animationDuration: self.configuration.animation.updatesAnimationDuration
+        )
+    }
+
+    public func autoLoadMoreContentIfNeeded() {
+        self.messagesViewController.autoLoadMoreContentIfNeeded()
     }
 }
 

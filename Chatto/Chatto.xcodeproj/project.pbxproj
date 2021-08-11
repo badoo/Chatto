@@ -23,8 +23,7 @@
 		C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0BC1C638681008A4605 /* ChatItemCompanion.swift */; };
 		C342D0C11C638A2C008A4605 /* ChatItemCompanionCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */; };
 		C342D0C51C638FDF008A4605 /* SerialTaskQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */; };
-		C36281E51BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */; };
-		C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */; };
+		C36281E71BF0F196004D6BCE /* UICollectionView+Scrolling.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281E61BF0F196004D6BCE /* UICollectionView+Scrolling.swift */; };
 		C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281EA1BF0F62F004D6BCE /* DummyChatItemPresenter.swift */; };
 		C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */; };
 		C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36281F11BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift */; };
@@ -36,7 +35,6 @@
 		C3C7C39B1CAC4BAC00A49929 /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C3961CAC4BAC00A49929 /* KeyboardTracker.swift */; };
 		C3C7C39D1CAC4BC500A49929 /* BaseChatViewControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39C1CAC4BC500A49929 /* BaseChatViewControllerView.swift */; };
 		C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */; };
-		C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */; };
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
 		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
 		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
@@ -71,8 +69,7 @@
 		C342D0BC1C638681008A4605 /* ChatItemCompanion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanion.swift; sourceTree = "<group>"; };
 		C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollection.swift; sourceTree = "<group>"; };
 		C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialTaskQueueTests.swift; sourceTree = "<group>"; };
-		C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Changes.swift"; sourceTree = "<group>"; };
-		C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Scrolling.swift"; sourceTree = "<group>"; };
+		C36281E61BF0F196004D6BCE /* UICollectionView+Scrolling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Scrolling.swift"; sourceTree = "<group>"; };
 		C36281EA1BF0F62F004D6BCE /* DummyChatItemPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyChatItemPresenter.swift; sourceTree = "<group>"; };
 		C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialTaskQueue.swift; sourceTree = "<group>"; };
 		C36281F11BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
@@ -84,7 +81,6 @@
 		C3C7C3961CAC4BAC00A49929 /* KeyboardTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardTracker.swift; sourceTree = "<group>"; };
 		C3C7C39C1CAC4BC500A49929 /* BaseChatViewControllerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewControllerView.swift; sourceTree = "<group>"; };
 		C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemPresenterFactory.swift; sourceTree = "<group>"; };
-		C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseChatViewController+Presenters.swift"; sourceTree = "<group>"; };
 		C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = sources/Info.plist; sourceTree = SOURCE_ROOT; };
 		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
@@ -151,12 +147,10 @@
 			children = (
 				A4F7666426BD4F2600008F24 /* ChatMessages */,
 				50D5BF4A25079D759B602EE5 /* Collaborators */,
-				C3E904B11BE0509E00C662A2 /* BaseChatViewController+Presenters.swift */,
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
 				EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */,
-				C36281E41BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift */,
 				C38352D01CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift */,
-				C36281E61BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift */,
+				C36281E61BF0F196004D6BCE /* UICollectionView+Scrolling.swift */,
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
 			);
 			path = ChatController;
@@ -360,7 +354,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3C7C39D1CAC4BC500A49929 /* BaseChatViewControllerView.swift in Sources */,
-				C3E904DB1BE0509E00C662A2 /* BaseChatViewController+Presenters.swift in Sources */,
 				C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */,
 				A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */,
 				C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */,
@@ -373,10 +366,9 @@
 				A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
 				A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */,
-				C36281E51BF0F0F0004D6BCE /* BaseChatViewController+Changes.swift in Sources */,
 				C38352D11CC6514B006C359C /* BaseChatViewController+CellPanGestureHandler.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,
-				C36281E71BF0F196004D6BCE /* BaseChatViewController+Scrolling.swift in Sources */,
+				C36281E71BF0F196004D6BCE /* UICollectionView+Scrolling.swift in Sources */,
 				26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,

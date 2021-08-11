@@ -4,10 +4,23 @@
 
 import UIKit
 
-public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource {
+public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
     func onViewDidAppear()
     func onViewDidDisappear()
     func setup(in collectionView: UICollectionView)
+
+    var delegate: ChatMessageCollectionAdapterDelegate? { get set }
+
+    func indexPath(of itemId: String) -> IndexPath?
+    func refreshContent(completionBlock: (() -> Void)?)
+    func scheduleSpotlight(for: String)
+}
+
+public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
+    func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath: IndexPath)
+    func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType: UpdateType)
+
+    func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
 }
 
 public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
@@ -18,7 +31,11 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let configuration: Configuration
     private let updateQueue: SerialTaskQueueProtocol
 
+    private var nextDidEndScrollingAnimationHandlers: [() -> Void]
     private weak var collectionView: UICollectionView?
+
+    public weak var delegate: ChatMessageCollectionAdapterDelegate?
+    public weak var scrollViewDelegate: UIScrollViewDelegate?
 
     // TODO: Check properties that can be moved to private
     private(set) var isLoadingContents: Bool
@@ -43,6 +60,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 
         self.isLoadingContents = true
         self.isFirstLayout = true
+        self.nextDidEndScrollingAnimationHandlers = []
 
         super.init()
 
@@ -67,6 +85,35 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 
         self.collectionView = collectionView
     }
+
+    // TODO: Proxy
+    public func indexPath(of itemId: String) -> IndexPath? {
+        guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else {
+            return nil
+        }
+
+        return IndexPath(row: itemIndex, section: 0)
+    }
+
+    public func refreshContent(completionBlock: (() -> Void)?) {
+        self.enqueueModelUpdate(updateType: .normal, completionBlock: completionBlock)
+    }
+
+    public func scheduleSpotlight(for itemId: String) {
+        guard let collectionView = self.collectionView else { return }
+        guard let itemIndexPath = self.indexPath(of: itemId) else { return }
+        guard let presenter = self.chatItemCompanionCollection[itemId]?.presenter else { return }
+
+        let contentOffsetWillBeChanged = !collectionView.indexPathsForVisibleItems.contains(itemIndexPath)
+
+        if contentOffsetWillBeChanged {
+            self.nextDidEndScrollingAnimationHandlers.append { [weak presenter] in
+                presenter?.spotlight()
+            }
+        } else {
+            presenter.spotlight()
+        }
+    }
 }
 
 extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
@@ -78,7 +125,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         self.enqueueModelUpdate(updateType: updateType)
     }
 
-    private func enqueueModelUpdate(updateType: UpdateType, completion: (() -> Void)? = nil) {
+    private func enqueueModelUpdate(updateType: UpdateType, completionBlock: (() -> Void)? = nil) {
         if self.configuration.coalesceUpdates {
             self.updateQueue.flushQueue()
         }
@@ -97,7 +144,12 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                 if sSelf.updateQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
-                completion?()
+
+                self?.delegate?.chatMessageCollectionAdapter(
+                    sSelf,
+                    didUpdateItemsWithUpdateType: updateType
+                )
+                completionBlock?()
                 DispatchQueue.main.async {
                     // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
                     runNextTask()
@@ -126,11 +178,11 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             self?.performBatchUpdates(
                 updateModelClosure: updateModelClosure,
                 changes: changes,
-                updateType: updateType,
-                completion: { () -> Void in
-                    self?.isLoadingContents = false
-                    completion()
-            })
+                updateType: updateType
+            ) {
+                self?.isLoadingContents = false
+                completion()
+            }
         }
 
         let createModelUpdate = {
@@ -160,7 +212,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         guard let preferredMaxMessageCount = self.configuration.preferredMaxMessageCount,
               chatItems.count > preferredMaxMessageCount else { return }
 
-        self.updateQueue.addTask { [weak self] (completion) -> Void in
+        self.updateQueue.addTask { [weak self] completion in
             guard let sSelf = self else { return }
 
             sSelf.chatMessagesViewModel.adjustNumberOfMessages(
@@ -173,7 +225,12 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                 }
                 let newItems = sSelf.chatMessagesViewModel.chatItems
                 let oldItems = sSelf.chatItemCompanionCollection
-                sSelf.updateModels(newItems: newItems, oldItems: oldItems, updateType: .messageCountReduction, completion: completion )
+                sSelf.updateModels(
+                    newItems: newItems,
+                    oldItems: oldItems,
+                    updateType: .messageCountReduction,
+                    completion: completion
+                )
             }
         }
     }
@@ -181,8 +238,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
         let newDecoratedItems = self.chatItemsDecorator.decorateItems(newItems)
         let changes = generateChanges(
-            oldCollection: oldItems.map(HashableItem1.init),
-            newCollection: newDecoratedItems.map(HashableItem1.init)
+            oldCollection: oldItems.map(HashableItem.init),
+            newCollection: newDecoratedItems.map(HashableItem.init)
         )
         let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
         let layoutModel = self.createLayoutModel(itemCompanionCollection, collectionViewWidth: collectionViewWidth)
@@ -287,6 +344,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             completion()
             return
         }
+
         let usesBatchUpdates: Bool
         do { // Recover from too fast updates...
             let visibleCellsAreValid = self.visibleCellsAreValid(changes: changes)
@@ -302,7 +360,12 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                 // self.collectionView.subviews.forEach { $0.layer.removeAllAnimations() }
                 self.onAllBatchUpdatesFinished = { [weak self] in
                     self?.onAllBatchUpdatesFinished = nil
-                    self?.performBatchUpdates(updateModelClosure: updateModelClosure, changes: changes, updateType: updateType, completion: completion)
+                    self?.performBatchUpdates(
+                        updateModelClosure: updateModelClosure,
+                        changes: changes,
+                        updateType: updateType,
+                        completion: completion
+                    )
                 }
                 return
             }
@@ -318,7 +381,10 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             } else {
                 let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
                 let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
-                scrollAction = .preservePosition(rectForReferenceIndexPathBeforeUpdate: oldRect, referenceIndexPathAfterUpdate: newReferenceIndexPath)
+                scrollAction = .preservePosition(
+                    rectForReferenceIndexPathBeforeUpdate: oldRect,
+                    referenceIndexPathAfterUpdate: newReferenceIndexPath
+                )
             }
         }
 
@@ -392,13 +458,15 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 
     private func visibleCellsFromCollectionViewApi() -> [IndexPath: UICollectionViewCell] {
+        guard let collectionView = self.collectionView else { return [:] }
+
         var visibleCells: [IndexPath: UICollectionViewCell] = [:]
-        guard let collectionView = self.collectionView else { return visibleCells }
-        collectionView.indexPathsForVisibleItems.forEach({ (indexPath) in
-            if let cell = collectionView.cellForItem(at: indexPath) {
-                visibleCells[indexPath] = cell
-            }
-        })
+        collectionView.indexPathsForVisibleItems.forEach { indexPath in
+            guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+
+            visibleCells[indexPath] = cell
+        }
+
         return visibleCells
     }
 
@@ -422,8 +490,10 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         self.visibleCells = cellsToUpdate
 
         cellsToUpdate.forEach { (indexPath, cell) in
-            let presenter = self.presenterForIndex(indexPath.item, chatItemCompanionCollection: self.chatItemCompanionCollection)
-                //self.presenterForIndexPath(indexPath)
+            let presenter = self.presenterForIndex(
+                indexPath.item,
+                chatItemCompanionCollection: self.chatItemCompanionCollection
+            )
             presenter.configureCell(cell, decorationAttributes: self.chatItemCompanionCollection[indexPath.item].decorationAttributes)
             presenter.cellWillBeShown(cell) // `createModelUpdates` may have created a new presenter instance for existing visible cell so we need to tell it that its cell is visible
         }
@@ -464,7 +534,88 @@ extension ChatMessageCollectionAdapter {
         let cell = presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         let decorationAttributes = self.chatItemCompanionCollection[indexPath.item].decorationAttributes
         presenter.configureCell(cell, decorationAttributes: decorationAttributes)
-        return cell
+            return cell
+    }
+}
+
+extension ChatMessageCollectionAdapter {
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               didEndDisplaying cell: UICollectionViewCell,
+                               forItemAt indexPath: IndexPath) {
+        // Carefull: this index path can refer to old data source after an update. Don't use it to grab items from the model
+        // Instead let's use a mapping presenter <--> cell
+        if let oldPresenterForCell = self.presentersByCell.object(forKey: cell) as? ChatItemPresenterProtocol {
+            self.presentersByCell.removeObject(forKey: cell)
+            oldPresenterForCell.cellWasHidden(cell)
+        }
+
+        guard self.configuration.fastUpdates else { return }
+
+        if let visibleCell = self.visibleCells[indexPath], visibleCell === cell {
+            self.visibleCells[indexPath] = nil
+        } else {
+            self.visibleCells.forEach { indexPath, storedCell in
+                guard cell === storedCell else { return }
+
+                // Inconsistency found, likely due to very fast updates
+                self.visibleCells[indexPath] = nil
+            }
+        }
+    }
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               willDisplay cell: UICollectionViewCell,
+                               forItemAt indexPath: IndexPath) {
+        // Here indexPath should always referer to updated data source.
+        let presenter = self.presenterForIndexPath(indexPath)
+        self.presentersByCell.setObject(presenter, forKey: cell)
+
+        if self.configuration.fastUpdates {
+            self.visibleCells[indexPath] = cell
+        }
+
+        let shouldAnimate = self.delegate?.chatMessageCollectionAdapterShouldAnimateCellOnDisplay(self) ?? false
+        if !shouldAnimate {
+            UIView.performWithoutAnimation {
+                // See https://github.com/badoo/Chatto/issues/133
+                presenter.cellWillBeShown(cell)
+                cell.layoutIfNeeded()
+            }
+        } else {
+            presenter.cellWillBeShown(cell)
+        }
+
+        self.delegate?.chatMessageCollectionAdapter(
+            self,
+            onDisplayCellWithIndexPath: indexPath
+        )
+    }
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+        return self.presenterForIndexPath(indexPath).shouldShowMenu()
+    }
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               canPerformAction action: Selector,
+                               forItemAt indexPath: IndexPath,
+                               withSender sender: Any?) -> Bool {
+        return self.presenterForIndexPath(indexPath).canPerformMenuControllerAction(action)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               performAction action: Selector,
+                               forItemAt indexPath: IndexPath,
+                               withSender sender: Any?) {
+        self.presenterForIndexPath(indexPath).performMenuControllerAction(action)
+    }
+
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        for handler in self.nextDidEndScrollingAnimationHandlers {
+            handler()
+        }
+        self.nextDidEndScrollingAnimationHandlers = []
     }
 }
 
@@ -493,7 +644,7 @@ extension ChatMessageCollectionAdapter {
     }
 }
 
-struct HashableItem1: Hashable {
+struct HashableItem: Hashable {
     private let uid: String
     private let type: String
 
