@@ -41,9 +41,6 @@ open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
                                    ReplyIndicatorRevealerDelegate {
 
-    let chatItemsDecorator: ChatItemsDecoratorProtocol
-    let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
-
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
@@ -122,13 +119,9 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
-                messagesViewController: ChatMessagesViewControllerProtocol,
-                chatItemsDecorator: ChatItemsDecoratorProtocol = ChatItemsDecorator(),
+    public init(messagesViewController: ChatMessagesViewControllerProtocol,
                 configuration: Configuration = .default) {
-        self.chatItemPresenterFactory = chatItemPresenterFactory
         self.messagesViewController = messagesViewController
-        self.chatItemsDecorator = chatItemsDecorator
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
