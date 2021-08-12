@@ -33,15 +33,31 @@ final class UpdateItemTypeViewController: DemoChatViewController {
 
     // MARK: - UIViewController
 
-    override func viewDidLoad() {
-        self.textItem = DemoChatMessageFactory.makeTextMessage("1", text: "Hello", isIncoming: true)
-        self.photoItem = DemoChatMessageFactory.makePhotoMessage("1",
-                                                                 image: UIImage(named: "pic-test-1")!,
-                                                                 size: CGSize(width: 300, height: 300),
-                                                                 isIncoming: true)
+    init() {
+        self.textItem = DemoChatMessageFactory.makeTextMessage(
+            "1",
+            text: "Hello",
+            isIncoming: true
+        )
+        self.photoItem = DemoChatMessageFactory.makePhotoMessage(
+            "1",
+            image: UIImage(named: "pic-test-1")!,
+            size: CGSize(width: 300, height: 300),
+            isIncoming: true
+        )
         self.displayedItem = self.textItem
-        self.dataSource = DemoChatDataSource(messages: [self.displayedItem], pageSize: 50)
+        let dataSource = DemoChatDataSource(messages: [self.displayedItem], pageSize: 50)
+
+        super.init(dataSource: dataSource)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
         super.viewDidLoad()
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Update",
             style: .plain,

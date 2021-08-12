@@ -152,6 +152,8 @@ open class BaseChatViewController: UIViewController,
         self.addInputContentContainer()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
+
+        self.refreshContent()
     }
 
     open override func viewWillAppear(_ animated: Bool) {

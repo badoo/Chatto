@@ -26,11 +26,22 @@ import Chatto
 
 final class TestItemsReloadingViewController: DemoChatViewController {
 
+    let _dataSource: DemoChatDataSource
     // MARK: - UIViewController
 
+    init() {
+        self._dataSource = DemoChatDataSource(messages: Self.remakeItems(), pageSize: 50)
+
+        super.init(dataSource: self._dataSource)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
-        self.dataSource = DemoChatDataSource(messages: self.remakeItems(), pageSize: 50)
         super.viewDidLoad()
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Update",
             style: .plain,
@@ -43,10 +54,11 @@ final class TestItemsReloadingViewController: DemoChatViewController {
 
     @objc
     private func didPressUpdateItemType() {
-        self.dataSource = DemoChatDataSource(messages: self.remakeItems(), pageSize: 50)
+        self._dataSource.slidingWindow = SlidingDataSource(items: Self.remakeItems(), pageSize: 50)
+        self.refreshContent()
     }
 
-    private func remakeItems() -> [ChatItemProtocol] {
+    private static func remakeItems() -> [ChatItemProtocol] {
         let randomGoodAnswer = ["Nice!", "Great!", "Amazing!", "Brilliant!", "Another very very long answer to test how cell resizing works."].randomElement()!
         let randomImageName = "pic-test-\((1...3).randomElement()!)"
         let randomImage = UIImage(named: randomImageName)!

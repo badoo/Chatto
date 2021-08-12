@@ -26,24 +26,29 @@ import ChattoAdditions
 
 final class AsyncAvatarLoadingViewController: DemoChatViewController {
 
-    private var randomGenerator = SystemRandomNumberGenerator()
+    private static var randomGenerator = SystemRandomNumberGenerator()
 
-    override func viewDidLoad() {
+    init() {
         let messages: [ChatItemProtocol] = Array(0 ..< 10_000).map { index in
             let uid = String(index)
             let text = String(index)
             return DemoChatMessageFactory.makeTextMessage(uid, text: text, isIncoming: index % 2 == 0)
         }
 
-        self.dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
-        super.viewDidLoad()
+        let dataSource = DemoChatDataSource(messages: messages, pageSize: 50)
+
+        super.init(dataSource: dataSource)
     }
 
-    override func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override class func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
         DemoTextMessageViewModelBuilder { message in
             let observable: Observable<UIImage?> = .init(nil)
             let imageSize = CGSize(width: 40, height: 40)
-            let randomTime = Int(self.randomGenerator.next() % 10 + 1)
+            let randomTime = Int(Self.randomGenerator.next() % 10 + 1)
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(randomTime)) {
                 observable.value = UIImage.makeImage(ofSize: imageSize, text: message.uid)
             }
