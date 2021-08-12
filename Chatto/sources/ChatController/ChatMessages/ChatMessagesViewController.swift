@@ -432,7 +432,6 @@ public extension ChatMessagesViewController.Config {
         return .init(
             autoLoadingEnabled: true,
             autoMarginThreshold: 0.05
-
         )
     }
 }

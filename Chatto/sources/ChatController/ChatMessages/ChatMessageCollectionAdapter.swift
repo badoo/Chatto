@@ -83,7 +83,10 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 
     public func setup(in collectionView: UICollectionView) {
         collectionView.dataSource = self
-        self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
+
+        if self.configuration.isRegisteringPresentersAutomatically {
+            self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
+        }
 
         self.collectionView = collectionView
     }
@@ -626,6 +629,7 @@ public extension ChatMessageCollectionAdapter {
         public var autoloadingFractionalThreshold: CGFloat
         public var coalesceUpdates: Bool
         public var fastUpdates: Bool
+        public var isRegisteringPresentersAutomatically: Bool
         public var preferredMaxMessageCount: Int?
         public var preferredMaxMessageCountAdjustment: Int
         public var updatesAnimationDuration: TimeInterval
@@ -633,12 +637,14 @@ public extension ChatMessageCollectionAdapter {
         public init(autoloadingFractionalThreshold: CGFloat,
                     coalesceUpdates: Bool,
                     fastUpdates: Bool,
+                    isRegisteringPresentersAutomatically: Bool,
                     preferredMaxMessageCount: Int?,
                     preferredMaxMessageCountAdjustment: Int,
                     updatesAnimationDuration: TimeInterval) {
             self.autoloadingFractionalThreshold = autoloadingFractionalThreshold
             self.coalesceUpdates = coalesceUpdates
             self.fastUpdates = fastUpdates
+            self.isRegisteringPresentersAutomatically = isRegisteringPresentersAutomatically
             self.preferredMaxMessageCount = preferredMaxMessageCount
             self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
             self.updatesAnimationDuration = updatesAnimationDuration
@@ -652,6 +658,7 @@ public extension ChatMessageCollectionAdapter.Configuration {
             autoloadingFractionalThreshold: 0.05,
             coalesceUpdates: true,
             fastUpdates: true,
+            isRegisteringPresentersAutomatically: true,
             preferredMaxMessageCount: 500,
             preferredMaxMessageCountAdjustment: 400,
             updatesAnimationDuration: 0.33
