@@ -479,10 +479,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     public func scrollToBottom(animated: Bool) {
-        self.collectionView.scrollToBottom(
-            animated: animated,
-            animationDuration: self.configuration.animation.updatesAnimationDuration
-        )
+        self.messagesViewController.scrollToBottom(animated: animated)
     }
 
     public func autoLoadMoreContentIfNeeded() {
@@ -493,15 +490,6 @@ open class BaseChatViewController: UIViewController,
 public extension BaseChatViewController {
 
     struct Configuration {
-
-        public struct Animations {
-            public var updatesAnimationDuration: TimeInterval
-
-            public init(updatesAnimationDuration: TimeInterval) {
-                self.updatesAnimationDuration = updatesAnimationDuration
-            }
-        }
-
         public struct Editing {
             public var endsEditingWhenTappingOnChatBackground: Bool
 
@@ -510,60 +498,11 @@ public extension BaseChatViewController {
             }
         }
 
-        public struct Messages {
-            // If not nil, will ask data source to reduce number of messages when limit is reached. @see ChatDataSourceDelegateProtocol
-            public var preferredMaxMessageCount: Int?
-            // When the above happens, will ask to adjust with this value. It may be wise for this to be smaller to reduce number of adjustments
-            public var preferredMaxMessageCountAdjustment: Int
-
-            public init(preferredMaxMessageCount: Int?,
-                        preferredMaxMessageCountAdjustment: Int) {
-                self.preferredMaxMessageCount = preferredMaxMessageCount
-                self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
-            }
-        }
-
-
-        public struct Updates {
-            // in [0, 1]
-            public var autoloadingFractionalThreshold: CGFloat
-            // If receiving data source updates too fast, while an update it's being processed, only the last one will be executed
-            public var coalesceUpdates: Bool
-            // Allows another performBatchUpdates to be called before completion of a previous one (not recommended).
-            // Changing this value after viewDidLoad is not supported
-            public var fastUpdates: Bool
-
-            public init(autoloadingFractionalThreshold: CGFloat,
-                        coalesceUpdates: Bool,
-                        fastUpdates: Bool) {
-                self.autoloadingFractionalThreshold = autoloadingFractionalThreshold
-                self.coalesceUpdates = coalesceUpdates
-                self.fastUpdates = fastUpdates
-            }
-        }
-
-        public var animation: Animations
         public var editing: Editing
-        public var messages: Messages
-        public var updates: Updates
 
-        public init(animation: Animations,
-                    editing: Editing,
-                    messages: Messages,
-                    updates: Updates) {
-            self.animation = animation
+        public init(editing: Editing) {
             self.editing = editing
-            self.messages = messages
-            self.updates = updates
         }
-    }
-}
-
-public extension BaseChatViewController.Configuration.Animations {
-    static var `default`: Self {
-        return .init(
-            updatesAnimationDuration: 0.33
-        )
     }
 }
 
@@ -575,33 +514,10 @@ public extension BaseChatViewController.Configuration.Editing {
     }
 }
 
-public extension BaseChatViewController.Configuration.Messages {
-    static var `default`: Self {
-        return .init(
-            preferredMaxMessageCount: 500,
-            preferredMaxMessageCountAdjustment: 400
-        )
-    }
-}
-
-
-public extension BaseChatViewController.Configuration.Updates {
-    static var `default`: Self {
-        return .init(
-            autoloadingFractionalThreshold: 0.05,
-            coalesceUpdates: true,
-            fastUpdates: true
-        )
-    }
-}
-
 public extension BaseChatViewController.Configuration {
     static var `default`: Self {
         return .init(
-            animation: .default,
-            editing: .default,
-            messages: .default,
-            updates: .default
+            editing: .default
         )
     }
 }

@@ -621,14 +621,14 @@ extension ChatMessageCollectionAdapter {
     }
 }
 
-extension ChatMessageCollectionAdapter {
-    public struct Configuration {
-        var autoloadingFractionalThreshold: CGFloat
-        var coalesceUpdates: Bool
-        var fastUpdates: Bool
-        var preferredMaxMessageCount: Int?
-        var preferredMaxMessageCountAdjustment: Int
-        var updatesAnimationDuration: TimeInterval
+public extension ChatMessageCollectionAdapter {
+    struct Configuration {
+        public var autoloadingFractionalThreshold: CGFloat
+        public var coalesceUpdates: Bool
+        public var fastUpdates: Bool
+        public var preferredMaxMessageCount: Int?
+        public var preferredMaxMessageCountAdjustment: Int
+        public var updatesAnimationDuration: TimeInterval
 
         public init(autoloadingFractionalThreshold: CGFloat,
                     coalesceUpdates: Bool,
@@ -643,6 +643,19 @@ extension ChatMessageCollectionAdapter {
             self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
             self.updatesAnimationDuration = updatesAnimationDuration
         }
+    }
+}
+
+public extension ChatMessageCollectionAdapter.Configuration {
+    static var `default`: Self {
+        return .init(
+            autoloadingFractionalThreshold: 0.05,
+            coalesceUpdates: true,
+            fastUpdates: true,
+            preferredMaxMessageCount: 500,
+            preferredMaxMessageCountAdjustment: 400,
+            updatesAnimationDuration: 0.33
+        )
     }
 }
 

@@ -30,6 +30,7 @@ public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
                 position: UICollectionView.ScrollPosition,
                 animated: Bool,
                 spotlight: Bool)
+    func scrollToBottom(animated: Bool)
 }
 
 public final class ChatMessagesViewController: UICollectionViewController, ChatMessagesViewControllerProtocol {
@@ -178,6 +179,13 @@ public extension ChatMessagesViewController {
 
     func refreshContent(completionBlock: (() -> Void)? = nil) {
         self.messagesAdapter.refreshContent(completionBlock: completionBlock)
+    }
+
+    func scrollToBottom(animated: Bool) {
+        self.collectionView.scrollToBottom(
+            animated: animated,
+            animationDuration: self.style.updatesAnimationDuration
+        )
     }
 
     func autoLoadMoreContentIfNeeded() {
