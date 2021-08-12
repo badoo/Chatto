@@ -36,6 +36,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let updateQueue: SerialTaskQueueProtocol
 
     private var nextDidEndScrollingAnimationHandlers: [() -> Void]
+    private var isFirstUpdate: Bool // TODO: To remove
     private weak var collectionView: UICollectionView?
 
     public weak var delegate: ChatMessageCollectionAdapterDelegate?
@@ -61,6 +62,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         self.configuration = configuration
         self.updateQueue = updateQueue
 
+        self.isFirstUpdate = true
         self.isLoadingContents = true
         self.nextDidEndScrollingAnimationHandlers = []
 
@@ -124,9 +126,16 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
         self.enqueueModelUpdate(updateType: .normal)
+        self.isFirstUpdate = false
     }
 
     public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
+        if !self.configuration.isRegisteringPresentersAutomatically
+            && self.isFirstUpdate,
+           let collectionView = self.collectionView {
+            self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
+        }
+        
         self.enqueueModelUpdate(updateType: updateType)
     }
 
