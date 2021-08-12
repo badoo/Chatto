@@ -29,16 +29,16 @@ import XCTest
 class ChatViewControllerTests: XCTestCase {
 
     func testThat_WhenChatViewControllerInitated_ThenViewsIsNotLoaded() {
-        let chatMessageComponents = ChatMessageComponents()
-        let messagesViewController = chatMessageComponents.viewController
+        let chatMessageTestComponents = ChatMessageTestComponents()
+        let messagesViewController = chatMessageTestComponents.viewController
 
         XCTAssertFalse(messagesViewController.isViewLoaded)
         XCTAssertNotNil(messagesViewController.collectionView)
     }
 
     func testThat_GivenNoDataSource_ThenChatViewControllerLoadsCorrectly() {
-        let chatMessageComponents = ChatMessageComponents()
-        let messagesViewController = chatMessageComponents.viewController
+        let chatMessageTestComponents = ChatMessageTestComponents()
+        let messagesViewController = chatMessageTestComponents.viewController
 
         self.fakeDidAppearAndLayout(controller: messagesViewController)
         XCTAssertNotNil(messagesViewController.view)
@@ -47,8 +47,8 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_GivenDataSourceWithItemsAndNoPresenters_ThenChatViewControllerLoadsCorrectly() {
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource)
-        let messagesViewController = chatMessageComponents.viewController
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource)
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -61,8 +61,8 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_PresentersAreCreated () {
         let fakeDataSource = FakeDataSource()
         let fakePresenterBuilder = FakePresenterBuilder()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource, presenterBuilder: fakePresenterBuilder)
-        let messagesViewController = chatMessageComponents.viewController
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource, presenterBuilder: fakePresenterBuilder)
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
 
@@ -74,9 +74,9 @@ class ChatViewControllerTests: XCTestCase {
         let asyncExpectation = expectation(description: "update")
 
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource)
-        let messagesViewController = chatMessageComponents.viewController
-        let updateQueue = chatMessageComponents.updateQueue
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource)
+        let messagesViewController = chatMessageTestComponents.viewController
+        let updateQueue = chatMessageTestComponents.updateQueue
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -95,8 +95,8 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_CollectionIsScrolledAtBottomAfterFirstLoad() {
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource)
-        let messagesViewController = chatMessageComponents.viewController
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource)
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -106,9 +106,9 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_GivenManyItems_WhenScrollToTop_ThenLoadsPreviousPage() {
         let asyncExpectation = expectation(description: "update")
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource)
-        let messagesViewController = chatMessageComponents.viewController
-        let updateQueue = chatMessageComponents.updateQueue
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource)
+        let messagesViewController = chatMessageTestComponents.viewController
+        let updateQueue = chatMessageTestComponents.updateQueue
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -132,9 +132,9 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_WhenLoadsNextPage_ThenPreservesScrollPosition() {
         let asyncExpectation = expectation(description: "update")
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(dataSource: fakeDataSource)
-        let messagesViewController = chatMessageComponents.viewController
-        let updateQueue = chatMessageComponents.updateQueue
+        let chatMessageTestComponents = ChatMessageTestComponents(dataSource: fakeDataSource)
+        let messagesViewController = chatMessageTestComponents.viewController
+        let updateQueue = chatMessageTestComponents.updateQueue
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -160,11 +160,11 @@ class ChatViewControllerTests: XCTestCase {
         let asyncExpectation = expectation(description: "update")
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
-        _ = chatMessageComponents
+        _ = chatMessageTestComponents
 
         updateQueue.start()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
@@ -179,13 +179,13 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_WhenUpdatesFinish_ControllerIsNotRetained() {
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
         updateQueue.start()
 
-        weak var weakChatMessageCollectionAdapter = chatMessageComponents.adapter
+        weak var weakChatMessageCollectionAdapter = chatMessageTestComponents.adapter
         let asyncExpectation = expectation(description: "update")
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
 
@@ -201,11 +201,11 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_WhenLayoutFinishes_ControllerIsNotRetained() {
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource
         )
 
-        weak var weakChatMessageCollectionAdapter = chatMessageComponents.adapter
+        weak var weakChatMessageCollectionAdapter = chatMessageTestComponents.adapter
 
         weakChatMessageCollectionAdapter = nil
         XCTAssertNil(weakChatMessageCollectionAdapter)
@@ -214,11 +214,11 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_LayoutAdaptsWhenKeyboardIsShown() {
         let fakeDataSource = FakeDataSource()
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
-        let controller = TesteableChatViewController(messagesViewController: chatMessageComponents.viewController)
+        let controller = TesteableChatViewController(messagesViewController: chatMessageTestComponents.viewController)
         let notificationCenter = NotificationCenter()
         controller.notificationCenter = notificationCenter
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
@@ -229,10 +229,10 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_LayoutAdaptsWhenKeyboardIsHidden() {
         let fakeDataSource = FakeDataSource()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource
         )
-        let controller = TesteableChatViewController(messagesViewController: chatMessageComponents.viewController)
+        let controller = TesteableChatViewController(messagesViewController: chatMessageTestComponents.viewController)
         let notificationCenter = NotificationCenter()
         controller.notificationCenter = notificationCenter
 
@@ -250,12 +250,12 @@ class ChatViewControllerTests: XCTestCase {
         var adapterConfig = ChatMessageCollectionAdapter.Configuration.testConfig
         adapterConfig.coalesceUpdates = true
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             adapterConfig: adapterConfig,
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
-        self.fakeDidAppearAndLayout(controller: chatMessageComponents.viewController)
+        self.fakeDidAppearAndLayout(controller: chatMessageTestComponents.viewController)
         fakeDataSource.chatItems = []
         fakeDataSource.chatItems = []
         fakeDataSource.chatItems = []
@@ -269,13 +269,13 @@ class ChatViewControllerTests: XCTestCase {
         var adapterConfig = ChatMessageCollectionAdapter.Configuration.testConfig
         adapterConfig.coalesceUpdates = false
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             adapterConfig: adapterConfig,
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
 
-        self.fakeDidAppearAndLayout(controller: chatMessageComponents.viewController)
+        self.fakeDidAppearAndLayout(controller: chatMessageTestComponents.viewController)
         fakeDataSource.chatItems = []
         fakeDataSource.chatItems = []
         fakeDataSource.chatItems = []
@@ -301,12 +301,12 @@ extension ChatViewControllerTests {
         let fakeDataSource = FakeDataSource()
         let fakePresenterBuilder = FakePresenterBuilder()
         let updateQueue = SerialTaskQueueTestHelper()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             presenterBuilder: fakePresenterBuilder,
             updateQueue: updateQueue
         )
-        let messagesViewController = chatMessageComponents.viewController
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -328,11 +328,11 @@ extension ChatViewControllerTests {
     func testThat_GivenDataSourceWithUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithSameItems_ThenTwoPresentersAreUpdated() {
         let fakeDataSource = FakeDataSource()
         let fakePresenterBuilder = FakeUpdatablePresenterBuilder()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             presenterBuilder: fakePresenterBuilder
         )
-        let messagesViewController = chatMessageComponents.viewController
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
 
@@ -362,11 +362,11 @@ extension ChatViewControllerTests {
     func testThat_GivenDataSourceWithNotUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithOneNewItem_ThenThreePresentersAreCreated() {
         let fakeDataSource = FakeDataSource()
         let fakePresenterBuilder = FakePresenterBuilder()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             presenterBuilder: fakePresenterBuilder
         )
-        let messagesViewController = chatMessageComponents.viewController
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -388,11 +388,11 @@ extension ChatViewControllerTests {
     func testThat_GivenDataSourceWithUpdatableItemPresenters_AndTwoItems_WhenItIsUpdatedWithOneNewItem_ThenTwoPresentersAreUpdated_AndOnePresenterIsCreated() {
         let fakeDataSource = FakeDataSource()
         let fakePresenterBuilder = FakeUpdatablePresenterBuilder()
-        let chatMessageComponents = ChatMessageComponents(
+        let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource,
             presenterBuilder: fakePresenterBuilder
         )
-        let messagesViewController = chatMessageComponents.viewController
+        let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         self.fakeDidAppearAndLayout(controller: messagesViewController)
@@ -419,20 +419,11 @@ extension ChatViewControllerTests {
 
 private extension ChatMessageCollectionAdapter.Configuration {
     static var testConfig: Self {
-        let defaultBaseChatViewControllerConfig = BaseChatViewController.Configuration.default
-
-        return .init(
-            autoloadingFractionalThreshold: defaultBaseChatViewControllerConfig.updates.autoloadingFractionalThreshold,
-            coalesceUpdates: defaultBaseChatViewControllerConfig.updates.coalesceUpdates,
-            fastUpdates: defaultBaseChatViewControllerConfig.updates.fastUpdates,
-            preferredMaxMessageCount: defaultBaseChatViewControllerConfig.messages.preferredMaxMessageCount,
-            preferredMaxMessageCountAdjustment: defaultBaseChatViewControllerConfig.messages.preferredMaxMessageCountAdjustment,
-            updatesAnimationDuration: defaultBaseChatViewControllerConfig.animation.updatesAnimationDuration
-        )
+        return Self.default
     }
 }
 
-private struct ChatMessageComponents {
+private struct ChatMessageTestComponents {
     var adapter: ChatMessageCollectionAdapter
     var dataSource: ChatMessagesViewModelProtocol
     var itemsDecorator: ChatItemsDecoratorProtocol
