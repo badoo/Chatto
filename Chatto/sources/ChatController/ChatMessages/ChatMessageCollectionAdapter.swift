@@ -147,7 +147,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
 
-                self?.delegate?.chatMessageCollectionAdapter(
+                sSelf.delegate?.chatMessageCollectionAdapter(
                     sSelf,
                     didUpdateItemsWithUpdateType: updateType
                 )

@@ -39,7 +39,8 @@ public protocol ReplyActionHandler: AnyObject {
 
 open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
-                                   ReplyIndicatorRevealerDelegate {
+                                   ReplyIndicatorRevealerDelegate,
+                                   ChatMessagesViewControllerDelegate {
 
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
@@ -190,6 +191,8 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func setupCollectionView() {
+        self.messagesViewController.delegate = self
+
         self.addChild(self.messagesViewController)
         defer { self.messagesViewController.didMove(toParent: self) }
 
@@ -446,22 +449,6 @@ open class BaseChatViewController: UIViewController,
         self.messagesViewController.refreshContent(completionBlock: completionBlock)
     }
 
-    public func chatMessagesViewController(_: ChatMessagesViewController,
-                                         scrollViewDidEndDragging scrollView: UIScrollView,
-                                         willDecelerate decelerate: Bool) {
-        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
-    }
-
-    open func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) { }
-
-    open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
-
-    open func chatMessagesViewController(_ : ChatMessagesViewController, didScroll: UIScrollView) { }
-
-    open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
-
-    open func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging: UIScrollView) { }
-
     public func scrollToItem(withId itemId: String,
                              position: UICollectionView.ScrollPosition = .centeredVertically,
                              animated: Bool = false,
@@ -485,6 +472,22 @@ open class BaseChatViewController: UIViewController,
     public func autoLoadMoreContentIfNeeded() {
         self.messagesViewController.autoLoadMoreContentIfNeeded()
     }
+
+    public func chatMessagesViewController(_: ChatMessagesViewController,
+                                         scrollViewDidEndDragging scrollView: UIScrollView,
+                                         willDecelerate decelerate: Bool) {
+        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
+    }
+
+    open func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) { }
+
+    open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, didScroll: UIScrollView) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
+
+    open func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging: UIScrollView) { }
 }
 
 public extension BaseChatViewController {
