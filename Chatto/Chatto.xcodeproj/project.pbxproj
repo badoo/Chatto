@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */; };
 		3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */; };
+		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
+		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
 		A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */; };
 		A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */; };
 		A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */; };
@@ -54,6 +56,8 @@
 		26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyFeedbackGenerator.swift; sourceTree = "<group>"; };
 		3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLayoutConfiguration.swift; sourceTree = "<group>"; };
 		55E85D821BE390BE001885AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
+		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
 		A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
 		A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewModel.swift; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 				C36281F11BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift */,
 				C321C3951BE78835009803D1 /* CollectionChangesTests.swift */,
 				C31E91991BFF4CA300339585 /* BaseChatViewControllerTests.swift */,
+				A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */,
+				A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */,
 			);
 			path = ChatController;
 			sourceTree = "<group>";
@@ -385,8 +391,10 @@
 			files = (
 				C342D0C51C638FDF008A4605 /* SerialTaskQueueTests.swift in Sources */,
 				C3383E281BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift in Sources */,
+				A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */,
 				C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */,
 				C321C3961BE78835009803D1 /* CollectionChangesTests.swift in Sources */,
+				A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */,
 				C321DDBE1BE964DC00DE88CC /* BaseChatItemPresenterTests.swift in Sources */,
 				EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */,
 				C31E919A1BFF4CA300339585 /* BaseChatViewControllerTests.swift in Sources */,

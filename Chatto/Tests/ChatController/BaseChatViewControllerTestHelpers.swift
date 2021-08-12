@@ -36,8 +36,8 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 final class TesteableChatViewController: BaseChatViewController {
     let chatInputView = UIView()
 
-    init(configuration: BaseChatViewController.Configuration = .default,
-         messagesViewController: ChatMessagesViewController) {
+    init(messagesViewController: ChatMessagesViewController,
+         configuration: BaseChatViewController.Configuration = .default) {
         super.init(
             messagesViewController: messagesViewController,
             configuration: configuration
