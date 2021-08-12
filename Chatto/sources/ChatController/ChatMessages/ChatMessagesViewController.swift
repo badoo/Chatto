@@ -38,7 +38,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     private let config: Config
     private let layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol
     private let messagesAdapter: ChatMessageCollectionAdapterProtocol
-    private let presenterFactory: ChatItemPresenterFactoryProtocol
     private let style: Style
     private let viewModel: ChatMessagesViewModelProtocol
 
@@ -53,13 +52,11 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     public init(config: Config,
                 layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol,
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
-                presenterFactory: ChatItemPresenterFactoryProtocol,
                 style: Style,
                 viewModel: ChatMessagesViewModelProtocol) {
         self.config = config
         self.layout = layout
         self.messagesAdapter = messagesAdapter
-        self.presenterFactory = presenterFactory
         self.style = style
         self.viewModel = viewModel
 
@@ -76,7 +73,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         super.viewDidLoad()
 
         self.configureMessageAdapter()
-        self.configurePresenterFactory()
         self.configureStyle()
         self.configureView()
         self.configureCollectionView()
@@ -147,10 +143,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         self.collectionView.showsHorizontalScrollIndicator = false
         self.collectionView.showsVerticalScrollIndicator = self.style.shouldShowVerticalScrollView
         self.collectionView.scrollIndicatorInsets = self.style.scrollIndicatorInsets
-    }
-
-    private func configurePresenterFactory() {
-        self.presenterFactory.configure(withCollectionView: self.collectionView)
     }
 
     private func configureView() {
