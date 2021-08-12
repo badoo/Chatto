@@ -190,7 +190,7 @@ public extension ChatMessagesViewController {
             return
         }
 
-        let isCloseToBottom = self.collectionView.isCloseToTop(threshold: self.config.autoMarginThreshold)
+        let isCloseToBottom = self.collectionView.isCloseToBottom(threshold: self.config.autoMarginThreshold)
         let hasMoreNextContentToLoad = self.viewModel.hasMoreNext
         if isCloseToBottom && hasMoreNextContentToLoad {
             self.viewModel.loadNext()
@@ -295,6 +295,10 @@ extension ChatMessagesViewController {
     }
 
     public override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if self.collectionView.isDragging {
+            self.autoLoadMoreContentIfNeeded()
+        }
+
         self.messagesAdapter.scrollViewDidScroll?(scrollView)
 
         self.delegate?.chatMessagesViewController(
@@ -305,7 +309,6 @@ extension ChatMessagesViewController {
 
     public override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.messagesAdapter.scrollViewWillBeginDragging?(scrollView)
-
         self.delegate?.chatMessagesViewController(self, willBeginDragging: scrollView)
     }
 
@@ -323,6 +326,10 @@ extension ChatMessagesViewController {
             targetContentOffset: targetContentOffset
         )
     }
+
+    public override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+         self.autoLoadMoreContentIfNeeded()
+     }
 
     public override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.messagesAdapter.scrollViewDidEndDragging?(

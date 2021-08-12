@@ -34,25 +34,28 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 }
 
 final class TesteableChatViewController: BaseChatViewController {
-    let presenterBuilders: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
     let chatInputView = UIView()
-    init(configuration: BaseChatViewController.Configuration = .default,
-         presenterBuilders: [ChatItemType: [ChatItemPresenterBuilderProtocol]] = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()) {
-        self.presenterBuilders = presenterBuilders
 
-        super.init(configuration: configuration)
+    init(configuration: BaseChatViewController.Configuration = .default,
+         messagesViewController: ChatMessagesViewController) {
+        super.init(
+            messagesViewController: messagesViewController,
+            configuration: configuration
+        )
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
-        return self.presenterBuilders
-    }
-
     override func createChatInputView() -> UIView {
         return self.chatInputView
+    }
+}
+
+final class FakeChatItemsDecorator: ChatItemsDecoratorProtocol {
+    func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
+        return chatItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
     }
 }
 
@@ -62,7 +65,11 @@ final class FakeDataSource: ChatDataSourceProtocol {
     var wasRequestedForPrevious = false
     var wasRequestedForMessageCountContention = false
     var chatItemsForLoadNext: [ChatItemProtocol]?
-    var chatItems = [ChatItemProtocol]()
+    var chatItems = [ChatItemProtocol]() {
+        didSet {
+            self.delegate?.chatDataSourceDidUpdate(self)
+        }
+    }
     weak var delegate: ChatDataSourceDelegateProtocol?
 
     func loadNext() {

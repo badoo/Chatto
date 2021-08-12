@@ -12,6 +12,7 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
     func stopProcessingUpdates()
     func setup(in collectionView: UICollectionView)
 
+    // TODO: Remove from the adapter
     func indexPath(of itemId: String) -> IndexPath?
     func refreshContent(completionBlock: (() -> Void)?)
     func scheduleSpotlight(for: String)
@@ -38,7 +39,6 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private weak var collectionView: UICollectionView?
 
     public weak var delegate: ChatMessageCollectionAdapterDelegate?
-    public weak var scrollViewDelegate: UIScrollViewDelegate?
 
     // TODO: Check properties that can be moved to private
     private(set) var isLoadingContents: Bool
