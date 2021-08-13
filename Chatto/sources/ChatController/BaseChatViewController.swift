@@ -200,12 +200,11 @@ open class BaseChatViewController: UIViewController,
 
         self.view.addSubview(self.messagesViewController.view)
         self.messagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
             self.view.topAnchor.constraint(equalTo: self.messagesViewController.view.topAnchor),
-            self.view.rightAnchor.constraint(equalTo: self.messagesViewController.view.rightAnchor),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: self.messagesViewController.view.trailingAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.messagesViewController.view.bottomAnchor),
-            self.view.leftAnchor.constraint(equalTo: self.messagesViewController.view.leftAnchor)
+            self.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: self.messagesViewController.view.leadingAnchor)
         ])
 
         self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
@@ -299,13 +298,6 @@ open class BaseChatViewController: UIViewController,
         let insetBottomDiff = newInsetBottom - collectionView.contentInset.bottom
         var newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
-
-        let needToPlaceMessagesAtBottom = self.allContentFits
-        if needToPlaceMessagesAtBottom {
-            let realContentHeight = contentSize.height + newInsetTop + newInsetBottom
-            newInsetTop += collectionView.bounds.height - realContentHeight
-        }
-
         let prevContentOffsetY = collectionView.contentOffset.y
 
         let boundsHeightDiff: CGFloat = {
@@ -344,9 +336,7 @@ open class BaseChatViewController: UIViewController,
         guard shouldUpdateContentOffset else { return }
 
         let inputIsAtBottom = self.view.bounds.maxY - self.inputBarContainer.frame.maxY <= 0
-        if isInteracting && needToPlaceMessagesAtBottom {
-            collectionView.contentOffset.y = prevContentOffsetY
-        } else if self.allContentFits {
+        if self.allContentFits {
             collectionView.contentOffset.y = -collectionView.contentInset.top
         } else if !isInteracting || inputIsAtBottom {
             collectionView.contentOffset.y = newContentOffsetY

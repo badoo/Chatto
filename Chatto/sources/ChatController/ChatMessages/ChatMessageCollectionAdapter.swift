@@ -23,7 +23,6 @@ public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
 
     func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath: IndexPath)
     func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType: UpdateType)
-
     func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
 }
 
@@ -126,14 +125,15 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol) {
         self.enqueueModelUpdate(updateType: .normal)
-        self.isFirstUpdate = false
     }
 
     public func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType) {
         if !self.configuration.isRegisteringPresentersAutomatically
-            && self.isFirstUpdate,
+           && self.isFirstUpdate,
            let collectionView = self.collectionView {
+
             self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
+            self.isFirstUpdate = false
         }
         
         self.enqueueModelUpdate(updateType: updateType)
@@ -548,7 +548,8 @@ extension ChatMessageCollectionAdapter {
         let cell = presenter.dequeueCell(collectionView: collectionView, indexPath: indexPath)
         let decorationAttributes = self.chatItemCompanionCollection[indexPath.item].decorationAttributes
         presenter.configureCell(cell, decorationAttributes: decorationAttributes)
-            return cell
+
+        return cell
     }
 }
 
