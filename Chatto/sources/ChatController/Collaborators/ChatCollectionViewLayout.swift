@@ -146,6 +146,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout, ChatCollectionViewL
 
             return self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section][indexPath.item]
         }
+        // This assertion is currently being thrown if the user send a message that is immediately seen
         assert(false, "Unexpected indexPath requested:\(indexPath)")
         return nil
     }

@@ -95,6 +95,7 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
 
         if self.isFirstLayout {
             self.messagesAdapter.startProcessingUpdates()
+            self.autoLoadMoreContentIfNeeded()
         }
         self.isFirstLayout = false
     }
