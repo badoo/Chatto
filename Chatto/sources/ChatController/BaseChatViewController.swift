@@ -475,7 +475,9 @@ open class BaseChatViewController: UIViewController,
 
     open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
 
-    open func chatMessagesViewController(_ : ChatMessagesViewController, didScroll: UIScrollView) { }
+    open func chatMessagesViewController(_ viewController: ChatMessagesViewController, didScroll: UIScrollView) {
+        self.scrollViewEventsHandler?.onScrollViewDidScroll(viewController.collectionView)
+    }
 
     open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
 

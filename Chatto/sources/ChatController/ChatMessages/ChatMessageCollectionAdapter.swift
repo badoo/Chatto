@@ -415,7 +415,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         if usesBatchUpdates {
             UIView.animate(withDuration: self.configuration.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
-                collectionView.performBatchUpdates({ () -> Void in
+                collectionView.performBatchUpdates({
                     updateModelClosure()
                     self.updateVisibleCells(changes) // For instance, to support removal of tails
 
@@ -424,7 +424,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                     for move in changes.movedIndexPaths {
                         collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
                     }
-                }, completion: { [weak self] (_) -> Void in
+                }, completion: { [weak self] _ in
                     defer { myCompletion() }
                     guard let sSelf = self else { return }
                     sSelf.unfinishedBatchUpdatesCount -= 1
