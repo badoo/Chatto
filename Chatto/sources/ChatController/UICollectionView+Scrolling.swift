@@ -93,7 +93,7 @@ extension UICollectionView {
     }
 
     @objc
-    open func scrollToBottom(animated: Bool, animationDuration: TimeInterval) {
+    public func scrollToBottom(animated: Bool, animationDuration: TimeInterval) {
         // Cancel current scrolling
         self.setContentOffset(self.contentOffset, animated: false)
 

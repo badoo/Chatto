@@ -41,7 +41,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     private let style: Style
     private let viewModel: ChatMessagesViewModelProtocol
 
-    private var layoutModel: ChatCollectionViewLayoutModel
     private var isFirstLayout: Bool
 
     public weak var delegate: ChatMessagesViewControllerDelegate?
@@ -60,7 +59,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         self.style = style
         self.viewModel = viewModel
 
-        self.layoutModel = ChatCollectionViewLayoutModel.createModel(0, itemsLayoutData: [])
         self.isFirstLayout = true
         super.init(collectionViewLayout: layout)
     }
@@ -134,7 +132,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     }
 
     private func configureStyle() {
-        self.collectionView.collectionViewLayout = self.layout
         self.collectionView.allowsSelection = false
         self.collectionView.alwaysBounceVertical = self.style.alwaysBounceVertical
         self.collectionView.backgroundColor = self.style.backgroundColor

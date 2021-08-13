@@ -448,7 +448,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             )
         case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
             let newRect = self.rectAtIndexPath(indexPath)
-
             collectionView.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
         }
 
@@ -531,7 +530,10 @@ extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutDelegate {
         guard let collectionView = self.collectionView else { return self.layoutModel }
 
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
-            self.layoutModel = self.createLayoutModel(self.chatItemCompanionCollection, collectionViewWidth: collectionView.bounds.width)
+            self.layoutModel = self.createLayoutModel(
+                self.chatItemCompanionCollection,
+                collectionViewWidth: collectionView.bounds.width
+            )
         }
         return self.layoutModel
     }
