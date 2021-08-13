@@ -56,7 +56,6 @@ class DemoChatViewController: BaseChatViewController {
             config: .default,
             layout: layout,
             messagesAdapter: chatMessageCollectionAdapter,
-            presenterFactory: chatItemPresenterFactory,
             style: .default,
             viewModel: dataSource
         )

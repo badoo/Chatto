@@ -71,7 +71,6 @@ struct ChatMessageTestComponents {
             config: .default,
             layout: layout,
             messagesAdapter: self.adapter,
-            presenterFactory: chatItemPresenterFactory,
             style: .default,
             viewModel: dataSource
         )
