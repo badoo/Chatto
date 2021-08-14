@@ -440,6 +440,9 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             collectionView.collectionViewLayout.prepare()
         }
 
+        collectionView.setNeedsLayout()
+        collectionView.layoutIfNeeded()
+
         switch scrollAction {
         case .scrollToBottom:
             collectionView.scrollToBottom(
