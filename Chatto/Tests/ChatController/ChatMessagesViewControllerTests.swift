@@ -33,16 +33,14 @@ class ChatMessagesViewControllerTests: XCTestCase {
         let messagesViewController = chatMessageTestComponents.viewController
 
         XCTAssertFalse(messagesViewController.isViewLoaded)
-        XCTAssertNotNil(messagesViewController.collectionView)
     }
 
-    func testThat_GivenNoDataSource_ThenChatViewControllerLoadsCorrectly() {
+    func testThat_GivenEmptyDataSource_ThenChatViewControllerLoadsCorrectly() {
         let chatMessageTestComponents = ChatMessageTestComponents()
         let messagesViewController = chatMessageTestComponents.viewController
 
         fakeDidAppearAndLayout(controller: messagesViewController)
         XCTAssertNotNil(messagesViewController.view)
-        XCTAssertNotNil(messagesViewController.collectionView)
     }
 
     func testThat_GivenDataSourceWithItemsAndNoPresenters_ThenChatViewControllerLoadsCorrectly() {
@@ -54,7 +52,6 @@ class ChatMessagesViewControllerTests: XCTestCase {
         fakeDidAppearAndLayout(controller: messagesViewController)
 
         XCTAssertNotNil(messagesViewController.view)
-        XCTAssertNotNil(messagesViewController.collectionView)
         XCTAssertEqual(2, messagesViewController.collectionView.numberOfItems(inSection: 0))
     }
 
@@ -80,7 +77,6 @@ class ChatMessagesViewControllerTests: XCTestCase {
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         fakeDidAppearAndLayout(controller: messagesViewController)
-        XCTAssertNotNil(messagesViewController.collectionView)
 
         fakeDataSource.chatItems = createFakeChatItems(count: 3)
         updateQueue.addTask { completion in
