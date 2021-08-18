@@ -47,7 +47,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesAdapter.chatItemCompanionCollection
     }
-    
     public init(config: Config,
                 layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol,
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
