@@ -15,7 +15,7 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
     // TODO: Remove from the adapter
     func indexPath(of itemId: String) -> IndexPath?
     func refreshContent(completionBlock: (() -> Void)?)
-    func scheduleSpotlight(for: String)
+    func scheduleSpotlight(for itemId: String)
 }
 
 public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
