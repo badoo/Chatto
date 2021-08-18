@@ -20,8 +20,8 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
 public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
     var isFirstLoad: Bool { get }
 
-    func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType: UpdateType)
-    func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
+    func chatMessageCollectionAdapterDidUpdateItems(withUpdateType updateType: UpdateType)
+    func chatMessageCollectionAdapterShouldAnimateCellOnDisplay() -> Bool
 }
 
 public typealias ReferenceIndexPathRestoreProvider = (ChatItemCompanionCollection, CollectionChanges) -> (IndexPath?, IndexPath?)
@@ -168,10 +168,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
 
-                sSelf.delegate?.chatMessageCollectionAdapter(
-                    sSelf,
-                    didUpdateItemsWithUpdateType: updateType
-                )
+                sSelf.delegate?.chatMessageCollectionAdapterDidUpdateItems(withUpdateType: updateType)
                 completionBlock?()
                 DispatchQueue.main.async {
                     // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
@@ -599,7 +596,7 @@ extension ChatMessageCollectionAdapter {
             self.visibleCells[indexPath] = cell
         }
 
-        let shouldAnimate = self.delegate?.chatMessageCollectionAdapterShouldAnimateCellOnDisplay(self) ?? false
+        let shouldAnimate = self.delegate?.chatMessageCollectionAdapterShouldAnimateCellOnDisplay() ?? false
         if !shouldAnimate {
             UIView.performWithoutAnimation {
                 // See https://github.com/badoo/Chatto/issues/133

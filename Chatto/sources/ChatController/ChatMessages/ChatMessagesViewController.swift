@@ -352,11 +352,11 @@ extension ChatMessagesViewController {
 extension ChatMessagesViewController: ChatMessageCollectionAdapterDelegate {
     public var isFirstLoad: Bool { self.isFirstLayout }
 
-    public func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool {
+    public func chatMessageCollectionAdapterShouldAnimateCellOnDisplay() -> Bool {
         return self.delegate?.chatMessagesViewControllerShouldAnimateCellOnDisplay(self) ?? false
     }
 
-    public func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType updateType: UpdateType) {
+    public func chatMessageCollectionAdapterDidUpdateItems(withUpdateType updateType: UpdateType) {
         self.delegate?.chatMessagesViewController(self, didUpdateItemsWithUpdateType: updateType)
     }
 }
