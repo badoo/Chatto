@@ -25,6 +25,7 @@ public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
     func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
 }
 
+// TODO: Add unit tests
 public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
 
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
