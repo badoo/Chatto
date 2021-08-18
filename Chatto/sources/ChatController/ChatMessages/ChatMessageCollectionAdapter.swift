@@ -21,7 +21,6 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
 public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
     var isFirstLoad: Bool { get }
 
-    func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath: IndexPath)
     func chatMessageCollectionAdapter(_ : ChatMessageCollectionAdapter, didUpdateItemsWithUpdateType: UpdateType)
     func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
 }
@@ -605,11 +604,6 @@ extension ChatMessageCollectionAdapter {
         } else {
             presenter.cellWillBeShown(cell)
         }
-
-        self.delegate?.chatMessageCollectionAdapter(
-            self,
-            onDisplayCellWithIndexPath: indexPath
-        )
     }
 
     public func collectionView(_ collectionView: UICollectionView,
