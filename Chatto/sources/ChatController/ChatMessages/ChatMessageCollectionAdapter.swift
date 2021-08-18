@@ -25,13 +25,22 @@ public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
     func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool
 }
 
+public typealias ReferenceIndexPathRestoreProvider = (ChatItemCompanionCollection, CollectionChanges) -> (IndexPath?, IndexPath?)
+
 // TODO: Add unit tests
+/**
+ Component responsible to coordinate all chat messages updates and their display logic in a collection view.
+
+ After its initialisation, this component will start observing view model updates and dispatch update operations into the `updateQueue`. Taking into account the initial `configuration` injected into this component, whenever we receive a chat items update call, the elements difference between updates gets calculated and propagated into the collection view.
+ In order to decouple this component from the customisation of elements to be displayed, we delegate this responsibility to the `chatItemsDecorator` and `chatItemPresenterFactory` injected during its initialisation. These item customisation components will be used while presenting chat items in the collection view.
+ */
 public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
 
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
     private let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
     private let configuration: Configuration
+    private let referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProvider
     private let updateQueue: SerialTaskQueueProtocol
 
     private var nextDidEndScrollingAnimationHandlers: [() -> Void]
@@ -54,11 +63,13 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
                 chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
                 chatMessagesViewModel: ChatMessagesViewModelProtocol,
                 configuration: Configuration,
+                referenceIndexPathRestoreProvider: @escaping ReferenceIndexPathRestoreProvider,
                 updateQueue: SerialTaskQueueProtocol) {
         self.chatItemsDecorator = chatItemsDecorator
         self.chatItemPresenterFactory = chatItemPresenterFactory
         self.chatMessagesViewModel = chatMessagesViewModel
         self.configuration = configuration
+        self.referenceIndexPathRestoreProvider = referenceIndexPathRestoreProvider
         self.updateQueue = updateQueue
 
         self.isFirstUpdate = true
@@ -392,7 +403,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             if updateType != .pagination && collectionView.isScrolledAtBottom() {
                 scrollAction = .scrollToBottom
             } else {
-                let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: self.chatItemCompanionCollection, changes: changes)
+                let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathRestoreProvider(self.chatItemCompanionCollection, changes)
                 let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
                 scrollAction = .preservePosition(
                     rectForReferenceIndexPathBeforeUpdate: oldRect,
@@ -483,11 +494,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         return visibleCells
-    }
-
-    private func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
-        let firstItemMoved = changes.movedIndexPaths.first
-        return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }
 
     private func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
@@ -675,7 +681,7 @@ public extension ChatMessageCollectionAdapter.Configuration {
     }
 }
 
-struct HashableItem: Hashable {
+private struct HashableItem: Hashable {
     private let uid: String
     private let type: String
 
@@ -693,4 +699,13 @@ struct HashableItem: Hashable {
 private enum ScrollAction {
     case scrollToBottom
     case preservePosition(rectForReferenceIndexPathBeforeUpdate: CGRect?, referenceIndexPathAfterUpdate: IndexPath?)
+}
+
+public final class ReferenceIndexPathRestoreProviderFactory {
+    public static func makeDefault() -> ReferenceIndexPathRestoreProvider {
+        return { itemsBeforeUpdate, changes in
+            let firstItemMoved = changes.movedIndexPaths.first
+            return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
+        }
+    }
 }

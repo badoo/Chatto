@@ -33,6 +33,15 @@ public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
     func scrollToBottom(animated: Bool)
 }
 
+/**
+View controller capable of displaying chat messages.
+
+Some behaviour and styling of this chat messages container can be customised using the `style` and `config` properties. Please refer to `ChatMessagesViewController.Style` and `ChatMessagesViewController.Config` to check in more detail all customisation that can be achieved.
+
+ The message adapter is responsible to provide the datasource of the items to be displayed in the collection view of this container.
+
+ The delegate of this View Controller receives scroll related events and also update notifications.
+ */
 public final class ChatMessagesViewController: UICollectionViewController, ChatMessagesViewControllerProtocol {
 
     private let config: Config

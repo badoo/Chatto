@@ -186,7 +186,7 @@ open class BaseChatViewController: UIViewController,
 
     @objc
     open func userDidTapOnCollectionView() {
-        if self.configuration.editing.endsEditingWhenTappingOnChatBackground {
+        if self.configuration.endsEditingWhenTappingOnChatBackground {
             self.view.endEditing(true)
         }
     }
@@ -477,34 +477,18 @@ open class BaseChatViewController: UIViewController,
 public extension BaseChatViewController {
 
     struct Configuration {
-        public struct Editing {
-            public var endsEditingWhenTappingOnChatBackground: Bool
+        public var endsEditingWhenTappingOnChatBackground: Bool
 
-            public init(endsEditingWhenTappingOnChatBackground: Bool) {
-                self.endsEditingWhenTappingOnChatBackground = endsEditingWhenTappingOnChatBackground
-            }
+        public init(endsEditingWhenTappingOnChatBackground: Bool) {
+            self.endsEditingWhenTappingOnChatBackground = endsEditingWhenTappingOnChatBackground
         }
-
-        public var editing: Editing
-
-        public init(editing: Editing) {
-            self.editing = editing
-        }
-    }
-}
-
-public extension BaseChatViewController.Configuration.Editing {
-    static var `default`: Self {
-        return .init(
-            endsEditingWhenTappingOnChatBackground: true
-        )
     }
 }
 
 public extension BaseChatViewController.Configuration {
     static var `default`: Self {
         return .init(
-            editing: .default
+            endsEditingWhenTappingOnChatBackground: true
         )
     }
 }
