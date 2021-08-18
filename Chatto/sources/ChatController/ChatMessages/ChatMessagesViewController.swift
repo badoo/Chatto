@@ -158,26 +158,8 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
 
         return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
     }
-}
 
-// Proxy
-public extension ChatMessagesViewController {
-    func indexPath(of itemId: String) -> IndexPath? {
-        return self.messagesAdapter.indexPath(of: itemId)
-    }
-
-    func refreshContent(completionBlock: (() -> Void)? = nil) {
-        self.messagesAdapter.refreshContent(completionBlock: completionBlock)
-    }
-
-    func scrollToBottom(animated: Bool) {
-        self.collectionView.scrollToBottom(
-            animated: animated,
-            animationDuration: self.style.updatesAnimationDuration
-        )
-    }
-
-    func autoLoadMoreContentIfNeeded() {
+    public func autoLoadMoreContentIfNeeded() {
         guard self.config.autoLoadingEnabled else { return }
 
         let isCloseToTop = self.collectionView.isCloseToTop(threshold: self.config.autoMarginThreshold)
@@ -195,10 +177,10 @@ public extension ChatMessagesViewController {
         }
     }
 
-    func scroll(toItemId itemId: String,
-                position: UICollectionView.ScrollPosition,
-                animated: Bool,
-                spotlight: Bool) {
+    public func scroll(toItemId itemId: String,
+                       position: UICollectionView.ScrollPosition,
+                       animated: Bool,
+                       spotlight: Bool) {
         guard let itemIndexPath = self.messagesAdapter.indexPath(of: itemId),
               let rect = self.collectionView.rect(at: itemIndexPath) else { return }
 
@@ -237,6 +219,24 @@ public extension ChatMessagesViewController {
     }
 }
 
+// Proxy
+public extension ChatMessagesViewController {
+    func indexPath(of itemId: String) -> IndexPath? {
+        return self.messagesAdapter.indexPath(of: itemId)
+    }
+
+    func refreshContent(completionBlock: (() -> Void)? = nil) {
+        self.messagesAdapter.refreshContent(completionBlock: completionBlock)
+    }
+
+    func scrollToBottom(animated: Bool) {
+        self.collectionView.scrollToBottom(
+            animated: animated,
+            animationDuration: self.style.updatesAnimationDuration
+        )
+    }
+}
+
 extension ChatMessagesViewController {
     public override func collectionView(_ collectionView: UICollectionView,
                                         didEndDisplaying cell: UICollectionViewCell,
@@ -256,6 +256,8 @@ extension ChatMessagesViewController {
             willDisplay: cell,
             forItemAt: indexPath
         )
+
+        self.delegate?.chatMessagesViewController(self, onDisplayCellWithIndexPath: indexPath)
     }
 
     public override func collectionView(_ collectionView: UICollectionView,
@@ -344,10 +346,6 @@ extension ChatMessagesViewController {
 
 extension ChatMessagesViewController: ChatMessageCollectionAdapterDelegate {
     public var isFirstLoad: Bool { self.isFirstLayout }
-
-    public func chatMessageCollectionAdapter(_: ChatMessageCollectionAdapterProtocol, onDisplayCellWithIndexPath indexPath: IndexPath) {
-        self.delegate?.chatMessagesViewController(self, onDisplayCellWithIndexPath: indexPath)
-    }
 
     public func chatMessageCollectionAdapterShouldAnimateCellOnDisplay(_ : ChatMessageCollectionAdapterProtocol) -> Bool {
         return self.delegate?.chatMessagesViewControllerShouldAnimateCellOnDisplay(self) ?? false
