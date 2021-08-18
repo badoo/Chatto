@@ -135,7 +135,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
             self.isFirstUpdate = false
         }
-        
         self.enqueueModelUpdate(updateType: updateType)
     }
 
