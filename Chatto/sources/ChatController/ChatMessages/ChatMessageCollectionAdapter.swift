@@ -515,14 +515,14 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
     }
 
-    func presenterForIndexPath(_ indexPath: IndexPath) -> ChatItemPresenterProtocol {
+    private func presenterForIndexPath(_ indexPath: IndexPath) -> ChatItemPresenterProtocol {
         return self.presenterForIndex(
             indexPath.item,
             chatItemCompanionCollection: self.chatItemCompanionCollection
         )
     }
 
-    func presenterForIndex(_ index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
+    private func presenterForIndex(_ index: Int, chatItemCompanionCollection items: ChatItemCompanionCollection) -> ChatItemPresenterProtocol {
         // This can happen from didEndDisplayingCell if we reloaded with less messages
         return index < items.count ? items[index].presenter : DummyChatItemPresenter()
     }
