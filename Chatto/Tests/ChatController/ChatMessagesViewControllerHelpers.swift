@@ -75,6 +75,7 @@ struct ChatMessageTestComponents {
             style: .default,
             viewModel: dataSource
         )
+        self.adapter.delegate = self.viewController
     }
 }
 

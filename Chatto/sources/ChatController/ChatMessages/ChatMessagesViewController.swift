@@ -19,8 +19,6 @@ public protocol ChatMessagesViewControllerDelegate: AnyObject {
 }
 
 public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
-    var delegate: ChatMessagesViewControllerDelegate? { get set }
-
     // TODO: Proxy
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
 
@@ -135,7 +133,6 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     }
 
     private func configureMessageAdapter() {
-        self.messagesAdapter.delegate = self
         self.messagesAdapter.setup(in: self.collectionView)
     }
 

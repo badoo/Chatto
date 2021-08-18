@@ -192,8 +192,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func setupCollectionView() {
-        self.messagesViewController.delegate = self
-
         self.addChild(self.messagesViewController)
         defer { self.messagesViewController.didMove(toParent: self) }
 

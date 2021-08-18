@@ -6,7 +6,6 @@ import UIKit
 
 public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
-    var delegate: ChatMessageCollectionAdapterDelegate? { get set }
 
     func startProcessingUpdates()
     func stopProcessingUpdates()

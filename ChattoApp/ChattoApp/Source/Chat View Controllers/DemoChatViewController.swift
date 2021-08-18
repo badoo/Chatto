@@ -60,8 +60,11 @@ class DemoChatViewController: BaseChatViewController {
             style: .default,
             viewModel: dataSource
         )
+        chatMessageCollectionAdapter.delegate = messagesViewController
 
         super.init(messagesViewController: messagesViewController)
+        
+        messagesViewController.delegate = self
     }
 
     required init?(coder: NSCoder) {
