@@ -31,7 +31,6 @@ public protocol ChatItemsDecoratorProtocol {
 public final class ChatItemsDecorator:  ChatItemsDecoratorProtocol {
 
     public init() {}
-    
     public func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
         return chatItems.map { DecoratedChatItem(chatItem: $0, decorationAttributes: nil) }
     }
