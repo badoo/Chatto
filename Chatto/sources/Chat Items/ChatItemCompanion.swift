@@ -28,7 +28,7 @@ public protocol ChatItemsDecoratorProtocol {
     func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem]
 }
 
-public final class ChatItemsDecorator:  ChatItemsDecoratorProtocol {
+public final class DefaultChatItemsDecorator:  ChatItemsDecoratorProtocol {
 
     public init() {}
     public func decorateItems(_ chatItems: [ChatItemProtocol]) -> [DecoratedChatItem] {
