@@ -64,6 +64,7 @@ struct ChatMessageTestComponents {
             chatItemPresenterFactory: chatItemPresenterFactory,
             chatMessagesViewModel: dataSource,
             configuration: adapterConfig,
+            referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProviderFactory.makeDefault(),
             updateQueue: updateQueue
         )
         self.layout.delegate = self.adapter

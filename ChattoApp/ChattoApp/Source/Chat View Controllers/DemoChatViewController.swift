@@ -48,6 +48,7 @@ class DemoChatViewController: BaseChatViewController {
             chatItemPresenterFactory: chatItemPresenterFactory,
             chatMessagesViewModel: dataSource,
             configuration: adapterConfig,
+            referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProviderFactory.makeDefault(),
             updateQueue: SerialTaskQueue()
         )
         let layout = ChatCollectionViewLayout()
