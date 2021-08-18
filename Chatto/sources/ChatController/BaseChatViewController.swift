@@ -44,7 +44,6 @@ open class BaseChatViewController: UIViewController,
 
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
-    let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
 
     public weak var keyboardEventsHandler: KeyboardEventsHandling?
     public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
@@ -296,7 +295,7 @@ open class BaseChatViewController: UIViewController,
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let newInsetBottom = self.layoutConfiguration.contentInsets.bottom + inputHeightWithKeyboard
         let insetBottomDiff = newInsetBottom - collectionView.contentInset.bottom
-        var newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
+        let newInsetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
         let contentSize = collectionView.collectionViewLayout.collectionViewContentSize
         let prevContentOffsetY = collectionView.contentOffset.y
 
@@ -348,15 +347,6 @@ open class BaseChatViewController: UIViewController,
     open func createChatInputView() -> UIView {
         assert(false, "Override in subclass")
         return UIView()
-    }
-
-    /**
-        When paginating up we need to change the scroll position as the content is pushed down.
-        We take distance to top from beforeUpdate indexPath and then we make afterUpdate indexPath to appear at the same distance
-    */
-    open func referenceIndexPathsToRestoreScrollPositionOnUpdate(itemsBeforeUpdate: ChatItemCompanionCollection, changes: CollectionChanges) -> (beforeUpdate: IndexPath?, afterUpdate: IndexPath?) {
-        let firstItemMoved = changes.movedIndexPaths.first
-        return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
     }
 
     open func didPassThreshold(at: IndexPath) {
