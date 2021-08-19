@@ -42,8 +42,11 @@ open class BaseChatViewController: UIViewController,
                                    ReplyIndicatorRevealerDelegate,
                                    ChatMessagesViewControllerDelegate {
 
+    private let inputBarPresenterFactory: ChatInputBarPresenterFactoryProtocol
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
+
+    private(set) lazy var inputBarPresenter: ChatInputBarPresenterProtocol = self.inputBarPresenterFactory.makeInputBarPresenter(for: self)
 
     public weak var keyboardEventsHandler: KeyboardEventsHandling?
     public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
@@ -119,8 +122,10 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(messagesViewController: ChatMessagesViewControllerProtocol,
+    public init(inputBarPresenterFactory: ChatInputBarPresenterFactoryProtocol,
+                messagesViewController: ChatMessagesViewControllerProtocol,
                 configuration: Configuration = .default) {
+        self.inputBarPresenterFactory = inputBarPresenterFactory
         self.messagesViewController = messagesViewController
         self.configuration = configuration
 
@@ -231,7 +236,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func addInputView() {
-        let inputView = self.createChatInputView()
+        let inputView = self.inputBarPresenter.inputBarView
         self.inputBarContainer.addSubview(inputView)
         NSLayoutConstraint.activate([
             self.inputBarContainer.topAnchor.constraint(equalTo: inputView.topAnchor),
@@ -341,11 +346,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     // MARK: Subclass overrides
-
-    open func createChatInputView() -> UIView {
-        assert(false, "Override in subclass")
-        return UIView()
-    }
 
     open func didPassThreshold(at: IndexPath) {
         self.replyFeedbackGenerator?.generateFeedback()

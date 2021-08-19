@@ -59,3 +59,7 @@ public protocol ChatInputBarPresenterProtocol: AnyObject, ViewPresentationEvents
     func startTextInput()
     func isEmptyText() -> Bool
 }
+
+public protocol ChatInputBarPresenterFactoryProtocol: AnyObject {
+    func makeInputBarPresenter(for chatViewController: BaseChatViewController) -> ChatInputBarPresenterProtocol
+}
