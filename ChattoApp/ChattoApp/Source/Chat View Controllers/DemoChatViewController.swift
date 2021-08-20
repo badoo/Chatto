@@ -27,16 +27,48 @@ import Chatto
 import ChattoAdditions
 
 class DemoChatViewController: BaseChatViewController {
-    var shouldUseAlternativePresenter: Bool = false
-
-    var messageSender: DemoChatMessageSender!
+    let dataSource: DemoChatDataSource
     let messagesSelector = BaseMessagesSelector()
 
-    var dataSource: DemoChatDataSource! {
-        didSet {
-            self.chatDataSource = self.dataSource
-            self.messageSender = self.dataSource.messageSender
-        }
+    var messageSender: DemoChatMessageSender!
+    var shouldUseAlternativePresenter: Bool = false
+
+    init(dataSource: DemoChatDataSource) {
+        self.dataSource = dataSource
+        self.messageSender = dataSource.messageSender
+
+        let adapterConfig = ChatMessageCollectionAdapter.Configuration.default
+        let presentersBuilder = Self.createPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
+        let chatItemPresenterFactory = ChatItemPresenterFactory(
+            presenterBuildersByType: presentersBuilder
+        )
+        let chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
+        let chatMessageCollectionAdapter = ChatMessageCollectionAdapter(
+            chatItemsDecorator: chatItemsDecorator,
+            chatItemPresenterFactory: chatItemPresenterFactory,
+            chatMessagesViewModel: dataSource,
+            configuration: adapterConfig,
+            referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProviderFactory.makeDefault(),
+            updateQueue: SerialTaskQueue()
+        )
+        let layout = ChatCollectionViewLayout()
+        layout.delegate = chatMessageCollectionAdapter
+        let messagesViewController = ChatMessagesViewController(
+            config: .default,
+            layout: layout,
+            messagesAdapter: chatMessageCollectionAdapter,
+            style: .default,
+            viewModel: dataSource
+        )
+        chatMessageCollectionAdapter.delegate = messagesViewController
+
+        super.init(messagesViewController: messagesViewController)
+        
+        messagesViewController.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -46,7 +78,6 @@ class DemoChatViewController: BaseChatViewController {
 
         self.title = "Chat"
         self.messagesSelector.delegate = self
-        self.chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
         self.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
     }
 
@@ -72,23 +103,24 @@ class DemoChatViewController: BaseChatViewController {
         return chatInputView
     }
 
-    override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+    static private func createPresenterBuilders(messageSender: DemoChatMessageSender,
+                                                messageSelector: BaseMessagesSelector) -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
 
         let textMessagePresenter = TextMessagePresenterBuilder(
-            viewModelBuilder: self.createTextMessageViewModelBuilder(),
-            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
+            viewModelBuilder: Self.createTextMessageViewModelBuilder(),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector)
         )
         textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector)
+            interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector)
         )
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         let compoundPresenterBuilder = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
-            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector),
             accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
@@ -103,7 +135,7 @@ class DemoChatViewController: BaseChatViewController {
 
         let compoundPresenterBuilder2 = CompoundMessagePresenterBuilder(
             viewModelBuilder: DemoCompoundMessageViewModelBuilder(),
-            interactionHandler: DemoMessageInteractionHandler(messageSender: self.messageSender, messagesSelector: self.messagesSelector),
+            interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector),
             accessibilityIdentifier: nil,
             contentFactories: [
                 .init(DemoTextMessageContentFactory()),
@@ -127,7 +159,7 @@ class DemoChatViewController: BaseChatViewController {
         ]
     }
 
-    func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+    class func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
         return DemoTextMessageViewModelBuilder()
     }
 
@@ -168,10 +200,10 @@ class DemoChatViewController: BaseChatViewController {
 
 extension DemoChatViewController: MessagesSelectorDelegate {
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol) {
-        self.enqueueModelUpdate(updateType: .normal)
+        self.refreshContent()
     }
 
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol) {
-        self.enqueueModelUpdate(updateType: .normal)
+        self.refreshContent()
     }
 }

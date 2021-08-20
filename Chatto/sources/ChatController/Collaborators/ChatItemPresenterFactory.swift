@@ -29,14 +29,14 @@ public protocol ChatItemPresenterFactoryProtocol {
     func configure(withCollectionView collectionView: UICollectionView)
 }
 
-final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
-    var presenterBuildersByType = [ChatItemType: [ChatItemPresenterBuilderProtocol]]()
+public final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
+    let presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
 
-    init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
+    public init(presenterBuildersByType: [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
         self.presenterBuildersByType = presenterBuildersByType
     }
 
-    func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+    public func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
             if builder.canHandleChatItem(chatItem) {
                 return builder.createPresenterWithChatItem(chatItem)
@@ -45,10 +45,30 @@ final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
         return DummyChatItemPresenter()
     }
 
-    func configure(withCollectionView collectionView: UICollectionView) {
+    public func configure(withCollectionView collectionView: UICollectionView) {
         for presenterBuilder in self.presenterBuildersByType.flatMap({ $0.1 }) {
             presenterBuilder.presenterType.registerCells(collectionView)
         }
         DummyChatItemPresenter.registerCells(collectionView)
+    }
+}
+
+public final class LazyChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
+
+    private let presenterBuildersByTypeProviderBlock: () -> [ChatItemType: [ChatItemPresenterBuilderProtocol]]
+    private lazy var chatItemPresenterFactory: ChatItemPresenterFactory = .init(
+        presenterBuildersByType: self.presenterBuildersByTypeProviderBlock()
+    )
+
+    public init(presenterBuildersByTypeProviderBlock: @escaping () -> [ChatItemType: [ChatItemPresenterBuilderProtocol]]) {
+        self.presenterBuildersByTypeProviderBlock = presenterBuildersByTypeProviderBlock
+    }
+
+    public func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+        self.chatItemPresenterFactory.createChatItemPresenter(chatItem)
+    }
+
+    public func configure(withCollectionView collectionView: UICollectionView) {
+        self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
     }
 }

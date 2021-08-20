@@ -37,7 +37,7 @@ public protocol ChatDataSourceDelegateProtocol: AnyObject {
     func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType)
 }
 
-public protocol ChatDataSourceProtocol: AnyObject {
+public protocol ChatDataSourceProtocol: ChatMessagesViewModelProtocol {
     var hasMoreNext: Bool { get }
     var hasMorePrevious: Bool { get }
     var chatItems: [ChatItemProtocol] { get }
@@ -45,5 +45,4 @@ public protocol ChatDataSourceProtocol: AnyObject {
 
     func loadNext() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
     func loadPrevious() // Should trigger chatDataSourceDidUpdate with UpdateType.Pagination
-    func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:(_ didAdjust: Bool) -> Void) // If you want, implement message count contention for performance, otherwise just call completion(false)
 }

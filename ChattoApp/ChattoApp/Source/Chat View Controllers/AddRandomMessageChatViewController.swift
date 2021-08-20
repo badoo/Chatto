@@ -25,6 +25,7 @@
 import UIKit
 
 class AddRandomMessagesChatViewController: DemoChatViewController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

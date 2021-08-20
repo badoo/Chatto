@@ -71,8 +71,12 @@ public struct ChatCollectionViewLayoutModel {
     }
 }
 
-open class ChatCollectionViewLayout: UICollectionViewLayout {
-    var layoutModel: ChatCollectionViewLayoutModel!
+public protocol ChatCollectionViewLayoutProtocol {
+    var delegate: ChatCollectionViewLayoutDelegate? { get set }
+}
+
+open class ChatCollectionViewLayout: UICollectionViewLayout, ChatCollectionViewLayoutProtocol {
+    private var layoutModel: ChatCollectionViewLayoutModel!
     public weak var delegate: ChatCollectionViewLayoutDelegate?
 
     // Optimization: after reloadData we'll get invalidateLayout, but prepareLayout will be delayed until next run loop.
@@ -137,9 +141,12 @@ open class ChatCollectionViewLayout: UICollectionViewLayout {
     }
 
     open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        if indexPath.section < self.layoutModel.layoutAttributesBySectionAndItem.count && indexPath.item < self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section].count {
+        if indexPath.section < self.layoutModel.layoutAttributesBySectionAndItem.count
+            && indexPath.item < self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section].count {
+
             return self.layoutModel.layoutAttributesBySectionAndItem[indexPath.section][indexPath.item]
         }
+        // This assertion is currently being thrown if the user send a message that is immediately seen
         assert(false, "Unexpected indexPath requested:\(indexPath)")
         return nil
     }

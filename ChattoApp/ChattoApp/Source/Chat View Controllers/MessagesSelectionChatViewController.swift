@@ -46,7 +46,7 @@ class MessagesSelectionChatViewController: DemoChatViewController {
     private func handleSelectionButtonTap() {
         self.setupCancellationButton()
         self.messagesSelector.isActive = true
-        self.enqueueModelUpdate(updateType: .normal)
+        self.refreshContent()
     }
 
     // MARK: - Cancellation
@@ -65,6 +65,6 @@ class MessagesSelectionChatViewController: DemoChatViewController {
     private func handleCancellationButtonTap() {
         self.setupSelectionButton()
         self.messagesSelector.isActive = false
-        self.enqueueModelUpdate(updateType: .normal)
+        self.refreshContent()
     }
 }
