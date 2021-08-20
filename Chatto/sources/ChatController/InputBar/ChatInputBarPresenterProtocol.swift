@@ -10,7 +10,6 @@ public enum InputBarMode {
 }
 
 public protocol ViewPresentationEventsHandling {
-
     func onViewDidLoad()
 
     func onViewWillAppear()
@@ -20,36 +19,11 @@ public protocol ViewPresentationEventsHandling {
     func onViewDidDisappear()
 }
 
-/// sourcery: mockable
-public protocol ChatInputBarPresenterDelegate: AnyObject {
+public typealias ChatInputBarPresenterViewController = InputPositionControlling & UIViewController
 
-    func inputBarPresenterWillExpandInput(_ presenter: ChatInputBarPresenterProtocol)
-    func inputBarPresenterDidExpandInput(_ presenter: ChatInputBarPresenterProtocol)
+public protocol ChatInputBarPresenterProtocol: ViewPresentationEventsHandling, ScrollViewEventsHandling, KeyboardEventsHandling {
 
-    func inputBarPresenterAsksScreenLayoutDuringAnimation(_ presenter: ChatInputBarPresenterProtocol)
-
-    func inputBarPresenterWillCollapseInput(_ presenter: ChatInputBarPresenterProtocol)
-    func inputBarPresenterDidCollapseInput(_ presenter: ChatInputBarPresenterProtocol)
-
-    func inputBarPresenter(_ presenter: ChatInputBarPresenterProtocol, didChangeText text: String)
-    func inputBarPresenterDidSendMessage(_ presenter: ChatInputBarPresenterProtocol)
-
-    func inputBarPresenter(_ presenter: ChatInputBarPresenterProtocol, didChangeInputMode inputMode: InputBarMode)
-
-    func inputBarPresenterShouldAnimatePlaceholder(_ presenter: ChatInputBarPresenterProtocol) -> Bool
-
-    func inputBarPresenter(_ presenter: ChatInputBarPresenterProtocol, didAskToPresentAlert alert: UIAlertController)
-    func inputBarPresenterDidShowElementOnTopOfInputBar(_ presenter: ChatInputBarPresenterProtocol)
-    func inputBarPresenterDidHideElementOnTopOfInputBar(_ presenter: ChatInputBarPresenterProtocol)
-}
-
-/// sourcery: mockable
-public protocol ChatInputBarPresenterProtocol: AnyObject, ViewPresentationEventsHandling {
-
-    var presentingViewController: UIViewController? { get set }
-    var inputPositionController: InputPositionControlling? { get set }
-
-    var delegate: ChatInputBarPresenterDelegate? { get set }
+    var viewController: ChatInputBarPresenterViewController? { get set }
 
     var inputBarView: UIView { get }
     var inputBarControlPanel: UIView { get }

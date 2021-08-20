@@ -59,8 +59,6 @@ open class BaseChatViewController: UIViewController,
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesViewController.chatItemCompanionCollection
     }
-    // Must be set before loadView is called.
-    public var substitutesMainViewAutomatically = true
     /**
      - You can use a decorator to:
         - Provide the ChatCollectionViewLayout with margins between messages
@@ -142,12 +140,8 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Lifecycle
 
     open override func loadView() { // swiftlint:disable:this prohibited_super_call
-        if substitutesMainViewAutomatically {
-            self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
-            self.view.backgroundColor = UIColor.white
-        } else {
-            super.loadView()
-        }
+        self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
+        self.view.backgroundColor = UIColor.white
     }
 
     override open func viewDidLoad() {
@@ -239,8 +233,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func addInputView() {
-        self.inputBarPresenter.presentingViewController = self
-        self.inputBarPresenter.inputPositionController = self
+        self.inputBarPresenter.viewController = self
 
         let inputView = self.inputBarPresenter.inputBarView
         self.inputBarContainer.addSubview(inputView)
