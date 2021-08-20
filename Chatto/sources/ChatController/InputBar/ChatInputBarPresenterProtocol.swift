@@ -46,6 +46,9 @@ public protocol ChatInputBarPresenterDelegate: AnyObject {
 /// sourcery: mockable
 public protocol ChatInputBarPresenterProtocol: AnyObject, ViewPresentationEventsHandling {
 
+    var presentingViewController: UIViewController? { get set }
+    var inputPositionController: InputPositionControlling? { get set }
+
     var delegate: ChatInputBarPresenterDelegate? { get set }
 
     var inputBarView: UIView { get }
@@ -58,8 +61,4 @@ public protocol ChatInputBarPresenterProtocol: AnyObject, ViewPresentationEvents
 
     func startTextInput()
     func isEmptyText() -> Bool
-}
-
-public protocol ChatInputBarPresenterFactoryProtocol: AnyObject {
-    func makeInputBarPresenter(for chatViewController: BaseChatViewController) -> ChatInputBarPresenterProtocol
 }

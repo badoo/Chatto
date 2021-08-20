@@ -42,14 +42,13 @@ open class BaseChatViewController: UIViewController,
                                    ReplyIndicatorRevealerDelegate,
                                    ChatMessagesViewControllerDelegate {
 
-    private let inputBarPresenterFactory: ChatInputBarPresenterFactoryProtocol
+    public let inputBarPresenter: ChatInputBarPresenterProtocol
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
 
-    private(set) lazy var inputBarPresenter: ChatInputBarPresenterProtocol = self.inputBarPresenterFactory.makeInputBarPresenter(for: self)
+    private let keyboardEventsHandler: KeyboardEventsHandling?
+    private let scrollViewEventsHandler: ScrollViewEventsHandling?
 
-    public weak var keyboardEventsHandler: KeyboardEventsHandling?
-    public weak var scrollViewEventsHandler: ScrollViewEventsHandling?
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
@@ -122,11 +121,15 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(inputBarPresenterFactory: ChatInputBarPresenterFactoryProtocol,
+    public init(inputBarPresenter: ChatInputBarPresenterProtocol,
+                keyboardEventsHandler: KeyboardEventsHandling?,
                 messagesViewController: ChatMessagesViewControllerProtocol,
+                scrollViewEventsHandler: ScrollViewEventsHandling?,
                 configuration: Configuration = .default) {
-        self.inputBarPresenterFactory = inputBarPresenterFactory
+        self.inputBarPresenter = inputBarPresenter
+        self.keyboardEventsHandler = keyboardEventsHandler
         self.messagesViewController = messagesViewController
+        self.scrollViewEventsHandler = scrollViewEventsHandler
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
@@ -236,6 +239,9 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func addInputView() {
+        self.inputBarPresenter.presentingViewController = self
+        self.inputBarPresenter.inputPositionController = self
+
         let inputView = self.inputBarPresenter.inputBarView
         self.inputBarContainer.addSubview(inputView)
         NSLayoutConstraint.activate([
