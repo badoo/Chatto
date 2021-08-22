@@ -4,6 +4,7 @@
 
 import UIKit
 
+@frozen
 public enum InputBarMode {
     case text
     case custom
