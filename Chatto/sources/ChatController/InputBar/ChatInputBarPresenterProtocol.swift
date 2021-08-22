@@ -9,6 +9,15 @@ public enum InputBarMode {
     case custom
 }
 
+public protocol KeyboardEventsHandling: AnyObject {
+    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
+}
+
+public protocol ScrollViewEventsHandling: AnyObject {
+    func onScrollViewDidScroll(_ scrollView: UIScrollView)
+    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
+}
+
 public protocol ViewPresentationEventsHandling {
     func onViewDidLoad()
 
@@ -19,20 +28,17 @@ public protocol ViewPresentationEventsHandling {
     func onViewDidDisappear()
 }
 
-public typealias ChatInputBarPresenterViewController = InputPositionControlling & UIViewController
+public protocol ChatInputBarPresentingController: UIViewController & InputPositionControlling {
+    func setup(inputView: UIView)
+}
 
-public protocol ChatInputBarPresenterProtocol: ViewPresentationEventsHandling, ScrollViewEventsHandling, KeyboardEventsHandling {
-
-    var viewController: ChatInputBarPresenterViewController? { get set }
-
-    var inputBarView: UIView { get }
-    var inputBarControlPanel: UIView { get }
-
+public protocol ViewModelEventsHandling {
     func onViewDidUpdate()
-    func onDidTapOutside()
+}
 
-    func collapseInput()
+public protocol BaseChatInputBarPresenterProtocol: AnyObject {
 
-    func startTextInput()
-    func isEmptyText() -> Bool
+    var viewController: ChatInputBarPresentingController? { get set }
+
+    func onViewDidUpdate() // TODO: View Model updates should not be triggered by the BaseChatViewController
 }

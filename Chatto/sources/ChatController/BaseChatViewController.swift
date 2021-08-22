@@ -24,17 +24,12 @@
 
 import UIKit
 
-public protocol KeyboardEventsHandling: AnyObject {
-    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
-}
-
-public protocol ScrollViewEventsHandling: AnyObject {
-    func onScrollViewDidScroll(_ scrollView: UIScrollView)
-    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
-}
-
 public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
+}
+
+public protocol BaseChatViewControllerViewModelProtocol: AnyObject {
+    var onDidUpdate: (() -> Void)? { get set }
 }
 
 open class BaseChatViewController: UIViewController,
@@ -42,20 +37,23 @@ open class BaseChatViewController: UIViewController,
                                    ReplyIndicatorRevealerDelegate,
                                    ChatMessagesViewControllerDelegate {
 
-    public let inputBarPresenter: ChatInputBarPresenterProtocol
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
 
-    private let keyboardEventsHandler: KeyboardEventsHandling?
-    private let scrollViewEventsHandler: ScrollViewEventsHandling?
+    private let inputBarPresenter: BaseChatInputBarPresenterProtocol
+    private let keyboardEventsHandlers: [KeyboardEventsHandling]
+    private let scrollViewEventsHandlers: [ScrollViewEventsHandling]
+    private let viewEventsHandlers: [ViewPresentationEventsHandling]
+
+    private let viewModel: BaseChatViewControllerViewModelProtocol
 
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
     public var collectionView: UICollectionView { self.messagesViewController.collectionView }
 
-    public private(set) var inputBarContainer: UIView!
-    public private(set) var inputContentContainer: UIView!
+    public let inputBarContainer: UIView = UIView(frame: .zero)
+    public let inputContentContainer: UIView = UIView(frame: .zero)
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesViewController.chatItemCompanionCollection
     }
@@ -119,15 +117,19 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Init
 
-    public init(inputBarPresenter: ChatInputBarPresenterProtocol,
-                keyboardEventsHandler: KeyboardEventsHandling?,
+    public init(inputBarPresenter: BaseChatInputBarPresenterProtocol,
+                keyboardEventsHandlers: [KeyboardEventsHandling],
                 messagesViewController: ChatMessagesViewControllerProtocol,
-                scrollViewEventsHandler: ScrollViewEventsHandling?,
+                scrollViewEventsHandlers: [ScrollViewEventsHandling],
+                viewEventsHandlers: [ViewPresentationEventsHandling],
+                viewModel: BaseChatViewControllerViewModelProtocol,
                 configuration: Configuration = .default) {
         self.inputBarPresenter = inputBarPresenter
-        self.keyboardEventsHandler = keyboardEventsHandler
+        self.keyboardEventsHandlers = keyboardEventsHandlers
         self.messagesViewController = messagesViewController
-        self.scrollViewEventsHandler = scrollViewEventsHandler
+        self.scrollViewEventsHandlers = scrollViewEventsHandlers
+        self.viewEventsHandlers = viewEventsHandlers
+        self.viewModel = viewModel
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
@@ -147,24 +149,55 @@ open class BaseChatViewController: UIViewController,
     override open func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupViewModel()
         self.setupCollectionView()
         self.addInputBarContainer()
-        self.addInputView()
+        self.setupInputBarPresenter()
         self.addInputContentContainer()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
 
         self.refreshContent()
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewDidLoad()
+        }
     }
 
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         self.keyboardTracker.startTracking()
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewWillAppear()
+        }
+    }
+
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewDidAppear()
+        }
     }
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
         self.keyboardTracker?.stopTracking()
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewWillDisappear()
+        }
+    }
+
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewDidDisappear()
+        }
     }
 
     override open func viewDidLayoutSubviews() {
@@ -177,6 +210,16 @@ open class BaseChatViewController: UIViewController,
     }
 
     // MARK: - Setup
+
+    private func setupViewModel() {
+        self.viewModel.onDidUpdate = { [weak self] in
+            self?.onViewModelUpdate()
+        }
+    }
+
+    private func setupInputBarPresenter() {
+        self.inputBarPresenter.viewController = self
+    }
 
     private func setupTapGestureRecognizer() {
         let collectionView = self.collectionView
@@ -212,42 +255,20 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func addInputBarContainer() {
-        self.inputBarContainer = UIView(frame: CGRect.zero)
-        self.inputBarContainer.autoresizingMask = UIView.AutoresizingMask()
         self.inputBarContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputBarContainer.backgroundColor = .white
         self.view.addSubview(self.inputBarContainer)
-        NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor)
-        ])
         let guide = self.view.safeAreaLayoutGuide
-        let leadingAnchor: NSLayoutXAxisAnchor = guide.leadingAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor = guide.trailingAnchor
-
         NSLayoutConstraint.activate([
-            self.inputBarContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            self.inputBarContainer.trailingAnchor.constraint(equalTo: trailingAnchor)
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.inputBarContainer.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            self.inputBarContainer.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
         ])
         self.inputContainerBottomConstraint = self.view.bottomAnchor.constraint(equalTo: self.inputBarContainer.bottomAnchor)
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
 
-    private func addInputView() {
-        self.inputBarPresenter.viewController = self
-
-        let inputView = self.inputBarPresenter.inputBarView
-        self.inputBarContainer.addSubview(inputView)
-        NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(equalTo: inputView.topAnchor),
-            self.inputBarContainer.bottomAnchor.constraint(equalTo: inputView.bottomAnchor),
-            self.inputBarContainer.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
-            self.inputBarContainer.trailingAnchor.constraint(equalTo: inputView.trailingAnchor)
-        ])
-    }
-
     private func addInputContentContainer() {
-        self.inputContentContainer = UIView(frame: CGRect.zero)
-        self.inputContentContainer.autoresizingMask = UIView.AutoresizingMask()
         self.inputContentContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputContentContainer.backgroundColor = .white
         self.view.addSubview(self.inputContentContainer)
@@ -269,8 +290,10 @@ open class BaseChatViewController: UIViewController,
     open func setupKeyboardTracker() {
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
-            if let keyboardObservingDelegate = sSelf.keyboardEventsHandler {
-                keyboardObservingDelegate.onKeyboardStateDidChange(bottomMargin, keyboardStatus)
+            if sSelf.keyboardEventsHandlers.isEmpty == false {
+                sSelf.keyboardEventsHandlers.forEach {
+                    $0.onKeyboardStateDidChange(bottomMargin, keyboardStatus)
+                }
             } else {
                 sSelf.changeInputContentBottomMarginTo(bottomMargin)
             }
@@ -455,7 +478,9 @@ open class BaseChatViewController: UIViewController,
     public func chatMessagesViewController(_: ChatMessagesViewController,
                                          scrollViewDidEndDragging scrollView: UIScrollView,
                                          willDecelerate decelerate: Bool) {
-        self.scrollViewEventsHandler?.onScrollViewDidEndDragging(scrollView, decelerate)
+        self.scrollViewEventsHandlers.forEach {
+            $0.onScrollViewDidEndDragging(scrollView, decelerate)
+        }
     }
 
     open func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) { }
@@ -463,12 +488,33 @@ open class BaseChatViewController: UIViewController,
     open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
 
     open func chatMessagesViewController(_ viewController: ChatMessagesViewController, didScroll: UIScrollView) {
-        self.scrollViewEventsHandler?.onScrollViewDidScroll(viewController.collectionView)
+        self.scrollViewEventsHandlers.forEach {
+            $0.onScrollViewDidScroll(viewController.collectionView)
+        }
     }
 
     open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
 
     open func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging: UIScrollView) { }
+
+    open func onViewModelUpdate() {
+        self.inputBarPresenter.onViewDidUpdate()
+    }
+}
+
+extension BaseChatViewController: ChatInputBarPresentingController {
+    public func setup(inputView: UIView) {
+        self.inputBarContainer.subviews.forEach { $0.removeFromSuperview() }
+
+        inputView.translatesAutoresizingMaskIntoConstraints = false
+        self.inputBarContainer.addSubview(inputView)
+        NSLayoutConstraint.activate([
+            self.inputBarContainer.topAnchor.constraint(equalTo: inputView.topAnchor),
+            self.inputBarContainer.bottomAnchor.constraint(equalTo: inputView.bottomAnchor),
+            self.inputBarContainer.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
+            self.inputBarContainer.trailingAnchor.constraint(equalTo: inputView.trailingAnchor)
+        ])
+    }
 }
 
 public extension BaseChatViewController {

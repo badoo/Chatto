@@ -34,22 +34,28 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 }
 
 final class TesteableChatViewController: BaseChatViewController {
-    let chatInputView = UIView()
+
+    private let fakeChatInputBarPresenter: FakeChatInputBarPresenter
+    var chatInputView: UIView { self.fakeChatInputBarPresenter.inputView }
 
     init(messagesViewController: ChatMessagesViewController,
          configuration: BaseChatViewController.Configuration = .default) {
+
+        self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
+
         super.init(
+            inputBarPresenter: self.fakeChatInputBarPresenter,
+            keyboardEventsHandlers: [],
             messagesViewController: messagesViewController,
+            scrollViewEventsHandlers: [],
+            viewEventsHandlers: [],
+            viewModel: FakeChatViewControllerViewModel(),
             configuration: configuration
         )
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func createChatInputView() -> UIView {
-        return self.chatInputView
     }
 }
 
@@ -70,6 +76,8 @@ final class FakeDataSource: ChatDataSourceProtocol {
             self.delegate?.chatDataSourceDidUpdate(self)
         }
     }
+    var onDidUpdate: (() -> Void)?
+
     weak var delegate: ChatDataSourceDelegateProtocol?
 
     func loadNext() {
@@ -223,4 +231,26 @@ final class FakePresenter: ChatItemPresenterProtocol {
         let fakeCell = cell as! FakeCell
         fakeCell.backgroundColor = UIColor.red
     }
+}
+
+private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol {
+    let inputView: UIView
+
+    var viewController: ChatInputBarPresentingController? {
+        didSet {
+            guard let viewController = self.viewController else { return }
+
+            viewController.setup(inputView: self.inputView)
+        }
+    }
+
+    init(inputView: UIView) {
+        self.inputView = inputView
+    }
+
+    func onViewDidUpdate() { }
+}
+
+private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewModelProtocol {
+    var onDidUpdate: (() -> Void)?
 }

@@ -61,9 +61,11 @@ class ChatExamplesViewController: CellsViewController {
     private func makeChatCellItem(title: String, messagesCount: Int, shouldUseAlternativePresenter: Bool = false) -> CellItem {
         return CellItem(title: title, action: { [weak self] in
             let dataSource = DemoChatDataSource(count: messagesCount, pageSize: 50)
-            let viewController = AddRandomMessagesChatViewController(dataSource: dataSource)
+            let viewController = AddRandomMessagesChatViewController(
+                dataSource: dataSource,
+                shouldUseAlternativePresenter: shouldUseAlternativePresenter
+            )
 
-            viewController.shouldUseAlternativePresenter = shouldUseAlternativePresenter
             self?.navigationController?.pushViewController(viewController, animated: true)
         })
     }

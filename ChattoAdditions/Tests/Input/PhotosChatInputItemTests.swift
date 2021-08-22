@@ -29,7 +29,7 @@ class PhotosChatInputItemTests: XCTestCase {
     private var inputItem: PhotosChatInputItem!
     override func setUp() {
         super.setUp()
-        self.inputItem = PhotosChatInputItem(presentingController: nil)
+        self.inputItem = PhotosChatInputItem()
     }
 
     func testThat_PresentationModeIsCustomView() {

@@ -23,8 +23,9 @@
 */
 
 import UIKit
+import Chatto
 
-public protocol ChatInputBarPresenter: AnyObject {
+public protocol ChatInputBarPresenter: BaseChatInputBarPresenterProtocol {
     var focusedItem: ChatInputItemProtocol? { get }
     var chatInputBar: ChatInputBar { get }
     func onDidBeginEditing()
@@ -35,9 +36,16 @@ public protocol ChatInputBarPresenter: AnyObject {
 
 @objc
 public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+
     public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
+
+    public var viewController: ChatInputBarPresentingController? {
+        didSet {
+            self.viewController?.setup(inputView: self.chatInputBar)
+        }
+    }
 
     public init(chatInputBar: ChatInputBar,
                 chatInputItems: [ChatInputItemProtocol],
@@ -155,6 +163,8 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
             self.updateHeight(for: currentInputView)
         }
     }
+
+    public func onViewDidUpdate() { }
 }
 
 // MARK: ChatInputBarPresenter

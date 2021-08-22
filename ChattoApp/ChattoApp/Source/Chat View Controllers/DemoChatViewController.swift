@@ -30,10 +30,10 @@ class DemoChatViewController: BaseChatViewController {
     let dataSource: DemoChatDataSource
     let messagesSelector = BaseMessagesSelector()
 
-    var messageSender: DemoChatMessageSender!
-    var shouldUseAlternativePresenter: Bool = false
+    var messageSender: DemoChatMessageSender
 
-    init(dataSource: DemoChatDataSource) {
+    init(dataSource: DemoChatDataSource,
+         shouldUseAlternativePresenter: Bool = false) {
         self.dataSource = dataSource
         self.messageSender = dataSource.messageSender
 
@@ -61,10 +61,26 @@ class DemoChatViewController: BaseChatViewController {
             viewModel: dataSource
         )
         chatMessageCollectionAdapter.delegate = messagesViewController
+        let chatInputItems = Self.createChatInputItems(
+            dataSource: dataSource,
+            shouldUseAlternativePresenter: shouldUseAlternativePresenter
+        )
+        let chatInputContainer = Self.makeChatInputPresenter(
+            chatInputItems: chatInputItems,
+            shouldUseAlternativePresenter: shouldUseAlternativePresenter
+        )
 
-        super.init(messagesViewController: messagesViewController)
-        
+        super.init(
+            inputBarPresenter: chatInputContainer.presenter,
+            keyboardEventsHandlers: [chatInputContainer.keyboardHandler].compactMap { $0 },
+            messagesViewController: messagesViewController,
+            scrollViewEventsHandlers: [chatInputContainer.scrollHandler].compactMap { $0 },
+            viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 },
+            viewModel: dataSource
+        )
+        chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
         messagesViewController.delegate = self
+        chatInputContainer.presenter.viewController = self
     }
 
     required init?(coder: NSCoder) {
@@ -81,26 +97,43 @@ class DemoChatViewController: BaseChatViewController {
         self.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
     }
 
-    var chatInputPresenter: AnyObject!
-    override func createChatInputView() -> UIView {
+    private static func makeChatInputPresenter(chatInputItems: [ChatInputItemProtocol],
+                                               shouldUseAlternativePresenter: Bool) -> ChatInputContainer {
         let chatInputView = ChatInputBar.loadNib()
+        chatInputView.maxCharactersCount = 1000
+
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
-        if self.shouldUseAlternativePresenter {
-            let chatInputPresenter = ExpandableChatInputBarPresenter(
-                inputPositionController: self,
+
+        guard shouldUseAlternativePresenter else {
+            let presenter = BasicChatInputBarPresenter(
                 chatInputBar: chatInputView,
-                chatInputItems: self.createChatInputItems(),
-                chatInputBarAppearance: appearance)
-            self.chatInputPresenter = chatInputPresenter
-            self.keyboardEventsHandler = chatInputPresenter
-            self.scrollViewEventsHandler = chatInputPresenter
-        } else {
-            self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
+                chatInputItems: chatInputItems,
+                chatInputBarAppearance: appearance
+            )
+
+            return (presenter, nil, nil, nil)
         }
-        chatInputView.maxCharactersCount = 1000
-        return chatInputView
+
+        let presenter = ExpandableChatInputBarPresenter(
+                chatInputBar: chatInputView,
+                chatInputItems: chatInputItems,
+                chatInputBarAppearance: appearance
+            )
+
+        return (presenter, presenter, presenter, nil)
+    }
+
+    private static func createChatInputItems(dataSource: DemoChatDataSource,
+                                             shouldUseAlternativePresenter: Bool) -> [ChatInputItemProtocol] {
+        var items = [ChatInputItemProtocol]()
+        items.append(self.createTextInputItem(dataSource: dataSource))
+        items.append(self.createPhotoInputItem(dataSource: dataSource))
+        if shouldUseAlternativePresenter {
+            items.append(self.customInputItem(dataSource: dataSource))
+        }
+        return items
     }
 
     static private func createPresenterBuilders(messageSender: DemoChatMessageSender,
@@ -163,36 +196,26 @@ class DemoChatViewController: BaseChatViewController {
         return DemoTextMessageViewModelBuilder()
     }
 
-    func createChatInputItems() -> [ChatInputItemProtocol] {
-        var items = [ChatInputItemProtocol]()
-        items.append(self.createTextInputItem())
-        items.append(self.createPhotoInputItem())
-        if self.shouldUseAlternativePresenter {
-            items.append(self.customInputItem())
-        }
-        return items
-    }
-
-    private func createTextInputItem() -> TextChatInputItem {
+    private static func createTextInputItem(dataSource: DemoChatDataSource) -> TextChatInputItem {
         let item = TextChatInputItem()
-        item.textInputHandler = { [weak self] text in
-            self?.dataSource.addTextMessage(text)
+        item.textInputHandler = { [weak dataSource] text in
+            dataSource?.addTextMessage(text)
         }
         return item
     }
 
-    private func createPhotoInputItem() -> PhotosChatInputItem {
-        let item = PhotosChatInputItem(presentingController: self)
-        item.photoInputHandler = { [weak self] image, _ in
-            self?.dataSource.addPhotoMessage(image)
+    private static func createPhotoInputItem(dataSource: DemoChatDataSource) -> PhotosChatInputItem {
+        let item = PhotosChatInputItem()
+        item.photoInputHandler = { [weak dataSource] image, _ in
+            dataSource?.addPhotoMessage(image)
         }
         return item
     }
 
-    private func customInputItem() -> ContentAwareInputItem {
+    private static func customInputItem(dataSource: DemoChatDataSource) -> ContentAwareInputItem {
         let item = ContentAwareInputItem()
-        item.textInputHandler = { [weak self] text in
-            self?.dataSource.addTextMessage(text)
+        item.textInputHandler = { [weak dataSource] text in
+            dataSource?.addTextMessage(text)
         }
         return item
     }
@@ -207,3 +230,16 @@ extension DemoChatViewController: MessagesSelectorDelegate {
         self.refreshContent()
     }
 }
+
+private protocol PresenterChatInputItemProtocol: AnyObject {
+    var presentingController: UIViewController? { get set }
+}
+
+extension PhotosChatInputItem: PresenterChatInputItemProtocol {}
+
+typealias ChatInputContainer = (
+    presenter: BaseChatInputBarPresenterProtocol,
+    keyboardHandler: KeyboardEventsHandling?,
+    scrollHandler: ScrollViewEventsHandling?,
+    viewPresentationHandler: ViewPresentationEventsHandling?
+)
