@@ -29,7 +29,7 @@ public protocol ViewPresentationEventsHandling {
     func onViewDidDisappear()
 }
 
-public protocol ChatInputBarPresentingController: UIViewController & InputPositionControlling {
+public protocol ChatInputBarPresentingController: UIViewController, InputPositionControlling {
     func setup(inputView: UIView)
 }
 
