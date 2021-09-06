@@ -418,6 +418,19 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
+        let adjustScrollViewToBottom = {
+            switch scrollAction {
+            case .scrollToBottom:
+                collectionView.scrollToBottom(
+                    animated: updateType == .normal,
+                    animationDuration: self.configuration.updatesAnimationDuration
+                )
+            case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
+                let newRect = self.rectAtIndexPath(indexPath)
+                collectionView.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+            }
+        }
+
         if usesBatchUpdates {
             UIView.animate(withDuration: self.configuration.updatesAnimationDuration, animations: { () -> Void in
                 self.unfinishedBatchUpdatesCount += 1
@@ -437,6 +450,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                     if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
                         DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                     }
+
+                    adjustScrollViewToBottom()
                 })
             })
         } else {
@@ -444,20 +459,10 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             updateModelClosure()
             collectionView.reloadData()
             collectionView.collectionViewLayout.prepare()
-        }
 
-        collectionView.setNeedsLayout()
-        collectionView.layoutIfNeeded()
-
-        switch scrollAction {
-        case .scrollToBottom:
-            collectionView.scrollToBottom(
-                animated: updateType == .normal,
-                animationDuration: self.configuration.updatesAnimationDuration
-            )
-        case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
-            let newRect = self.rectAtIndexPath(indexPath)
-            collectionView.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
+            collectionView.setNeedsLayout()
+            collectionView.layoutIfNeeded()
+            adjustScrollViewToBottom()
         }
 
         if !usesBatchUpdates || self.configuration.fastUpdates {
