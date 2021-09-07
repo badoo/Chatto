@@ -418,15 +418,17 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        let adjustScrollViewToBottom = {
+        let adjustScrollViewToBottom = { [weak self, weak collectionView] in
+            guard let sSelf = self, let collectionView = collectionView else { return }
+
             switch scrollAction {
             case .scrollToBottom:
                 collectionView.scrollToBottom(
                     animated: updateType == .normal,
-                    animationDuration: self.configuration.updatesAnimationDuration
+                    animationDuration: sSelf.configuration.updatesAnimationDuration
                 )
-            case .preservePosition(rectForReferenceIndexPathBeforeUpdate: let oldRect, referenceIndexPathAfterUpdate: let indexPath):
-                let newRect = self.rectAtIndexPath(indexPath)
+            case .preservePosition(let oldRect, let indexPath):
+                let newRect = sSelf.rectAtIndexPath(indexPath)
                 collectionView.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
             }
         }
