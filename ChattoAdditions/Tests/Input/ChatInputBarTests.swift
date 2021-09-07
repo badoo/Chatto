@@ -259,7 +259,7 @@ class ChatInputBarTests: XCTestCase {
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
     var focusedItem: ChatInputItemProtocol?
-    var viewController: ChatInputBarPresentingController?
+    weak var viewController: ChatInputBarPresentingController?
 
     let chatInputBar: ChatInputBar
     init(chatInputBar: ChatInputBar) {

@@ -236,7 +236,7 @@ final class FakePresenter: ChatItemPresenterProtocol {
 private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol {
     let inputView: UIView
 
-    var viewController: ChatInputBarPresentingController? {
+    weak var viewController: ChatInputBarPresentingController? {
         didSet {
             guard let viewController = self.viewController else { return }
 

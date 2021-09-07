@@ -33,7 +33,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
 
-    public var viewController: ChatInputBarPresentingController? {
+    public weak var viewController: ChatInputBarPresentingController? {
         didSet {
             self.viewController?.setup(inputView: self.chatInputBar)
         }
