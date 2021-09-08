@@ -11,6 +11,7 @@
 		3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */; };
 		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
 		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
+		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
 		A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */; };
 		A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */; };
 		A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */; };
@@ -58,6 +59,7 @@
 		55E85D821BE390BE001885AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
 		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
+		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
 		A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
 		A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewModel.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		65F1B58D09341652E861362B /* ChatController */ = {
 			isa = PBXGroup;
 			children = (
+				A4C03CFC26CE42E400360526 /* InputBar */,
 				A4F7666426BD4F2600008F24 /* ChatMessages */,
 				50D5BF4A25079D759B602EE5 /* Collaborators */,
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
@@ -158,6 +161,14 @@
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
 			);
 			path = ChatController;
+			sourceTree = "<group>";
+		};
+		A4C03CFC26CE42E400360526 /* InputBar */ = {
+			isa = PBXGroup;
+			children = (
+				A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */,
+			);
+			path = InputBar;
 			sourceTree = "<group>";
 		};
 		A4F7666426BD4F2600008F24 /* ChatMessages */ = {
@@ -380,6 +391,7 @@
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
 				C3C7C39B1CAC4BAC00A49929 /* KeyboardTracker.swift in Sources */,
+				A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */,
 				B3B1B0FF1D6B40DF00D1183D /* Utils.swift in Sources */,
 				C342D0C11C638A2C008A4605 /* ChatItemCompanionCollection.swift in Sources */,
 			);

@@ -23,6 +23,7 @@
 */
 
 import XCTest
+import Chatto
 @testable import ChattoAdditions
 
 class ChatInputBarTests: XCTestCase {
@@ -258,6 +259,7 @@ class ChatInputBarTests: XCTestCase {
 
 class FakeChatInputBarPresenter: ChatInputBarPresenter {
     var focusedItem: ChatInputItemProtocol?
+    weak var viewController: ChatInputBarPresentingController?
 
     let chatInputBar: ChatInputBar
     init(chatInputBar: ChatInputBar) {
@@ -286,6 +288,8 @@ class FakeChatInputBarPresenter: ChatInputBarPresenter {
         self.onDidReceiveFocusOnItemCalled = true
         self.itemThatReceivedFocus = item
     }
+
+    func onViewDidUpdate() {}
 }
 
 class FakeChatInputBarDelegate: ChatInputBarDelegate {

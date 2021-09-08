@@ -26,10 +26,13 @@ import Foundation
 import Chatto
 
 class DemoChatDataSource: ChatDataSourceProtocol {
-    var nextMessageId: Int = 0
+
     let preferredMaxWindowSize = 500
 
+    var nextMessageId: Int = 0
+    var onDidUpdate: (() -> Void)?
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
+
     init(count: Int, pageSize: Int) {
         self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { [weak self] () -> ChatItemProtocol in
             guard let sSelf = self else { return DemoChatMessageFactory.makeRandomMessage("") }

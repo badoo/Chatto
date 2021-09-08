@@ -28,18 +28,23 @@ import Chatto
 
 @objc
 public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
+
     public let chatInputBar: ChatInputBar
     let chatInputItems: [ChatInputItemProtocol]
     let notificationCenter: NotificationCenter
 
+    public weak var viewController: ChatInputBarPresentingController? {
+        didSet {
+            self.viewController?.setup(inputView: self.chatInputBar)
+        }
+    }
+
     weak var inputPositionController: InputPositionControlling?
 
-    public init(inputPositionController: InputPositionControlling,
-                chatInputBar: ChatInputBar,
+    public init(chatInputBar: ChatInputBar,
                 chatInputItems: [ChatInputItemProtocol],
                 chatInputBarAppearance: ChatInputBarAppearance,
                 notificationCenter: NotificationCenter = NotificationCenter.default) {
-        self.inputPositionController = inputPositionController
 
         self.chatInputBar = chatInputBar
         self.chatInputItems = chatInputItems
@@ -286,6 +291,8 @@ extension ExpandableChatInputBarPresenter {
         self.allowListenToChangeFrameEvents = item.presentationMode == .keyboard
         self.updateContentContainer(withInputItem: item)
     }
+
+    public func onViewDidUpdate() { }
 }
 
 // MARK: KeyboardEventsHandling
