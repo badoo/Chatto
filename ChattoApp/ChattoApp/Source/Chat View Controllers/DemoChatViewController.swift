@@ -74,7 +74,7 @@ class DemoChatViewController: BaseChatViewController {
             inputBarPresenter: chatInputContainer.presenter,
             keyboardEventsHandlers: [chatInputContainer.keyboardHandler].compactMap { $0 },
             messagesViewController: messagesViewController,
-            scrollViewEventsHandlers: [chatInputContainer.scrollHandler].compactMap { $0 },
+            collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 },
             viewModel: dataSource
         )
@@ -240,6 +240,6 @@ extension PhotosChatInputItem: PresenterChatInputItemProtocol {}
 typealias ChatInputContainer = (
     presenter: BaseChatInputBarPresenterProtocol,
     keyboardHandler: KeyboardEventsHandling?,
-    scrollHandler: ScrollViewEventsHandling?,
+    collectionHandler: CollectionViewEventsHandling?,
     viewPresentationHandler: ViewPresentationEventsHandling?
 )

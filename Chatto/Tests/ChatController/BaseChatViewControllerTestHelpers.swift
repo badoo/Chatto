@@ -47,7 +47,7 @@ final class TesteableChatViewController: BaseChatViewController {
             inputBarPresenter: self.fakeChatInputBarPresenter,
             keyboardEventsHandlers: [],
             messagesViewController: messagesViewController,
-            scrollViewEventsHandlers: [],
+            collectionViewEventsHandlers: [],
             viewEventsHandlers: [],
             viewModel: FakeChatViewControllerViewModel(),
             configuration: configuration

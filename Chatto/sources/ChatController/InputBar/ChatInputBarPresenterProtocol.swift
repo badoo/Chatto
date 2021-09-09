@@ -16,7 +16,18 @@ public protocol KeyboardEventsHandling: AnyObject {
 
 public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidScroll(_ scrollView: UIScrollView)
-    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool)
+    func onScrollViewWillBeginDragging(_ scrollView: UIScrollView)
+    func onScrollViewWillEndDragging(_ scrollView: UIScrollView, velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
+    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool)
+}
+
+public protocol CollectionViewEventsHandling: ScrollViewEventsHandling {
+    func onCollectionView(_ collectionView: UICollectionView,
+                          didDisplayCellWithIndexPath indexPath: IndexPath,
+                          companionCollection: ChatItemCompanionCollection)
+
+    func onCollectionView(_ collectionView: UICollectionView,
+                          didUpdateItemsWithUpdateType updateType: UpdateType)
 }
 
 public protocol ViewPresentationEventsHandling {

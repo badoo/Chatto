@@ -304,7 +304,7 @@ extension ExpandableChatInputBarPresenter: KeyboardEventsHandling {
 }
 
 // MARK: ScrollViewEventsHandling
-extension ExpandableChatInputBarPresenter: ScrollViewEventsHandling {
+extension ExpandableChatInputBarPresenter: CollectionViewEventsHandling {
 
     public func onScrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let inputPositionController = self.inputPositionController else { return }
@@ -321,7 +321,22 @@ extension ExpandableChatInputBarPresenter: ScrollViewEventsHandling {
         }
     }
 
-    public func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool) {
+    public func onScrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
+
+    public func onScrollViewWillEndDragging(_ scrollView: UIScrollView, velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
+
+    public func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) {
         self.onScrollViewDidEndDragging(willDecelerate: decelerate)
     }
+
+    public func onScrollView(_ scrollView: UIScrollView, didDisplayCellWithIndexPath indexPath: IndexPath) { }
+
+    public func onScrollView(_ scrollView: UIScrollView, didUpdateItemsWithUpdateType updateType: UpdateType) { }
+    
+    public func onCollectionView(_ collectionView: UICollectionView,
+                                 didDisplayCellWithIndexPath indexPath: IndexPath,
+                                 companionCollection: ChatItemCompanionCollection) { }
+    
+    public func onCollectionView(_ collectionView: UICollectionView,
+                                 didUpdateItemsWithUpdateType updateType: UpdateType) { }
 }
