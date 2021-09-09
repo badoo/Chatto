@@ -24,6 +24,7 @@
 
 import Foundation
 
+@frozen
 public enum UpdateType: CaseIterable {
     case normal
     case firstLoad
