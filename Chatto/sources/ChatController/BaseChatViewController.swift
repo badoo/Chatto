@@ -50,8 +50,6 @@ open class BaseChatViewController: UIViewController,
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
-    private let viewModel: BaseChatViewControllerViewModelProtocol
-
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
@@ -127,14 +125,12 @@ open class BaseChatViewController: UIViewController,
                 messagesViewController: ChatMessagesViewControllerProtocol,
                 collectionViewEventsHandlers: [CollectionViewEventsHandling],
                 viewEventsHandlers: [ViewPresentationEventsHandling],
-                viewModel: BaseChatViewControllerViewModelProtocol,
                 configuration: Configuration = .default) {
         self.inputBarPresenter = inputBarPresenter
         self.keyboardEventsHandlers = keyboardEventsHandlers
         self.messagesViewController = messagesViewController
         self.collectionViewEventsHandlers = collectionViewEventsHandlers
         self.viewEventsHandlers = viewEventsHandlers
-        self.viewModel = viewModel
         self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
@@ -154,7 +150,6 @@ open class BaseChatViewController: UIViewController,
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupViewModel()
         self.setupInputBarPresenter()
         self.setupCollectionView()
         self.addInputBarContainer()
@@ -215,12 +210,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     // MARK: - Setup
-
-    private func setupViewModel() {
-        self.viewModel.onDidUpdate = { [weak self] in
-            self?.onViewModelUpdate()
-        }
-    }
 
     private func setupInputBarPresenter() {
         self.inputBarPresenter.viewController = self
@@ -466,10 +455,6 @@ open class BaseChatViewController: UIViewController,
 
     public func autoLoadMoreContentIfNeeded() {
         self.messagesViewController.autoLoadMoreContentIfNeeded()
-    }
-
-    open func onViewModelUpdate() {
-        self.inputBarPresenter.onViewDidUpdate()
     }
 }
 
