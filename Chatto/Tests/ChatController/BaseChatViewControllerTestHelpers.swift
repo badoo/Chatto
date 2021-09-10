@@ -39,7 +39,8 @@ final class TesteableChatViewController: BaseChatViewController {
     var chatInputView: UIView { self.fakeChatInputBarPresenter.inputView }
 
     init(messagesViewController: ChatMessagesViewController,
-         configuration: BaseChatViewController.Configuration = .default) {
+         configuration: BaseChatViewController.Configuration = .default,
+         notificationCenter: NotificationCenter = .default) {
 
         self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
 
@@ -49,7 +50,8 @@ final class TesteableChatViewController: BaseChatViewController {
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
             viewEventsHandlers: [],
-            configuration: configuration
+            configuration: configuration,
+            notificationCenter: notificationCenter
         )
     }
 

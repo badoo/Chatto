@@ -35,9 +35,11 @@ class BaseChatViewControllerTests: XCTestCase {
             dataSource: fakeDataSource,
             updateQueue: updateQueue
         )
-        let controller = TesteableChatViewController(messagesViewController: chatMessageTestComponents.viewController)
         let notificationCenter = NotificationCenter()
-        controller.notificationCenter = notificationCenter
+        let controller = TesteableChatViewController(
+            messagesViewController: chatMessageTestComponents.viewController,
+            notificationCenter: notificationCenter
+        )
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         fakeDidAppearAndLayout(controller: controller)
         notificationCenter.post(name: UIResponder.keyboardWillShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
@@ -49,9 +51,11 @@ class BaseChatViewControllerTests: XCTestCase {
         let chatMessageTestComponents = ChatMessageTestComponents(
             dataSource: fakeDataSource
         )
-        let controller = TesteableChatViewController(messagesViewController: chatMessageTestComponents.viewController)
         let notificationCenter = NotificationCenter()
-        controller.notificationCenter = notificationCenter
+        let controller = TesteableChatViewController(
+            messagesViewController: chatMessageTestComponents.viewController,
+            notificationCenter: notificationCenter
+        )
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
 

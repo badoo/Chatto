@@ -48,6 +48,7 @@ open class BaseChatViewController: UIViewController,
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardEventsHandlers: [KeyboardEventsHandling]
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
+    private let notificationCenter: NotificationCenter
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
     public var replyActionHandler: ReplyActionHandler?
@@ -67,11 +68,10 @@ open class BaseChatViewController: UIViewController,
         - You can also add new items (for instance time markers or failed cells)
     */
 
-    var inputContainerBottomConstraint: NSLayoutConstraint!
-    var cellPanGestureHandler: CellPanGestureHandler!
-    var isAdjustingInputContainer: Bool = false
-    var notificationCenter = NotificationCenter.default
-    var keyboardTracker: KeyboardTracker!
+    private var inputContainerBottomConstraint: NSLayoutConstraint!
+    private var cellPanGestureHandler: CellPanGestureHandler!
+    private var isAdjustingInputContainer: Bool = false
+    private var keyboardTracker: KeyboardTracker!
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
 
@@ -125,13 +125,15 @@ open class BaseChatViewController: UIViewController,
                 messagesViewController: ChatMessagesViewControllerProtocol,
                 collectionViewEventsHandlers: [CollectionViewEventsHandling],
                 viewEventsHandlers: [ViewPresentationEventsHandling],
-                configuration: Configuration = .default) {
+                configuration: Configuration = .default,
+                notificationCenter: NotificationCenter = .default) {
         self.inputBarPresenter = inputBarPresenter
         self.keyboardEventsHandlers = keyboardEventsHandlers
         self.messagesViewController = messagesViewController
         self.collectionViewEventsHandlers = collectionViewEventsHandlers
         self.viewEventsHandlers = viewEventsHandlers
         self.configuration = configuration
+        self.notificationCenter = notificationCenter
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -142,7 +144,7 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Lifecycle
 
-    open override func loadView() { // swiftlint:disable:this prohibited_super_call
+    public override func loadView() { // swiftlint:disable:this prohibited_super_call
         self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
         self.view.backgroundColor = UIColor.white
     }
@@ -281,7 +283,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open func setupKeyboardTracker() {
+    private func setupKeyboardTracker() {
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
             if sSelf.keyboardEventsHandlers.isEmpty == false {
@@ -363,16 +365,16 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: Subclass overrides
 
-    open func didPassThreshold(at: IndexPath) {
+    public func didPassThreshold(at: IndexPath) {
         self.replyFeedbackGenerator?.generateFeedback()
     }
 
-    open func didFinishReplyGesture(at indexPath: IndexPath) {
+    public func didFinishReplyGesture(at indexPath: IndexPath) {
         let item = self.chatItemCompanionCollection[indexPath.item].chatItem
         self.replyActionHandler?.handleReply(for: item)
     }
 
-    open func didCancelReplyGesture(at: IndexPath) {}
+    public func didCancelReplyGesture(at: IndexPath) {}
 
     open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
