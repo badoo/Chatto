@@ -205,8 +205,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        let createModelUpdate = {
-            return self.createModelUpdates(
+        let createModelUpdate = { [weak self] in
+            return self?.createModelUpdates(
                 newItems: newItems,
                 oldItems: oldItems,
                 collectionViewWidth: collectionViewWidth
@@ -215,13 +215,15 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
         if performInBackground {
             DispatchQueue.global(qos: .userInitiated).async {
-                let modelUpdate = createModelUpdate()
+                guard let modelUpdate = createModelUpdate() else { return }
+
                 DispatchQueue.main.async {
                     performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
                 }
             }
         } else {
-            let modelUpdate = createModelUpdate()
+            guard let modelUpdate = createModelUpdate() else { return }
+            
             performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
         }
     }
