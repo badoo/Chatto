@@ -49,7 +49,6 @@ final class TesteableChatViewController: BaseChatViewController {
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
             viewEventsHandlers: [],
-            viewModel: FakeChatViewControllerViewModel(),
             configuration: configuration
         )
     }
