@@ -40,7 +40,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
     private let configuration: Configuration
     private let referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProvider
-    private let updateQueue: SerialTaskQueueProtocol
+    private let collectionUpdatesQueue: SerialTaskQueueProtocol
 
     private var nextDidEndScrollingAnimationHandlers: [() -> Void]
     private var isFirstUpdate: Bool // TODO: To remove
@@ -58,11 +58,6 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
 
     public private(set) var chatItemCompanionCollection = ChatItemCompanionCollection(items: [])
 
-    private let chattoUpdatesQueue: DispatchQueue = .init(
-        label: "chattoUpdatesQueue",
-        qos: .userInitiated
-    )
-
     public init(chatItemsDecorator: ChatItemsDecoratorProtocol,
                 chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
                 chatMessagesViewModel: ChatMessagesViewModelProtocol,
@@ -74,7 +69,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         self.chatMessagesViewModel = chatMessagesViewModel
         self.configuration = configuration
         self.referenceIndexPathRestoreProvider = referenceIndexPathRestoreProvider
-        self.updateQueue = updateQueue
+        self.collectionUpdatesQueue = updateQueue
 
         self.isFirstUpdate = true
         self.isLoadingContents = true
@@ -86,11 +81,11 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     }
 
     public func startProcessingUpdates() {
-        self.updateQueue.start()
+        self.collectionUpdatesQueue.start()
     }
 
     public func stopProcessingUpdates() {
-        self.updateQueue.stop()
+        self.collectionUpdatesQueue.stop()
     }
 
     private func configureChatMessagesViewModel() {
@@ -155,7 +150,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
     private func enqueueModelUpdate(updateType: UpdateType, completionBlock: (() -> Void)? = nil) {
         if self.configuration.coalesceUpdates {
-            self.updateQueue.flushQueue()
+            self.collectionUpdatesQueue.flushQueue()
         }
 
         let updateBlock: TaskClosure = { [weak self] runNextTask in
@@ -170,7 +165,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             ) {
                 guard let sSelf = self else { return }
 
-                if sSelf.updateQueue.isEmpty {
+                if sSelf.collectionUpdatesQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
 
@@ -183,7 +178,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        self.updateQueue.addTask(updateBlock)
+        self.collectionUpdatesQueue.addTask(updateBlock)
     }
 
     private func updateModels(newItems: [ChatItemProtocol],
@@ -220,7 +215,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         if performInBackground {
-            self.chattoUpdatesQueue.async {
+            DispatchQueue.global(qos: .userInitiated).async {
                 guard let modelUpdate = createModelUpdate() else { return }
 
                 DispatchQueue.main.async {
@@ -240,7 +235,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         guard let preferredMaxMessageCount = self.configuration.preferredMaxMessageCount,
               chatItems.count > preferredMaxMessageCount else { return }
 
-        self.updateQueue.addTask { [weak self] completion in
+        self.collectionUpdatesQueue.addTask { [weak self] completion in
             guard let sSelf = self else { return }
 
             sSelf.chatMessagesViewModel.adjustNumberOfMessages(
