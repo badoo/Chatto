@@ -309,8 +309,10 @@ extension ExpandableChatInputBarPresenter: CollectionViewEventsHandling {
     public func onScrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let inputPositionController = self.inputPositionController else { return }
         guard let view = scrollView.panGestureRecognizer.view else { return }
+
         let velocity = scrollView.panGestureRecognizer.velocity(in: view)
         let location = scrollView.panGestureRecognizer.location(in: inputPositionController.inputBarContainer)
+
         switch scrollView.panGestureRecognizer.state {
         case .changed:
             self.onScrollViewDidScroll(velocity: velocity, location: location)
@@ -321,22 +323,7 @@ extension ExpandableChatInputBarPresenter: CollectionViewEventsHandling {
         }
     }
 
-    public func onScrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
-
-    public func onScrollViewWillEndDragging(_ scrollView: UIScrollView, velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
-
     public func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) {
         self.onScrollViewDidEndDragging(willDecelerate: decelerate)
     }
-
-    public func onScrollView(_ scrollView: UIScrollView, didDisplayCellWithIndexPath indexPath: IndexPath) { }
-
-    public func onScrollView(_ scrollView: UIScrollView, didUpdateItemsWithUpdateType updateType: UpdateType) { }
-    
-    public func onCollectionView(_ collectionView: UICollectionView,
-                                 didDisplayCellWithIndexPath indexPath: IndexPath,
-                                 companionCollection: ChatItemCompanionCollection) { }
-    
-    public func onCollectionView(_ collectionView: UICollectionView,
-                                 didUpdateItemsWithUpdateType updateType: UpdateType) { }
 }

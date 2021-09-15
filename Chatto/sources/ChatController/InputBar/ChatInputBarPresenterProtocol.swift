@@ -21,6 +21,16 @@ public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool)
 }
 
+public extension ScrollViewEventsHandling {
+    func onScrollViewDidScroll(_ scrollView: UIScrollView) { }
+
+    func onScrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
+
+    func onScrollViewWillEndDragging(_ scrollView: UIScrollView, velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
+
+    func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) { }
+}
+
 public protocol CollectionViewEventsHandling: ScrollViewEventsHandling {
     func onCollectionView(_ collectionView: UICollectionView,
                           didDisplayCellWithIndexPath indexPath: IndexPath,
@@ -28,6 +38,15 @@ public protocol CollectionViewEventsHandling: ScrollViewEventsHandling {
 
     func onCollectionView(_ collectionView: UICollectionView,
                           didUpdateItemsWithUpdateType updateType: UpdateType)
+}
+
+public extension CollectionViewEventsHandling {
+    func onCollectionView(_ collectionView: UICollectionView,
+                          didDisplayCellWithIndexPath indexPath: IndexPath,
+                          companionCollection: ChatItemCompanionCollection) { }
+
+    func onCollectionView(_ collectionView: UICollectionView,
+                          didUpdateItemsWithUpdateType updateType: UpdateType) { }
 }
 
 public protocol ViewPresentationEventsHandling {
