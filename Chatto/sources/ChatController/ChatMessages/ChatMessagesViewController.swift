@@ -11,7 +11,10 @@ public protocol ChatMessagesViewControllerDelegate: AnyObject {
     func chatMessagesViewController(_: ChatMessagesViewController, didScroll: UIScrollView)
     func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath: IndexPath)
     func chatMessagesViewController(_: ChatMessagesViewController, willBeginDragging: UIScrollView)
-    func chatMessagesViewController(_: ChatMessagesViewController, scrollViewDidEndDragging: UIScrollView, willDecelerate decelerate: Bool)
+    func chatMessagesViewController(_: ChatMessagesViewController,
+                                    scrollViewDidEndDragging: UIScrollView,
+                                    willDecelerate decelerate: Bool)
+
     func chatMessagesViewController(_: ChatMessagesViewController,
                                     willEndDragging: UIScrollView,
                                     withVelocity velocity: CGPoint,

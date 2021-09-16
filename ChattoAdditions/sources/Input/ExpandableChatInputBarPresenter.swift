@@ -304,13 +304,15 @@ extension ExpandableChatInputBarPresenter: KeyboardEventsHandling {
 }
 
 // MARK: ScrollViewEventsHandling
-extension ExpandableChatInputBarPresenter: ScrollViewEventsHandling {
+extension ExpandableChatInputBarPresenter: CollectionViewEventsHandling {
 
     public func onScrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let inputPositionController = self.inputPositionController else { return }
         guard let view = scrollView.panGestureRecognizer.view else { return }
+
         let velocity = scrollView.panGestureRecognizer.velocity(in: view)
         let location = scrollView.panGestureRecognizer.location(in: inputPositionController.inputBarContainer)
+
         switch scrollView.panGestureRecognizer.state {
         case .changed:
             self.onScrollViewDidScroll(velocity: velocity, location: location)
@@ -321,7 +323,7 @@ extension ExpandableChatInputBarPresenter: ScrollViewEventsHandling {
         }
     }
 
-    public func onScrollViewDidEndDragging(_ scrollView: UIScrollView, _ decelerate: Bool) {
+    public func onScrollViewDidEndDragging(_ scrollView: UIScrollView, decelerate: Bool) {
         self.onScrollViewDidEndDragging(willDecelerate: decelerate)
     }
 }

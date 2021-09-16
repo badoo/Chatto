@@ -32,20 +32,24 @@ public protocol BaseChatViewControllerViewModelProtocol: AnyObject {
     var onDidUpdate: (() -> Void)? { get set }
 }
 
+public protocol ItemPositionScrollable: AnyObject {
+    func scrollToItem(withId: String,
+                      position: UICollectionView.ScrollPosition,
+                      animated: Bool)
+}
+
 open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
-                                   ReplyIndicatorRevealerDelegate,
-                                   ChatMessagesViewControllerDelegate {
+                                   ReplyIndicatorRevealerDelegate {
 
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardEventsHandlers: [KeyboardEventsHandling]
-    private let scrollViewEventsHandlers: [ScrollViewEventsHandling]
+    private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
+    private let notificationCenter: NotificationCenter
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
-
-    private let viewModel: BaseChatViewControllerViewModelProtocol
 
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
@@ -64,11 +68,10 @@ open class BaseChatViewController: UIViewController,
         - You can also add new items (for instance time markers or failed cells)
     */
 
-    var inputContainerBottomConstraint: NSLayoutConstraint!
-    var cellPanGestureHandler: CellPanGestureHandler!
-    var isAdjustingInputContainer: Bool = false
-    var notificationCenter = NotificationCenter.default
-    var keyboardTracker: KeyboardTracker!
+    private var inputContainerBottomConstraint: NSLayoutConstraint!
+    private var cellPanGestureHandler: CellPanGestureHandler!
+    private var isAdjustingInputContainer: Bool = false
+    private var keyboardTracker: KeyboardTracker!
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
 
@@ -120,17 +123,17 @@ open class BaseChatViewController: UIViewController,
     public init(inputBarPresenter: BaseChatInputBarPresenterProtocol,
                 keyboardEventsHandlers: [KeyboardEventsHandling],
                 messagesViewController: ChatMessagesViewControllerProtocol,
-                scrollViewEventsHandlers: [ScrollViewEventsHandling],
+                collectionViewEventsHandlers: [CollectionViewEventsHandling],
                 viewEventsHandlers: [ViewPresentationEventsHandling],
-                viewModel: BaseChatViewControllerViewModelProtocol,
-                configuration: Configuration = .default) {
+                configuration: Configuration = .default,
+                notificationCenter: NotificationCenter = .default) {
         self.inputBarPresenter = inputBarPresenter
         self.keyboardEventsHandlers = keyboardEventsHandlers
         self.messagesViewController = messagesViewController
-        self.scrollViewEventsHandlers = scrollViewEventsHandlers
+        self.collectionViewEventsHandlers = collectionViewEventsHandlers
         self.viewEventsHandlers = viewEventsHandlers
-        self.viewModel = viewModel
         self.configuration = configuration
+        self.notificationCenter = notificationCenter
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -141,7 +144,7 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: - Lifecycle
 
-    open override func loadView() { // swiftlint:disable:this prohibited_super_call
+    public override func loadView() { // swiftlint:disable:this prohibited_super_call
         self.view = BaseChatViewControllerView() // http://stackoverflow.com/questions/24596031/uiviewcontroller-with-inputaccessoryview-is-not-deallocated
         self.view.backgroundColor = UIColor.white
     }
@@ -149,7 +152,6 @@ open class BaseChatViewController: UIViewController,
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupViewModel()
         self.setupInputBarPresenter()
         self.setupCollectionView()
         self.addInputBarContainer()
@@ -210,12 +212,6 @@ open class BaseChatViewController: UIViewController,
     }
 
     // MARK: - Setup
-
-    private func setupViewModel() {
-        self.viewModel.onDidUpdate = { [weak self] in
-            self?.onViewModelUpdate()
-        }
-    }
 
     private func setupInputBarPresenter() {
         self.inputBarPresenter.viewController = self
@@ -287,7 +283,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open func setupKeyboardTracker() {
+    private func setupKeyboardTracker() {
         let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
             guard let sSelf = self else { return }
             if sSelf.keyboardEventsHandlers.isEmpty == false {
@@ -369,16 +365,16 @@ open class BaseChatViewController: UIViewController,
 
     // MARK: Subclass overrides
 
-    open func didPassThreshold(at: IndexPath) {
+    public func didPassThreshold(at: IndexPath) {
         self.replyFeedbackGenerator?.generateFeedback()
     }
 
-    open func didFinishReplyGesture(at indexPath: IndexPath) {
+    public func didFinishReplyGesture(at indexPath: IndexPath) {
         let item = self.chatItemCompanionCollection[indexPath.item].chatItem
         self.replyActionHandler?.handleReply(for: item)
     }
 
-    open func didCancelReplyGesture(at: IndexPath) {}
+    public func didCancelReplyGesture(at: IndexPath) {}
 
     open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
@@ -451,18 +447,6 @@ open class BaseChatViewController: UIViewController,
         self.messagesViewController.refreshContent(completionBlock: completionBlock)
     }
 
-    public func scrollToItem(withId itemId: String,
-                             position: UICollectionView.ScrollPosition = .centeredVertically,
-                             animated: Bool = false,
-                             spotlight: Bool = false) {
-        self.messagesViewController.scroll(
-            toItemId: itemId,
-            position: position,
-            animated: animated,
-            spotlight: spotlight
-        )
-    }
-
     public var isScrolledAtBottom: Bool {
         return self.collectionView.isScrolledAtBottom()
     }
@@ -474,31 +458,82 @@ open class BaseChatViewController: UIViewController,
     public func autoLoadMoreContentIfNeeded() {
         self.messagesViewController.autoLoadMoreContentIfNeeded()
     }
+}
+
+extension BaseChatViewController: ChatMessagesViewControllerDelegate {
 
     public func chatMessagesViewController(_: ChatMessagesViewController,
-                                         scrollViewDidEndDragging scrollView: UIScrollView,
-                                         willDecelerate decelerate: Bool) {
-        self.scrollViewEventsHandlers.forEach {
-            $0.onScrollViewDidEndDragging(scrollView, decelerate)
+                                           scrollViewDidEndDragging scrollView: UIScrollView,
+                                           willDecelerate decelerate: Bool) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onScrollViewDidEndDragging(scrollView, decelerate: decelerate)
         }
     }
 
-    open func chatMessagesViewController(_: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) { }
-
-    open func chatMessagesViewController(_: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) { }
-
-    open func chatMessagesViewController(_ viewController: ChatMessagesViewController, didScroll: UIScrollView) {
-        self.scrollViewEventsHandlers.forEach {
-            $0.onScrollViewDidScroll(viewController.collectionView)
+    public func chatMessagesViewController(_ viewController: ChatMessagesViewController, onDisplayCellWithIndexPath indexPath: IndexPath) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onCollectionView(
+                viewController.collectionView,
+                didDisplayCellWithIndexPath: indexPath,
+                companionCollection: self.chatItemCompanionCollection
+            )
         }
     }
 
-    open func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) { }
+    public func chatMessagesViewController(_ viewController: ChatMessagesViewController, didUpdateItemsWithUpdateType updateType: UpdateType) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onCollectionView(
+                viewController.collectionView,
+                didUpdateItemsWithUpdateType: updateType
+            )
+        }
+    }
 
-    open func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging: UIScrollView) { }
+    public func chatMessagesViewController(_ viewController: ChatMessagesViewController, didScroll scrollView: UIScrollView) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onScrollViewDidScroll(scrollView)
+        }
+    }
 
-    open func onViewModelUpdate() {
-        self.inputBarPresenter.onViewDidUpdate()
+    public func chatMessagesViewController(_ : ChatMessagesViewController, willEndDragging scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onScrollViewWillEndDragging(
+                scrollView,
+                velocity: velocity,
+                targetContentOffset: targetContentOffset
+            )
+        }
+    }
+
+    public func chatMessagesViewController(_ : ChatMessagesViewController, willBeginDragging scrollView: UIScrollView) {
+        self.collectionViewEventsHandlers.forEach {
+            $0.onScrollViewWillBeginDragging(scrollView)
+        }
+    }
+}
+
+extension BaseChatViewController: ItemPositionScrollable {
+    public func scrollToItem(withId id: String, position: UICollectionView.ScrollPosition, animated: Bool) {
+        self.scrollToItem(
+            withId: id,
+            position: position,
+            animated: animated,
+            spotlight: false
+        )
+    }
+
+    public func scrollToItem(withId itemId: String,
+                             position: UICollectionView.ScrollPosition = .centeredVertically,
+                             animated: Bool = false,
+                             spotlight: Bool = false) {
+        self.messagesViewController.scroll(
+            toItemId: itemId,
+            position: position,
+            animated: animated,
+            spotlight: spotlight
+        )
+        // Programmatic scroll don't trigger autoloading, so, we need to trigger it manually
+        self.autoLoadMoreContentIfNeeded()
     }
 }
 
