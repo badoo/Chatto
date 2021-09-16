@@ -73,6 +73,7 @@ class DemoChatViewController: BaseChatViewController {
         super.init(
             inputBarPresenter: chatInputContainer.presenter,
             keyboardEventsHandlers: [chatInputContainer.keyboardHandler].compactMap { $0 },
+            keyboardTracker: KeyboardTracker(notificationCenter: .default),
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 }

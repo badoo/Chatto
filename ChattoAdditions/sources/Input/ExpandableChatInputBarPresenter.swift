@@ -190,7 +190,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         if self.focusedItem == nil || self.focusedItem?.presentationMode == .keyboard {
             inputPositionController.changeInputContentBottomMarginTo(bottomMargin, animated: false, callback: nil)
         } else if let item = self.focusedItem {
-            switch keyboardStatus {
+            switch keyboardStatus.state {
             case .shown, .showing:
                 inputPositionController.changeInputContentBottomMarginTo(self.expandedInputViewHeight(forItem: item), animated: true, callback: nil)
             case .hidden, .hiding:

@@ -42,17 +42,20 @@ final class TesteableChatViewController: BaseChatViewController {
          configuration: BaseChatViewController.Configuration = .default,
          notificationCenter: NotificationCenter = .default) {
 
+        let fakeKeyboardHandler = FakeKeyboardHandler()
         self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
 
         super.init(
             inputBarPresenter: self.fakeChatInputBarPresenter,
-            keyboardEventsHandlers: [],
+            keyboardEventsHandlers: [fakeKeyboardHandler],
+            keyboardTracker: KeyboardTracker(notificationCenter: notificationCenter),
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
             viewEventsHandlers: [],
             configuration: configuration,
             notificationCenter: notificationCenter
         )
+        fakeKeyboardHandler.viewController = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -254,4 +257,14 @@ private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol
 
 private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewModelProtocol {
     var onDidUpdate: (() -> Void)?
+}
+
+private final class FakeKeyboardHandler: KeyboardEventsHandling {
+    weak var viewController: BaseChatViewController?
+
+    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {
+        guard let viewController = self.viewController else { return }
+
+        viewController.changeInputContentBottomMarginTo(height)
+    }
 }
