@@ -40,7 +40,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
     private let configuration: Configuration
     private let referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProvider
-    private let updateQueue: SerialTaskQueueProtocol
+    private let collectionUpdatesQueue: SerialTaskQueueProtocol
 
     private var nextDidEndScrollingAnimationHandlers: [() -> Void]
     private var isFirstUpdate: Bool // TODO: To remove
@@ -69,7 +69,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         self.chatMessagesViewModel = chatMessagesViewModel
         self.configuration = configuration
         self.referenceIndexPathRestoreProvider = referenceIndexPathRestoreProvider
-        self.updateQueue = updateQueue
+        self.collectionUpdatesQueue = updateQueue
 
         self.isFirstUpdate = true
         self.isLoadingContents = true
@@ -81,11 +81,11 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     }
 
     public func startProcessingUpdates() {
-        self.updateQueue.start()
+        self.collectionUpdatesQueue.start()
     }
 
     public func stopProcessingUpdates() {
-        self.updateQueue.stop()
+        self.collectionUpdatesQueue.stop()
     }
 
     private func configureChatMessagesViewModel() {
@@ -150,7 +150,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
     private func enqueueModelUpdate(updateType: UpdateType, completionBlock: (() -> Void)? = nil) {
         if self.configuration.coalesceUpdates {
-            self.updateQueue.flushQueue()
+            self.collectionUpdatesQueue.flushQueue()
         }
 
         let updateBlock: TaskClosure = { [weak self] runNextTask in
@@ -164,7 +164,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                 updateType: updateType
             ) {
                 guard let sSelf = self else { return }
-                if sSelf.updateQueue.isEmpty {
+
+                if sSelf.collectionUpdatesQueue.isEmpty {
                     sSelf.enqueueMessageCountReductionIfNeeded()
                 }
 
@@ -177,7 +178,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        self.updateQueue.addTask(updateBlock)
+        self.collectionUpdatesQueue.addTask(updateBlock)
     }
 
     private func updateModels(newItems: [ChatItemProtocol],
@@ -205,8 +206,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        let createModelUpdate = {
-            return self.createModelUpdates(
+        let createModelUpdate = { [weak self] in
+            return self?.createModelUpdates(
                 newItems: newItems,
                 oldItems: oldItems,
                 collectionViewWidth: collectionViewWidth
@@ -215,13 +216,15 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
         if performInBackground {
             DispatchQueue.global(qos: .userInitiated).async {
-                let modelUpdate = createModelUpdate()
+                guard let modelUpdate = createModelUpdate() else { return }
+
                 DispatchQueue.main.async {
                     performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
                 }
             }
         } else {
-            let modelUpdate = createModelUpdate()
+            guard let modelUpdate = createModelUpdate() else { return }
+            
             performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
         }
     }
@@ -232,7 +235,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         guard let preferredMaxMessageCount = self.configuration.preferredMaxMessageCount,
               chatItems.count > preferredMaxMessageCount else { return }
 
-        self.updateQueue.addTask { [weak self] completion in
+        self.collectionUpdatesQueue.addTask { [weak self] completion in
             guard let sSelf = self else { return }
 
             sSelf.chatMessagesViewModel.adjustNumberOfMessages(
@@ -346,12 +349,15 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         if itemsForMainThread.count > 0 {
-            DispatchQueue.main.sync(execute: { () -> Void in
+            DispatchQueue.main.sync {
                 for (index, itemCompanion) in itemsForMainThread {
-                    let height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
+                    let height = itemCompanion.presenter.heightForCell(
+                        maximumWidth: collectionViewWidth,
+                        decorationAttributes: itemCompanion.decorationAttributes
+                    )
                     intermediateLayoutData[index].height = height
                 }
-            })
+            }
         }
         return createLayoutModel(intermediateLayoutData: intermediateLayoutData)
     }
@@ -434,28 +440,39 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
 
         if usesBatchUpdates {
-            UIView.animate(withDuration: self.configuration.updatesAnimationDuration, animations: { () -> Void in
-                self.unfinishedBatchUpdatesCount += 1
-                collectionView.performBatchUpdates({
-                    updateModelClosure()
-                    self.updateVisibleCells(changes) // For instance, to support removal of tails
-
-                    collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
-                    collectionView.insertItems(at: Array(changes.insertedIndexPaths))
-                    for move in changes.movedIndexPaths {
-                        collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
-                    }
-                }, completion: { [weak self] _ in
-                    defer { myCompletion() }
+            UIView.animate(
+                withDuration: self.configuration.updatesAnimationDuration,
+                animations: { [weak self] () -> Void in
                     guard let sSelf = self else { return }
-                    sSelf.unfinishedBatchUpdatesCount -= 1
-                    if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
-                        DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
-                    }
 
-                    adjustScrollViewToBottom()
-                })
-            })
+                    sSelf.unfinishedBatchUpdatesCount += 1
+
+                    collectionView.performBatchUpdates({ [weak self] in
+                        guard let sSelf = self else { return }
+
+                        updateModelClosure()
+                        sSelf.updateVisibleCells(changes) // For instance, to support removal of tails
+
+                        collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
+                        collectionView.insertItems(at: Array(changes.insertedIndexPaths))
+
+                        for move in changes.movedIndexPaths {
+                            collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
+                        }
+                    }, completion: { [weak self] _ in
+                        defer { myCompletion() }
+
+                        guard let sSelf = self else { return }
+
+                        sSelf.unfinishedBatchUpdatesCount -= 1
+                        if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
+                            DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
+                        }
+
+                        adjustScrollViewToBottom()
+                    })
+                }
+            )
         } else {
             self.visibleCells = [:]
             updateModelClosure()
