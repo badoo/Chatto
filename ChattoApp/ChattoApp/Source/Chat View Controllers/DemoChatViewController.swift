@@ -28,6 +28,7 @@ import ChattoAdditions
 
 class DemoChatViewController: BaseChatViewController {
     let dataSource: DemoChatDataSource
+    let keyboardUpdatesHandler: KeyboardUpdatesHandlerDelegate
     let messagesSelector = BaseMessagesSelector()
 
     var messageSender: DemoChatMessageSender
@@ -69,18 +70,24 @@ class DemoChatViewController: BaseChatViewController {
             chatInputItems: chatInputItems,
             shouldUseAlternativePresenter: shouldUseAlternativePresenter
         )
+        let keyboardTracker = KeyboardTracker(notificationCenter: .default)
+        let keyboardHandler = KeyboardUpdatesHandler(keyboardTracker: keyboardTracker)
+
+        self.keyboardUpdatesHandler = chatInputContainer.keyboardHandlerDelegate
 
         super.init(
             inputBarPresenter: chatInputContainer.presenter,
-            keyboardEventsHandlers: [chatInputContainer.keyboardHandler].compactMap { $0 },
-            keyboardTracker: KeyboardTracker(notificationCenter: .default),
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
+            keyboardUpdatesHandler: keyboardHandler,
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 }
         )
         chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
         messagesViewController.delegate = self
         chatInputContainer.presenter.viewController = self
+
+        keyboardHandler.keyboardInputAdjustableViewController = self
+        keyboardHandler.delegate = chatInputContainer.keyboardHandlerDelegate
     }
 
     required init?(coder: NSCoder) {
@@ -113,7 +120,7 @@ class DemoChatViewController: BaseChatViewController {
                 chatInputBarAppearance: appearance
             )
 
-            return (presenter, nil, nil, nil)
+            return (presenter, DefaultKeyboardHandler(), nil, nil)
         }
 
         let presenter = ExpandableChatInputBarPresenter(
@@ -239,7 +246,18 @@ extension PhotosChatInputItem: PresenterChatInputItemProtocol {}
 
 typealias ChatInputContainer = (
     presenter: BaseChatInputBarPresenterProtocol,
-    keyboardHandler: KeyboardEventsHandling?,
+    keyboardHandlerDelegate: KeyboardUpdatesHandlerDelegate,
     collectionHandler: CollectionViewEventsHandling?,
     viewPresentationHandler: ViewPresentationEventsHandling?
 )
+
+private final class DefaultKeyboardHandler: KeyboardUpdatesHandlerDelegate {
+
+    weak var viewController: BaseChatViewController?
+
+    func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus) {
+        guard let viewController = self.viewController else { return }
+
+        viewController.changeInputContentBottomMarginTo(margin)
+    }
+}
