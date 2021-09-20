@@ -9,7 +9,7 @@ public protocol KeyboardInputAdjustableViewController: UIViewController {
 }
 
 public protocol KeyboardUpdatesHandlerProtocol {
-    var keyboardTrackingView: KeyboardTrackingView { get }
+    var keyboardTrackingView: UIView { get }
 
     func adjustLayoutIfNeeded()
     func startTracking()
@@ -17,7 +17,7 @@ public protocol KeyboardUpdatesHandlerProtocol {
 }
 
 public protocol KeyboardUpdatesHandlerDelegate: AnyObject {
-    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
+    func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus)
 }
 
 public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
@@ -26,7 +26,8 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     private var isTracking: Bool
     private var isPerformingForcedLayout: Bool
 
-    public private(set) lazy var keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
+    public var keyboardTrackingView: UIView { self._keyboardTrackingView }
+    private lazy var _keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
 
     public weak var delegate: KeyboardUpdatesHandlerDelegate?
     public weak var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController?
@@ -78,8 +79,7 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
 }
 
 extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
-    public func keyboardTracker(_: KeyboardTrackerProtocol,
-                                didUpdateTo keyboardStatus: KeyboardStatus) {
+    public func didUpdate(keyboardStatus: KeyboardStatus) {
         guard self.isTracking else { return }
 
         guard let keyboardInputAdjustableViewController = self.keyboardInputAdjustableViewController else {
@@ -100,12 +100,12 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.onKeyboardStateDidChange(bottomConstraintValue, self.keyboardTracker.keyboardStatus)
+            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, status: self.keyboardTracker.keyboardStatus)
         case .shown:
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.onKeyboardStateDidChange(bottomConstraintValue, self.keyboardTracker.keyboardStatus)
+            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, status: self.keyboardTracker.keyboardStatus)
             self.adjustTrackingViewSizeIfNeeded()
         }
     }
@@ -133,7 +133,7 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
         self.isPerformingForcedLayout = true
         defer { self.isPerformingForcedLayout = false }
 
-        self.delegate?.onKeyboardStateDidChange(bottomConstraint, self.keyboardTracker.keyboardStatus)
+        self.delegate?.didAdjustBottomMargin(to: bottomConstraint, status: self.keyboardTracker.keyboardStatus)
     }
 
     private func adjustTrackingViewSize() {
@@ -141,11 +141,11 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
 
         let inputBarContainerView = keyboardInputAdjustableViewController.inputBarContainer
         let inputBarContainerViewHeight = inputBarContainerView.bounds.height
-        guard self.keyboardTrackingView.preferredSize.height != inputBarContainerViewHeight else {
+        guard self._keyboardTrackingView.preferredSize.height != inputBarContainerViewHeight else {
             return
         }
 
-        self.keyboardTrackingView.preferredSize.height = inputBarContainerViewHeight
+        self._keyboardTrackingView.preferredSize.height = inputBarContainerViewHeight
         self.isPerformingForcedLayout = true
         defer { self.isPerformingForcedLayout = false }
 

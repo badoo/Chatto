@@ -298,8 +298,8 @@ extension ExpandableChatInputBarPresenter {
 // MARK: KeyboardEventsHandling
 extension ExpandableChatInputBarPresenter: KeyboardUpdatesHandlerDelegate {
 
-    public func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {
-        self.onKeyboardStateDidChange(bottomMargin: height, keyboardStatus: status)
+    public func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus) {
+        self.onKeyboardStateDidChange(bottomMargin: margin, keyboardStatus: status)
     }
 }
 

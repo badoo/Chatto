@@ -20,7 +20,7 @@
 
 import UIKit
 
-public final class KeyboardTrackingView: UIView {
+final class KeyboardTrackingView: UIView {
 
     var positionChangedCallback: (() -> Void)?
     var observedView: UIView?

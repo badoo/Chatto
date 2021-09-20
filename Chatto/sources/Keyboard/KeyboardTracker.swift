@@ -24,8 +24,7 @@ public struct KeyboardStatus {
 }
 
 public protocol KeyboardTrackerDelegate: AnyObject {
-    func keyboardTracker(_ : KeyboardTrackerProtocol,
-                         didUpdateTo: KeyboardStatus)
+    func didUpdate(keyboardStatus: KeyboardStatus)
 }
 
 public protocol KeyboardTrackerProtocol: AnyObject {
@@ -41,7 +40,7 @@ public final class KeyboardTracker: KeyboardTrackerProtocol {
 
     public private(set) var keyboardStatus: KeyboardStatus = .init(frame: .zero, state: .hidden) {
         didSet {
-            self.delegate?.keyboardTracker(self, didUpdateTo: self.keyboardStatus)
+            self.delegate?.didUpdate(keyboardStatus: self.keyboardStatus)
         }
     }
 

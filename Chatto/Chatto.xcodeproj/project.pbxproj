@@ -12,7 +12,6 @@
 		A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13926F205DB00166C55 /* KeyboardTracker.swift */; };
 		A40DC13C26F2067000166C55 /* KeyboardTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13B26F2067000166C55 /* KeyboardTrackingView.swift */; };
 		A40DC13E26F2072100166C55 /* KeyboardUpdatesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */; };
-		A40DC14026F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13F26F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift */; };
 		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
 		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
 		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
@@ -62,7 +61,6 @@
 		A40DC13926F205DB00166C55 /* KeyboardTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardTracker.swift; sourceTree = "<group>"; };
 		A40DC13B26F2067000166C55 /* KeyboardTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardTrackingView.swift; sourceTree = "<group>"; };
 		A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUpdatesHandler.swift; sourceTree = "<group>"; };
-		A40DC13F26F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticKeyboardUpdatesAnimator.swift; sourceTree = "<group>"; };
 		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
 		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
 		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 				A40DC13926F205DB00166C55 /* KeyboardTracker.swift */,
 				A40DC13B26F2067000166C55 /* KeyboardTrackingView.swift */,
 				A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */,
-				A40DC13F26F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift */,
 			);
 			path = Keyboard;
 			sourceTree = "<group>";
@@ -401,7 +398,6 @@
 				EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
-				A40DC14026F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
 				C321DDA91BE9649F00DE88CC /* BaseChatItemPresenter.swift in Sources */,
 				C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */,

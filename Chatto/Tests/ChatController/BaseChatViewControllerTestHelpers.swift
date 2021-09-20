@@ -268,9 +268,9 @@ private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewM
 private final class FakeKeyboardAdjuster: KeyboardUpdatesHandlerDelegate {
     weak var viewController: BaseChatViewController?
 
-    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {
+    func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus) {
         guard let viewController = self.viewController else { return }
 
-        viewController.changeInputContentBottomMarginTo(height)
+        viewController.changeInputContentBottomMarginTo(margin)
     }
 }
