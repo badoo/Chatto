@@ -17,7 +17,7 @@ public protocol KeyboardUpdatesHandlerProtocol {
 }
 
 public protocol KeyboardUpdatesHandlerDelegate: AnyObject {
-    func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus)
+    func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState)
 }
 
 public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
@@ -100,12 +100,12 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, status: self.keyboardTracker.keyboardStatus)
+            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
         case .shown:
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, status: self.keyboardTracker.keyboardStatus)
+            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
             self.adjustTrackingViewSizeIfNeeded()
         }
     }
@@ -133,7 +133,7 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
         self.isPerformingForcedLayout = true
         defer { self.isPerformingForcedLayout = false }
 
-        self.delegate?.didAdjustBottomMargin(to: bottomConstraint, status: self.keyboardTracker.keyboardStatus)
+        self.delegate?.didAdjustBottomMargin(to: bottomConstraint, state: self.keyboardTracker.keyboardStatus.state)
     }
 
     private func adjustTrackingViewSize() {

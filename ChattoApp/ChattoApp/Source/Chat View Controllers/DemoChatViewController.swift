@@ -255,7 +255,7 @@ private final class DefaultKeyboardHandler: KeyboardUpdatesHandlerDelegate {
 
     weak var viewController: BaseChatViewController?
 
-    func didAdjustBottomMargin(to margin: CGFloat, status: KeyboardStatus) {
+    func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState) {
         guard let viewController = self.viewController else { return }
 
         viewController.changeInputContentBottomMarginTo(margin)
