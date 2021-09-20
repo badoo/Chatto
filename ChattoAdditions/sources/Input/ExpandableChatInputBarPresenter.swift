@@ -296,7 +296,7 @@ extension ExpandableChatInputBarPresenter {
 }
 
 // MARK: KeyboardEventsHandling
-extension ExpandableChatInputBarPresenter: KeyboardEventsHandling {
+extension ExpandableChatInputBarPresenter: KeyboardUpdatesHandlerDelegate {
 
     public func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {
         self.onKeyboardStateDidChange(bottomMargin: height, keyboardStatus: status)

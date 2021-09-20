@@ -47,12 +47,10 @@ open class BaseChatViewController: UIViewController,
     public let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
-    private let keyboardEventsHandlers: [KeyboardEventsHandling]
-    private let keyboardTracker: KeyboardTrackerProtocol
+    private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
-    private lazy var keyboardUpdatesHandler: KeyboardUpdatesHandler = self.makeKeyboardUpdatesHandler()
     public var replyActionHandler: ReplyActionHandler?
     public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
@@ -88,10 +86,6 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    public var keyboardStatus: KeyboardStatus {
-        return self.keyboardTracker.keyboardStatus
-    }
-
     public var maximumInputSize: CGSize {
         return self.view.bounds.size
     }
@@ -108,16 +102,6 @@ open class BaseChatViewController: UIViewController,
         didSet { self.updateInputContainerBottomConstraint() }
     }
 
-    private func makeKeyboardUpdatesHandler() -> KeyboardUpdatesHandler {
-        let keyboardUpdatesHandler = KeyboardUpdatesHandler(
-            keyboardTracker: self.keyboardTracker
-        )
-        keyboardUpdatesHandler.keyboardInputAdjustableViewController = self
-        keyboardUpdatesHandler.delegate = self
-
-        return keyboardUpdatesHandler
-    }
-
     public var allContentFits: Bool {
         let collectionView = self.collectionView
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
@@ -132,18 +116,15 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Init
 
     public init(inputBarPresenter: BaseChatInputBarPresenterProtocol,
-                keyboardEventsHandlers: [KeyboardEventsHandling],
-                keyboardTracker: KeyboardTrackerProtocol,
                 messagesViewController: ChatMessagesViewControllerProtocol,
                 collectionViewEventsHandlers: [CollectionViewEventsHandling],
+                keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol,
                 viewEventsHandlers: [ViewPresentationEventsHandling],
-                configuration: Configuration = .default,
-                notificationCenter: NotificationCenter = .default) {
+                configuration: Configuration = .default) {
         self.inputBarPresenter = inputBarPresenter
-        self.keyboardEventsHandlers = keyboardEventsHandlers
-        self.keyboardTracker = keyboardTracker
         self.messagesViewController = messagesViewController
         self.collectionViewEventsHandlers = collectionViewEventsHandlers
+        self.keyboardUpdatesHandler = keyboardUpdatesHandler
         self.viewEventsHandlers = viewEventsHandlers
         self.configuration = configuration
 
@@ -553,14 +534,6 @@ extension BaseChatViewController: ChatInputBarPresentingController {
             self.inputBarContainer.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
             self.inputBarContainer.trailingAnchor.constraint(equalTo: inputView.trailingAnchor)
         ])
-    }
-}
-
-extension BaseChatViewController: KeyboardUpdatesHandlerDelegate {
-    public func keyboardUpdatesHandler(_ keyboardUpdatesHandler: KeyboardUpdatesHandler, didAdjustBottomMarginTo bottomMargin: CGFloat) {
-        self.keyboardEventsHandlers.forEach {
-            $0.onKeyboardStateDidChange(bottomMargin, self.keyboardTracker.keyboardStatus)
-        }
     }
 }
 

@@ -36,26 +36,32 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 final class TesteableChatViewController: BaseChatViewController {
 
     private let fakeChatInputBarPresenter: FakeChatInputBarPresenter
+    private let fakeKeyboardAdjuster: FakeKeyboardAdjuster
     var chatInputView: UIView { self.fakeChatInputBarPresenter.inputView }
 
     init(messagesViewController: ChatMessagesViewController,
          configuration: BaseChatViewController.Configuration = .default,
          notificationCenter: NotificationCenter = .default) {
 
-        let fakeKeyboardHandler = FakeKeyboardHandler()
         self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
+
+        let keyboardTracker = KeyboardTracker(notificationCenter: notificationCenter)
+        let keyboardUpdatesHandler = KeyboardUpdatesHandler(keyboardTracker: keyboardTracker)
+        let fakeKeyboardAdjuster = FakeKeyboardAdjuster()
+        self.fakeKeyboardAdjuster = fakeKeyboardAdjuster
 
         super.init(
             inputBarPresenter: self.fakeChatInputBarPresenter,
-            keyboardEventsHandlers: [fakeKeyboardHandler],
-            keyboardTracker: KeyboardTracker(notificationCenter: notificationCenter),
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
+            keyboardUpdatesHandler: keyboardUpdatesHandler,
             viewEventsHandlers: [],
-            configuration: configuration,
-            notificationCenter: notificationCenter
+            configuration: configuration
         )
-        fakeKeyboardHandler.viewController = self
+        keyboardUpdatesHandler.delegate = fakeKeyboardAdjuster
+        keyboardUpdatesHandler.keyboardInputAdjustableViewController = self
+
+        self.fakeKeyboardAdjuster.viewController = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -259,7 +265,7 @@ private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewM
     var onDidUpdate: (() -> Void)?
 }
 
-private final class FakeKeyboardHandler: KeyboardEventsHandling {
+private final class FakeKeyboardAdjuster: KeyboardUpdatesHandlerDelegate {
     weak var viewController: BaseChatViewController?
 
     func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus) {

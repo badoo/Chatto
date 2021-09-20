@@ -123,9 +123,9 @@
 				65F1B58D09341652E861362B /* ChatController */,
 				BEDBF0E67432E19C5DF4D925 /* Chat Items */,
 				A40DC13826F205BE00166C55 /* Keyboard */,
-				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
-				B3B1B0FE1D6B40DF00D1183D /* Utils.swift */,
+				A4BB719A26F8875D00A941C4 /* Utils */,
 				C342D0C01C638A2C008A4605 /* ChatItemCompanionCollection.swift */,
+				C36281EC1BF10086004D6BCE /* SerialTaskQueue.swift */,
 			);
 			path = sources;
 			sourceTree = "<group>";
@@ -159,9 +159,9 @@
 				A4F7666426BD4F2600008F24 /* ChatMessages */,
 				50D5BF4A25079D759B602EE5 /* Collaborators */,
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
+				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
 				EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */,
 				C36281E61BF0F196004D6BCE /* UICollectionView+Scrolling.swift */,
-				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
 			);
 			path = ChatController;
 			sourceTree = "<group>";
@@ -175,6 +175,14 @@
 				A40DC13F26F2076100166C55 /* StaticKeyboardUpdatesAnimator.swift */,
 			);
 			path = Keyboard;
+			sourceTree = "<group>";
+		};
+		A4BB719A26F8875D00A941C4 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B3B1B0FE1D6B40DF00D1183D /* Utils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		A4C03CFC26CE42E400360526 /* InputBar */ = {
