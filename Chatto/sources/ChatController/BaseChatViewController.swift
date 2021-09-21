@@ -361,7 +361,7 @@ open class BaseChatViewController: UIViewController,
 
     public func didCancelReplyGesture(at: IndexPath) {}
 
-    open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
         if animated {
             self.isAdjustingInputContainer = true
@@ -383,7 +383,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
         guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
         if animated {
             self.isAdjustingInputContainer = true

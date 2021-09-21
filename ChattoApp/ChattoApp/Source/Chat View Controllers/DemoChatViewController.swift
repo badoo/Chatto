@@ -87,7 +87,7 @@ class DemoChatViewController: BaseChatViewController {
         chatInputContainer.presenter.viewController = self
 
         keyboardHandler.keyboardInputAdjustableViewController = self
-        keyboardHandler.delegate = chatInputContainer.keyboardHandlerDelegate
+        keyboardHandler.delegateStore.add(chatInputContainer.keyboardHandlerDelegate)
     }
 
     required init?(coder: NSCoder) {

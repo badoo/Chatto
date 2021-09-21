@@ -58,7 +58,7 @@ final class TesteableChatViewController: BaseChatViewController {
             viewEventsHandlers: [],
             configuration: configuration
         )
-        keyboardUpdatesHandler.delegate = fakeKeyboardAdjuster
+        keyboardUpdatesHandler.delegateStore.add(fakeKeyboardAdjuster)
         keyboardUpdatesHandler.keyboardInputAdjustableViewController = self
 
         self.fakeKeyboardAdjuster.viewController = self
