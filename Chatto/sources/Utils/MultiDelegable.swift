@@ -5,7 +5,7 @@
 import Foundation
 
 public struct DelegateStore<Delegate> {
-    fileprivate var delegatesTable = NSHashTable<AnyObject>.weakObjects()
+    private var delegatesTable = NSHashTable<AnyObject>.weakObjects()
 
     public init() {}
 
