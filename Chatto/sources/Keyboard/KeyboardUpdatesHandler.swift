@@ -74,13 +74,13 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     }
 
     private func adjustTrackingViewSizeIfNeeded() {
-        guard self.isTracking && self.keyboardTracker.keyboardStatus.state == .shown else { return }
+        guard self.isTracking && self.keyboardState == .shown else { return }
 
         self.adjustTrackingViewSize()
     }
 
     private func adjustLayoutInputAtTrackingViewIfNeeded() {
-        guard self.isTracking && self.keyboardTracker.keyboardStatus.state == .shown else { return }
+        guard self.isTracking && self.keyboardState == .shown else { return }
 
         self.layoutInputContainer(withBottomConstraint: self.calculateBottomConstraintFromTrackingView())
     }
