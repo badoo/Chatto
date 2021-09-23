@@ -67,7 +67,7 @@ struct ChatMessageTestComponents {
             referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProviderFactory.makeDefault(),
             updateQueue: updateQueue
         )
-        self.layout.delegate = self.adapter
+        self.layout.layoutModelProvider = self.adapter
         self.viewController = ChatMessagesViewController(
             config: .default,
             layout: layout,

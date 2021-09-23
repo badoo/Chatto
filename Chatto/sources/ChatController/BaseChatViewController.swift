@@ -219,9 +219,15 @@ open class BaseChatViewController: UIViewController,
     }
 
     @objc
-    open func userDidTapOnCollectionView() {
-        if self.configuration.endsEditingWhenTappingOnChatBackground {
-            self.view.endEditing(true)
+    private func userDidTapOnCollectionView() {
+        guard self.configuration.endsEditingWhenTappingOnChatBackground else {
+            return
+        }
+
+        self.view.endEditing(true)
+
+        self.viewEventsHandlers.forEach {
+            $0.onDidEndEditing()
         }
     }
 

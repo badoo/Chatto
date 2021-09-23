@@ -45,7 +45,7 @@ public extension CollectionViewEventsHandling {
                           didUpdateItemsWithUpdateType updateType: UpdateType) { }
 }
 
-public protocol ViewPresentationEventsHandling {
+public protocol ViewPresentationEventsHandling: AnyObject {
     func onViewDidLoad()
 
     func onViewWillAppear()
@@ -53,19 +53,14 @@ public protocol ViewPresentationEventsHandling {
 
     func onViewWillDisappear()
     func onViewDidDisappear()
+
+    func onDidEndEditing()
 }
 
 public protocol ChatInputBarPresentingController: UIViewController, InputPositionControlling {
     func setup(inputView: UIView)
 }
 
-public protocol ViewModelEventsHandling {
-    func onViewDidUpdate()
-}
-
 public protocol BaseChatInputBarPresenterProtocol: AnyObject {
-
     var viewController: ChatInputBarPresentingController? { get set }
-
-    func onViewDidUpdate() // TODO: View Model updates should not be triggered by the BaseChatViewController
 }

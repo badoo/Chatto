@@ -45,8 +45,10 @@ Some behaviour and styling of this chat messages container can be customised usi
  */
 public final class ChatMessagesViewController: UICollectionViewController, ChatMessagesViewControllerProtocol {
 
+    public typealias Layout = UICollectionViewLayout & ChatCollectionViewLayoutProtocol
+
     private let config: Config
-    private let layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol
+    private let layout: Layout
     private let messagesAdapter: ChatMessageCollectionAdapterProtocol
     private let style: Style
     private let viewModel: ChatMessagesViewModelProtocol
@@ -58,7 +60,7 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         self.messagesAdapter.chatItemCompanionCollection
     }
     public init(config: Config,
-                layout: UICollectionViewLayout & ChatCollectionViewLayoutProtocol,
+                layout: Layout,
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
                 style: Style,
                 viewModel: ChatMessagesViewModelProtocol) {

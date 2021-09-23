@@ -4,6 +4,10 @@
 
 import UIKit
 
+public protocol DelegableChatMessageCollectionAdapterProtocol: AnyObject {
+    var delegate: ChatMessageCollectionAdapterDelegate? { get set }
+}
+
 public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
 
@@ -33,7 +37,7 @@ public typealias ReferenceIndexPathRestoreProvider = (ChatItemCompanionCollectio
  After its initialisation, this component will start observing view model updates and dispatch update operations into the `updateQueue`. Taking into account the initial `configuration` injected into this component, whenever we receive a chat items update call, the elements difference between updates gets calculated and propagated into the collection view.
  In order to decouple this component from the customisation of elements to be displayed, we delegate this responsibility to the `chatItemsDecorator` and `chatItemPresenterFactory` injected during its initialisation. These item customisation components will be used while presenting chat items in the collection view.
  */
-public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol {
+public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollectionAdapterProtocol, DelegableChatMessageCollectionAdapterProtocol {
 
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
     private let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
@@ -553,8 +557,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 }
 
-extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutDelegate {
-    public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
+extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutModelProviderProtocol {
+    public func makeChatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
         guard let collectionView = self.collectionView else { return self.layoutModel }
 
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
