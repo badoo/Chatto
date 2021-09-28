@@ -10,10 +10,6 @@ public enum InputBarMode {
     case custom
 }
 
-public protocol KeyboardEventsHandling: AnyObject {
-    func onKeyboardStateDidChange(_ height: CGFloat, _ status: KeyboardStatus)
-}
-
 public protocol ScrollViewEventsHandling: AnyObject {
     func onScrollViewDidScroll(_ scrollView: UIScrollView)
     func onScrollViewWillBeginDragging(_ scrollView: UIScrollView)

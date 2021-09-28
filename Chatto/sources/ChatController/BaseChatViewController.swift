@@ -40,15 +40,15 @@ public protocol ItemPositionScrollable: AnyObject {
 
 open class BaseChatViewController: UIViewController,
                                    InputPositionControlling,
+                                   KeyboardInputAdjustableViewController,
                                    ReplyIndicatorRevealerDelegate {
 
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
-    private let keyboardEventsHandlers: [KeyboardEventsHandling]
+    private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
-    private let notificationCenter: NotificationCenter
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
     public var replyActionHandler: ReplyActionHandler?
@@ -68,10 +68,9 @@ open class BaseChatViewController: UIViewController,
         - You can also add new items (for instance time markers or failed cells)
     */
 
-    private var inputContainerBottomConstraint: NSLayoutConstraint!
+    private(set) public lazy var inputContainerBottomConstraint: NSLayoutConstraint = self.makeInputContainerBottomConstraint()
     private var cellPanGestureHandler: CellPanGestureHandler!
     private var isAdjustingInputContainer: Bool = false
-    private var keyboardTracker: KeyboardTracker!
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
 
@@ -85,10 +84,6 @@ open class BaseChatViewController: UIViewController,
         didSet {
             self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
         }
-    }
-
-    public var keyboardStatus: KeyboardStatus {
-        return self.keyboardTracker.keyboardStatus
     }
 
     public var maximumInputSize: CGSize {
@@ -121,19 +116,17 @@ open class BaseChatViewController: UIViewController,
     // MARK: - Init
 
     public init(inputBarPresenter: BaseChatInputBarPresenterProtocol,
-                keyboardEventsHandlers: [KeyboardEventsHandling],
                 messagesViewController: ChatMessagesViewControllerProtocol,
                 collectionViewEventsHandlers: [CollectionViewEventsHandling],
+                keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol,
                 viewEventsHandlers: [ViewPresentationEventsHandling],
-                configuration: Configuration = .default,
-                notificationCenter: NotificationCenter = .default) {
+                configuration: Configuration = .default) {
         self.inputBarPresenter = inputBarPresenter
-        self.keyboardEventsHandlers = keyboardEventsHandlers
         self.messagesViewController = messagesViewController
         self.collectionViewEventsHandlers = collectionViewEventsHandlers
+        self.keyboardUpdatesHandler = keyboardUpdatesHandler
         self.viewEventsHandlers = viewEventsHandlers
         self.configuration = configuration
-        self.notificationCenter = notificationCenter
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -169,7 +162,7 @@ open class BaseChatViewController: UIViewController,
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.keyboardTracker.startTracking()
+        self.keyboardUpdatesHandler.startTracking()
 
         self.viewEventsHandlers.forEach {
             $0.onViewWillAppear()
@@ -187,7 +180,7 @@ open class BaseChatViewController: UIViewController,
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        self.keyboardTracker?.stopTracking()
+        self.keyboardUpdatesHandler.stopTracking()
 
         self.viewEventsHandlers.forEach {
             $0.onViewWillDisappear()
@@ -206,7 +199,7 @@ open class BaseChatViewController: UIViewController,
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
-        self.keyboardTracker.adjustTrackingViewSizeIfNeeded()
+        self.keyboardUpdatesHandler.adjustLayoutIfNeeded()
 
         self.updateInputContainerBottomBaseOffset()
     }
@@ -264,6 +257,10 @@ open class BaseChatViewController: UIViewController,
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
 
+    private func makeInputContainerBottomConstraint() -> NSLayoutConstraint {
+        return self.view.bottomAnchor.constraint(equalTo: self.inputBarContainer.bottomAnchor)
+    }
+
     private func addInputContentContainer() {
         self.inputContentContainer.translatesAutoresizingMaskIntoConstraints = false
         self.inputContentContainer.backgroundColor = .white
@@ -284,19 +281,7 @@ open class BaseChatViewController: UIViewController,
     }
 
     private func setupKeyboardTracker() {
-        let heightBlock = { [weak self] (bottomMargin: CGFloat, keyboardStatus: KeyboardStatus) in
-            guard let sSelf = self else { return }
-            if sSelf.keyboardEventsHandlers.isEmpty == false {
-                sSelf.keyboardEventsHandlers.forEach {
-                    $0.onKeyboardStateDidChange(bottomMargin, keyboardStatus)
-                }
-            } else {
-                sSelf.changeInputContentBottomMarginTo(bottomMargin)
-            }
-        }
-        self.keyboardTracker = KeyboardTracker(viewController: self, inputBarContainer: self.inputBarContainer, heightBlock: heightBlock, notificationCenter: self.notificationCenter)
-
-        (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardTracker?.trackingView
+        (self.view as? BaseChatViewControllerViewProtocol)?.bmaInputAccessoryView = self.keyboardUpdatesHandler.keyboardTrackingView
     }
 
     private func updateInputContainerBottomConstraint() {

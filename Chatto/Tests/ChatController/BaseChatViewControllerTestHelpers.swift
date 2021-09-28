@@ -36,6 +36,7 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 final class TesteableChatViewController: BaseChatViewController {
 
     private let fakeChatInputBarPresenter: FakeChatInputBarPresenter
+    private let fakeKeyboardAdjuster: FakeKeyboardAdjuster
     var chatInputView: UIView { self.fakeChatInputBarPresenter.inputView }
 
     init(messagesViewController: ChatMessagesViewController,
@@ -44,15 +45,23 @@ final class TesteableChatViewController: BaseChatViewController {
 
         self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
 
+        let keyboardTracker = KeyboardTracker(notificationCenter: notificationCenter)
+        let keyboardUpdatesHandler = KeyboardUpdatesHandler(keyboardTracker: keyboardTracker)
+        let fakeKeyboardAdjuster = FakeKeyboardAdjuster()
+        self.fakeKeyboardAdjuster = fakeKeyboardAdjuster
+
         super.init(
             inputBarPresenter: self.fakeChatInputBarPresenter,
-            keyboardEventsHandlers: [],
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
+            keyboardUpdatesHandler: keyboardUpdatesHandler,
             viewEventsHandlers: [],
-            configuration: configuration,
-            notificationCenter: notificationCenter
+            configuration: configuration
         )
+        keyboardUpdatesHandler.delegate = fakeKeyboardAdjuster
+        keyboardUpdatesHandler.keyboardInputAdjustableViewController = self
+
+        self.fakeKeyboardAdjuster.viewController = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -254,4 +263,14 @@ private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol
 
 private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewModelProtocol {
     var onDidUpdate: (() -> Void)?
+}
+
+private final class FakeKeyboardAdjuster: KeyboardUpdatesHandlerDelegate {
+    weak var viewController: BaseChatViewController?
+
+    func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState) {
+        guard let viewController = self.viewController else { return }
+
+        viewController.changeInputContentBottomMarginTo(margin)
+    }
 }
