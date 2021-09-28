@@ -202,6 +202,10 @@ open class BaseChatViewController: UIViewController,
         self.keyboardUpdatesHandler.adjustLayoutIfNeeded()
 
         self.updateInputContainerBottomBaseOffset()
+
+        self.viewEventsHandlers.forEach {
+            $0.onViewDidLayoutSubviews()
+        }
     }
 
     // MARK: - Setup

@@ -53,6 +53,7 @@ public protocol ViewPresentationEventsHandling: AnyObject {
 
     func onViewWillDisappear()
     func onViewDidDisappear()
+    func onViewDidLayoutSubviews()
 
     func onDidEndEditing()
 }
