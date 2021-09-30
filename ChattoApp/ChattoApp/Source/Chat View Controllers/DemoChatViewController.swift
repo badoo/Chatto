@@ -87,7 +87,10 @@ class DemoChatViewController: BaseChatViewController {
         chatInputContainer.presenter.viewController = self
 
         keyboardHandler.keyboardInputAdjustableViewController = self
-        keyboardHandler.delegateStore.add(chatInputContainer.keyboardHandlerDelegate)
+
+        keyboardHandler.keyboardInfo.observe(self) { [weak keyboardHandlerDelegate = chatInputContainer.keyboardHandlerDelegate] _, keyboardInfo in
+            keyboardHandlerDelegate?.didAdjustBottomMargin(to: keyboardInfo.bottomMargin, state: keyboardInfo.state)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -119,8 +122,9 @@ class DemoChatViewController: BaseChatViewController {
                 chatInputItems: chatInputItems,
                 chatInputBarAppearance: appearance
             )
+            let keyboardHandler = DefaultKeyboardHandler(presenter: presenter)
 
-            return (presenter, DefaultKeyboardHandler(), nil, nil)
+            return (presenter, keyboardHandler, nil, nil)
         }
 
         let presenter = ExpandableChatInputBarPresenter(
@@ -253,11 +257,15 @@ typealias ChatInputContainer = (
 
 private final class DefaultKeyboardHandler: KeyboardUpdatesHandlerDelegate {
 
-    weak var viewController: BaseChatViewController?
+    weak var presenter: BaseChatInputBarPresenterProtocol?
+
+    init(presenter: BaseChatInputBarPresenterProtocol) {
+        self.presenter = presenter
+    }
 
     func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState) {
-        guard let viewController = self.viewController else { return }
+        guard let presenter = self.presenter?.viewController else { return }
 
-        viewController.changeInputContentBottomMarginTo(margin)
+        presenter.changeInputContentBottomMarginTo(margin, animated: true, callback: nil)
     }
 }

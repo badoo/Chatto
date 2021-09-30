@@ -1,6 +1,7 @@
 //
 // Copyright (c) Badoo Trading Limited, 2010-present. All rights reserved.
 //
+
 import UIKit
 
 public protocol KeyboardInputAdjustableViewController: UIViewController {
@@ -9,9 +10,8 @@ public protocol KeyboardInputAdjustableViewController: UIViewController {
 }
 
 public protocol KeyboardUpdatesHandlerProtocol: AnyObject {
-    var delegateStore: DelegateStore<KeyboardUpdatesHandlerDelegate> { get }
+    var keyboardInfo: Observable<KeyboardUpdatesInfo> { get }
     var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController? { get set }
-    var keyboardState: KeyboardState { get }
     var keyboardTrackingView: UIView { get }
 
     func adjustLayoutIfNeeded()
@@ -23,6 +23,16 @@ public protocol KeyboardUpdatesHandlerDelegate: AnyObject {
     func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState)
 }
 
+public struct KeyboardUpdatesInfo {
+    public let bottomMargin: CGFloat
+    public let state: KeyboardState
+
+    public init(bottomMargin: CGFloat, state: KeyboardState) {
+        self.bottomMargin = bottomMargin
+        self.state = state
+    }
+}
+
 public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     private let keyboardTracker: KeyboardTrackerProtocol
 
@@ -32,17 +42,19 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     public var keyboardTrackingView: UIView { self._keyboardTrackingView }
     private lazy var _keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
 
-    public let delegateStore: DelegateStore<KeyboardUpdatesHandlerDelegate>
+    public private(set) var keyboardInfo: Observable<KeyboardUpdatesInfo>// DelegateStore<KeyboardUpdatesHandlerDelegate>
     public weak var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController?
 
-    public var keyboardState: KeyboardState {
+    private var keyboardState: KeyboardState {
         return self.keyboardTracker.keyboardStatus.state
     }
 
     public init(keyboardTracker: KeyboardTrackerProtocol) {
         self.keyboardTracker = keyboardTracker
 
-        self.delegateStore = DelegateStore<KeyboardUpdatesHandlerDelegate>()
+        self.keyboardInfo = .init(
+            KeyboardUpdatesInfo(bottomMargin: 0, state: keyboardTracker.keyboardStatus.state)
+        )
         self.isTracking = false
         self.isPerformingForcedLayout = false
 
@@ -108,16 +120,13 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegateStore.notifyAll {
-                $0.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
-            }
+
+            self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraintValue, state: self.keyboardState)
         case .shown:
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegateStore.notifyAll {
-                $0.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
-            }
+            self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraintValue, state: self.keyboardState)
             self.adjustTrackingViewSizeIfNeeded()
         }
     }
@@ -145,9 +154,7 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
         self.isPerformingForcedLayout = true
         defer { self.isPerformingForcedLayout = false }
 
-        self.delegateStore.notifyAll {
-            $0.didAdjustBottomMargin(to: bottomConstraint, state: self.keyboardTracker.keyboardStatus.state)
-        }
+        self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraint, state: self.keyboardState)
     }
 
     private func adjustTrackingViewSize() {
