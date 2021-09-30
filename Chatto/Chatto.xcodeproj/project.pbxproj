@@ -14,7 +14,7 @@
 		A40DC13E26F2072100166C55 /* KeyboardUpdatesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */; };
 		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
 		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
-		A4BBA3BE26F8E36600A941C4 /* MultiDelegable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BBA3BD26F8E36600A941C4 /* MultiDelegable.swift */; };
+		A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A452A8BF2705DAED00DCC8D5 /* Observable.swift */; };
 		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
 		A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */; };
 		A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */; };
@@ -64,7 +64,7 @@
 		A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUpdatesHandler.swift; sourceTree = "<group>"; };
 		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
 		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
-		A4BBA3BD26F8E36600A941C4 /* MultiDelegable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiDelegable.swift; sourceTree = "<group>"; };
+		A452A8BF2705DAED00DCC8D5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
 		A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
@@ -179,8 +179,8 @@
 		A4BB719A26F8875D00A941C4 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A452A8BF2705DAED00DCC8D5 /* Observable.swift */,
 				B3B1B0FE1D6B40DF00D1183D /* Utils.swift */,
-				A4BBA3BD26F8E36600A941C4 /* MultiDelegable.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -405,6 +405,7 @@
 				C321DDA91BE9649F00DE88CC /* BaseChatItemPresenter.swift in Sources */,
 				C36281ED1BF10086004D6BCE /* SerialTaskQueue.swift in Sources */,
 				A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */,
+				A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
 				A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */,
 				A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */,
@@ -413,7 +414,6 @@
 				26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
-				A4BBA3BE26F8E36600A941C4 /* MultiDelegable.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
 				A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */,
 				B3B1B0FF1D6B40DF00D1183D /* Utils.swift in Sources */,
