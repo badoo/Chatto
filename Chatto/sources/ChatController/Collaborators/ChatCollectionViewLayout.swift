@@ -25,7 +25,7 @@
 import UIKit
 
 public protocol ChatCollectionViewLayoutModelProviderProtocol: AnyObject {
-    func makeChatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel
+    var chatCollectionViewLayoutModel: ChatCollectionViewLayoutModel { get }
 }
 
 public struct ChatCollectionViewLayoutModel {
@@ -95,7 +95,7 @@ open class ChatCollectionViewLayout: UICollectionViewLayout, ChatCollectionViewL
             return
         }
         var oldLayoutModel = self.layoutModel
-        self.layoutModel = layoutModelProvider.makeChatCollectionViewLayoutModel()
+        self.layoutModel = layoutModelProvider.chatCollectionViewLayoutModel
         self.layoutNeedsUpdate = false
         DispatchQueue.global(qos: .default).async { () -> Void in
             // Dealloc of layout with 5000 items take 25 ms on tests on iPhone 4s

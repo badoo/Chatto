@@ -558,7 +558,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 }
 
 extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutModelProviderProtocol {
-    public func makeChatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
+    public var chatCollectionViewLayoutModel: ChatCollectionViewLayoutModel {
         guard let collectionView = self.collectionView else { return self.layoutModel }
 
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
