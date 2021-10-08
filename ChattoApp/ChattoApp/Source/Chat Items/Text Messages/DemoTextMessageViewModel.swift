@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import Chatto
 import ChattoAdditions
 
 public typealias DemoTextMessageViewModel = TextMessageViewModel<DemoTextMessageModel>

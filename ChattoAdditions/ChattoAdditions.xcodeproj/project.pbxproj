@@ -98,7 +98,6 @@
 		C3C0CC5F1BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC151BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift */; };
 		C3C0CC601BFE496A0052747C /* ReusableXibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC161BFE496A0052747C /* ReusableXibView.swift */; };
 		C3C0CC621BFE496A0052747C /* TextChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */; };
-		C3C0CC641BFE496A0052747C /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC1B1BFE496A0052747C /* Observable.swift */; };
 		C3C0CC851BFE49700052747C /* ChatInputBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */; };
 		C3C0CC861BFE49700052747C /* ChatInputItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */; };
 		C3C0CC871BFE49700052747C /* ChatInputItemViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C0CC791BFE49700052747C /* ChatInputItemViewTests.swift */; };
@@ -277,7 +276,6 @@
 		C3C0CC151BFE496A0052747C /* PhotosInputViewItemSizeCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosInputViewItemSizeCalculator.swift; sourceTree = "<group>"; };
 		C3C0CC161BFE496A0052747C /* ReusableXibView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReusableXibView.swift; sourceTree = "<group>"; };
 		C3C0CC191BFE496A0052747C /* TextChatInputItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChatInputItem.swift; sourceTree = "<group>"; };
-		C3C0CC1B1BFE496A0052747C /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		C3C0CC751BFE49700052747C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3C0CC771BFE49700052747C /* ChatInputBarTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputBarTests.swift; sourceTree = "<group>"; };
 		C3C0CC781BFE49700052747C /* ChatInputItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputItemTests.swift; sourceTree = "<group>"; };
@@ -643,7 +641,6 @@
 				55ABA5531FC739C300923302 /* Alignment.swift */,
 				55ABA55A1FC73EF100923302 /* UIScreen+Scale.swift */,
 				55ABA56A1FC74CB400923302 /* UIEdgeInsets+Additions.swift */,
-				C3C0CC1B1BFE496A0052747C /* Observable.swift */,
 				55ABA56E1FC74D8F00923302 /* UIColor+Additions.swift */,
 				E3E0D60222EA1AA2006E2053 /* Comparable+Clamp.swift */,
 				55ABA5701FC74DB400923302 /* UIView+Additions.swift */,
@@ -1084,7 +1081,6 @@
 				C3C0CC621BFE496A0052747C /* TextChatInputItem.swift in Sources */,
 				C3C0CC3E1BFE496A0052747C /* TextMessagePresenterBuilder.swift in Sources */,
 				C3C0CC511BFE496A0052747C /* ChatInputBarAppearance.swift in Sources */,
-				C3C0CC641BFE496A0052747C /* Observable.swift in Sources */,
 				C3C0CC2E1BFE496A0052747C /* BaseMessageCollectionViewCell.swift in Sources */,
 				C3C0CC5A1BFE496A0052747C /* PhotosInputCameraPicker.swift in Sources */,
 				CDC610061FD80C2B00C2588E /* PhotosInputPlaceholderDataProvider.swift in Sources */,

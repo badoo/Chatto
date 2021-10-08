@@ -1,6 +1,7 @@
 //
 // Copyright (c) Badoo Trading Limited, 2010-present. All rights reserved.
 //
+
 import UIKit
 
 public protocol KeyboardInputAdjustableViewController: UIViewController {
@@ -8,7 +9,9 @@ public protocol KeyboardInputAdjustableViewController: UIViewController {
     var inputContainerBottomConstraint: NSLayoutConstraint { get }
 }
 
-public protocol KeyboardUpdatesHandlerProtocol {
+public protocol KeyboardUpdatesHandlerProtocol: AnyObject {
+    var keyboardInfo: Observable<KeyboardUpdatesInfo> { get }
+    var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController? { get set }
     var keyboardTrackingView: UIView { get }
 
     func adjustLayoutIfNeeded()
@@ -20,6 +23,16 @@ public protocol KeyboardUpdatesHandlerDelegate: AnyObject {
     func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState)
 }
 
+public struct KeyboardUpdatesInfo {
+    public let bottomMargin: CGFloat
+    public let state: KeyboardState
+
+    public init(bottomMargin: CGFloat, state: KeyboardState) {
+        self.bottomMargin = bottomMargin
+        self.state = state
+    }
+}
+
 public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     private let keyboardTracker: KeyboardTrackerProtocol
 
@@ -29,12 +42,19 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     public var keyboardTrackingView: UIView { self._keyboardTrackingView }
     private lazy var _keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
 
-    public weak var delegate: KeyboardUpdatesHandlerDelegate?
+    public private(set) var keyboardInfo: Observable<KeyboardUpdatesInfo>// DelegateStore<KeyboardUpdatesHandlerDelegate>
     public weak var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController?
+
+    private var keyboardState: KeyboardState {
+        return self.keyboardTracker.keyboardStatus.state
+    }
 
     public init(keyboardTracker: KeyboardTrackerProtocol) {
         self.keyboardTracker = keyboardTracker
 
+        self.keyboardInfo = .init(
+            KeyboardUpdatesInfo(bottomMargin: 0, state: keyboardTracker.keyboardStatus.state)
+        )
         self.isTracking = false
         self.isPerformingForcedLayout = false
 
@@ -66,13 +86,13 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     }
 
     private func adjustTrackingViewSizeIfNeeded() {
-        guard self.isTracking && self.keyboardTracker.keyboardStatus.state == .shown else { return }
+        guard self.isTracking && self.keyboardState == .shown else { return }
 
         self.adjustTrackingViewSize()
     }
 
     private func adjustLayoutInputAtTrackingViewIfNeeded() {
-        guard self.isTracking && self.keyboardTracker.keyboardStatus.state == .shown else { return }
+        guard self.isTracking && self.keyboardState == .shown else { return }
 
         self.layoutInputContainer(withBottomConstraint: self.calculateBottomConstraintFromTrackingView())
     }
@@ -100,12 +120,13 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
+
+            self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraintValue, state: self.keyboardState)
         case .shown:
             guard bottomConstraintValue > 0,
                   !self.isPerformingForcedLayout else { return }
 
-            self.delegate?.didAdjustBottomMargin(to: bottomConstraintValue, state: self.keyboardTracker.keyboardStatus.state)
+            self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraintValue, state: self.keyboardState)
             self.adjustTrackingViewSizeIfNeeded()
         }
     }
@@ -133,7 +154,7 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
         self.isPerformingForcedLayout = true
         defer { self.isPerformingForcedLayout = false }
 
-        self.delegate?.didAdjustBottomMargin(to: bottomConstraint, state: self.keyboardTracker.keyboardStatus.state)
+        self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraint, state: self.keyboardState)
     }
 
     private func adjustTrackingViewSize() {

@@ -22,6 +22,7 @@
  THE SOFTWARE.
 */
 
+import Chatto
 import XCTest
 @testable import ChattoAdditions
 
