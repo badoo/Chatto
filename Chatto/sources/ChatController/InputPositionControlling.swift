@@ -23,13 +23,15 @@
  */
 import UIKit
 
-public protocol InputPositionControlling: AnyObject {
+public protocol ChatInputBarPresentingController: UIViewController {
 
     var inputBarContainer: UIView { get }
     var maximumInputSize: CGSize { get }
 
     var inputContentContainer: UIView { get }
     var inputContentBottomMargin: CGFloat { get }
+
+    func setup(inputView: UIView)
 
     func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
     func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)

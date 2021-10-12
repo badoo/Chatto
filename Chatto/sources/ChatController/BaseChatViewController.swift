@@ -39,15 +39,14 @@ public protocol ItemPositionScrollable: AnyObject {
 }
 
 open class BaseChatViewController: UIViewController,
-                                   InputPositionControlling,
-                                   KeyboardInputAdjustableViewController,
-                                   ReplyIndicatorRevealerDelegate {
+                                   KeyboardInputAdjustableViewController {
 
     public let messagesViewController: ChatMessagesViewControllerProtocol
     public let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
+
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
@@ -57,6 +56,7 @@ open class BaseChatViewController: UIViewController,
     public var collectionView: UICollectionView { self.messagesViewController.collectionView }
 
     public let inputBarContainer: UIView = UIView(frame: .zero)
+    private(set) public lazy var inputContainerBottomConstraint: NSLayoutConstraint = self.makeInputContainerBottomConstraint()
     public let inputContentContainer: UIView = UIView(frame: .zero)
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesViewController.chatItemCompanionCollection
@@ -67,8 +67,6 @@ open class BaseChatViewController: UIViewController,
         - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
         - You can also add new items (for instance time markers or failed cells)
     */
-
-    private(set) public lazy var inputContainerBottomConstraint: NSLayoutConstraint = self.makeInputContainerBottomConstraint()
     private var cellPanGestureHandler: CellPanGestureHandler!
     private var isAdjustingInputContainer: Bool = false
 
@@ -358,77 +356,8 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    // MARK: Subclass overrides
-
-    public func didPassThreshold(at: IndexPath) {
-        self.replyFeedbackGenerator?.generateFeedback()
-    }
-
-    public func didFinishReplyGesture(at indexPath: IndexPath) {
-        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
-        self.replyActionHandler?.handleReply(for: item)
-    }
-
-    public func didCancelReplyGesture(at: IndexPath) {}
-
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
-        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
-        if animated {
-            self.isAdjustingInputContainer = true
-            self.inputContainerBottomAdditionalOffset = newValue
-            CATransaction.begin()
-            UIView.animate(
-                withDuration: duration,
-                delay: 0.0,
-                usingSpringWithDamping: 1.0,
-                initialSpringVelocity: initialSpringVelocity,
-                options: .curveLinear,
-                animations: { self.view.layoutIfNeeded() },
-                completion: { _ in })
-            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
-            CATransaction.commit()
-            self.isAdjustingInputContainer = false
-        } else {
-            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
-        }
-    }
-
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
-        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
-        if animated {
-            self.isAdjustingInputContainer = true
-            CATransaction.begin()
-            CATransaction.setAnimationTimingFunction(timingFunction)
-            self.inputContainerBottomAdditionalOffset = newValue
-            UIView.animate(
-                withDuration: duration,
-                animations: { self.view.layoutIfNeeded() },
-                completion: { _ in }
-            )
-            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
-            CATransaction.commit()
-            self.isAdjustingInputContainer = false
-        } else {
-            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
-        }
-    }
-
-    // MARK: ReplyIndicatorRevealerDelegate
-
     private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
         return ReplyFeedbackGenerator()
-    }
-
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
-        self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
-    }
-
-    private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
-        self.isAdjustingInputContainer = true
-        self.inputContainerBottomAdditionalOffset = newValue
-        self.view.layoutIfNeeded()
-        callback?()
-        self.isAdjustingInputContainer = false
     }
 
     // MARK: - ChatMessagesViewControllerDelegate
@@ -545,6 +474,74 @@ extension BaseChatViewController: ChatInputBarPresentingController {
             self.inputBarContainer.trailingAnchor.constraint(equalTo: inputView.trailingAnchor)
         ])
     }
+
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
+        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
+        if animated {
+            self.isAdjustingInputContainer = true
+            self.inputContainerBottomAdditionalOffset = newValue
+            CATransaction.begin()
+            UIView.animate(
+                withDuration: duration,
+                delay: 0.0,
+                usingSpringWithDamping: 1.0,
+                initialSpringVelocity: initialSpringVelocity,
+                options: .curveLinear,
+                animations: { self.view.layoutIfNeeded() },
+                completion: { _ in })
+            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
+            CATransaction.commit()
+            self.isAdjustingInputContainer = false
+        } else {
+            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
+        }
+    }
+
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
+        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
+        if animated {
+            self.isAdjustingInputContainer = true
+            CATransaction.begin()
+            CATransaction.setAnimationTimingFunction(timingFunction)
+            self.inputContainerBottomAdditionalOffset = newValue
+            UIView.animate(
+                withDuration: duration,
+                animations: { self.view.layoutIfNeeded() },
+                completion: { _ in }
+            )
+            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
+            CATransaction.commit()
+            self.isAdjustingInputContainer = false
+        } else {
+            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
+        }
+    }
+
+    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
+        self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
+    }
+
+    private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
+        self.isAdjustingInputContainer = true
+        self.inputContainerBottomAdditionalOffset = newValue
+        self.view.layoutIfNeeded()
+        callback?()
+        self.isAdjustingInputContainer = false
+    }
+}
+
+extension BaseChatViewController: ReplyIndicatorRevealerDelegate {
+
+    public func didPassThreshold(at: IndexPath) {
+        self.replyFeedbackGenerator?.generateFeedback()
+    }
+
+    public func didFinishReplyGesture(at indexPath: IndexPath) {
+        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
+        self.replyActionHandler?.handleReply(for: item)
+    }
+
+    public func didCancelReplyGesture(at: IndexPath) { }
 }
 
 public extension BaseChatViewController {
