@@ -24,8 +24,8 @@
 
 import UIKit
 
-public protocol ChatCollectionViewLayoutDelegate: AnyObject {
-    func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel
+public protocol ChatCollectionViewLayoutModelProviderProtocol: AnyObject {
+    var chatCollectionViewLayoutModel: ChatCollectionViewLayoutModel { get }
 }
 
 public struct ChatCollectionViewLayoutModel {
@@ -72,12 +72,12 @@ public struct ChatCollectionViewLayoutModel {
 }
 
 public protocol ChatCollectionViewLayoutProtocol {
-    var delegate: ChatCollectionViewLayoutDelegate? { get set }
+    var layoutModelProvider: ChatCollectionViewLayoutModelProviderProtocol? { get set }
 }
 
 open class ChatCollectionViewLayout: UICollectionViewLayout, ChatCollectionViewLayoutProtocol {
     private var layoutModel: ChatCollectionViewLayoutModel!
-    public weak var delegate: ChatCollectionViewLayoutDelegate?
+    public weak var layoutModelProvider: ChatCollectionViewLayoutModelProviderProtocol?
 
     // Optimization: after reloadData we'll get invalidateLayout, but prepareLayout will be delayed until next run loop.
     // Client may need to force prepareLayout after reloadData, but we don't want to compute layout again in the next run loop.
@@ -90,12 +90,12 @@ open class ChatCollectionViewLayout: UICollectionViewLayout, ChatCollectionViewL
     open override func prepare() {
         super.prepare()
         guard self.layoutNeedsUpdate else { return }
-        guard let delegate = self.delegate else {
+        guard let layoutModelProvider = self.layoutModelProvider else {
             self.layoutModel = ChatCollectionViewLayoutModel.createEmptyModel()
             return
         }
         var oldLayoutModel = self.layoutModel
-        self.layoutModel = delegate.chatCollectionViewLayoutModel()
+        self.layoutModel = layoutModelProvider.chatCollectionViewLayoutModel
         self.layoutNeedsUpdate = false
         DispatchQueue.global(qos: .default).async { () -> Void in
             // Dealloc of layout with 5000 items take 25 ms on tests on iPhone 4s

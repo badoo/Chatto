@@ -53,7 +53,7 @@ class DemoChatViewController: BaseChatViewController {
             updateQueue: SerialTaskQueue()
         )
         let layout = ChatCollectionViewLayout()
-        layout.delegate = chatMessageCollectionAdapter
+        layout.layoutModelProvider = chatMessageCollectionAdapter
         let messagesViewController = ChatMessagesViewController(
             config: .default,
             layout: layout,

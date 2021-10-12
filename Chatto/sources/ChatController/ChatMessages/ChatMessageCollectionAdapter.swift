@@ -7,6 +7,8 @@ import UIKit
 public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
 
+    var delegate: ChatMessageCollectionAdapterDelegate? { get set }
+
     func startProcessingUpdates()
     func stopProcessingUpdates()
     func setup(in collectionView: UICollectionView)
@@ -553,8 +555,8 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
     }
 }
 
-extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutDelegate {
-    public func chatCollectionViewLayoutModel() -> ChatCollectionViewLayoutModel {
+extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutModelProviderProtocol {
+    public var chatCollectionViewLayoutModel: ChatCollectionViewLayoutModel {
         guard let collectionView = self.collectionView else { return self.layoutModel }
 
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
