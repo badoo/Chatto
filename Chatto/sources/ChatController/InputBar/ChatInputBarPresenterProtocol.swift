@@ -58,10 +58,6 @@ public protocol ViewPresentationEventsHandling: AnyObject {
     func onDidEndEditing()
 }
 
-public protocol ChatInputBarPresentingController: UIViewController, InputPositionControlling {
-    func setup(inputView: UIView)
-}
-
 public protocol BaseChatInputBarPresenterProtocol: AnyObject {
     var viewController: ChatInputBarPresentingController? { get set }
 }

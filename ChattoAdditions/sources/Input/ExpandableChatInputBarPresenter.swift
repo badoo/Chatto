@@ -107,7 +107,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         }
     }
 
-    private func setup(inputBar: UIView, inContainerOfInputBarController inputBarController: InputPositionControlling) {
+    private func setup(inputBar: UIView, inContainerOfInputBarController inputBarController: ChatInputBarPresentingController) {
         self.shouldIgnoreContainerBottomMarginUpdates = true
         inputBarController.changeInputContentBottomMarginTo(self.keyboardHeight, animated: true, callback: {
             self.shouldIgnoreContainerBottomMarginUpdates = false
@@ -119,13 +119,7 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
             containerView.contentView = inputBar
             return containerView
         }()
-        inputBarController.inputContentContainer.addSubview(containerView)
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: inputBarController.inputContentContainer.topAnchor),
-            containerView.leftAnchor.constraint(equalTo: inputBarController.inputContentContainer.leftAnchor),
-            containerView.rightAnchor.constraint(equalTo: inputBarController.inputContentContainer.rightAnchor),
-            containerView.bottomAnchor.constraint(equalTo: inputBarController.inputContentContainer.bottomAnchor)
-            ])
+        inputBarController.setup(inputView: containerView)
         self.currentInputView = containerView
     }
 
