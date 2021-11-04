@@ -36,14 +36,16 @@ class BaseChatViewControllerTests: XCTestCase {
             updateQueue: updateQueue
         )
         let notificationCenter = NotificationCenter()
-        let controller = TesteableChatViewController(
+        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
+        let controller = BaseChatViewController.makeBaseChatViewController(
             messagesViewController: chatMessageTestComponents.viewController,
+            chatInputViewPresenter: chatInputViewPresenter,
             notificationCenter: notificationCenter
         )
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         fakeDidAppearAndLayout(controller: controller)
         notificationCenter.post(name: UIResponder.keyboardWillShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        XCTAssertEqual(400, controller.view.convert(controller.chatInputView.bounds, from: controller.chatInputView).maxY)
+        XCTAssertEqual(400, controller.view.convert(chatInputViewPresenter.inputView.bounds, from: chatInputViewPresenter.inputView).maxY)
     }
 
     func testThat_LayoutAdaptsWhenKeyboardIsHidden() {
@@ -52,8 +54,10 @@ class BaseChatViewControllerTests: XCTestCase {
             dataSource: fakeDataSource
         )
         let notificationCenter = NotificationCenter()
-        let controller = TesteableChatViewController(
+        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
+        let controller = BaseChatViewController.makeBaseChatViewController(
             messagesViewController: chatMessageTestComponents.viewController,
+            chatInputViewPresenter: chatInputViewPresenter,
             notificationCenter: notificationCenter
         )
 
@@ -63,6 +67,24 @@ class BaseChatViewControllerTests: XCTestCase {
         notificationCenter.post(name: UIResponder.keyboardWillShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         notificationCenter.post(name: UIResponder.keyboardDidShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         notificationCenter.post(name: UIResponder.keyboardWillHideNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
-        XCTAssertEqual(900, controller.view.convert(controller.chatInputView.bounds, from: controller.chatInputView).maxY)
+        XCTAssertEqual(900, controller.view.convert(chatInputViewPresenter.inputView.bounds, from: chatInputViewPresenter.inputView).maxY)
     }
+}
+
+private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol {
+    let inputView: UIView
+
+    weak var viewController: ChatInputBarPresentingController? {
+        didSet {
+            guard let viewController = self.viewController else { return }
+
+            viewController.setup(inputView: self.inputView)
+        }
+    }
+
+    init(inputView: UIView) {
+        self.inputView = inputView
+    }
+
+    func onViewDidUpdate() { }
 }

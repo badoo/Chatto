@@ -6,7 +6,6 @@ import UIKit
 
 public protocol KeyboardInputAdjustableViewController: UIViewController {
     var inputBarContainer: UIView { get }
-    var inputContainerBottomConstraint: NSLayoutConstraint { get }
 }
 
 public protocol KeyboardUpdatesHandlerProtocol: AnyObject {

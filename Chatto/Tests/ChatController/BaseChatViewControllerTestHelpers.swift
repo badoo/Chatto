@@ -33,37 +33,31 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
     return items
 }
 
-final class TesteableChatViewController: BaseChatViewController {
+extension BaseChatViewController {
 
-    private let fakeChatInputBarPresenter: FakeChatInputBarPresenter
-    var chatInputView: UIView { self.fakeChatInputBarPresenter.inputView }
-
-    init(messagesViewController: ChatMessagesViewController,
-         configuration: BaseChatViewController.Configuration = .default,
-         notificationCenter: NotificationCenter = .default) {
-
-        self.fakeChatInputBarPresenter = FakeChatInputBarPresenter(inputView: UIView())
+    static func makeBaseChatViewController(messagesViewController: ChatMessagesViewController,
+                                           chatInputViewPresenter: BaseChatInputBarPresenterProtocol,
+                                           configuration: BaseChatViewController.Configuration = .default,
+                                           notificationCenter: NotificationCenter = .default) -> BaseChatViewController {
 
         let keyboardTracker = KeyboardTracker(notificationCenter: notificationCenter)
         let keyboardUpdatesHandler = KeyboardUpdatesHandler(keyboardTracker: keyboardTracker)
 
-        super.init(
-            inputBarPresenter: self.fakeChatInputBarPresenter,
+        let baseChatViewController = BaseChatViewController(
+            inputBarPresenter: chatInputViewPresenter,
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
             keyboardUpdatesHandler: keyboardUpdatesHandler,
             viewEventsHandlers: [],
             configuration: configuration
         )
-        keyboardUpdatesHandler.keyboardInputAdjustableViewController = self
+        keyboardUpdatesHandler.keyboardInputAdjustableViewController = baseChatViewController
 
-        keyboardUpdatesHandler.keyboardInfo.observe(self) { [weak self] _, keyboardInfo in
-            self?.changeInputContentBottomMarginTo(keyboardInfo.bottomMargin)
+        keyboardUpdatesHandler.keyboardInfo.observe(self) { [weak baseChatViewController] _, keyboardInfo in
+            baseChatViewController?.changeInputContentBottomMarginTo(keyboardInfo.bottomMargin)
         }
-    }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        return baseChatViewController
     }
 }
 
@@ -239,24 +233,6 @@ final class FakePresenter: ChatItemPresenterProtocol {
         let fakeCell = cell as! FakeCell
         fakeCell.backgroundColor = UIColor.red
     }
-}
-
-private final class FakeChatInputBarPresenter: BaseChatInputBarPresenterProtocol {
-    let inputView: UIView
-
-    weak var viewController: ChatInputBarPresentingController? {
-        didSet {
-            guard let viewController = self.viewController else { return }
-
-            viewController.setup(inputView: self.inputView)
-        }
-    }
-
-    init(inputView: UIView) {
-        self.inputView = inputView
-    }
-
-    func onViewDidUpdate() { }
 }
 
 private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewModelProtocol {

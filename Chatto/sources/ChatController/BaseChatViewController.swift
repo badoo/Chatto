@@ -38,11 +38,11 @@ public protocol ItemPositionScrollable: AnyObject {
                       animated: Bool)
 }
 
-open class BaseChatViewController: UIViewController,
-                                   KeyboardInputAdjustableViewController {
+public final class BaseChatViewController: UIViewController,
+                                           KeyboardInputAdjustableViewController {
 
-    public let messagesViewController: ChatMessagesViewControllerProtocol
-    public let configuration: Configuration
+    private let messagesViewController: ChatMessagesViewControllerProtocol
+    private let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
@@ -84,10 +84,6 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    public var maximumInputSize: CGSize {
-        return self.view.bounds.size
-    }
-
     public var inputContentBottomMargin: CGFloat {
         return self.inputContainerBottomConstraint.constant
     }
@@ -100,7 +96,7 @@ open class BaseChatViewController: UIViewController,
         didSet { self.updateInputContainerBottomConstraint() }
     }
 
-    public var allContentFits: Bool {
+    private var allContentFits: Bool {
         let collectionView = self.collectionView
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
@@ -140,7 +136,7 @@ open class BaseChatViewController: UIViewController,
         self.view.backgroundColor = UIColor.white
     }
 
-    override open func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         self.setupInputBarPresenter()
@@ -157,7 +153,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.keyboardUpdatesHandler.startTracking()
@@ -167,7 +163,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         self.viewEventsHandlers.forEach {
@@ -175,7 +171,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         self.keyboardUpdatesHandler.stopTracking()
@@ -185,7 +181,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewDidDisappear(_ animated: Bool) {
+    override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         self.viewEventsHandlers.forEach {
@@ -193,7 +189,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    override open func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
@@ -257,7 +253,7 @@ open class BaseChatViewController: UIViewController,
         self.view.addSubview(self.inputBarContainer)
         let guide = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: guide.topAnchor),
             self.inputBarContainer.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             self.inputBarContainer.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
         ])
@@ -297,7 +293,7 @@ open class BaseChatViewController: UIViewController,
         self.view.setNeedsLayout()
     }
 
-    func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
+    private func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard self.isViewLoaded else { return }
 
         let collectionView = self.collectionView
@@ -462,6 +458,10 @@ extension BaseChatViewController: ItemPositionScrollable {
 }
 
 extension BaseChatViewController: ChatInputBarPresentingController {
+    public var maximumInputSize: CGSize {
+        return self.view.bounds.size
+    }
+
     public func setup(inputView: UIView) {
         self.inputBarContainer.subviews.forEach { $0.removeFromSuperview() }
 
