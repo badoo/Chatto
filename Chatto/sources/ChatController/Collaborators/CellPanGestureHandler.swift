@@ -70,14 +70,19 @@ public struct CellPanGestureHandlerConfig {
     }
 }
 
-final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
+public final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
 
     private let panRecognizer: UIPanGestureRecognizer = UIPanGestureRecognizer()
     private let collectionView: UICollectionView
+    private let config: CellPanGestureHandlerConfig
 
-    init(collectionView: UICollectionView) {
+    public init(collectionView: UICollectionView,
+                config: CellPanGestureHandlerConfig) {
         self.collectionView = collectionView
+        self.config = config
+
         super.init()
+
         self.collectionView.addGestureRecognizer(self.panRecognizer)
         self.panRecognizer.addTarget(self, action: #selector(CellPanGestureHandler.handlePan(_:)))
         self.panRecognizer.delegate = self
@@ -93,8 +98,6 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
             self.panRecognizer.isEnabled = self.isEnabled
         }
     }
-
-    var config = CellPanGestureHandlerConfig.defaultConfig()
 
     public weak var replyDelegate: ReplyIndicatorRevealerDelegate?
 
@@ -133,11 +136,11 @@ final class CellPanGestureHandler: NSObject, UIGestureRecognizerDelegate {
         }
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer != self.panRecognizer {
             return true
         }

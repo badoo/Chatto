@@ -50,9 +50,6 @@ public final class BaseChatViewController: UIViewController,
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
-    public var replyActionHandler: ReplyActionHandler?
-    public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
-
     public var collectionView: UICollectionView { self.messagesViewController.collectionView }
 
     public let inputBarContainer: UIView = UIView(frame: .zero)
@@ -61,13 +58,7 @@ public final class BaseChatViewController: UIViewController,
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesViewController.chatItemCompanionCollection
     }
-    /**
-     - You can use a decorator to:
-        - Provide the ChatCollectionViewLayout with margins between messages
-        - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
-        - You can also add new items (for instance time markers or failed cells)
-    */
-    private var cellPanGestureHandler: CellPanGestureHandler!
+
     private var isAdjustingInputContainer: Bool = false
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
@@ -75,12 +66,6 @@ public final class BaseChatViewController: UIViewController,
     public var layoutConfiguration: ChatLayoutConfigurationProtocol = ChatLayoutConfiguration.defaultConfiguration {
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
-        }
-    }
-
-    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
-        didSet {
-            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
         }
     }
 
@@ -241,10 +226,6 @@ public final class BaseChatViewController: UIViewController,
             self.view.bottomAnchor.constraint(equalTo: self.messagesViewController.view.bottomAnchor),
             self.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: self.messagesViewController.view.leadingAnchor)
         ])
-
-        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
-        self.cellPanGestureHandler.replyDelegate = self
-        self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
     }
 
     private func addInputBarContainer() {
@@ -350,10 +331,6 @@ public final class BaseChatViewController: UIViewController,
         } else if !isInteracting || inputIsAtBottom {
             collectionView.contentOffset.y = newContentOffsetY
         }
-    }
-
-    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
-        return ReplyFeedbackGenerator()
     }
 
     // MARK: - ChatMessagesViewControllerDelegate
@@ -528,20 +505,6 @@ extension BaseChatViewController: ChatInputBarPresentingController {
         callback?()
         self.isAdjustingInputContainer = false
     }
-}
-
-extension BaseChatViewController: ReplyIndicatorRevealerDelegate {
-
-    public func didPassThreshold(at: IndexPath) {
-        self.replyFeedbackGenerator?.generateFeedback()
-    }
-
-    public func didFinishReplyGesture(at indexPath: IndexPath) {
-        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
-        self.replyActionHandler?.handleReply(for: item)
-    }
-
-    public func didCancelReplyGesture(at: IndexPath) { }
 }
 
 public extension BaseChatViewController {

@@ -27,11 +27,15 @@ public protocol ReplyFeedbackGeneratorProtocol {
     func generateFeedback()
 }
 
-struct ReplyFeedbackGenerator: ReplyFeedbackGeneratorProtocol {
+public struct ReplyFeedbackGenerator: ReplyFeedbackGeneratorProtocol {
 
-    private let impactFeedbackGenerator = UIImpactFeedbackGenerator()
+    private let impactFeedbackGenerator: UIImpactFeedbackGenerator
 
-    func generateFeedback() {
+    public init() {
+        self.impactFeedbackGenerator = UIImpactFeedbackGenerator()
+    }
+
+    public func generateFeedback() {
         self.impactFeedbackGenerator.impactOccurred()
     }
 }

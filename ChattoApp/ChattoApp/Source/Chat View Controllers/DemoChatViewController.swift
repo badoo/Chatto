@@ -32,6 +32,17 @@ class DemoChatViewController: UIViewController {
     let keyboardUpdatesHandler: KeyboardUpdatesHandlerDelegate
     let messagesSelector = BaseMessagesSelector()
 
+    private lazy var chatPanGestureRecogniserHandler: ChatPanGestureRecogniserHandler = {
+        var panGestureHandlerConfig = CellPanGestureHandlerConfig.defaultConfig()
+        panGestureHandlerConfig.allowReplyRevealing = true
+
+        return ChatPanGestureRecogniserHandler(
+            panGestureHandlerConfig: panGestureHandlerConfig,
+            replyActionHandler: DemoReplyActionHandler(presentingViewController: self),
+            replyFeedbackGenerator: ReplyFeedbackGenerator()
+        )
+    }()
+
     var messageSender: DemoChatMessageSender
 
     init(dataSource: DemoChatDataSource,
@@ -104,11 +115,10 @@ class DemoChatViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupChatViewController()
-        self.baseChatViewController.cellPanGestureHandlerConfig.allowReplyRevealing = true
 
         self.title = "Chat"
         self.messagesSelector.delegate = self
-        self.baseChatViewController.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
+        self.chatPanGestureRecogniserHandler.chatViewController = self.baseChatViewController
     }
 
     func refreshContent() {
