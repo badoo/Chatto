@@ -26,10 +26,22 @@ import UIKit
 import Chatto
 import ChattoAdditions
 
-class DemoChatViewController: BaseChatViewController {
+class DemoChatViewController: UIViewController {
+    let baseChatViewController: BaseChatViewController
     let dataSource: DemoChatDataSource
     let keyboardUpdatesHandler: KeyboardUpdatesHandlerDelegate
     let messagesSelector = BaseMessagesSelector()
+
+    private lazy var chatPanGestureRecogniserHandler: ChatPanGestureRecogniserHandler = {
+        var panGestureHandlerConfig = CellPanGestureHandlerConfig.defaultConfig()
+        panGestureHandlerConfig.allowReplyRevealing = true
+
+        return ChatPanGestureRecogniserHandler(
+            panGestureHandlerConfig: panGestureHandlerConfig,
+            replyActionHandler: DemoReplyActionHandler(presentingViewController: self),
+            replyFeedbackGenerator: ReplyFeedbackGenerator()
+        )
+    }()
 
     var messageSender: DemoChatMessageSender
 
@@ -75,18 +87,20 @@ class DemoChatViewController: BaseChatViewController {
 
         self.keyboardUpdatesHandler = chatInputContainer.keyboardHandlerDelegate
 
-        super.init(
+        self.baseChatViewController = BaseChatViewController(
             inputBarPresenter: chatInputContainer.presenter,
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
             keyboardUpdatesHandler: keyboardHandler,
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 }
         )
-        chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
-        messagesViewController.delegate = self
-        chatInputContainer.presenter.viewController = self
+        super.init(nibName: nil, bundle: nil)
 
-        keyboardHandler.keyboardInputAdjustableViewController = self
+        chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
+        messagesViewController.delegate = self.baseChatViewController
+        chatInputContainer.presenter.viewController = self.baseChatViewController
+
+        keyboardHandler.keyboardInputAdjustableViewController = self.baseChatViewController
 
         keyboardHandler.keyboardInfo.observe(self) { [weak keyboardHandlerDelegate = chatInputContainer.keyboardHandlerDelegate] _, keyboardInfo in
             keyboardHandlerDelegate?.didAdjustBottomMargin(to: keyboardInfo.bottomMargin, state: keyboardInfo.state)
@@ -100,11 +114,33 @@ class DemoChatViewController: BaseChatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.cellPanGestureHandlerConfig.allowReplyRevealing = true
+        self.setupChatViewController()
 
         self.title = "Chat"
         self.messagesSelector.delegate = self
-        self.replyActionHandler = DemoReplyActionHandler(presentingViewController: self)
+        self.chatPanGestureRecogniserHandler.chatViewController = self.baseChatViewController
+    }
+
+    func refreshContent() {
+        self.baseChatViewController.refreshContent()
+    }
+
+    public func scrollToItem(withId id: String, position: UICollectionView.ScrollPosition, animated: Bool) {
+        self.baseChatViewController.scrollToItem(withId: id, position: position, animated: animated)
+    }
+
+    private func setupChatViewController() {
+        self.addChild(self.baseChatViewController)
+        defer { self.baseChatViewController.didMove(toParent: self) }
+
+        self.view.addSubview(self.baseChatViewController.view)
+        self.baseChatViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.view.topAnchor.constraint(equalTo: self.baseChatViewController.view.topAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.baseChatViewController.view.trailingAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.baseChatViewController.view.bottomAnchor),
+            self.view.leadingAnchor.constraint(equalTo: self.baseChatViewController.view.leadingAnchor),
+        ])
     }
 
     private static func makeChatInputPresenter(chatInputItems: [ChatInputItemProtocol],
@@ -234,11 +270,11 @@ class DemoChatViewController: BaseChatViewController {
 
 extension DemoChatViewController: MessagesSelectorDelegate {
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol) {
-        self.refreshContent()
+        self.baseChatViewController.refreshContent()
     }
 
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol) {
-        self.refreshContent()
+        self.baseChatViewController.refreshContent()
     }
 }
 

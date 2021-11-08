@@ -15,6 +15,7 @@
 		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
 		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
 		A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A452A8BF2705DAED00DCC8D5 /* Observable.swift */; };
+		A4724CDB27355829006B9562 /* ChatPanGestureRecogniserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */; };
 		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
 		A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */; };
 		A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */; };
@@ -65,6 +66,7 @@
 		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
 		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
 		A452A8BF2705DAED00DCC8D5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPanGestureRecogniserHandler.swift; sourceTree = "<group>"; };
 		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
 		A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				C3C7C39C1CAC4BC500A49929 /* BaseChatViewControllerView.swift */,
 				C3C7C3921CAC4BAC00A49929 /* CellPanGestureHandler.swift */,
 				C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */,
+				A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */,
 				C3C7C3951CAC4BAC00A49929 /* CollectionChanges.swift */,
 				C3C7C3941CAC4BAC00A49929 /* ChatDataSourceProtocol.swift */,
 				26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */,
@@ -407,6 +410,7 @@
 				A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */,
 				A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
+				A4724CDB27355829006B9562 /* ChatPanGestureRecogniserHandler.swift in Sources */,
 				A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */,
 				A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,

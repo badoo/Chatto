@@ -38,20 +38,17 @@ public protocol ItemPositionScrollable: AnyObject {
                       animated: Bool)
 }
 
-open class BaseChatViewController: UIViewController,
-                                   KeyboardInputAdjustableViewController {
+public final class BaseChatViewController: UIViewController,
+                                           KeyboardInputAdjustableViewController {
 
-    public let messagesViewController: ChatMessagesViewControllerProtocol
-    public let configuration: Configuration
+    private let messagesViewController: ChatMessagesViewControllerProtocol
+    private let configuration: Configuration
 
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
 
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
-
-    public var replyActionHandler: ReplyActionHandler?
-    public var replyFeedbackGenerator: ReplyFeedbackGeneratorProtocol? = BaseChatViewController.makeReplyFeedbackGenerator()
 
     public var collectionView: UICollectionView { self.messagesViewController.collectionView }
 
@@ -61,13 +58,7 @@ open class BaseChatViewController: UIViewController,
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesViewController.chatItemCompanionCollection
     }
-    /**
-     - You can use a decorator to:
-        - Provide the ChatCollectionViewLayout with margins between messages
-        - Provide to your pressenters additional attributes to help them configure their cells (for instance if a bubble should show a tail)
-        - You can also add new items (for instance time markers or failed cells)
-    */
-    private var cellPanGestureHandler: CellPanGestureHandler!
+
     private var isAdjustingInputContainer: Bool = false
 
     private var previousBoundsUsedForInsetsAdjustment: CGRect?
@@ -76,16 +67,6 @@ open class BaseChatViewController: UIViewController,
         didSet {
             self.adjustCollectionViewInsets(shouldUpdateContentOffset: false)
         }
-    }
-
-    public final var cellPanGestureHandlerConfig: CellPanGestureHandlerConfig = .defaultConfig() {
-        didSet {
-            self.cellPanGestureHandler?.config = self.cellPanGestureHandlerConfig
-        }
-    }
-
-    public var maximumInputSize: CGSize {
-        return self.view.bounds.size
     }
 
     public var inputContentBottomMargin: CGFloat {
@@ -100,7 +81,7 @@ open class BaseChatViewController: UIViewController,
         didSet { self.updateInputContainerBottomConstraint() }
     }
 
-    public var allContentFits: Bool {
+    private var allContentFits: Bool {
         let collectionView = self.collectionView
         let inputHeightWithKeyboard = self.view.bounds.height - self.inputBarContainer.frame.minY
         let insetTop = self.view.safeAreaInsets.top + self.layoutConfiguration.contentInsets.top
@@ -140,7 +121,7 @@ open class BaseChatViewController: UIViewController,
         self.view.backgroundColor = UIColor.white
     }
 
-    override open func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         self.setupInputBarPresenter()
@@ -157,7 +138,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.keyboardUpdatesHandler.startTracking()
@@ -167,7 +148,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         self.viewEventsHandlers.forEach {
@@ -175,7 +156,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         self.keyboardUpdatesHandler.stopTracking()
@@ -185,7 +166,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    open override func viewDidDisappear(_ animated: Bool) {
+    override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         self.viewEventsHandlers.forEach {
@@ -193,7 +174,7 @@ open class BaseChatViewController: UIViewController,
         }
     }
 
-    override open func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
@@ -245,10 +226,6 @@ open class BaseChatViewController: UIViewController,
             self.view.bottomAnchor.constraint(equalTo: self.messagesViewController.view.bottomAnchor),
             self.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: self.messagesViewController.view.leadingAnchor)
         ])
-
-        self.cellPanGestureHandler = CellPanGestureHandler(collectionView: self.messagesViewController.collectionView)
-        self.cellPanGestureHandler.replyDelegate = self
-        self.cellPanGestureHandler.config = self.cellPanGestureHandlerConfig
     }
 
     private func addInputBarContainer() {
@@ -257,7 +234,7 @@ open class BaseChatViewController: UIViewController,
         self.view.addSubview(self.inputBarContainer)
         let guide = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.inputBarContainer.topAnchor.constraint(greaterThanOrEqualTo: guide.topAnchor),
             self.inputBarContainer.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             self.inputBarContainer.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
         ])
@@ -297,7 +274,7 @@ open class BaseChatViewController: UIViewController,
         self.view.setNeedsLayout()
     }
 
-    func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
+    private func adjustCollectionViewInsets(shouldUpdateContentOffset: Bool) {
         guard self.isViewLoaded else { return }
 
         let collectionView = self.collectionView
@@ -354,10 +331,6 @@ open class BaseChatViewController: UIViewController,
         } else if !isInteracting || inputIsAtBottom {
             collectionView.contentOffset.y = newContentOffsetY
         }
-    }
-
-    private static func makeReplyFeedbackGenerator() -> ReplyFeedbackGeneratorProtocol? {
-        return ReplyFeedbackGenerator()
     }
 
     // MARK: - ChatMessagesViewControllerDelegate
@@ -462,6 +435,10 @@ extension BaseChatViewController: ItemPositionScrollable {
 }
 
 extension BaseChatViewController: ChatInputBarPresentingController {
+    public var maximumInputSize: CGSize {
+        return self.view.bounds.size
+    }
+
     public func setup(inputView: UIView) {
         self.inputBarContainer.subviews.forEach { $0.removeFromSuperview() }
 
@@ -528,20 +505,6 @@ extension BaseChatViewController: ChatInputBarPresentingController {
         callback?()
         self.isAdjustingInputContainer = false
     }
-}
-
-extension BaseChatViewController: ReplyIndicatorRevealerDelegate {
-
-    public func didPassThreshold(at: IndexPath) {
-        self.replyFeedbackGenerator?.generateFeedback()
-    }
-
-    public func didFinishReplyGesture(at indexPath: IndexPath) {
-        let item = self.chatItemCompanionCollection[indexPath.item].chatItem
-        self.replyActionHandler?.handleReply(for: item)
-    }
-
-    public func didCancelReplyGesture(at: IndexPath) { }
 }
 
 public extension BaseChatViewController {
