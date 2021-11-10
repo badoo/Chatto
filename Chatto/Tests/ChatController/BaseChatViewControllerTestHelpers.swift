@@ -54,7 +54,10 @@ extension BaseChatViewController {
         keyboardUpdatesHandler.keyboardInputAdjustableViewController = baseChatViewController
 
         keyboardUpdatesHandler.keyboardInfo.observe(self) { [weak baseChatViewController] _, keyboardInfo in
-            baseChatViewController?.changeInputContentBottomMargin(to: keyboardInfo.bottomMargin, completion: nil)
+            baseChatViewController?.changeInputContentBottomMarginWithoutAnimation(
+                to: keyboardInfo.bottomMargin,
+                completion: nil
+            )
         }
 
         return baseChatViewController

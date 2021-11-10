@@ -49,7 +49,7 @@ public final class SpringChatInputBarAnimation: ChatInputBarAnimationProtocol {
         CATransaction.commit()
     }
 
-    static func makeDefault() -> SpringChatInputBarAnimation {
+    public static func makeDefault() -> SpringChatInputBarAnimation {
         return SpringChatInputBarAnimation(
             duration: CATransaction.animationDuration(),
             initialSpringVelocity: 0

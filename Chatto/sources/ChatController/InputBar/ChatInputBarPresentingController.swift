@@ -41,7 +41,15 @@ public protocol ChatInputBarPresentingController: UIViewController {
 }
 
 public extension ChatInputBarPresentingController {
-    func changeInputContentBottomMargin(to value: CGFloat, completion: (() -> Void)?) {
+    func changeInputContentBottomMarginWithoutAnimation(to value: CGFloat, completion: (() -> Void)?) {
+        self.changeInputContentBottomMargin(
+            to: value,
+            animation: nil,
+            completion: completion
+        )
+    }
+
+    func changeInputContentBottomMarginWithDefaultAnimation(to value: CGFloat, completion: (() -> Void)?) {
         self.changeInputContentBottomMargin(
             to: value,
             animation: SpringChatInputBarAnimation.makeDefault(),

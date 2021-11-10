@@ -453,17 +453,10 @@ extension BaseChatViewController: ChatInputBarPresentingController {
         if let animation = animation {
             animation.animate(view: self.view, completion: completion)
         } else {
+            self.view.layoutIfNeeded()
             completion?()
         }
 
-        self.isAdjustingInputContainer = false
-    }
-
-    private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
-        self.isAdjustingInputContainer = true
-        self.inputContainerBottomAdditionalOffset = newValue
-        self.view.layoutIfNeeded()
-        callback?()
         self.isAdjustingInputContainer = false
     }
 }
