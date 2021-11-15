@@ -262,9 +262,11 @@ public class ExpandableChatInputBarPresenter: NSObject, ChatInputBarPresenter {
             animation: SpringChatInputBarAnimation(
                 duration: velocityAwareDuration,
                 initialSpringVelocity: velocity.y
-            ),
-            completion: nil
-        )
+            )
+        ) { [weak self] in
+            self?.shouldIgnoreContainerBottomMarginUpdates = false
+            self?.cleanupFocusedItem(animated: true)
+        }
     }
 
     private func cleanupFocusedItem(animated: Bool = false) {
