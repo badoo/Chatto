@@ -6,9 +6,10 @@ import UIKit
 
 public protocol KeyboardUpdatesHandlerProtocol: AnyObject {
     var keyboardInfo: Observable<KeyboardUpdatesInfo> { get }
-    var keyboardInputAdjustableViewController: UIViewController? { get set }
+    var keyboardInputAdjustableViewController: ChatInputBarPresentingController? { get set }
     var keyboardTrackingView: UIView { get }
 
+    func adjustLayoutIfNeeded()
     func startTracking()
     func stopTracking()
 }
@@ -37,7 +38,7 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     private lazy var _keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
 
     public private(set) var keyboardInfo: Observable<KeyboardUpdatesInfo>// DelegateStore<KeyboardUpdatesHandlerDelegate>
-    public weak var keyboardInputAdjustableViewController: UIViewController?
+    public weak var keyboardInputAdjustableViewController: ChatInputBarPresentingController?
 
     private var keyboardState: KeyboardState {
         return self.keyboardTracker.keyboardStatus.state
@@ -63,6 +64,10 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
         self.isTracking = false
     }
 
+    public func adjustLayoutIfNeeded() {
+        self.adjustTrackingViewSizeIfNeeded()
+    }
+
     private func makeTrackingView() -> KeyboardTrackingView {
         let trackingView = KeyboardTrackingView()
         trackingView.positionChangedCallback = { [weak self] in
@@ -73,6 +78,12 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
         }
 
         return trackingView
+    }
+
+    private func adjustTrackingViewSizeIfNeeded() {
+        guard self.isTracking && self.keyboardState == .shown else { return }
+
+        self.adjustTrackingViewSize()
     }
 
     private func adjustLayoutInputAtTrackingViewIfNeeded() {
@@ -111,11 +122,12 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
                   !self.isPerformingForcedLayout else { return }
 
             self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraintValue, state: self.keyboardState)
+            self.adjustTrackingViewSizeIfNeeded()
         }
     }
 
     private func bottomConstraintValue(for keyboardFrame: CGRect,
-                                      keyboardInputAdjustableViewController: UIViewController) -> CGFloat {
+                                      keyboardInputAdjustableViewController: ChatInputBarPresentingController) -> CGFloat {
         let rectInView = keyboardInputAdjustableViewController.view.convert(keyboardFrame, from: nil)
 
         guard keyboardFrame.height > 0 else { return 0 }
@@ -138,6 +150,27 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
         defer { self.isPerformingForcedLayout = false }
 
         self.keyboardInfo.value = KeyboardUpdatesInfo(bottomMargin: bottomConstraint, state: self.keyboardState)
+    }
+
+    private func adjustTrackingViewSize() {
+        guard let keyboardInputAdjustableViewController = self.keyboardInputAdjustableViewController else { return }
+
+        let inputBarContainerView = keyboardInputAdjustableViewController.inputBarContainer
+        let inputBarContainerViewHeight = inputBarContainerView.bounds.height
+        guard self._keyboardTrackingView.preferredSize.height != inputBarContainerViewHeight else {
+            return
+        }
+
+        self._keyboardTrackingView.preferredSize.height = inputBarContainerViewHeight
+        self.isPerformingForcedLayout = true
+        defer { self.isPerformingForcedLayout = false }
+
+        // Sometimes, the autolayout system doesn't finish the layout inside of the input bar container at this point.
+        // If it happens, then the input bar may have a height different than an input bar container.
+        // We need to ensure that their heights are the same; otherwise, it would lead to incorrect calculations that in turn affects lastKnownKeyboardHeight.
+        // Tracking view adjustment changes a keyboard height and triggers an update of lastKnownKeyboardHeight.
+        inputBarContainerView.layoutIfNeeded()
+        self.keyboardTrackingView.window?.layoutIfNeeded()
     }
 
     private func calculateBottomConstraintFromTrackingView() -> CGFloat {

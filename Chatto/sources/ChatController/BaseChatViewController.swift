@@ -176,6 +176,7 @@ public final class BaseChatViewController: UIViewController {
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
 
+        self.keyboardUpdatesHandler.adjustLayoutIfNeeded()
         self.updateInputContainerBottomBaseOffset()
 
         self.viewEventsHandlers.forEach {
