@@ -38,7 +38,7 @@ public protocol ChatDataSourceDelegateProtocol: AnyObject {
     func chatDataSourceDidUpdate(_ chatDataSource: ChatDataSourceProtocol, updateType: UpdateType)
 }
 
-public protocol ChatDataSourceProtocol: ChatMessagesViewModelProtocol, BaseChatViewControllerViewModelProtocol {
+public protocol ChatDataSourceProtocol: ChatMessagesViewModelProtocol {
     var hasMoreNext: Bool { get }
     var hasMorePrevious: Bool { get }
     var chatItems: [ChatItemProtocol] { get }
