@@ -38,15 +38,12 @@ public protocol ItemPositionScrollable: AnyObject {
                       animated: Bool)
 }
 
-public final class BaseChatViewController: UIViewController,
-                                           KeyboardInputAdjustableViewController {
+public final class BaseChatViewController: UIViewController {
 
     private let messagesViewController: ChatMessagesViewControllerProtocol
     private let configuration: Configuration
-
     private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
-
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
 
@@ -178,8 +175,8 @@ public final class BaseChatViewController: UIViewController,
         super.viewDidLayoutSubviews()
 
         self.adjustCollectionViewInsets(shouldUpdateContentOffset: true)
-        self.keyboardUpdatesHandler.adjustLayoutIfNeeded()
 
+        self.keyboardUpdatesHandler.adjustLayoutIfNeeded()
         self.updateInputContainerBottomBaseOffset()
 
         self.viewEventsHandlers.forEach {
@@ -238,7 +235,6 @@ public final class BaseChatViewController: UIViewController,
             self.inputBarContainer.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             self.inputBarContainer.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
         ])
-        self.inputContainerBottomConstraint = self.view.bottomAnchor.constraint(equalTo: self.inputBarContainer.bottomAnchor)
         self.view.addConstraint(self.inputContainerBottomConstraint)
     }
 
@@ -452,57 +448,16 @@ extension BaseChatViewController: ChatInputBarPresentingController {
         ])
     }
 
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, initialSpringVelocity: CGFloat = 0.0, callback: (() -> Void)? = nil) {
-        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
-        if animated {
-            self.isAdjustingInputContainer = true
-            self.inputContainerBottomAdditionalOffset = newValue
-            CATransaction.begin()
-            UIView.animate(
-                withDuration: duration,
-                delay: 0.0,
-                usingSpringWithDamping: 1.0,
-                initialSpringVelocity: initialSpringVelocity,
-                options: .curveLinear,
-                animations: { self.view.layoutIfNeeded() },
-                completion: { _ in })
-            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
-            CATransaction.commit()
-            self.isAdjustingInputContainer = false
-        } else {
-            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
-        }
-    }
-
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)? = nil) {
-        guard self.inputContainerBottomConstraint.constant != newValue else { callback?(); return }
-        if animated {
-            self.isAdjustingInputContainer = true
-            CATransaction.begin()
-            CATransaction.setAnimationTimingFunction(timingFunction)
-            self.inputContainerBottomAdditionalOffset = newValue
-            UIView.animate(
-                withDuration: duration,
-                animations: { self.view.layoutIfNeeded() },
-                completion: { _ in }
-            )
-            CATransaction.setCompletionBlock(callback) // this callback is guaranteed to be called
-            CATransaction.commit()
-            self.isAdjustingInputContainer = false
-        } else {
-            self.changeInputContentBottomMarginWithoutAnimationTo(newValue, callback: callback)
-        }
-    }
-
-    public func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool = false, callback: (() -> Void)? = nil) {
-        self.changeInputContentBottomMarginTo(newValue, animated: animated, duration: CATransaction.animationDuration(), callback: callback)
-    }
-
-    private func changeInputContentBottomMarginWithoutAnimationTo(_ newValue: CGFloat, callback: (() -> Void)?) {
+    public func changeInputContentBottomMargin(to value: CGFloat, animation: ChatInputBarAnimationProtocol?, completion: (() -> Void)?) {
         self.isAdjustingInputContainer = true
-        self.inputContainerBottomAdditionalOffset = newValue
-        self.view.layoutIfNeeded()
-        callback?()
+        self.inputContainerBottomAdditionalOffset = value
+        if let animation = animation {
+            animation.animate(view: self.view, completion: completion)
+        } else {
+            self.view.layoutIfNeeded()
+            completion?()
+        }
+
         self.isAdjustingInputContainer = false
     }
 }

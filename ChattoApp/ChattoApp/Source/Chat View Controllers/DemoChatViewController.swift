@@ -302,6 +302,9 @@ private final class DefaultKeyboardHandler: KeyboardUpdatesHandlerDelegate {
     func didAdjustBottomMargin(to margin: CGFloat, state: KeyboardState) {
         guard let presenter = self.presenter?.viewController else { return }
 
-        presenter.changeInputContentBottomMarginTo(margin, animated: true, callback: nil)
+        presenter.changeInputContentBottomMarginWithDefaultAnimation(
+            to: margin,
+            completion: nil
+        )
     }
 }

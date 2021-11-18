@@ -23,6 +23,10 @@
  */
 import UIKit
 
+public protocol ChatInputBarAnimationProtocol {
+    func animate(view: UIView, completion: (() -> Void)?)
+}
+
 public protocol ChatInputBarPresentingController: UIViewController {
 
     var inputBarContainer: UIView { get }
@@ -33,7 +37,23 @@ public protocol ChatInputBarPresentingController: UIViewController {
 
     func setup(inputView: UIView)
 
-    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, callback: (() -> Void)?)
-    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, initialSpringVelocity: CGFloat, callback: (() -> Void)?)
-    func changeInputContentBottomMarginTo(_ newValue: CGFloat, animated: Bool, duration: CFTimeInterval, timingFunction: CAMediaTimingFunction, callback: (() -> Void)?)
+    func changeInputContentBottomMargin(to value: CGFloat, animation: ChatInputBarAnimationProtocol?, completion: (() -> Void)?)
+}
+
+public extension ChatInputBarPresentingController {
+    func changeInputContentBottomMarginWithoutAnimation(to value: CGFloat, completion: (() -> Void)?) {
+        self.changeInputContentBottomMargin(
+            to: value,
+            animation: nil,
+            completion: completion
+        )
+    }
+
+    func changeInputContentBottomMarginWithDefaultAnimation(to value: CGFloat, completion: (() -> Void)?) {
+        self.changeInputContentBottomMargin(
+            to: value,
+            animation: SpringChatInputBarAnimation.makeDefault(),
+            completion: completion
+        )
+    }
 }

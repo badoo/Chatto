@@ -4,13 +4,9 @@
 
 import UIKit
 
-public protocol KeyboardInputAdjustableViewController: UIViewController {
-    var inputBarContainer: UIView { get }
-}
-
 public protocol KeyboardUpdatesHandlerProtocol: AnyObject {
     var keyboardInfo: Observable<KeyboardUpdatesInfo> { get }
-    var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController? { get set }
+    var keyboardInputAdjustableViewController: ChatInputBarPresentingController? { get set }
     var keyboardTrackingView: UIView { get }
 
     func adjustLayoutIfNeeded()
@@ -42,7 +38,7 @@ public final class KeyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol {
     private lazy var _keyboardTrackingView: KeyboardTrackingView = self.makeTrackingView()
 
     public private(set) var keyboardInfo: Observable<KeyboardUpdatesInfo>// DelegateStore<KeyboardUpdatesHandlerDelegate>
-    public weak var keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController?
+    public weak var keyboardInputAdjustableViewController: ChatInputBarPresentingController?
 
     private var keyboardState: KeyboardState {
         return self.keyboardTracker.keyboardStatus.state
@@ -131,7 +127,7 @@ extension KeyboardUpdatesHandler: KeyboardTrackerDelegate {
     }
 
     private func bottomConstraintValue(for keyboardFrame: CGRect,
-                                      keyboardInputAdjustableViewController: KeyboardInputAdjustableViewController) -> CGFloat {
+                                      keyboardInputAdjustableViewController: ChatInputBarPresentingController) -> CGFloat {
         let rectInView = keyboardInputAdjustableViewController.view.convert(keyboardFrame, from: nil)
 
         guard keyboardFrame.height > 0 else { return 0 }

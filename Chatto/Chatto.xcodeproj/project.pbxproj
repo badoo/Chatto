@@ -14,6 +14,8 @@
 		A40DC13E26F2072100166C55 /* KeyboardUpdatesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */; };
 		A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */; };
 		A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */; };
+		A42C66DE273BC387006B032A /* TimingChatInputBarAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42C66DD273BC387006B032A /* TimingChatInputBarAnimation.swift */; };
+		A42C66E0273BC3B1006B032A /* SpringChatInputBarAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42C66DF273BC3B1006B032A /* SpringChatInputBarAnimation.swift */; };
 		A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A452A8BF2705DAED00DCC8D5 /* Observable.swift */; };
 		A4724CDB27355829006B9562 /* ChatPanGestureRecogniserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */; };
 		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
@@ -42,7 +44,7 @@
 		C3C7C39D1CAC4BC500A49929 /* BaseChatViewControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39C1CAC4BC500A49929 /* BaseChatViewControllerView.swift */; };
 		C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */; };
 		C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */; };
-		EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */; };
+		EA24F40C21F8BF0D007735DD /* ChatInputBarPresentingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA24F40A21F8BF0D007735DD /* ChatInputBarPresentingController.swift */; };
 		EA3D58FF22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +67,8 @@
 		A40DC13D26F2072100166C55 /* KeyboardUpdatesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUpdatesHandler.swift; sourceTree = "<group>"; };
 		A410D4BA26C56FF100A48342 /* ChatMessagesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerTests.swift; sourceTree = "<group>"; };
 		A410D4BC26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewControllerHelpers.swift; sourceTree = "<group>"; };
+		A42C66DD273BC387006B032A /* TimingChatInputBarAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingChatInputBarAnimation.swift; sourceTree = "<group>"; };
+		A42C66DF273BC3B1006B032A /* SpringChatInputBarAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringChatInputBarAnimation.swift; sourceTree = "<group>"; };
 		A452A8BF2705DAED00DCC8D5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPanGestureRecogniserHandler.swift; sourceTree = "<group>"; };
 		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
@@ -95,7 +99,7 @@
 		C3C7C39E1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemPresenterFactory.swift; sourceTree = "<group>"; };
 		C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
 		C3E905041BE0521700C662A2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = sources/Info.plist; sourceTree = SOURCE_ROOT; };
-		EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputPositionControlling.swift; sourceTree = "<group>"; };
+		EA24F40A21F8BF0D007735DD /* ChatInputBarPresentingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresentingController.swift; sourceTree = "<group>"; };
 		EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatItemCompanionCollectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,11 +163,11 @@
 			isa = PBXGroup;
 			children = (
 				A4C03CFC26CE42E400360526 /* InputBar */,
+				A42C66DC273BC35E006B032A /* InputBarPresentingController */,
 				A4F7666426BD4F2600008F24 /* ChatMessages */,
 				50D5BF4A25079D759B602EE5 /* Collaborators */,
 				C3E904B21BE0509E00C662A2 /* BaseChatViewController.swift */,
 				3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */,
-				EA24F40A21F8BF0D007735DD /* InputPositionControlling.swift */,
 				C36281E61BF0F196004D6BCE /* UICollectionView+Scrolling.swift */,
 			);
 			path = ChatController;
@@ -179,6 +183,22 @@
 			path = Keyboard;
 			sourceTree = "<group>";
 		};
+		A42C66DC273BC35E006B032A /* InputBarPresentingController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = InputBarPresentingController;
+			sourceTree = "<group>";
+		};
+		A42C66E1273BC3DA006B032A /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				A42C66DD273BC387006B032A /* TimingChatInputBarAnimation.swift */,
+				A42C66DF273BC3B1006B032A /* SpringChatInputBarAnimation.swift */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
 		A4BB719A26F8875D00A941C4 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,6 +211,8 @@
 		A4C03CFC26CE42E400360526 /* InputBar */ = {
 			isa = PBXGroup;
 			children = (
+				A42C66E1273BC3DA006B032A /* Animations */,
+				EA24F40A21F8BF0D007735DD /* ChatInputBarPresentingController.swift */,
 				A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */,
 			);
 			path = InputBar;
@@ -398,10 +420,11 @@
 				C3C7C39D1CAC4BC500A49929 /* BaseChatViewControllerView.swift in Sources */,
 				C3E904DC1BE0509E00C662A2 /* BaseChatViewController.swift in Sources */,
 				A40DC13C26F2067000166C55 /* KeyboardTrackingView.swift in Sources */,
+				A42C66E0273BC3B1006B032A /* SpringChatInputBarAnimation.swift in Sources */,
 				A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */,
 				A40DC13E26F2072100166C55 /* KeyboardUpdatesHandler.swift in Sources */,
 				C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */,
-				EA24F40C21F8BF0D007735DD /* InputPositionControlling.swift in Sources */,
+				EA24F40C21F8BF0D007735DD /* ChatInputBarPresentingController.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
@@ -414,6 +437,7 @@
 				A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */,
 				A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */,
 				C342D0BD1C638681008A4605 /* ChatItemCompanion.swift in Sources */,
+				A42C66DE273BC387006B032A /* TimingChatInputBarAnimation.swift in Sources */,
 				C36281E71BF0F196004D6BCE /* UICollectionView+Scrolling.swift in Sources */,
 				26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
