@@ -136,6 +136,10 @@ public final class BaseChatViewController: UIViewController {
     }
 
     override public func viewWillAppear(_ animated: Bool) {
+        self.viewEventsHandlers.forEach {
+            $0.onBeforeViewWillAppear()
+        }
+
         super.viewWillAppear(animated)
 
         self.keyboardUpdatesHandler.startTracking()

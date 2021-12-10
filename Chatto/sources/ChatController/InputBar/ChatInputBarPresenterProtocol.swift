@@ -48,6 +48,7 @@ public extension CollectionViewEventsHandling {
 public protocol ViewPresentationEventsHandling: AnyObject {
     func onViewDidLoad()
 
+    func onBeforeViewWillAppear()
     func onViewWillAppear()
     func onViewDidAppear()
 
