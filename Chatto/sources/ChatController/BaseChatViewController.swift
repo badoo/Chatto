@@ -28,10 +28,6 @@ public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
 }
 
-public protocol BaseChatViewControllerViewModelProtocol: AnyObject {
-    var onDidUpdate: (() -> Void)? { get set }
-}
-
 public protocol ItemPositionScrollable: AnyObject {
     func scrollToItem(withId: String,
                       position: UICollectionView.ScrollPosition,
