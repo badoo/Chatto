@@ -237,7 +237,3 @@ final class FakePresenter: ChatItemPresenterProtocol {
         fakeCell.backgroundColor = UIColor.red
     }
 }
-
-private final class FakeChatViewControllerViewModel: BaseChatViewControllerViewModelProtocol {
-    var onDidUpdate: (() -> Void)?
-}
