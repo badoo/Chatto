@@ -40,6 +40,7 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     private let chatItemsDecorator: ChatItemsDecoratorProtocol
     private let chatItemPresenterFactory: ChatItemPresenterFactoryProtocol
     private let chatMessagesViewModel: ChatMessagesViewModelProtocol
+    private let collectionViewLayoutModelFactory: ChatCollectionViewLayoutModelFactoryProtocol
     private let configuration: Configuration
     private let referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProvider
     private let collectionUpdatesQueue: SerialTaskQueueProtocol
@@ -65,10 +66,12 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
                 chatMessagesViewModel: ChatMessagesViewModelProtocol,
                 configuration: Configuration,
                 referenceIndexPathRestoreProvider: @escaping ReferenceIndexPathRestoreProvider,
-                updateQueue: SerialTaskQueueProtocol) {
+                updateQueue: SerialTaskQueueProtocol,
+                collectionViewLayoutModelFactory: ChatCollectionViewLayoutModelFactoryProtocol = ChatCollectionViewLayoutModelFactory()) {
         self.chatItemsDecorator = chatItemsDecorator
         self.chatItemPresenterFactory = chatItemPresenterFactory
         self.chatMessagesViewModel = chatMessagesViewModel
+        self.collectionViewLayoutModelFactory = collectionViewLayoutModelFactory
         self.configuration = configuration
         self.referenceIndexPathRestoreProvider = referenceIndexPathRestoreProvider
         self.collectionUpdatesQueue = updateQueue
@@ -197,10 +200,13 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         let performInBackground = updateType != .firstLoad
 
         self.isLoadingContents = true
-        let performBatchUpdates: (CollectionChanges, @escaping () -> Void) -> Void  = { [weak self] changes, updateModelClosure in
+        let performBatchUpdates: (ChatCollectionItemsDiffer.Diff) -> Void = { [weak self] diff in
             self?.performBatchUpdates(
-                updateModelClosure: updateModelClosure,
-                changes: changes,
+                updateModelClosure: { [weak self] in
+                    self?.layoutModel = diff.layoutModel
+                    self?.chatItemCompanionCollection = diff.itemCompanionCollection
+                },
+                changes: diff.changes,
                 updateType: updateType
             ) {
                 self?.isLoadingContents = false
@@ -208,8 +214,15 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         }
 
-        let createModelUpdate = { [weak self] in
-            return self?.createModelUpdates(
+
+        let layoutModelsProcessor = ChatCollectionItemsDiffer(
+            chatItemsDecorator: self.chatItemsDecorator,
+            chatItemPresenterFactory: self.chatItemPresenterFactory,
+            chatCollectionViewLayoutModelFactory: self.collectionViewLayoutModelFactory
+        )
+
+        let createCollectionItemsDiffBlock: () -> ChatCollectionItemsDiffer.Diff? = {
+            return layoutModelsProcessor.calculateChanges(
                 newItems: newItems,
                 oldItems: oldItems,
                 collectionViewWidth: collectionViewWidth
@@ -218,16 +231,16 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
         if performInBackground {
             DispatchQueue.global(qos: .userInitiated).async {
-                guard let modelUpdate = createModelUpdate() else { return }
+                guard let collectionItemsDiff = createCollectionItemsDiffBlock() else { return }
 
                 DispatchQueue.main.async {
-                    performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
+                    performBatchUpdates(collectionItemsDiff)
                 }
             }
         } else {
-            guard let modelUpdate = createModelUpdate() else { return }
+            guard let collectionItemsDiff = createCollectionItemsDiffBlock() else { return }
             
-            performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
+            performBatchUpdates(collectionItemsDiff)
         }
     }
 
@@ -260,21 +273,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         }
     }
 
-    private func createModelUpdates(newItems: [ChatItemProtocol], oldItems: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> (changes: CollectionChanges, updateModelClosure: () -> Void) {
-        let newDecoratedItems = self.chatItemsDecorator.decorateItems(newItems)
-        let changes = generateChanges(
-            oldCollection: oldItems.map(HashableItem.init),
-            newCollection: newDecoratedItems.map(HashableItem.init)
-        )
-        let itemCompanionCollection = self.createCompanionCollection(fromChatItems: newDecoratedItems, previousCompanionCollection: oldItems)
-        let layoutModel = self.createLayoutModel(itemCompanionCollection, collectionViewWidth: collectionViewWidth)
-        let updateModelClosure : () -> Void = { [weak self] in
-            self?.layoutModel = layoutModel
-            self?.chatItemCompanionCollection = itemCompanionCollection
-        }
-        return (changes, updateModelClosure)
-    }
-
     // Returns scrolling position in interval [0, 1], 0 top, 1 bottom
     public var focusPosition: Double {
         guard let collectionView = self.collectionView else { return 0 }
@@ -296,72 +294,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         let collectionViewContentYOffset = collectionView.contentOffset.y
         let midContentOffset = collectionViewContentYOffset + collectionView.visibleRect().height / 2
         return min(max(0, Double(midContentOffset / contentHeight)), 1.0)
-    }
-
-    private func createCompanionCollection(fromChatItems newItems: [DecoratedChatItem], previousCompanionCollection oldItems: ChatItemCompanionCollection) -> ChatItemCompanionCollection {
-        return ChatItemCompanionCollection(items: newItems.map { (decoratedChatItem) -> ChatItemCompanion in
-
-            /*
-             We use an assumption, that message having a specific messageId never changes its type.
-             If such changes has to be supported, then generation of changes has to suppport reloading items.
-             Otherwise, updateVisibleCells may try to update the existing cells with new presenters which aren't able to work with another types.
-             */
-
-            let presenter: ChatItemPresenterProtocol = {
-                guard let oldChatItemCompanion = oldItems[decoratedChatItem.uid] ?? oldItems[decoratedChatItem.chatItem.uid],
-                    oldChatItemCompanion.chatItem.type == decoratedChatItem.chatItem.type,
-                    oldChatItemCompanion.presenter.isItemUpdateSupported else {
-                        return self.chatItemPresenterFactory.createChatItemPresenter(decoratedChatItem.chatItem)
-                }
-
-                oldChatItemCompanion.presenter.update(with: decoratedChatItem.chatItem)
-                return oldChatItemCompanion.presenter
-            }()
-
-            return ChatItemCompanion(uid: decoratedChatItem.uid, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)
-        })
-    }
-
-    private func createLayoutModel(_ items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
-        // swiftlint:disable:next nesting
-        typealias IntermediateItemLayoutData = (height: CGFloat?, bottomMargin: CGFloat)
-        typealias ItemLayoutData = (height: CGFloat, bottomMargin: CGFloat)
-        // swiftlint:disable:previous nesting
-
-        func createLayoutModel(intermediateLayoutData: [IntermediateItemLayoutData]) -> ChatCollectionViewLayoutModel {
-            let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
-                return (height: intermediateLayoutData.height!, bottomMargin: intermediateLayoutData.bottomMargin)
-            }
-            return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
-        }
-
-        let isInBackground = !Thread.isMainThread
-        var intermediateLayoutData = [IntermediateItemLayoutData]()
-        var itemsForMainThread = [(index: Int, itemCompanion: ChatItemCompanion)]()
-
-        for (index, itemCompanion) in items.enumerated() {
-            var height: CGFloat?
-            let bottomMargin: CGFloat = itemCompanion.decorationAttributes?.bottomMargin ?? 0
-            if !isInBackground || itemCompanion.presenter.canCalculateHeightInBackground {
-                height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
-            } else {
-                itemsForMainThread.append((index: index, itemCompanion: itemCompanion))
-            }
-            intermediateLayoutData.append((height: height, bottomMargin: bottomMargin))
-        }
-
-        if itemsForMainThread.count > 0 {
-            DispatchQueue.main.sync {
-                for (index, itemCompanion) in itemsForMainThread {
-                    let height = itemCompanion.presenter.heightForCell(
-                        maximumWidth: collectionViewWidth,
-                        decorationAttributes: itemCompanion.decorationAttributes
-                    )
-                    intermediateLayoutData[index].height = height
-                }
-            }
-        }
-        return createLayoutModel(intermediateLayoutData: intermediateLayoutData)
     }
 
     private func performBatchUpdates(updateModelClosure: @escaping () -> Void, // swiftlint:disable:this cyclomatic_complexity
@@ -560,7 +492,7 @@ extension ChatMessageCollectionAdapter: ChatCollectionViewLayoutModelProviderPro
         guard let collectionView = self.collectionView else { return self.layoutModel }
 
         if self.layoutModel.calculatedForWidth != collectionView.bounds.width {
-            self.layoutModel = self.createLayoutModel(
+            self.layoutModel = self.collectionViewLayoutModelFactory.createLayoutModel(
                 self.chatItemCompanionCollection,
                 collectionViewWidth: collectionView.bounds.width
             )
@@ -700,21 +632,6 @@ public extension ChatMessageCollectionAdapter.Configuration {
             preferredMaxMessageCountAdjustment: 400,
             updatesAnimationDuration: 0.33
         )
-    }
-}
-
-private struct HashableItem: Hashable {
-    private let uid: String
-    private let type: String
-
-    init(_ decoratedChatItem: DecoratedChatItem) {
-        self.uid = decoratedChatItem.uid
-        self.type = decoratedChatItem.chatItem.type
-    }
-
-    init(_ chatItemCompanion: ChatItemCompanion) {
-        self.uid = chatItemCompanion.uid
-        self.type = chatItemCompanion.chatItem.type
     }
 }
 
