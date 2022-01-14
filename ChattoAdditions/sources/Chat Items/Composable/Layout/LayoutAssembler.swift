@@ -72,7 +72,7 @@ public struct LayoutAssembler {
         where Key.LayoutProvider.Layout: SizeContainer, Key.View: ManualLayoutViewProtocol, Key.View.Layout == Key.LayoutProvider.Layout {
         let erasedKey = AnyBindingKey(key)
         self.makeSizeProviders[erasedKey] = { anyLayoutProvider in
-            guard let layoutProvider = anyLayoutProvider as? CachingLayoutProvder<Key.LayoutProvider.Layout> else {
+            guard let layoutProvider = anyLayoutProvider as? CachingLayoutProvider<Key.LayoutProvider.Layout> else {
                 throw Error.internalInconsistency
             }
             return AnySizeProvider(layoutProvider)
@@ -81,7 +81,7 @@ public struct LayoutAssembler {
             guard let layoutProvider = anyLayoutProvider as? Key.LayoutProvider else {
                 throw Error.internalInconsistency
             }
-            return CachingLayoutProvder(layoutProvider)
+            return CachingLayoutProvider(layoutProvider)
         }
         self.layoutApplicators[erasedKey] = { anyView, anyLayout in
             guard let view = anyView as? Key.View, let layout = anyLayout as? Key.LayoutProvider.Layout else {
@@ -170,7 +170,7 @@ public protocol AnyCachedLayoutProvider {
     var lastPerformedLayoutResult: Any? { get }
 }
 
-private final class CachingLayoutProvder<Layout: LayoutModel>: LayoutProviderProtocol {
+private final class CachingLayoutProvider<Layout: LayoutModel>: LayoutProviderProtocol {
 
     private let _layout: (LayoutContext) throws -> Layout
 
@@ -187,7 +187,7 @@ private final class CachingLayoutProvder<Layout: LayoutModel>: LayoutProviderPro
     }
 }
 
-extension CachingLayoutProvder: AnyCachedLayoutProvider {
+extension CachingLayoutProvider: AnyCachedLayoutProvider {
     var lastPerformedLayoutResult: Any? { self.lastLayout }
 }
 
