@@ -77,7 +77,7 @@ final class CompoundMessageView: UIView, ManualLayoutViewProtocol {
 }
 
 extension CompoundMessageView: MultipleContainerViewProtocol {
-    func addChildren(children: [UIView]) {
+    func add(children: [UIView]) {
         self.componentViews = children
     }
 }

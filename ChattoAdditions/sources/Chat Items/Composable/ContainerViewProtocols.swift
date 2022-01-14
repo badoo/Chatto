@@ -4,13 +4,13 @@ import UIKit
 // MARK: - Single
 
 public protocol SingleContainerViewProtocol {
-    func addChild(view: UIView)
+    func add(child view: UIView)
 }
 
 public struct DefaultSingleViewComposition<View: SingleContainerViewProtocol>: SingleViewComposition {
     init() {}
     public func add(child: UIView, to parent: View) {
-        parent.addChild(view: child)
+        parent.add(child: child)
     }
 }
 
@@ -29,13 +29,13 @@ extension ViewAssembler {
 // MARK: - Multiple
 
 public protocol MultipleContainerViewProtocol {
-    func addChildren(children: [UIView])
+    func add(children: [UIView])
 }
 
 public struct DefaultMultipleViewComposition<View: MultipleContainerViewProtocol>: MultipleViewComposition {
     init() {}
     public func add(children: [UIView], to parent: View) {
-        parent.addChildren(children: children)
+        parent.add(children: children)
     }
 }
 

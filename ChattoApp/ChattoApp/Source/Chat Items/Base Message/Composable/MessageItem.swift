@@ -116,7 +116,7 @@ struct MessageBubbleLayout: LayoutModel, SizeContainer {
 }
 
 extension MessageBubbleView: SingleContainerViewProtocol {
-    func addChild(view: UIView) {
+    func add(child view: UIView) {
         self.contentView = view
     }
 }
