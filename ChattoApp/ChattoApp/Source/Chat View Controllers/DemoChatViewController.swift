@@ -53,16 +53,12 @@ class DemoChatViewController: UIViewController {
 
         let adapterConfig = ChatMessageCollectionAdapter.Configuration.default
         let presentersBuilder: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
-        if shouldUseNewMessageArchitecture {
-            presentersBuilder = Self.makeNewPresenterBuilders()
-        } else {
-            presentersBuilder = Self.makeOldPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
-        }
-
         let fallbackItemPresenterFactory: ChatItemPresenterFactoryProtocol
         if shouldUseNewMessageArchitecture {
+            presentersBuilder = Self.makeNewPresenterBuilders()
             fallbackItemPresenterFactory = Self.makeNewFallbackItemPresenterFactory()
         } else {
+            presentersBuilder = Self.makeOldPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
             fallbackItemPresenterFactory = DummyItemPresenterFactory()
         }
 
