@@ -46,14 +46,25 @@ class DemoChatViewController: UIViewController {
     var messageSender: DemoChatMessageSender
 
     init(dataSource: DemoChatDataSource,
-         shouldUseAlternativePresenter: Bool = false) {
+         shouldUseAlternativePresenter: Bool = false,
+         shouldUseNewMessageArchitecture: Bool = false) {
         self.dataSource = dataSource
         self.messageSender = dataSource.messageSender
 
         let adapterConfig = ChatMessageCollectionAdapter.Configuration.default
-        let presentersBuilder = Self.createPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
+        let presentersBuilder: [ChatItemType: [ChatItemPresenterBuilderProtocol]]
+        let fallbackItemPresenterFactory: ChatItemPresenterFactoryProtocol
+        if shouldUseNewMessageArchitecture {
+            presentersBuilder = Self.makeNewPresenterBuilders()
+            fallbackItemPresenterFactory = Self.makeNewFallbackItemPresenterFactory()
+        } else {
+            presentersBuilder = Self.makeOldPresenterBuilders(messageSender: self.messageSender, messageSelector: self.messagesSelector)
+            fallbackItemPresenterFactory = DummyItemPresenterFactory()
+        }
+
         let chatItemPresenterFactory = ChatItemPresenterFactory(
-            presenterBuildersByType: presentersBuilder
+            presenterBuildersByType: presentersBuilder,
+            fallbackItemPresenterFactory: fallbackItemPresenterFactory
         )
         let chatItemsDecorator = DemoChatItemsDecorator(messagesSelector: self.messagesSelector)
         let chatMessageCollectionAdapter = ChatMessageCollectionAdapter(
@@ -183,9 +194,12 @@ class DemoChatViewController: UIViewController {
         return items
     }
 
-    static private func createPresenterBuilders(messageSender: DemoChatMessageSender,
-                                                messageSelector: BaseMessagesSelector) -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+    class func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
+        return DemoTextMessageViewModelBuilder()
+    }
 
+    private static func makeOldPresenterBuilders(messageSender: DemoChatMessageSender,
+                                          messageSelector: BaseMessagesSelector) -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: Self.createTextMessageViewModelBuilder(),
             interactionHandler: DemoMessageInteractionHandler(messageSender: messageSender, messagesSelector: messageSelector)
@@ -239,8 +253,190 @@ class DemoChatViewController: UIViewController {
         ]
     }
 
-    class func createTextMessageViewModelBuilder() -> DemoTextMessageViewModelBuilder {
-        return DemoTextMessageViewModelBuilder()
+    private static func makeNewFallbackItemPresenterFactory() -> ChatItemPresenterFactoryProtocol {
+
+        struct DummyItemPresenterFactory: ChatItemPresenterFactoryProtocol {
+
+            typealias PresenterBuilder = ChatItemPresenterBuilderProtocol & ChatItemPresenterBuilderCollectionViewConfigurable
+
+            let presenterBuilder: PresenterBuilder
+
+            func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
+                guard self.presenterBuilder.canHandleChatItem(chatItem) else { fatalError() }
+                return self.presenterBuilder.createPresenterWithChatItem(chatItem)
+            }
+
+            func configure(withCollectionView collectionView: UICollectionView) {
+                self.presenterBuilder.configure(with: collectionView)
+            }
+        }
+
+        var factory = FactoryAggregate<ChatItemProtocol>()
+
+        let dummy = factory.register(
+            viewFactory: DummyContentViewFactory(),
+            viewModelFactory: DummyViewModelFactory(),
+            layoutProviderFactory: DummyLayoutProviderFactory()
+        )
+
+        var binder = Binder()
+        binder.registerBinding(for: dummy)
+
+        let assembler = ViewAssembler(root: dummy)
+        var layoutAssembler = LayoutAssembler(rootKey: dummy)
+
+        // TODO: Remove #746
+        layoutAssembler.populateSizeProviders(for: dummy)
+
+        let presenterBuilder = ChatItemPresenterBuilder(
+            binder: binder,
+            assembler: assembler,
+            layoutAssembler: layoutAssembler,
+            factory: factory
+        )
+        return DummyItemPresenterFactory(presenterBuilder: presenterBuilder)
+    }
+
+    private static func makeNewPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
+        return [
+            DemoTextMessageModel.chatItemType: [self.makeNewTextMessagePresenterBuilder()],
+            ChatItemType.compoundItemType: [self.makeNewCompoundExamplePresenterBuilder()],
+            DemoPhotoMessageModel.chatItemType: [self.makeNewImagePresenterBuilder()]
+        ]
+    }
+
+    private static func makeNewImagePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+
+        var factory = FactoryAggregate<DemoPhotoMessageModel>()
+
+        let image = factory.register(
+            viewFactory: AsyncImageViewFactory(),
+            viewModelFactory: AsyncImageViewModelFactory(),
+            layoutProviderFactory: AsyncImageLayoutProviderFactory()
+        )
+
+        let bubble = factory.register(
+            viewFactory: MessageBubbleViewFactory(),
+            viewModelFactory: MessageBubbleViewModelFactory(),
+            layoutProviderFactory: MessageBubbleLayoutProviderFactory(configuration: .init(percentageToOccupy: 0.4))
+        )
+
+        var binder = Binder()
+
+        binder.registerBinding(for: bubble)
+
+        binder.registerBlockBinding(for: image) { view, viewModel in
+            view.viewModel = viewModel
+        }
+
+        var assembler = ViewAssembler(root: bubble)
+        assembler.register(child: image, parent: bubble)
+
+        var layoutAssembler = LayoutAssembler(rootKey: bubble)
+        layoutAssembler.register(child: image, for: bubble)
+
+        // TODO: Remove #746
+        layoutAssembler.populateSizeProviders(for: bubble)
+        layoutAssembler.populateSizeProviders(for: image)
+
+        return ChatItemPresenterBuilder(
+            binder: binder,
+            assembler: assembler,
+            layoutAssembler: layoutAssembler,
+            factory: factory
+        )
+    }
+
+    private static func makeNewCompoundExamplePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+        var factory = FactoryAggregate<DemoCompoundMessageModel>()
+
+        let bubble = factory.register(
+            viewFactory: MessageBubbleViewFactory(),
+            viewModelFactory: MessageBubbleViewModelFactory(),
+            layoutProviderFactory: MessageBubbleLayoutProviderFactory(configuration: .init(percentageToOccupy: 0.8))
+        )
+
+        let compound = factory.register(
+            viewFactory: CompoundViewFactory(),
+            viewModelFactory: CompoundViewModelFactory(),
+            layoutProviderFactory: CompoundLayoutProviderFactory()
+        )
+
+        let first = factory.register(
+            viewFactory: DummyContentViewFactory(),
+            viewModelFactory: StaticDummyViewModelFactory(text: "first"),
+            layoutProviderFactory: DummyLayoutProviderFactory()
+        )
+
+        let second = factory.register(
+            viewFactory: DummyContentViewFactory(),
+            viewModelFactory: StaticDummyViewModelFactory(text: "second"),
+            layoutProviderFactory: DummyLayoutProviderFactory()
+        )
+
+        var binder = Binder()
+
+        binder.registerBinding(for: bubble)
+        binder.registerNoopBinding(for: compound)
+        binder.registerBinding(for: first)
+        binder.registerBinding(for: second)
+
+        var assembler = ViewAssembler(root: bubble)
+        assembler.register(children: [.init(first), .init(second)], parent: compound)
+        assembler.register(child: compound, parent: bubble)
+
+        var layoutAssembler = LayoutAssembler(rootKey: bubble)
+        layoutAssembler.register(child: compound, for: bubble)
+        layoutAssembler.register(children: [.init(first), .init(second)], for: compound)
+
+        // TODO: Remove #746
+        layoutAssembler.populateSizeProviders(for: first)
+        layoutAssembler.populateSizeProviders(for: second)
+        layoutAssembler.populateSizeProviders(for: compound)
+        layoutAssembler.populateSizeProviders(for: bubble)
+
+        return ChatItemPresenterBuilder(
+            binder: binder,
+            assembler: assembler,
+            layoutAssembler: layoutAssembler,
+            factory: factory
+        )
+    }
+
+    private static func makeNewTextMessagePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+        var factory = FactoryAggregate<DemoTextMessageModel>()
+
+        let bubble = factory.register(
+            viewFactory: MessageBubbleViewFactory(),
+            viewModelFactory: MessageBubbleViewModelFactory(),
+            layoutProviderFactory: MessageBubbleLayoutProviderFactory(configuration: .init(percentageToOccupy: 0.6))
+        )
+        let dummy = factory.register(
+            viewFactory: DummyContentViewFactory(),
+            viewModelFactory: DummyViewModelFactory(),
+            layoutProviderFactory: DummyLayoutProviderFactory()
+        )
+
+        var binder = Binder()
+        binder.registerBinding(for: dummy)
+        binder.registerBinding(for: bubble)
+
+        var assembler = ViewAssembler(root: bubble)
+        assembler.register(child: dummy, parent: bubble)
+
+        var layoutAssembler = LayoutAssembler(rootKey: bubble)
+        layoutAssembler.register(child: dummy, for: bubble)
+
+        // TODO: Remove #746
+        layoutAssembler.populateSizeProviders(for: dummy)
+        layoutAssembler.populateSizeProviders(for: bubble)
+
+        return ChatItemPresenterBuilder(
+            binder: binder,
+            assembler: assembler,
+            layoutAssembler: layoutAssembler,
+            factory: factory
+        )
     }
 
     private static func createTextInputItem(dataSource: DemoChatDataSource) -> TextChatInputItem {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */; };
 		0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */; };
+		261D431926A9F2BC00DE3C75 /* AsyncImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261D431826A9F2BC00DE3C75 /* AsyncImageItem.swift */; };
 		266C7AE124B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */; };
 		268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */; };
 		268CD56F21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD56E21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift */; };
@@ -16,8 +17,11 @@
 		268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */; };
 		268CD57A22034A9900DEE2C2 /* DemoImageMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */; };
 		268CD57E220377D500DEE2C2 /* DemoDateMessageContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268CD57D220377D500DEE2C2 /* DemoDateMessageContentFactory.swift */; };
+		26A7C4BA26A7EDDA00557809 /* CompoundItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A7C4B926A7EDDA00557809 /* CompoundItem.swift */; };
 		26D63B4C250F3154007BC13C /* DemoReplyActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D63B4B250F3154007BC13C /* DemoReplyActionHandler.swift */; };
 		26D6D524220CAAE2006232B4 /* UpdateItemTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */; };
+		26F01F5926A4E15500BE187A /* DummyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F01F5826A4E15500BE187A /* DummyItem.swift */; };
+		26F01F5B26A4EBAA00BE187A /* MessageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F01F5A26A4EBAA00BE187A /* MessageItem.swift */; };
 		26FAADC423747B1300F62D01 /* AsyncAvatarLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FAADC323747B1300F62D01 /* AsyncAvatarLoadingViewController.swift */; };
 		5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5587302D1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift */; };
 		558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558730331FCD8891005BC2EC /* AddRandomMessageChatViewController.swift */; };
@@ -81,6 +85,7 @@
 		0997CD2E2042E42100D7BDF9 /* CellsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellsViewController.swift; sourceTree = "<group>"; };
 		0997CD302042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWithTabBarExamplesViewController.swift; sourceTree = "<group>"; };
 		13A796C853501DB82BA5DC27 /* Pods_ChattoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChattoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		261D431826A9F2BC00DE3C75 /* AsyncImageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageItem.swift; sourceTree = "<group>"; };
 		266C7AE024B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoEmojiDecorationViewFactory.swift; sourceTree = "<group>"; };
 		268CD56C21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCompoundMessageModel.swift; sourceTree = "<group>"; };
 		268CD56E21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMessageInteractionHandler.swift; sourceTree = "<group>"; };
@@ -88,8 +93,11 @@
 		268CD577220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTextMessageContentFactory.swift; sourceTree = "<group>"; };
 		268CD57922034A9900DEE2C2 /* DemoImageMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoImageMessageContentFactory.swift; sourceTree = "<group>"; };
 		268CD57D220377D500DEE2C2 /* DemoDateMessageContentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDateMessageContentFactory.swift; sourceTree = "<group>"; };
+		26A7C4B926A7EDDA00557809 /* CompoundItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompoundItem.swift; sourceTree = "<group>"; };
 		26D63B4B250F3154007BC13C /* DemoReplyActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoReplyActionHandler.swift; sourceTree = "<group>"; };
 		26D6D523220CAAE2006232B4 /* UpdateItemTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateItemTypeViewController.swift; sourceTree = "<group>"; };
+		26F01F5826A4E15500BE187A /* DummyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyItem.swift; sourceTree = "<group>"; };
+		26F01F5A26A4EBAA00BE187A /* MessageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageItem.swift; sourceTree = "<group>"; };
 		26FAADC323747B1300F62D01 /* AsyncAvatarLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAvatarLoadingViewController.swift; sourceTree = "<group>"; };
 		2CCB5DAFC70B636492325895 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChattoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChattoApp/Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5587302D1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesSelectionChatViewController.swift; sourceTree = "<group>"; };
@@ -175,6 +183,17 @@
 			path = "Compound Messages";
 			sourceTree = "<group>";
 		};
+		26F72680278B48DB0077021D /* Composable */ = {
+			isa = PBXGroup;
+			children = (
+				26F01F5A26A4EBAA00BE187A /* MessageItem.swift */,
+				26A7C4B926A7EDDA00557809 /* CompoundItem.swift */,
+				26F01F5826A4E15500BE187A /* DummyItem.swift */,
+				261D431826A9F2BC00DE3C75 /* AsyncImageItem.swift */,
+			);
+			path = Composable;
+			sourceTree = "<group>";
+		};
 		55A77B471FCC41CC0040C77E /* Chat Items */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +211,7 @@
 		55A77B481FCC42250040C77E /* Base Message */ = {
 			isa = PBXGroup;
 			children = (
+				26F72680278B48DB0077021D /* Composable */,
 				268CD56E21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift */,
 				FE2D050A1C915ADB006F902B /* BaseMessageCollectionViewCellAvatarStyle.swift */,
 			);
@@ -494,6 +514,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAEC84202530737900F149CD /* DemoInvisibleSplitterFactory.swift in Sources */,
+				26F01F5926A4E15500BE187A /* DummyItem.swift in Sources */,
 				268CD57E220377D500DEE2C2 /* DemoDateMessageContentFactory.swift in Sources */,
 				268CD56F21FA485500DEE2C2 /* DemoMessageInteractionHandler.swift in Sources */,
 				55A77B4A1FCC5EE70040C77E /* MessagesSelectorProtocol.swift in Sources */,
@@ -510,6 +531,7 @@
 				C3F91DBC1C75EF9E00D461D2 /* DemoChatViewController.swift in Sources */,
 				C3F91DBD1C75EF9E00D461D2 /* DemoChatDataSource.swift in Sources */,
 				C3F91DB61C75EF9E00D461D2 /* AppDelegate.swift in Sources */,
+				26F01F5B26A4EBAA00BE187A /* MessageItem.swift in Sources */,
 				268CD57A22034A9900DEE2C2 /* DemoImageMessageContentFactory.swift in Sources */,
 				268CD56D21FA3C4C00DEE2C2 /* DemoCompoundMessageModel.swift in Sources */,
 				C341D42F1C9635DF00FD3463 /* TimeSeparatorPresenter.swift in Sources */,
@@ -518,6 +540,7 @@
 				266C7AE124B2AE2E00DB0F61 /* DemoEmojiDecorationViewFactory.swift in Sources */,
 				55EE230821BFFD6600D50A1C /* ScrollToBottomButtonChatViewController.swift in Sources */,
 				5587302E1FCD7EE5005BC2EC /* MessagesSelectionChatViewController.swift in Sources */,
+				261D431926A9F2BC00DE3C75 /* AsyncImageItem.swift in Sources */,
 				26FAADC423747B1300F62D01 /* AsyncAvatarLoadingViewController.swift in Sources */,
 				268CD578220336EB00DEE2C2 /* DemoTextMessageContentFactory.swift in Sources */,
 				C3F91DCC1C75EFE300D461D2 /* SendingStatusCollectionViewCell.swift in Sources */,
@@ -525,6 +548,7 @@
 				C3F91DB71C75EF9E00D461D2 /* DemoChatItemsDecorator.swift in Sources */,
 				EAE6345722EB0CAD0053E21A /* TestItemsReloadingViewController.swift in Sources */,
 				0997CD2F2042E42100D7BDF9 /* CellsViewController.swift in Sources */,
+				26A7C4BA26A7EDDA00557809 /* CompoundItem.swift in Sources */,
 				0997CD312042E58400D7BDF9 /* ChatWithTabBarExamplesViewController.swift in Sources */,
 				558730341FCD8891005BC2EC /* AddRandomMessageChatViewController.swift in Sources */,
 				DECD501A21AEEAF100988729 /* ContentAwareInputItem.swift in Sources */,
