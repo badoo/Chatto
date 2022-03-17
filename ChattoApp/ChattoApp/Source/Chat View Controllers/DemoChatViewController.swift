@@ -98,22 +98,23 @@ class DemoChatViewController: UIViewController {
 
         self.keyboardUpdatesHandler = chatInputContainer.keyboardHandlerDelegate
 
-        self.baseChatViewController = BaseChatViewController(
+        let baseChatViewController = BaseChatViewController(
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
             keyboardUpdatesHandler: keyboardHandler,
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 }
         )
+        self.baseChatViewController = baseChatViewController
 
         super.init(nibName: nil, bundle: nil)
 
 
-        chatInputContainer.presenter.viewController = self.baseChatViewController
+        chatInputContainer.presenter.viewController = baseChatViewController
         chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
-        messagesViewController.delegate = self.baseChatViewController
-        chatInputContainer.presenter.viewController = self.baseChatViewController
+        messagesViewController.delegate = baseChatViewController
+        chatInputContainer.presenter.viewController = baseChatViewController
 
-        keyboardHandler.keyboardInputAdjustableViewController = self.baseChatViewController
+        keyboardHandler.keyboardInputAdjustableViewController = baseChatViewController
 
         keyboardHandler.keyboardInfo.observe(self) { [weak keyboardHandlerDelegate = chatInputContainer.keyboardHandlerDelegate] _, keyboardInfo in
             keyboardHandlerDelegate?.didAdjustBottomMargin(to: keyboardInfo.bottomMargin, state: keyboardInfo.state)

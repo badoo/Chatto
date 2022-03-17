@@ -28,7 +28,7 @@ public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
 }
 
-public typealias ChatViewControllerProtocol = UIViewController & ChatMessagesCollectionProtocol & ChatInputBarPresentingController & ChatMessagesViewControllerDelegate
+public typealias ChatViewControllerProtocol = UIViewController & ChatMessagesCollectionProtocol & ChatInputBarPresentingController
 
 public extension ChatMessagesCollectionProtocol {
     func refreshContent() {
