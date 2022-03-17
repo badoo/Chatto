@@ -27,7 +27,7 @@ import Chatto
 import ChattoAdditions
 
 class DemoChatViewController: UIViewController {
-    let baseChatViewController: BaseChatViewController
+    let baseChatViewController: ChatViewControllerProtocol
     let dataSource: DemoChatDataSource
     let keyboardUpdatesHandler: KeyboardUpdatesHandlerDelegate
     let messagesSelector = BaseMessagesSelector()
@@ -99,14 +99,16 @@ class DemoChatViewController: UIViewController {
         self.keyboardUpdatesHandler = chatInputContainer.keyboardHandlerDelegate
 
         self.baseChatViewController = BaseChatViewController(
-            inputBarPresenter: chatInputContainer.presenter,
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [chatInputContainer.collectionHandler].compactMap { $0 },
             keyboardUpdatesHandler: keyboardHandler,
             viewEventsHandlers: [chatInputContainer.viewPresentationHandler].compactMap { $0 }
         )
+
         super.init(nibName: nil, bundle: nil)
 
+
+        chatInputContainer.presenter.viewController = self.baseChatViewController
         chatInputItems.forEach { ($0 as? PresenterChatInputItemProtocol)?.presentingController = self }
         messagesViewController.delegate = self.baseChatViewController
         chatInputContainer.presenter.viewController = self.baseChatViewController
@@ -133,7 +135,7 @@ class DemoChatViewController: UIViewController {
     }
 
     func refreshContent() {
-        self.baseChatViewController.refreshContent()
+        self.baseChatViewController.refreshContent(completionBlock: nil)
     }
 
     public func scrollToItem(withId id: String, position: UICollectionView.ScrollPosition, animated: Bool) {
@@ -466,7 +468,7 @@ class DemoChatViewController: UIViewController {
 
 extension DemoChatViewController: MessagesSelectorDelegate {
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didSelectMessage: MessageModelProtocol) {
-        self.baseChatViewController.refreshContent()
+        self.baseChatViewController.refreshContent(completionBlock: nil)
     }
 
     func messagesSelector(_ messagesSelector: MessagesSelectorProtocol, didDeselectMessage: MessageModelProtocol) {

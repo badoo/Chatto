@@ -25,8 +25,6 @@
 import Foundation
 import UIKit
 
-public typealias ChatViewControllerProtocol = UIViewController & ChatMessagesCollectionProtocol & ChatInputBarPresentingController
-
 public final class ChatPanGestureRecogniserHandler {
 
     private let panGestureHandlerConfig: CellPanGestureHandlerConfig

@@ -28,10 +28,18 @@ public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
 }
 
-public protocol ItemPositionScrollable: AnyObject {
-    func scrollToItem(withId: String,
+public typealias ChatViewControllerProtocol = UIViewController & ChatMessagesCollectionProtocol & ChatInputBarPresentingController & ChatMessagesViewControllerDelegate
+
+public extension ChatMessagesCollectionProtocol {
+    func refreshContent() {
+        self.refreshContent(completionBlock: nil)
+    }
+
+    func scrollToItem(withId itemId: String,
                       position: UICollectionView.ScrollPosition,
-                      animated: Bool)
+                      animated: Bool) {
+        self.scrollToItem(withId: itemId, position: position, animated: animated, spotlight: false)
+    }
 }
 
 public final class BaseChatViewController: UIViewController {
@@ -393,7 +401,7 @@ extension BaseChatViewController: ChatMessagesViewControllerDelegate {
     }
 }
 
-extension BaseChatViewController: ItemPositionScrollable {
+extension BaseChatViewController: ChatMessagesCollectionProtocol {
     public func scrollToItem(withId id: String, position: UICollectionView.ScrollPosition, animated: Bool) {
         self.scrollToItem(
             withId: id,
