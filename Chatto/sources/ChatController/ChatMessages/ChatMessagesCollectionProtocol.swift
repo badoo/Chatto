@@ -24,8 +24,7 @@
 
 import UIKit
 
-/// sourcery: mockable
-public protocol ChatMessagesCollectionProtocol: AnyObject {
+public protocol ChatMessagesCollectionHolderProtocol: AnyObject {
     var collectionView: UICollectionView { get }
     var isScrolledAtBottom: Bool { get }
     var layoutConfiguration: ChatLayoutConfigurationProtocol { get set }
@@ -34,4 +33,16 @@ public protocol ChatMessagesCollectionProtocol: AnyObject {
     func scrollToBottom(animated: Bool)
     func scrollToItem(withId itemId: String, position: UICollectionView.ScrollPosition, animated: Bool, spotlight: Bool)
     func refreshContent(completionBlock: (() -> Void)?)
+}
+
+public extension ChatMessagesCollectionHolderProtocol {
+    func refreshContent() {
+        self.refreshContent(completionBlock: nil)
+    }
+
+    func scrollToItem(withId itemId: String,
+                      position: UICollectionView.ScrollPosition,
+                      animated: Bool) {
+        self.scrollToItem(withId: itemId, position: position, animated: animated, spotlight: false)
+    }
 }
