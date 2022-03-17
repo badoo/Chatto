@@ -38,7 +38,6 @@ public final class BaseChatViewController: UIViewController {
 
     private let messagesViewController: ChatMessagesViewControllerProtocol
     private let configuration: Configuration
-    private let inputBarPresenter: BaseChatInputBarPresenterProtocol
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
     private let collectionViewEventsHandlers: [CollectionViewEventsHandling]
     private let viewEventsHandlers: [ViewPresentationEventsHandling]
@@ -87,13 +86,11 @@ public final class BaseChatViewController: UIViewController {
 
     // MARK: - Init
 
-    public init(inputBarPresenter: BaseChatInputBarPresenterProtocol,
-                messagesViewController: ChatMessagesViewControllerProtocol,
+    public init(messagesViewController: ChatMessagesViewControllerProtocol,
                 collectionViewEventsHandlers: [CollectionViewEventsHandling],
                 keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol,
                 viewEventsHandlers: [ViewPresentationEventsHandling],
                 configuration: Configuration = .default) {
-        self.inputBarPresenter = inputBarPresenter
         self.messagesViewController = messagesViewController
         self.collectionViewEventsHandlers = collectionViewEventsHandlers
         self.keyboardUpdatesHandler = keyboardUpdatesHandler
@@ -117,7 +114,6 @@ public final class BaseChatViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupInputBarPresenter()
         self.setupCollectionView()
         self.addInputBarContainer()
         self.addInputContentContainer()
@@ -181,10 +177,6 @@ public final class BaseChatViewController: UIViewController {
     }
 
     // MARK: - Setup
-
-    private func setupInputBarPresenter() {
-        self.inputBarPresenter.viewController = self
-    }
 
     private func setupTapGestureRecognizer() {
         let collectionView = self.collectionView
