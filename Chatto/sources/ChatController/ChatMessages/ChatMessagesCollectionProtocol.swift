@@ -24,14 +24,23 @@
 
 import UIKit
 
-public protocol ChatMessagesCollectionHolderProtocol: AnyObject {
+public protocol ChatPositionScrollable: AnyObject {
+    func scrollToBottom(animated: Bool)
+
+    func scrollToItem(
+        withId: String,
+        position: UICollectionView.ScrollPosition,
+        animated: Bool,
+        spotlight: Bool
+    )
+}
+
+public protocol ChatMessagesCollectionHolderProtocol: ChatPositionScrollable {
     var collectionView: UICollectionView { get }
     var isScrolledAtBottom: Bool { get }
     var layoutConfiguration: ChatLayoutConfigurationProtocol { get set }
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
 
-    func scrollToBottom(animated: Bool)
-    func scrollToItem(withId itemId: String, position: UICollectionView.ScrollPosition, animated: Bool, spotlight: Bool)
     func refreshContent(completionBlock: (() -> Void)?)
 }
 
