@@ -35,6 +35,14 @@ public protocol ChatPositionScrollable: AnyObject {
     )
 }
 
+public extension ChatPositionScrollable {
+    func scrollToItem(withId itemId: String,
+                      position: UICollectionView.ScrollPosition,
+                      animated: Bool) {
+        self.scrollToItem(withId: itemId, position: position, animated: animated, spotlight: false)
+    }
+}
+
 public protocol ChatMessagesCollectionHolderProtocol: ChatPositionScrollable {
     var collectionView: UICollectionView { get }
     var isScrolledAtBottom: Bool { get }
@@ -47,11 +55,5 @@ public protocol ChatMessagesCollectionHolderProtocol: ChatPositionScrollable {
 public extension ChatMessagesCollectionHolderProtocol {
     func refreshContent() {
         self.refreshContent(completionBlock: nil)
-    }
-
-    func scrollToItem(withId itemId: String,
-                      position: UICollectionView.ScrollPosition,
-                      animated: Bool) {
-        self.scrollToItem(withId: itemId, position: position, animated: animated, spotlight: false)
     }
 }
