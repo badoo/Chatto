@@ -272,6 +272,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         }
 
         self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     public func updateFailedIconState() {
@@ -333,7 +334,7 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         if !self.useAutolayoutForBubbleView {
             self.bubbleView.bma_rect = layout.bubbleViewFrame
             self.bubbleView.preferredMaxLayoutWidth = layout.preferredMaxWidthForBubble
-            self.bubbleView.setNeedsLayout()
+            self.bubbleView.layoutIfNeeded()
         }
 
         self.avatarView.bma_rect = layout.avatarViewFrame

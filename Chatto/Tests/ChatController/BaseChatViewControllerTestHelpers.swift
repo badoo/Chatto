@@ -36,7 +36,6 @@ func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
 extension BaseChatViewController {
 
     static func makeBaseChatViewController(messagesViewController: ChatMessagesViewController,
-                                           chatInputViewPresenter: BaseChatInputBarPresenterProtocol,
                                            configuration: BaseChatViewController.Configuration = .default,
                                            notificationCenter: NotificationCenter = .default) -> BaseChatViewController {
 
@@ -44,7 +43,6 @@ extension BaseChatViewController {
         let keyboardUpdatesHandler = KeyboardUpdatesHandler(keyboardTracker: keyboardTracker)
 
         let baseChatViewController = BaseChatViewController(
-            inputBarPresenter: chatInputViewPresenter,
             messagesViewController: messagesViewController,
             collectionViewEventsHandlers: [],
             keyboardUpdatesHandler: keyboardUpdatesHandler,

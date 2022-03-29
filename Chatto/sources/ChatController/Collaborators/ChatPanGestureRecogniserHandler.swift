@@ -23,14 +23,9 @@
 
 
 import Foundation
+import UIKit
 
-public protocol ChatViewControllerDependant: AnyObject   {
-    var chatViewController: BaseChatViewController? { get set }
-}
-
-public typealias ChatGestureHandlerProtocol = ChatViewControllerDependant
-
-public final class ChatPanGestureRecogniserHandler: ChatGestureHandlerProtocol {
+public final class ChatPanGestureRecogniserHandler {
 
     private let panGestureHandlerConfig: CellPanGestureHandlerConfig
     private let replyActionHandler: ReplyActionHandler
@@ -38,7 +33,7 @@ public final class ChatPanGestureRecogniserHandler: ChatGestureHandlerProtocol {
 
     private var cellPanGestureHandler: CellPanGestureHandler?
 
-    public weak var chatViewController: BaseChatViewController? {
+    public weak var chatViewController: ChatViewControllerProtocol? {
         didSet {
             guard let chatViewController = self.chatViewController else { return }
 

@@ -36,14 +36,17 @@ class BaseChatViewControllerTests: XCTestCase {
             updateQueue: updateQueue
         )
         let notificationCenter = NotificationCenter()
-        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
         let controller = BaseChatViewController.makeBaseChatViewController(
             messagesViewController: chatMessageTestComponents.viewController,
-            chatInputViewPresenter: chatInputViewPresenter,
             notificationCenter: notificationCenter
         )
+        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
+
+        chatInputViewPresenter.viewController = controller
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
+
         fakeDidAppearAndLayout(controller: controller)
+
         notificationCenter.post(name: UIResponder.keyboardWillShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         XCTAssertEqual(400, controller.view.convert(chatInputViewPresenter.inputView.bounds, from: chatInputViewPresenter.inputView).maxY)
     }
@@ -54,16 +57,17 @@ class BaseChatViewControllerTests: XCTestCase {
             dataSource: fakeDataSource
         )
         let notificationCenter = NotificationCenter()
-        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
         let controller = BaseChatViewController.makeBaseChatViewController(
             messagesViewController: chatMessageTestComponents.viewController,
-            chatInputViewPresenter: chatInputViewPresenter,
             notificationCenter: notificationCenter
         )
+        let chatInputViewPresenter = FakeChatInputBarPresenter(inputView: UIView())
 
+        chatInputViewPresenter.viewController = controller
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
 
         fakeDidAppearAndLayout(controller: controller)
+
         notificationCenter.post(name: UIResponder.keyboardWillShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         notificationCenter.post(name: UIResponder.keyboardDidShowNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])
         notificationCenter.post(name: UIResponder.keyboardWillHideNotification, object: self, userInfo: [UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: CGRect(x: 0, y: 400, width: 400, height: 500))])

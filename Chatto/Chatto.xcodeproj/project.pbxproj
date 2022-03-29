@@ -19,6 +19,7 @@
 		A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A452A8BF2705DAED00DCC8D5 /* Observable.swift */; };
 		A4724CDB27355829006B9562 /* ChatPanGestureRecogniserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */; };
 		A4C03CFE26CE431D00360526 /* ChatInputBarPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */; };
+		A4DFA57F27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DFA57E27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift */; };
 		A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */; };
 		A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */; };
 		A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */; };
@@ -72,6 +73,7 @@
 		A452A8BF2705DAED00DCC8D5 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		A4724CDA27355829006B9562 /* ChatPanGestureRecogniserHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPanGestureRecogniserHandler.swift; sourceTree = "<group>"; };
 		A4C03CFD26CE431D00360526 /* ChatInputBarPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBarPresenterProtocol.swift; sourceTree = "<group>"; };
+		A4DFA57E27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesCollectionProtocol.swift; sourceTree = "<group>"; };
 		A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
 		A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewModel.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */,
 				A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */,
 				A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */,
+				A4DFA57E27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift */,
 			);
 			path = ChatMessages;
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */,
 				EA24F40C21F8BF0D007735DD /* ChatInputBarPresentingController.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
+				A4DFA57F27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
 				C321DDA91BE9649F00DE88CC /* BaseChatItemPresenter.swift in Sources */,
