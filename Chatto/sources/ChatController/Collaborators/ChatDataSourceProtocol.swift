@@ -28,6 +28,7 @@ import Foundation
 public enum UpdateType: CaseIterable {
     case normal
     case firstLoad
+    case firstSync
     case pagination
     case reload
     case messageCountReduction
