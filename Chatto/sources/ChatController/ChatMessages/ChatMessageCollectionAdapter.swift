@@ -376,7 +376,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
         let usesBatchUpdates: Bool
         do { // Recover from too fast updates...
             let visibleCellsAreValid = self.visibleCellsAreValid(changes: changes)
-            let wantsReloadData = updateType != .normal
+            let wantsReloadData = updateType != .normal && updateType != .firstSync
             let hasUnfinishedBatchUpdates = self.unfinishedBatchUpdatesCount > 0 // This can only happen when enabling self.updatesConfig.fastUpdates
 
             // a) It's unsafe to perform reloadData while there's a performBatchUpdates animating: https://github.com/diegosanchezr/UICollectionViewStressing/tree/master/GhostCells
@@ -404,7 +404,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
         let scrollAction: ScrollAction
         do { // Scroll action
-            if updateType != .pagination && collectionView.isScrolledAtBottom() {
+            if updateType != .pagination && updateType != .firstSync && collectionView.isScrolledAtBottom() {
                 scrollAction = .scrollToBottom
             } else {
                 let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathRestoreProvider(self.chatItemCompanionCollection, changes)
