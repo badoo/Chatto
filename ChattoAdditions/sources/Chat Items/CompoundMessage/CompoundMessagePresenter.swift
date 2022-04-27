@@ -197,6 +197,9 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 
     open override func cellWillBeShown() {
         super.cellWillBeShown()
+
+        self.cell?.layoutIfNeeded()
+
         self.contentPresenters.forEach { $0.contentWillBeShown() }
     }
 
