@@ -285,8 +285,10 @@ class DemoChatViewController: UIViewController {
         var binder = Binder()
         binder.registerBinding(for: dummy)
 
-        let assembler = ViewAssembler(root: dummy)
-        var layoutAssembler = LayoutAssembler(rootKey: dummy)
+        let hierarchy = MessageViewHierarchy(root: dummy)
+
+        let assembler = ViewAssembler(hierarchy: hierarchy)
+        var layoutAssembler = LayoutAssembler(hierarchy: hierarchy)
 
         // TODO: Remove #746
         layoutAssembler.populateSizeProviders(for: dummy)
@@ -301,14 +303,19 @@ class DemoChatViewController: UIViewController {
     }
 
     private static func makeNewPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
-        return [
-            DemoTextMessageModel.chatItemType: [self.makeNewTextMessagePresenterBuilder()],
-            ChatItemType.compoundItemType: [self.makeNewCompoundExamplePresenterBuilder()],
-            DemoPhotoMessageModel.chatItemType: [self.makeNewImagePresenterBuilder()]
-        ]
+        do {
+            return [
+                DemoTextMessageModel.chatItemType: [try self.makeNewTextMessagePresenterBuilder()],
+                ChatItemType.compoundItemType: [try self.makeNewCompoundExamplePresenterBuilder()],
+                DemoPhotoMessageModel.chatItemType: [try self.makeNewImagePresenterBuilder()]
+            ]
+        } catch {
+            fatalError("Couldn't create new presenter builders: \(error)")
+            return [:]
+        }
     }
 
-    private static func makeNewImagePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+    private static func makeNewImagePresenterBuilder() throws -> ChatItemPresenterBuilderProtocol {
 
         var factory = FactoryAggregate<DemoPhotoMessageModel>()
 
@@ -326,17 +333,17 @@ class DemoChatViewController: UIViewController {
 
         var binder = Binder()
 
+        var hierarchy = MessageViewHierarchy(root: bubble)
+        try hierarchy.add(child: image, to: bubble)
+
         binder.registerBinding(for: bubble)
 
         binder.registerBlockBinding(for: image) { view, viewModel in
             view.viewModel = viewModel
         }
 
-        var assembler = ViewAssembler(root: bubble)
-        assembler.register(child: image, parent: bubble)
-
-        var layoutAssembler = LayoutAssembler(rootKey: bubble)
-        layoutAssembler.register(child: image, for: bubble)
+        let assembler = ViewAssembler(hierarchy: hierarchy)
+        var layoutAssembler = LayoutAssembler(hierarchy: hierarchy)
 
         // TODO: Remove #746
         layoutAssembler.populateSizeProviders(for: bubble)
@@ -350,7 +357,7 @@ class DemoChatViewController: UIViewController {
         )
     }
 
-    private static func makeNewCompoundExamplePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+    private static func makeNewCompoundExamplePresenterBuilder() throws -> ChatItemPresenterBuilderProtocol {
         var factory = FactoryAggregate<DemoCompoundMessageModel>()
 
         let bubble = factory.register(
@@ -379,18 +386,17 @@ class DemoChatViewController: UIViewController {
 
         var binder = Binder()
 
+        var hierarchy = MessageViewHierarchy(root: bubble)
+        try hierarchy.add(child: compound, to: bubble)
+        try hierarchy.add(children: [.init(first), .init(second)], to: compound)
+
         binder.registerBinding(for: bubble)
         binder.registerNoopBinding(for: compound)
         binder.registerBinding(for: first)
         binder.registerBinding(for: second)
 
-        var assembler = ViewAssembler(root: bubble)
-        assembler.register(children: [.init(first), .init(second)], parent: compound)
-        assembler.register(child: compound, parent: bubble)
-
-        var layoutAssembler = LayoutAssembler(rootKey: bubble)
-        layoutAssembler.register(child: compound, for: bubble)
-        layoutAssembler.register(children: [.init(first), .init(second)], for: compound)
+        let assembler = ViewAssembler(hierarchy: hierarchy)
+        var layoutAssembler = LayoutAssembler(hierarchy: hierarchy)
 
         // TODO: Remove #746
         layoutAssembler.populateSizeProviders(for: first)
@@ -406,7 +412,7 @@ class DemoChatViewController: UIViewController {
         )
     }
 
-    private static func makeNewTextMessagePresenterBuilder() -> ChatItemPresenterBuilderProtocol {
+    private static func makeNewTextMessagePresenterBuilder() throws -> ChatItemPresenterBuilderProtocol {
         var factory = FactoryAggregate<DemoTextMessageModel>()
 
         let bubble = factory.register(
@@ -421,14 +427,15 @@ class DemoChatViewController: UIViewController {
         )
 
         var binder = Binder()
+
         binder.registerBinding(for: dummy)
         binder.registerBinding(for: bubble)
 
-        var assembler = ViewAssembler(root: bubble)
-        assembler.register(child: dummy, parent: bubble)
+        var hierarchy = MessageViewHierarchy(root: bubble)
+        try hierarchy.add(child: dummy, to: bubble)
 
-        var layoutAssembler = LayoutAssembler(rootKey: bubble)
-        layoutAssembler.register(child: dummy, for: bubble)
+        let assembler = ViewAssembler(hierarchy: hierarchy)
+        var layoutAssembler = LayoutAssembler(hierarchy: hierarchy)
 
         // TODO: Remove #746
         layoutAssembler.populateSizeProviders(for: dummy)

@@ -4,85 +4,51 @@ import UIKit
 // MARK: - Protocols
 
 public protocol ViewAssemblerProtocol {
-    func assemble(subviews: [AnyBindingKey: UIView]) -> AnyIndexedSubviews
-}
-
-public protocol SingleCompositionRegistry {
-    mutating func register<Composition: SingleViewComposition, Key: BindingKeyProtocol>(viewComposition: Composition, key: AnyBindingKey, to: Key)
-    where Composition.View == Key.View
-}
-
-public protocol MultipleCompositionRegistry {
-    mutating func register<Composition: MultipleViewComposition, Key: BindingKeyProtocol>(viewComposition: Composition, keys: [AnyBindingKey], to: Key)
-    where Composition.View == Key.View
+    func assemble(subviews: [AnyBindingKey: UIView]) throws -> AnyIndexedSubviews
 }
 
 // MARK: - Implementation
 
-public struct ViewAssembler: ViewAssemblerProtocol, SingleCompositionRegistry, MultipleCompositionRegistry {
+public struct ViewAssembler: ViewAssemblerProtocol {
 
     // MARK: - Type declarations
 
-    fileprivate enum Composition {
-        case single(composition: AnySingleViewComposition, key: AnyBindingKey)
-        case multiple(composition: AnyMultipleViewComposition, keys: [AnyBindingKey])
+    enum Error: Swift.Error {
+        case internalInconsistency
     }
 
     // MARK: - Private properties
 
-    fileprivate let root: AnyBindingKey
-    private(set) fileprivate var compositions: [AnyBindingKey: Composition] = [:]
+    private let hierarchy: MessageViewHierarchy
 
     // MARK: - Instantiation
 
-    public init(root: AnyBindingKey) {
-        self.root = root
-    }
-
-    // MARK: - SingleCompositionRegistry
-
-    public mutating func register<Composition: SingleViewComposition, Key: BindingKeyProtocol>(
-        viewComposition: Composition,
-        key: AnyBindingKey,
-        to: Key
-    ) where Composition.View == Key.View {
-        let erasedComposition = AnySingleViewComposition(viewComposition)
-        self.compositions[.init(to)] = .single(
-            composition: erasedComposition,
-            key: key
-        )
-    }
-
-    // MARK: - MultipleCompositionRegistry
-
-    public mutating func register<Composition: MultipleViewComposition, Key: BindingKeyProtocol>(
-        viewComposition: Composition,
-        keys: [AnyBindingKey],
-        to: Key
-    ) where Composition.View == Key.View {
-        let erasedComposition = AnyMultipleViewComposition(viewComposition)
-        self.compositions[.init(to)] = .multiple(
-            composition: erasedComposition,
-            keys: keys
-        )
+    public init(hierarchy: MessageViewHierarchy) {
+        self.hierarchy = hierarchy
     }
 
     // MARK: - ViewAssemblerProtocol
 
-    public func assemble(subviews: [AnyBindingKey: UIView]) -> AnyIndexedSubviews {
-        for (parentKey, composition) in self.compositions {
-            let parent = subviews[parentKey]
-            switch composition {
-                case let .single(composition, childKey):
-                    let child = subviews[childKey]!
-                    composition.add(child: child, to: parent)
-                case let .multiple(composition, keys):
-                    let children = keys.map { subviews[$0]! }
-                    composition.add(children: children, to: parent)
+    public func assemble(subviews: [AnyBindingKey: UIView]) throws -> AnyIndexedSubviews {
+        for (key, children) in self.hierarchy.allRegistrations() {
+            let parentView = subviews[key]
+
+            switch children {
+            case .no:
+                break
+            case .single(let child):
+                let childView = subviews[child]!
+                guard let container = parentView as? SingleContainerViewProtocol else { throw Error.internalInconsistency }
+                container.add(child: childView)
+            case .multiple(let children):
+                let childrenViews = children.map { subviews[$0]! }
+                guard let container = parentView as? MultipleContainerViewProtocol else { throw Error.internalInconsistency }
+                container.add(children: childrenViews)
             }
         }
+
         return AnyIndexedSubviews(
-            rootKey: self.root,
+            rootKey: self.hierarchy.root,
             subviews: subviews
         )
     }
@@ -92,28 +58,24 @@ public struct ViewAssembler: ViewAssemblerProtocol, SingleCompositionRegistry, M
 
 extension ViewAssembler: ReuseIdentifierProvider {
     public var reuseIdentifier: String {
-        var components: [String] = [self.root.description]
+        var components: [String] = [self.hierarchy.root.description]
 
-        for (parentKey, composition) in self.compositions {
-            var string = parentKey.description + "->"
-            switch composition {
-                case let .single(_, childKey):
-                    string += childKey.description
-                case let .multiple(_, childrenKeys):
-                    string += childrenKeys.map { $0.description }.joined(separator: ",")
+        for (parent, children) in self.hierarchy.allRegistrations() {
+            var string = parent.description
+            defer { components.append(string) }
+
+            switch children {
+            case .no:
+                continue
+            case .single(let child):
+                string += "->\(child.description)"
+            case .multiple(let children):
+                let childrenDescription = children.map { $0.description }.joined(separator: ",")
+                string += "->\(childrenDescription)"
             }
-            components.append(string)
         }
 
         return components.joined(separator: "::")
-    }
-}
-
-// MARK: - Convenience
-
-extension ViewAssembler {
-    public init<Key: BindingKeyProtocol>(root: Key) {
-        self.init(root: .init(root))
     }
 }
 

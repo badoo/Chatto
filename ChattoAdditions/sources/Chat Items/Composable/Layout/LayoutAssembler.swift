@@ -34,38 +34,20 @@ public struct LayoutAssembler {
         case layoutWasNotCalculated(Key)
     }
 
-    private enum Composition {
-        case single(AnyBindingKey)
-        case multiple([AnyBindingKey])
-    }
-
     // MARK: - Private properties
 
-    private let rootKey: AnyBindingKey
-    private var compositions: [AnyBindingKey: Composition] = [:]
+    private let hierarchy: MessageViewHierarchy
     private var makeSizeProviders: [AnyBindingKey: (Any) throws -> AnySizeProvider] = [:]
     private var makeCachingProviders: [AnyBindingKey: (Any) throws -> AnyCachedLayoutProvider] = [:]
     private var layoutApplicators: [AnyBindingKey: (Any, Any) throws -> Void] = [:]
 
     // MARK: - Instantiation
 
-    public init(rootKey: AnyBindingKey) {
-        self.rootKey = rootKey
-    }
-
-    public init<Root: BindingKeyProtocol>(rootKey: Root) {
-        self.init(rootKey: .init(rootKey))
+    public init(hierarchy: MessageViewHierarchy) {
+        self.hierarchy = hierarchy
     }
 
     // MARK: - Public API
-
-    public mutating func register<Parent: BindingKeyProtocol>(child: AnyBindingKey, for parent: Parent) {
-        self.compositions[.init(parent)] = .single(child)
-    }
-
-    public mutating func register<Parent: BindingKeyProtocol>(children: [AnyBindingKey], for parent: Parent) {
-        self.compositions[.init(parent)] = .multiple(children)
-    }
 
     // TODO: Remove #746
     public mutating func populateSizeProviders<Key: BindingKeyProtocol>(for key: Key)
@@ -92,7 +74,7 @@ public struct LayoutAssembler {
     }
 
     public func assembleRootSizeProvider(layoutProviders: [Key: Any]) throws -> AnySizeProvider {
-        let key = self.rootKey
+        let key = self.hierarchy.root
         var layoutCache: LayoutCache = [:]
         return try self.assemble(for: key, with: layoutProviders, layoutCache: &layoutCache)
     }
@@ -101,7 +83,7 @@ public struct LayoutAssembler {
     public func applyLayout(with context: LayoutContext, views: [Key: Any], layoutProviders: [Key: Any]) throws {
         var layoutCache: LayoutCache = [:]
         // TODO: Check keys
-        let rootLayoutProvider = try self.assemble(for: self.rootKey, with: layoutProviders, layoutCache: &layoutCache)
+        let rootLayoutProvider = try self.assemble(for: self.hierarchy.root, with: layoutProviders, layoutCache: &layoutCache)
 
         // perform layout to cache results
         _ = try rootLayoutProvider.layout(for: context)
@@ -135,28 +117,30 @@ public struct LayoutAssembler {
         }
 
         let resultLayoutProvider: Any
-        switch self.compositions[key] {
 
-        case .single(let childKey)?:
+        switch try self.hierarchy.children(of: key) {
+        case .no:
+            resultLayoutProvider = layoutProvider
+        case .single(let childKey):
             let child = try self.assemble(for: childKey, with: providers, layoutCache: &layoutCache)
+
             guard var container = layoutProvider as? SingleContainerLayoutProviderProtocol else {
                 throw Error.internalInconsistency
             }
+
             container.childLayoutProvider = child
             resultLayoutProvider = container
+        case .multiple(let childrenKeys):
+            let children: [AnySizeProvider] = try childrenKeys.map {
+                try self.assemble(for: $0, with: providers, layoutCache: &layoutCache)
+            }
 
-        case .multiple(let childrenKeys)?:
-            let children: [AnySizeProvider] = try childrenKeys
-                .map { try self.assemble(for: $0, with: providers, layoutCache: &layoutCache) }
             guard var container = layoutProvider as? MultipleContainerLayoutProviderProtocol else {
                 throw Error.internalInconsistency
             }
+
             container.childrenLayoutProviders = children
             resultLayoutProvider = container
-
-        case nil:
-            resultLayoutProvider = layoutProvider
-
         }
 
         let cachingContainer = try makeCachingProvider(resultLayoutProvider)
@@ -189,12 +173,5 @@ private final class CachingLayoutProvider<Layout: LayoutModel>: LayoutProviderPr
 
 extension CachingLayoutProvider: AnyCachedLayoutProvider {
     var lastPerformedLayoutResult: Any? { self.lastLayout }
-}
-
-// Convenience
-extension LayoutAssembler {
-    public mutating func register<Child: BindingKeyProtocol, Parent: BindingKeyProtocol>(child: Child, for parent: Parent) {
-        self.register(child: .init(child), for: parent)
-    }
 }
 
