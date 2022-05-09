@@ -471,7 +471,6 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                             DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                         }
 
-                        adjustScrollViewToBottom()
                     })
                 }
             )
@@ -483,8 +482,9 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
             collectionView.setNeedsLayout()
             collectionView.layoutIfNeeded()
-            adjustScrollViewToBottom()
         }
+
+        adjustScrollViewToBottom()
 
         if !usesBatchUpdates || self.configuration.fastUpdates {
             myCompletion()
