@@ -88,7 +88,7 @@ public final class ChatItemPresenter<ChatItem>: ChatItemPresenterProtocol {
     public func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         guard let cell = cell as? Cell else { fatalError() }
         do {
-            let subviews = self.setupSubviews(of: cell)
+            let subviews = try self.setupSubviews(of: cell)
             let viewModels = self.makeViewModels()
             self.lifecycleObservers = viewModels.values.compactMap { $0 as? ChatItemLifecycleViewModel }
             try self.binder.bind(subviews: subviews, viewModels: viewModels)
@@ -143,13 +143,13 @@ public final class ChatItemPresenter<ChatItem>: ChatItemPresenterProtocol {
         }
     }
 
-    private func setupSubviews(of cell: Cell) -> AnyIndexedSubviews {
+    private func setupSubviews(of cell: Cell) throws -> AnyIndexedSubviews {
         if let indexed = cell.indexed {
             return indexed
         }
 
         let subviews = self.factory.makeViews()
-        let indexed = self.assembler.assemble(subviews: subviews)
+        let indexed = try self.assembler.assemble(subviews: subviews)
         cell.indexed = indexed
         return indexed
     }
