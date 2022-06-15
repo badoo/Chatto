@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		065DDCA628726F0600FAF3B9 /* NewChatMessageCollectionAdapterConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCA528726F0600FAF3B9 /* NewChatMessageCollectionAdapterConfiguration.swift */; };
+		065DDCA828726F2E00FAF3B9 /* CollectionUpdateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCA728726F2E00FAF3B9 /* CollectionUpdateProvider.swift */; };
+		065DDCAA28726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCA928726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift */; };
+		065DDCAC28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCAB28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift */; };
+		065DDCAE2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCAD2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift */; };
 		26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */; };
 		3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */; };
 		A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13926F205DB00166C55 /* KeyboardTracker.swift */; };
@@ -60,6 +65,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		065DDCA528726F0600FAF3B9 /* NewChatMessageCollectionAdapterConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatMessageCollectionAdapterConfiguration.swift; sourceTree = "<group>"; };
+		065DDCA728726F2E00FAF3B9 /* CollectionUpdateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionUpdateProvider.swift; sourceTree = "<group>"; };
+		065DDCA928726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionUpdateProviderProtocol.swift; sourceTree = "<group>"; };
+		065DDCAB28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
+		065DDCAD2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayoutModelFactory.swift; sourceTree = "<group>"; };
 		26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyFeedbackGenerator.swift; sourceTree = "<group>"; };
 		3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLayoutConfiguration.swift; sourceTree = "<group>"; };
 		55E85D821BE390BE001885AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -124,6 +134,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		065DDCA428726EE400FAF3B9 /* New */ = {
+			isa = PBXGroup;
+			children = (
+				065DDCA528726F0600FAF3B9 /* NewChatMessageCollectionAdapterConfiguration.swift */,
+				065DDCA728726F2E00FAF3B9 /* CollectionUpdateProvider.swift */,
+				065DDCA928726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift */,
+				065DDCAB28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift */,
+				065DDCAD2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift */,
+			);
+			path = New;
+			sourceTree = "<group>";
+		};
 		14DE67667A8495EC4B05787D /* sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +245,7 @@
 		A4F7666426BD4F2600008F24 /* ChatMessages */ = {
 			isa = PBXGroup;
 			children = (
+				065DDCA428726EE400FAF3B9 /* New */,
 				A4F7666226BD417600008F24 /* ChatMessagesViewController.swift */,
 				A4F7666526BD4FA400008F24 /* ChatMessageCollectionAdapter.swift */,
 				A4F7666726BD59EF00008F24 /* ChatMessagesViewModel.swift */,
@@ -426,9 +449,11 @@
 				A42C66E0273BC3B1006B032A /* SpringChatInputBarAnimation.swift in Sources */,
 				A4F7666626BD4FA400008F24 /* ChatMessageCollectionAdapter.swift in Sources */,
 				A40DC13E26F2072100166C55 /* KeyboardUpdatesHandler.swift in Sources */,
+				065DDCAA28726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift in Sources */,
 				C3C7C3971CAC4BAC00A49929 /* CellPanGestureHandler.swift in Sources */,
 				EA24F40C21F8BF0D007735DD /* ChatInputBarPresentingController.swift in Sources */,
 				C3C7C39F1CAC4D6F00A49929 /* ChatItemPresenterFactory.swift in Sources */,
+				065DDCAE2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift in Sources */,
 				A4DFA57F27E34F9400BABDFE /* ChatMessagesCollectionProtocol.swift in Sources */,
 				C3C7C39A1CAC4BAC00A49929 /* CollectionChanges.swift in Sources */,
 				C3C7C3991CAC4BAC00A49929 /* ChatDataSourceProtocol.swift in Sources */,
@@ -437,6 +462,7 @@
 				A4F7666826BD59EF00008F24 /* ChatMessagesViewModel.swift in Sources */,
 				A452A8C12705DAED00DCC8D5 /* Observable.swift in Sources */,
 				C321DDAE1BE9649F00DE88CC /* ChatItemProtocolDefinitions.swift in Sources */,
+				065DDCA628726F0600FAF3B9 /* NewChatMessageCollectionAdapterConfiguration.swift in Sources */,
 				A4724CDB27355829006B9562 /* ChatPanGestureRecogniserHandler.swift in Sources */,
 				A4F7666326BD417700008F24 /* ChatMessagesViewController.swift in Sources */,
 				A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */,
@@ -444,6 +470,8 @@
 				A42C66DE273BC387006B032A /* TimingChatInputBarAnimation.swift in Sources */,
 				C36281E71BF0F196004D6BCE /* UICollectionView+Scrolling.swift in Sources */,
 				26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */,
+				065DDCAC28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift in Sources */,
+				065DDCA828726F2E00FAF3B9 /* CollectionUpdateProvider.swift in Sources */,
 				3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */,
 				C36281EB1BF0F62F004D6BCE /* DummyChatItemPresenter.swift in Sources */,
 				C3C7C3981CAC4BAC00A49929 /* ChatCollectionViewLayout.swift in Sources */,
