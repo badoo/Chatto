@@ -4,9 +4,11 @@
 
 import UIKit
 
-public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource, UICollectionViewDelegate {
+public protocol CompanionCollectionProvider {
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
+}
 
+public protocol ChatMessageCollectionAdapterProtocol: CompanionCollectionProvider, UICollectionViewDataSource, UICollectionViewDelegate {
     var delegate: ChatMessageCollectionAdapterDelegate? { get set }
 
     func startProcessingUpdates()
@@ -17,6 +19,16 @@ public protocol ChatMessageCollectionAdapterProtocol: UICollectionViewDataSource
     func indexPath(of itemId: String) -> IndexPath?
     func refreshContent(completionBlock: (() -> Void)?)
     func scheduleSpotlight(for itemId: String)
+}
+
+extension ChatMessageCollectionAdapterProtocol {
+    public func indexPath(of itemId: String) -> IndexPath? {
+        guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else {
+            return nil
+        }
+
+        return IndexPath(row: itemIndex, section: 0)
+    }
 }
 
 public protocol ChatMessageCollectionAdapterDelegate: AnyObject {
@@ -102,15 +114,6 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
         }
 
         self.collectionView = collectionView
-    }
-
-    // TODO: Proxy
-    public func indexPath(of itemId: String) -> IndexPath? {
-        guard let itemIndex = self.chatItemCompanionCollection.indexOf(itemId) else {
-            return nil
-        }
-
-        return IndexPath(row: itemIndex, section: 0)
     }
 
     public func refreshContent(completionBlock: (() -> Void)?) {
@@ -226,7 +229,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
             }
         } else {
             guard let modelUpdate = createModelUpdate() else { return }
-            
+
             performBatchUpdates(modelUpdate.changes, modelUpdate.updateModelClosure)
         }
     }
@@ -723,11 +726,3 @@ private enum ScrollAction {
     case preservePosition(rectForReferenceIndexPathBeforeUpdate: CGRect?, referenceIndexPathAfterUpdate: IndexPath?)
 }
 
-public final class ReferenceIndexPathRestoreProviderFactory {
-    public static func makeDefault() -> ReferenceIndexPathRestoreProvider {
-        return { itemsBeforeUpdate, changes in
-            let firstItemMoved = changes.movedIndexPaths.first
-            return (firstItemMoved?.indexPathOld as IndexPath?, firstItemMoved?.indexPathNew as IndexPath?)
-        }
-    }
-}
