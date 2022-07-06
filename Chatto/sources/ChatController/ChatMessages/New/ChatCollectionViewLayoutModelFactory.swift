@@ -31,54 +31,87 @@ public protocol ChatCollectionViewLayoutModelFactoryProtocol: AnyObject {
 
 final class ChatCollectionViewLayoutModelFactory: ChatCollectionViewLayoutModelFactoryProtocol {
 
+    // MARK: - Type declarations
+
+    private struct HeightValue {
+        var value: CGFloat = 0
+        private let heightProvider: () -> CGFloat
+
+        init(_ heightProvider: @escaping () -> CGFloat) {
+            self.heightProvider = heightProvider
+        }
+
+        mutating func calculate() {
+            self.value = self.heightProvider()
+        }
+    }
+
     // MARK: - Instantiation
 
-    init() {
-    }
+    init() {}
 
     // MARK: - ChatCollectionViewLayoutUpdater
 
-    public func createLayoutModel(items: ChatItemCompanionCollection, collectionViewWidth: CGFloat) -> ChatCollectionViewLayoutModel {
-        // swiftlint:disable:next nesting
-        typealias IntermediateItemLayoutData = (height: CGFloat?, bottomMargin: CGFloat)
-        typealias ItemLayoutData = (height: CGFloat, bottomMargin: CGFloat)
-        // swiftlint:disable:previous nesting
+    public func createLayoutModel(items: ChatItemCompanionCollection,
+              collectionViewWidth width: CGFloat) -> ChatCollectionViewLayoutModel {
 
-        func createLayoutModel(intermediateLayoutData: [IntermediateItemLayoutData]) -> ChatCollectionViewLayoutModel {
-            let layoutData = intermediateLayoutData.map { (intermediateLayoutData: IntermediateItemLayoutData) -> ItemLayoutData in
-                return (height: intermediateLayoutData.height!, bottomMargin: intermediateLayoutData.bottomMargin)
-            }
-            return ChatCollectionViewLayoutModel.createModel(collectionViewWidth, itemsLayoutData: layoutData)
+        var heights = items.map { companion in
+            HeightValue { companion.height(forMaxWidth: width) }
         }
 
-        let isInBackground = !Thread.isMainThread
-        var intermediateLayoutData = [IntermediateItemLayoutData]()
-        var itemsForMainThread = [(index: Int, itemCompanion: ChatItemCompanion)]()
+        enum ExecutionContext { case this, main }
 
-        for (index, itemCompanion) in items.enumerated() {
-            var height: CGFloat?
-            let bottomMargin: CGFloat = itemCompanion.decorationAttributes?.bottomMargin ?? 0
-            if !isInBackground || itemCompanion.presenter.canCalculateHeightInBackground {
-                height = itemCompanion.presenter.heightForCell(maximumWidth: collectionViewWidth, decorationAttributes: itemCompanion.decorationAttributes)
-            } else {
-                itemsForMainThread.append((index: index, itemCompanion: itemCompanion))
-            }
-            intermediateLayoutData.append((height: height, bottomMargin: bottomMargin))
+        let isMainThread = Thread.isMainThread
+
+        let contexts: Indices<ExecutionContext> = Indices(of: items) {
+            isMainThread || $0.presenter.canCalculateHeightInBackground ? .this : .main
         }
 
-        if itemsForMainThread.count > 0 {
+        for index in contexts[.this] {
+            heights[index].calculate()
+        }
+
+        if !contexts[.main].isEmpty {
             DispatchQueue.main.sync {
-                for (index, itemCompanion) in itemsForMainThread {
-                    let height = itemCompanion.presenter.heightForCell(
-                        maximumWidth: collectionViewWidth,
-                        decorationAttributes: itemCompanion.decorationAttributes
-                    )
-                    intermediateLayoutData[index].height = height
+                for index in contexts[.main] {
+                    heights[index].calculate()
                 }
             }
         }
-        return createLayoutModel(intermediateLayoutData: intermediateLayoutData)
+
+        let heightValues = heights.map { $0.value }
+        let bottomMargins = items.map(\.bottomMargin)
+        let layoutData = Array(zip(heightValues, bottomMargins))
+
+        return ChatCollectionViewLayoutModel.createModel(width, itemsLayoutData: layoutData)
+    }
+}
+
+private extension ChatItemCompanion {
+    func height(forMaxWidth maxWidth: CGFloat) -> CGFloat {
+        self.presenter.heightForCell(maximumWidth: maxWidth,
+                             decorationAttributes: self.decorationAttributes)
     }
 
+    var bottomMargin: CGFloat { self.decorationAttributes?.bottomMargin ?? 0 }
+}
+
+private struct Indices<Key: Hashable> {
+
+    private let indicesByKey: [Key: Set<Int>]
+
+    init<C: Collection>(of collection: C, decide: (C.Element) -> Key) where C.Index == Int {
+        var indicesByKey: [Key: Set<Int>] = [:]
+
+        for (index, element) in collection.enumerated() {
+            indicesByKey[decide(element), default: []].insert(index)
+        }
+
+        self.indicesByKey = indicesByKey
+    }
+
+    subscript(_ key: Key) -> Set<Int> {
+        self.indicesByKey[key] ?? []
+    }
 }
 
