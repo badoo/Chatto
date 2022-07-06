@@ -32,6 +32,7 @@ public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
                 animated: Bool,
                 spotlight: Bool)
     func scrollToBottom(animated: Bool)
+    func configure(backgroundColor: UIColor)
 }
 
 /**
@@ -59,6 +60,7 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesAdapter.chatItemCompanionCollection
     }
+
     public init(config: Config,
                 layout: Layout,
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
@@ -226,6 +228,10 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
             at: position,
             animated: animated
         )
+    }
+
+    public func configure(backgroundColor: UIColor) {
+        self.collectionView.backgroundColor = backgroundColor
     }
 }
 

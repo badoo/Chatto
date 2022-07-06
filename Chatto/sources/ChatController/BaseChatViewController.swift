@@ -28,7 +28,9 @@ public protocol ReplyActionHandler: AnyObject {
     func handleReply(for: ChatItemProtocol)
 }
 
-public typealias ChatViewControllerProtocol = UIViewController & ChatMessagesCollectionHolderProtocol & ChatInputBarPresentingController
+public protocol ChatViewControllerProtocol: ChatMessagesCollectionHolderProtocol, ChatInputBarPresentingController {
+    func configure(style: ChatViewControllerStyle)
+}
 
 public final class BaseChatViewController: UIViewController {
 
@@ -446,6 +448,15 @@ extension BaseChatViewController: ChatInputBarPresentingController {
     }
 }
 
+extension BaseChatViewController: ChatViewControllerProtocol {
+    public func configure(style: ChatViewControllerStyle) {
+        self.inputContentContainer.backgroundColor = style.inputBarBackgroundColor
+        self.messagesViewController.configure(
+            backgroundColor: style.messagesBackgroundColor
+        )
+    }
+}
+
 public extension BaseChatViewController {
 
     struct Configuration {
@@ -461,6 +472,28 @@ public extension BaseChatViewController.Configuration {
     static var `default`: Self {
         return .init(
             endsEditingWhenTappingOnChatBackground: true
+        )
+    }
+}
+
+public struct ChatViewControllerStyle {
+    public var inputBarBackgroundColor: UIColor
+    public var messagesBackgroundColor: UIColor
+
+    public init(
+        inputBarBackgroundColor: UIColor,
+        messagesBackgroundColor: UIColor
+    ) {
+        self.inputBarBackgroundColor = inputBarBackgroundColor
+        self.messagesBackgroundColor = messagesBackgroundColor
+    }
+}
+
+public extension ChatViewControllerStyle {
+    static var `default`: Self {
+        return .init(
+            inputBarBackgroundColor: .white,
+            messagesBackgroundColor: ChatMessagesViewController.Style.default.backgroundColor
         )
     }
 }
