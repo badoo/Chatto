@@ -23,6 +23,7 @@
 
 import UIKit
 
+@available(iOS 13, *)
 public final class NewChatMessageCollectionAdapter: NSObject,
                                                     ChatMessageCollectionAdapterProtocol,
                                                     ChatDataSourceDelegateProtocol,
@@ -31,10 +32,21 @@ public final class NewChatMessageCollectionAdapter: NSObject,
     // MARK: - Private type declarations
 
     private struct ModelUpdates {
+        struct ScrollPositionData {
+            let oldRect: CGRect
+            let referenceIndexPath: IndexPath
+        }
+
         let updateType: UpdateType
         let changes: CollectionChanges
         let collection: ChatItemCompanionCollection
         let layoutModel: ChatCollectionViewLayoutModel
+
+        var scrollPositionData: ScrollPositionData? = nil
+    }
+
+    private enum Error: Swift.Error {
+        case internalInconsistancy
     }
 
     // MARK: - Private properties
@@ -42,7 +54,7 @@ public final class NewChatMessageCollectionAdapter: NSObject,
     private let configuration: Configuration
     private let collectionUpdateProvider: CollectionUpdateProviderProtocol
     private let layoutFactory: ChatCollectionViewLayoutModelFactoryProtocol
-    private let collectionUpdatesQueue: SerialTaskQueueProtocol
+    private let collectionUpdatesQueue: NewSerialTaskQueueProtocol
     private let referenceIndexPathRestoreProvider: ReferenceIndexPathRestoreProvider
 
     // MARK: - State
@@ -57,7 +69,7 @@ public final class NewChatMessageCollectionAdapter: NSObject,
 
     init(configuration: Configuration,
          collectionUpdateProvider: CollectionUpdateProviderProtocol,
-         collectionUpdatesQueue: SerialTaskQueueProtocol,
+         collectionUpdatesQueue: NewSerialTaskQueueProtocol,
          layoutFactory: ChatCollectionViewLayoutModelFactoryProtocol,
          referenceIndexPathRestoreProvider: @escaping ReferenceIndexPathRestoreProvider) {
         self.configuration = configuration
@@ -75,11 +87,11 @@ public final class NewChatMessageCollectionAdapter: NSObject,
     public var delegate: ChatMessageCollectionAdapterDelegate?
 
     public func startProcessingUpdates() {
-        self.collectionUpdatesQueue.start()
+        Task { await self.collectionUpdatesQueue.start() }
     }
 
     public func stopProcessingUpdates() {
-        self.collectionUpdatesQueue.stop()
+        Task { await self.collectionUpdatesQueue.stop() }
     }
 
     public func setup(in collectionView: UICollectionView) {
@@ -134,9 +146,6 @@ public final class NewChatMessageCollectionAdapter: NSObject,
             oldPresenterForCell.cellWasHidden(cell)
         }
 
-        // TODO: Remove from configuration
-        guard self.configuration.fastUpdates else { return }
-
         if let visibleCell = self.visibleCells[indexPath], visibleCell === cell {
             self.visibleCells[indexPath] = nil
         } else {
@@ -157,10 +166,7 @@ public final class NewChatMessageCollectionAdapter: NSObject,
         let presenter = self.presenter(for: indexPath)
         self.presentersByCell.setObject(presenter, forKey: cell)
 
-        // TODO: Remove from configuration
-        if self.configuration.fastUpdates {
-            self.visibleCells[indexPath] = cell
-        }
+        self.visibleCells[indexPath] = cell
 
         let shouldAnimate = self.delegate?.chatMessageCollectionAdapterShouldAnimateCellOnDisplay() ?? false
         if !shouldAnimate {
@@ -234,24 +240,33 @@ public final class NewChatMessageCollectionAdapter: NSObject,
             collectionViewWidth: collectionView.bounds.width
         )
         self.layoutModel = layoutModel
-
     }
 
-    private func enqueueModelUpdate(type: UpdateType, completion: (() -> Void)? = nil) {
-        let task: TaskClosure = { [weak self] runNextTask in
-            self?.updateModels(updateType: type) { [weak self] updates in
-                self?.performBatchUpdates(updates: updates) { [weak self] in
-                    guard let self = self else { return }
-                    self.delegate?.chatMessageCollectionAdapterDidUpdateItems(withUpdateType: type)
-                    completion?()
-                    DispatchQueue.main.async {
-                        // Reduces inconsistencies before next update: https://github.com/diegosanchezr/UICollectionViewStressing
-                        runNextTask()
-                    }
-                }
-            }
+    private func enqueueModelUpdate(type: UpdateType, completion: (@MainActor () -> Void)? = nil) {
+        var updateType = type
+        self.fixUpdateTypeIfNeeded(updateType: &updateType)
+
+        Task.detached { [weak self, updateType] in
+            guard let self = self else { return }
+            await self.asyncEnqueueModelUpdate(type: updateType)
+            await completion?()
         }
-        self.collectionUpdatesQueue.addTask(task)
+    }
+
+    @MainActor
+    private func asyncEnqueueModelUpdate(type: UpdateType) async {
+        await self.collectionUpdatesQueue.enqueue { [weak self] in
+            guard let self = self else { return }
+            do {
+                let updates = try await self.updatedModels(updateType: type)
+                try await self.reloadView(with: updates)
+                self.notifyDelegateAboutUpdate(with: type)
+            } catch { }
+        }
+    }
+
+    private func notifyDelegateAboutUpdate(with type: UpdateType) {
+        self.delegate?.chatMessageCollectionAdapterDidUpdateItems(withUpdateType: type)
     }
 
     private func presenter(for indexPath: IndexPath) -> ChatItemPresenterProtocol {
@@ -261,115 +276,89 @@ public final class NewChatMessageCollectionAdapter: NSObject,
         return self.chatItemCompanionCollection[index].presenter
     }
 
-    private func performBatchUpdates(updates: ModelUpdates, completion: @escaping () -> Void) {
-        guard let collectionView = self.collectionView else { return }
-
-        let updateType = updates.updateType
-        let collection = updates.collection
-        let changes = updates.changes
-        let layout = updates.layoutModel
-
-        let updateModelClosure = { [weak self] in
-            guard let self = self else { return }
-            self.chatItemCompanionCollection = collection
-            self.layoutModel = layout
-        }
-
-        let usesBatchUpdates: Bool = {
-            let visibleCellsAreValid = self.visibleCellsAreValid(changes: changes)
-            let wantsReloadData = updateType != .normal && updateType != .firstSync
-            return !wantsReloadData && visibleCellsAreValid
-        }()
-
-        let scrollAction: ScrollAction
-        do { // Scroll action
-            if updateType != .pagination && updateType != .firstSync && collectionView.isScrolledAtBottom() {
-                scrollAction = .scrollToBottom
-            } else {
-                let (oldReferenceIndexPath, newReferenceIndexPath) = self.referenceIndexPathRestoreProvider(collection, changes)
-                let oldRect = self.rectAtIndexPath(oldReferenceIndexPath)
-                scrollAction = .preservePosition(
-                    rectForReferenceIndexPathBeforeUpdate: oldRect,
-                    referenceIndexPathAfterUpdate: newReferenceIndexPath
-                )
-            }
-        }
-
-        let myCompletion: () -> Void
-        do { // Completion
-            var myCompletionExecuted = false
-            myCompletion = {
-                if myCompletionExecuted { return }
-                myCompletionExecuted = true
-                completion()
-            }
-        }
-
-        let adjustScrollViewToBottom = { [weak self, weak collectionView] in
-            guard let self = self, let collectionView = collectionView else { return }
-
-            switch scrollAction {
-            case .scrollToBottom:
-                collectionView.scrollToBottom(
-                    animated: updateType == .normal,
-                    animationDuration: self.configuration.updatesAnimationDuration
-                )
-            case .preservePosition(let oldRect, let indexPath):
-                let newRect = self.rectAtIndexPath(indexPath)
-                collectionView.scrollToPreservePosition(oldRefRect: oldRect, newRefRect: newRect)
-            }
-        }
-
-        if usesBatchUpdates {
-            UIView.animate(
-                withDuration: self.configuration.updatesAnimationDuration,
-                animations: { [weak self] () -> Void in
-                    guard let self = self else { return }
-
-                    collectionView.performBatchUpdates({ [weak self] in
-                        guard let self = self else { return }
-
-                        updateModelClosure()
-                        self.updateVisibleCells(changes) // For instance, to support removal of tails
-
-                        collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
-                        collectionView.insertItems(at: Array(changes.insertedIndexPaths))
-
-                        for move in changes.movedIndexPaths {
-                            collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
-                        }
-                    }, completion: { _ in
-                        myCompletion()
-                    })
-                }
-            )
+    @MainActor
+    private func reloadView(with updates: ModelUpdates) async throws {
+        if self.shouldReloadInstantly(for: updates) {
+            self.reloadInstantly(with: updates)
         } else {
-            self.visibleCells = [:]
-            updateModelClosure()
-            collectionView.reloadData()
-            collectionView.collectionViewLayout.prepare()
-
-            collectionView.setNeedsLayout()
-            collectionView.layoutIfNeeded()
+            try await self.reloadWithAnimation(with: updates)
         }
-
-        adjustScrollViewToBottom()
-
-        if !usesBatchUpdates || self.configuration.fastUpdates {
-            myCompletion()
+        if let scrollPositionData = updates.scrollPositionData {
+            self.adjustScroll(with: scrollPositionData)
         }
     }
 
-    private func createModelUpdates(updateType: UpdateType) -> ModelUpdates {
-        // TODO: Fix fatalError
-        guard let collectionView = self.collectionView else { fatalError() }
-        let old = self.chatItemCompanionCollection
+    private func shouldReloadInstantly(for updates: ModelUpdates) -> Bool {
+        let updateType = updates.updateType
+        let visibleCellsAreValid = self.visibleCellsAreValid(changes: updates.changes)
+        let wantsReloadData = updateType != .normal && updateType != .firstSync
+        return wantsReloadData || !visibleCellsAreValid
+    }
+
+    private func reloadInstantly(with updates: ModelUpdates) {
+        guard let collectionView = self.collectionView else { return }
+
+        self.visibleCells = [:]
+        self.applyModelChange(from: updates)
+        collectionView.reloadData()
+        collectionView.collectionViewLayout.prepare()
+
+        collectionView.setNeedsLayout()
+        collectionView.layoutIfNeeded()
+    }
+
+    @MainActor
+    private func reloadWithAnimation(with updates: ModelUpdates) async throws {
+        guard let collectionView = self.collectionView else {
+            throw Error.internalInconsistancy
+        }
+
+        let changes = updates.changes
+
+        await withCheckedContinuation { [weak self] (continuation: CheckedContinuation<Void, Never>) -> Void in
+            guard let self = self else { return }
+            self.animate { [weak self] in
+                collectionView.performBatchUpdates { [weak self] in
+                    guard let self = self else { return }
+
+                    self.applyModelChange(from: updates)
+                    self.updateVisibleCells(changes) // For instance, to support removal of tails
+
+                    collectionView.deleteItems(at: Array(changes.deletedIndexPaths))
+                    collectionView.insertItems(at: Array(changes.insertedIndexPaths))
+
+                    for move in changes.movedIndexPaths {
+                        collectionView.moveItem(at: move.indexPathOld, to: move.indexPathNew)
+                    }
+                } completion: { _ in continuation.resume() }
+            }
+        }
+    }
+
+    private func adjustScroll(with preservation: ModelUpdates.ScrollPositionData) {
+        guard let collectionView = self.collectionView else { return }
+        let newRect = self.rectAtIndexPath(preservation.referenceIndexPath)
+        collectionView.scrollToPreservePosition(oldRefRect: preservation.oldRect, newRefRect: newRect)
+    }
+
+    private func applyModelChange(from updates: ModelUpdates) {
+        self.chatItemCompanionCollection = updates.collection
+        self.layoutModel = updates.layoutModel
+    }
+
+    private func animate(animations: @escaping () -> Void) {
+        UIView.animate(withDuration: self.configuration.updatesAnimationDuration) { animations() }
+    }
+
+    private func createModelUpdates(updateType: UpdateType,
+                                           old: ChatItemCompanionCollection,
+                                      maxWidth: CGFloat) -> ModelUpdates {
         let new = self.collectionUpdateProvider.updateCollection(old: old)
         let changes = generateChanges(oldCollection: old.map(HashableItem.init),
                                       newCollection: new.map(HashableItem.init))
         let layoutModel = self.layoutFactory.createLayoutModel(
             items: new,
-            collectionViewWidth: collectionView.bounds.width
+            collectionViewWidth: maxWidth
         )
         return ModelUpdates(
             updateType: updateType,
@@ -379,21 +368,44 @@ public final class NewChatMessageCollectionAdapter: NSObject,
         )
     }
 
-    private func updateModels(updateType: UpdateType,
-                              completion: @escaping (ModelUpdates) -> Void) {
-        let performInBackground = updateType != .firstLoad
-
-        if performInBackground {
-            DispatchQueue.global(qos: .userInitiated).async {
-                let updates = self.createModelUpdates(updateType: updateType)
-                DispatchQueue.main.async {
-                    completion(updates)
-                }
-            }
-        } else {
-            let updates = self.createModelUpdates(updateType: updateType)
-            completion(updates)
+    @MainActor
+    private func updatedModels(updateType: UpdateType) async throws -> ModelUpdates {
+        guard let collectionView = self.collectionView else {
+            throw Error.internalInconsistancy
         }
+
+        let performInBackground = updateType != .firstLoad
+        let maxWidth = collectionView.bounds.width
+        let old = self.chatItemCompanionCollection
+
+        let createModelUpdates: () throws -> ModelUpdates = { [weak self] in
+            guard let self = self else { throw Error.internalInconsistancy }
+            return self.createModelUpdates(updateType: updateType,
+                                                  old: old,
+                                             maxWidth: maxWidth)
+        }
+
+        var modelUpdates: ModelUpdates
+        if performInBackground {
+            modelUpdates = try await Task.detached { try createModelUpdates() }.value
+        } else {
+            modelUpdates = try createModelUpdates()
+        }
+
+        self.setupScrollPositionData(in: &modelUpdates)
+
+        return modelUpdates
+    }
+
+    private func fixUpdateTypeIfNeeded(updateType: inout UpdateType) {
+        guard self.delegate?.isFirstLoad == true else { return }
+        updateType = .firstLoad
+    }
+
+    private func setupScrollPositionData(in updates: inout ModelUpdates) {
+        guard case let (old, new?) = self.referenceIndexPathRestoreProvider(updates.collection, updates.changes),
+              let oldRect = self.rectAtIndexPath(old) else { return }
+        updates.scrollPositionData = .init(oldRect: oldRect, referenceIndexPath: new)
     }
 
     private func rectAtIndexPath(_ indexPath: IndexPath?) -> CGRect? {
@@ -404,12 +416,8 @@ public final class NewChatMessageCollectionAdapter: NSObject,
     }
 
     private func visibleCellsAreValid(changes: CollectionChanges) -> Bool {
-        guard self.configuration.fastUpdates else {
-            return true
-        }
-
         // After performBatchUpdates, indexPathForCell may return a cell refering to the state before the update
-        // if self.updatesConfig.fastUpdates is enabled, very fast updates could result in `updateVisibleCells` updating wrong cells.
+        // Very fast updates could result in `updateVisibleCells` updating wrong cells.
         // See more: https://github.com/diegosanchezr/UICollectionViewStressing
         let updatesFromVisibleCells = updated(collection: self.visibleCells, withChanges: changes)
         let updatesFromCollectionViewApi = updated(collection: self.visibleCellsFromCollectionViewApi(), withChanges: changes)
@@ -446,9 +454,10 @@ public final class NewChatMessageCollectionAdapter: NSObject,
 }
 
 // TODO: Remove later
+@available(iOS 13, *)
 public extension NewChatMessageCollectionAdapter {
     static func make(configuration: Configuration,
-                       updateQueue: SerialTaskQueueProtocol,
+                       updateQueue: NewSerialTaskQueueProtocol,
           chatItemPresenterFactory: ChatItemPresenterFactoryProtocol,
                 chatItemsDecorator: ChatItemsDecoratorProtocol,
  referenceIndexPathRestoreProvider: @escaping ReferenceIndexPathRestoreProvider,
@@ -456,7 +465,7 @@ public extension NewChatMessageCollectionAdapter {
 
         let configuration: NewChatMessageCollectionAdapter.Configuration = .default
         let collectionUpdateProvider = CollectionUpdateProvider(
-            configuration: configuration,
+            configuration: .init(adapterConfiguration: configuration),
             chatItemsDecorator: chatItemsDecorator,
             chatItemPresenterFactory: chatItemPresenterFactory,
             chatMessagesViewModel: chatMessagesViewModel
@@ -502,4 +511,3 @@ private struct HashableItem: Hashable {
         self.type = chatItemCompanion.chatItem.type
     }
 }
-

@@ -78,3 +78,47 @@ public final class SerialTaskQueue: SerialTaskQueueProtocol {
         }
     }
 }
+
+@available(iOS 13, *)
+public protocol NewSerialTaskQueueProtocol {
+    typealias AsyncTaskClosure = @MainActor () async -> Void
+    func start() async
+    func stop() async
+    func enqueue(task: @escaping AsyncTaskClosure) async
+}
+
+@available(iOS 13, *)
+public actor NewSerialTaskQueue: NewSerialTaskQueueProtocol {
+
+    // MARK: - State
+
+    private var stopped = true
+    private var tasks: [AsyncTaskClosure] = []
+
+    // MARK: - Instantiation
+
+    // MARK: - NewSerialTaskQueueProtocol
+
+    public func start() async {
+        self.stopped = false
+        await run()
+    }
+
+    public func stop() async {
+        self.stopped = true
+    }
+
+    public func enqueue(task: @escaping AsyncTaskClosure) async {
+        self.tasks.append(task)
+        await self.run()
+    }
+
+    // MARK: - Private
+
+    private func run() async {
+        guard !self.stopped && !self.tasks.isEmpty else { return }
+        let task = self.tasks.removeFirst()
+        await task()
+        await self.run()
+    }
+}

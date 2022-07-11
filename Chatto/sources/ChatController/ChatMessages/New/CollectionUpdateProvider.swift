@@ -26,8 +26,13 @@ import UIKit
 // TODO: Rename
 public final class CollectionUpdateProvider: CollectionUpdateProviderProtocol {
 
-    // TODO: Stop sharing configuration with adapter
-    public typealias Configuration = NewChatMessageCollectionAdapter.Configuration
+    public struct Configuration {
+        let isRegisteringPresentersAutomatically: Bool
+
+        public init(isRegisteringPresentersAutomatically: Bool) {
+            self.isRegisteringPresentersAutomatically = isRegisteringPresentersAutomatically
+        }
+    }
 
     // MARK: - Private properties
 
