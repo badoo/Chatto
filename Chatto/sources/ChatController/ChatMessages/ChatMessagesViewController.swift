@@ -21,9 +21,10 @@ public protocol ChatMessagesViewControllerDelegate: AnyObject {
                                     targetContentOffset: UnsafeMutablePointer<CGPoint>)
 }
 
-public protocol ChatMessagesViewControllerProtocol: UICollectionViewController {
+public protocol ChatMessagesViewProtocol {
     // TODO: Proxy
     var chatItemCompanionCollection: ChatItemCompanionCollection { get }
+    var collectionView: UICollectionView { get }
 
     func autoLoadMoreContentIfNeeded()
     func refreshContent(completionBlock: (() -> Void)?)
@@ -44,7 +45,7 @@ Some behaviour and styling of this chat messages container can be customised usi
 
  The delegate of this View Controller receives scroll related events and also update notifications.
  */
-public final class ChatMessagesViewController: UICollectionViewController, ChatMessagesViewControllerProtocol {
+public final class ChatMessagesViewController: UIViewController, ChatMessagesViewProtocol {
 
     public typealias Layout = UICollectionViewLayout & ChatCollectionViewLayoutProtocol
 
@@ -57,6 +58,9 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     private var isFirstLayout: Bool
 
     public weak var delegate: ChatMessagesViewControllerDelegate?
+
+    public let collectionView: UICollectionView
+
     public var chatItemCompanionCollection: ChatItemCompanionCollection {
         self.messagesAdapter.chatItemCompanionCollection
     }
@@ -66,6 +70,10 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
                 messagesAdapter: ChatMessageCollectionAdapterProtocol,
                 style: Style,
                 viewModel: ChatMessagesViewModelProtocol) {
+        self.collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         self.config = config
         self.layout = layout
         self.messagesAdapter = messagesAdapter
@@ -73,7 +81,7 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         self.viewModel = viewModel
 
         self.isFirstLayout = true
-        super.init(collectionViewLayout: layout)
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -116,10 +124,9 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
         super.viewWillTransition(to: size, with: coordinator)
 
         guard self.isViewLoaded else { return }
-        guard let collectionView = self.collectionView else { return }
 
         let shouldScrollToBottom = self.collectionView.isScrolledAtBottom()
-        let referenceIndexPath = collectionView.indexPathsForVisibleItems.first
+        let referenceIndexPath = self.collectionView.indexPathsForVisibleItems.first
         let oldRect = self.rect(at: referenceIndexPath)
 
         coordinator.animate { [weak self] _ in
@@ -161,14 +168,22 @@ public final class ChatMessagesViewController: UICollectionViewController, ChatM
     }
 
     private func configureCollectionView() {
+        self.view.addSubview(self.collectionView)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        ])
+
         self.collectionView.delegate = self
     }
 
     private func rect(at indexPath: IndexPath?) -> CGRect? {
-        guard let collectionView = self.collectionView else { return nil }
         guard let indexPath = indexPath else { return nil }
 
-        return collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
+        return self.collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame
     }
 
     public func autoLoadMoreContentIfNeeded() {
@@ -253,10 +268,10 @@ public extension ChatMessagesViewController {
     }
 }
 
-extension ChatMessagesViewController {
-    public override func collectionView(_ collectionView: UICollectionView,
-                                        didEndDisplaying cell: UICollectionViewCell,
-                                        forItemAt indexPath: IndexPath) {
+extension ChatMessagesViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView,
+                               didEndDisplaying cell: UICollectionViewCell,
+                               forItemAt indexPath: IndexPath) {
         self.messagesAdapter.collectionView?(
             collectionView,
             didEndDisplaying: cell,
@@ -264,9 +279,9 @@ extension ChatMessagesViewController {
         )
     }
 
-    public override func collectionView(_ collectionView: UICollectionView,
-                                        willDisplay cell: UICollectionViewCell,
-                                        forItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView,
+                               willDisplay cell: UICollectionViewCell,
+                               forItemAt indexPath: IndexPath) {
         self.messagesAdapter.collectionView?(
             collectionView,
             willDisplay: cell,
@@ -276,15 +291,15 @@ extension ChatMessagesViewController {
         self.delegate?.chatMessagesViewController(self, onDisplayCellWithIndexPath: indexPath)
     }
 
-    public override func collectionView(_ collectionView: UICollectionView,
-                                        shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView,
+                               shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return self.messagesAdapter.collectionView?(collectionView, shouldShowMenuForItemAt: indexPath) ?? false
     }
 
-    public override func collectionView(_ collectionView: UICollectionView,
-                                        canPerformAction action: Selector,
-                                        forItemAt indexPath: IndexPath,
-                                        withSender sender: Any?) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView,
+                               canPerformAction action: Selector,
+                               forItemAt indexPath: IndexPath,
+                               withSender sender: Any?) -> Bool {
         return self.messagesAdapter.collectionView?(
             collectionView,
             canPerformAction: action,
@@ -293,10 +308,10 @@ extension ChatMessagesViewController {
         ) ?? false
     }
 
-    public override func collectionView(_ collectionView: UICollectionView,
-                                        performAction action: Selector,
-                                        forItemAt indexPath: IndexPath,
-                                        withSender sender: Any?) {
+    public func collectionView(_ collectionView: UICollectionView,
+                               performAction action: Selector,
+                               forItemAt indexPath: IndexPath,
+                               withSender sender: Any?) {
         self.messagesAdapter.collectionView?(
             collectionView,
             performAction: action,
@@ -305,11 +320,11 @@ extension ChatMessagesViewController {
         )
     }
 
-    public override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         self.messagesAdapter.scrollViewDidEndScrollingAnimation?(scrollView)
     }
 
-    public override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.collectionView.isDragging {
             self.autoLoadMoreContentIfNeeded()
         }
@@ -322,12 +337,12 @@ extension ChatMessagesViewController {
         )
     }
 
-    public override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.messagesAdapter.scrollViewWillBeginDragging?(scrollView)
         self.delegate?.chatMessagesViewController(self, willBeginDragging: scrollView)
     }
 
-    public override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         self.messagesAdapter.scrollViewWillEndDragging?(
             scrollView,
             withVelocity: velocity,
@@ -342,11 +357,11 @@ extension ChatMessagesViewController {
         )
     }
 
-    public override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
          self.autoLoadMoreContentIfNeeded()
      }
 
-    public override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.messagesAdapter.scrollViewDidEndDragging?(
             scrollView,
             willDecelerate: decelerate

@@ -34,6 +34,8 @@ public protocol ChatViewControllerProtocol: ChatMessagesCollectionHolderProtocol
 
 public final class BaseChatViewController: UIViewController {
 
+    public typealias ChatMessagesViewControllerProtocol = ChatMessagesViewProtocol & UIViewController
+
     private let messagesViewController: ChatMessagesViewControllerProtocol
     private let configuration: Configuration
     private let keyboardUpdatesHandler: KeyboardUpdatesHandlerProtocol
