@@ -291,7 +291,13 @@ public final class NewChatMessageCollectionAdapter: NSObject,
     private func shouldReloadInstantly(for updates: ModelUpdates) -> Bool {
         let updateType = updates.updateType
         let visibleCellsAreValid = self.visibleCellsAreValid(changes: updates.changes)
-        let wantsReloadData = updateType != .normal && updateType != .firstSync
+        let wantsReloadData: Bool
+        switch updateType {
+        case .normal, .firstSync:
+            wantsReloadData = false
+        case .firstLoad, .pagination, .reload, .messageCountReduction:
+            wantsReloadData = true
+        }
         return wantsReloadData || !visibleCellsAreValid
     }
 
