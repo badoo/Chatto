@@ -112,7 +112,7 @@ class ChatMessagesViewControllerTests: XCTestCase {
 
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         fakeDidAppearAndLayout(controller: messagesViewController)
-        let collectionView = messagesViewController.collectionView!
+        let collectionView = messagesViewController.collectionView
         updateQueue.addTask { completion in
             fakeDataSource.hasMorePrevious = true
             collectionView.contentOffset = CGPoint.zero
@@ -135,7 +135,7 @@ class ChatMessagesViewControllerTests: XCTestCase {
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         fakeDidAppearAndLayout(controller: messagesViewController)
 
-        let collectionView = messagesViewController.collectionView!
+        let collectionView = messagesViewController.collectionView
         let contentOffset = collectionView.contentOffset
         fakeDataSource.hasMoreNext = true
         fakeDataSource.chatItemsForLoadNext = createFakeChatItems(count: 3000)
