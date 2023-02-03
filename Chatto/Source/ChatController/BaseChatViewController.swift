@@ -260,6 +260,8 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
 
     private func updateInputContainerBottomBaseOffset() {
         if #available(iOS 11.0, *) {
+            guard self.inputContainerBottomBaseOffset != self.bottomLayoutGuide.length
+            else { return }
             self.inputContainerBottomBaseOffset = self.bottomLayoutGuide.length
         } else {
             // If we have been pushed on nav controller and hidesBottomBarWhenPushed = true, then ignore bottomLayoutMargin
