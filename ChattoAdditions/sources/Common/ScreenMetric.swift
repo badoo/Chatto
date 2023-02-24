@@ -46,8 +46,14 @@ enum ScreenMetrics {
     /// iPhone XR
     case inch6_1
 
+    /// iPhone 12 Pro (6.1 on spec)
+    case inch6_0_6
+
     /// iPhone XMax
     case inch6_5
+
+    /// iPhone 12 Pro MAX
+    case inch6_7
 
     /// iPad, iPad Air, iPad Pro 9.7, iPad Pro 10.5
     case iPad
@@ -73,6 +79,10 @@ private extension ScreenMetrics {
             return 812
         case .inch6_1, .inch6_5:
             return 896
+        case .inch6_0_6:
+            return 844
+        case .inch6_7:
+            return 926
         case .iPad:
             return 1024
         case .iPad_12_9:
@@ -107,6 +117,10 @@ extension UIScreen {
             return .inch6_1
         case ScreenMetrics.inch6_5.heightInPoints:
             return .inch6_5
+        case ScreenMetrics.inch6_0_6.heightInPoints:
+            return .inch6_0_6
+        case ScreenMetrics.inch6_7.heightInPoints:
+            return .inch6_7
         case ScreenMetrics.iPad.heightInPoints:
             return .iPad
         case ScreenMetrics.iPad_12_9.heightInPoints:
@@ -124,16 +138,16 @@ extension UIScreen {
             return 260
         case .inch5_5:
             return 271
-        case .inch5_8:
-            return 335
-        case .inch6_1, .inch6_5:
+        case .inch5_8, .inch6_0_6:
+            return 336
+        case .inch6_1, .inch6_5, .inch6_7:
             return 346
         case .iPad:
             return 313
         case .iPad_12_9:
             return 378
         case .undefined:
-            return 335 // iPhoneX
+            return 336 // iPhoneX
         }
     }
 
@@ -149,13 +163,24 @@ extension UIScreen {
             return 398
         case .iPad_12_9:
             return 471
+        case .inch6_0_6, .inch6_7:
+            return 219
         case .undefined:
             return 209 // iPhone X
         }
     }
 
     public var defaultKeyboardHeightForCurrentOrientation: CGFloat {
-        return self.defaultKeyboardHeight(isPortrait: UIDevice.current.orientation.isPortrait)
+        let isPortrait = {
+            switch UIDevice.current.orientation {
+            case .portrait, .portraitUpsideDown, .unknown:
+                return true
+            default:
+                return false
+            }
+        }()
+
+        return self.defaultKeyboardHeight(isPortrait: isPortrait)
     }
 
     public func defaultKeyboardHeight(isPortrait: Bool) -> CGFloat {
