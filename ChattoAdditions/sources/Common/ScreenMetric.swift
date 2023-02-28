@@ -78,10 +78,10 @@ private extension ScreenMetrics {
             return 736
         case .inch5_8:
             return 812
-        case .inch6_1, .inch6_5:
-            return 896
         case .inch6_0_6:
             return 844
+        case .inch6_1, .inch6_5:
+            return 896
         case .inch6_7:
             return 926
         case .iPad:
@@ -114,12 +114,12 @@ extension UIScreen {
             return .inch5_5
         case ScreenMetrics.inch5_8.heightInPoints:
             return .inch5_8
+        case ScreenMetrics.inch6_0_6.heightInPoints:
+            return .inch6_0_6
         case ScreenMetrics.inch6_1.heightInPoints:
             return .inch6_1
         case ScreenMetrics.inch6_5.heightInPoints:
             return .inch6_5
-        case ScreenMetrics.inch6_0_6.heightInPoints:
-            return .inch6_0_6
         case ScreenMetrics.inch6_7.heightInPoints:
             return .inch6_7
         case ScreenMetrics.iPad.heightInPoints:
