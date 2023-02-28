@@ -62,6 +62,7 @@ enum ScreenMetrics {
     case iPad_12_9
 }
 
+// Keyboard heights can be checked on: https://federicabenacquista.medium.com/list-of-the-official-ios-keyboards-heights-and-how-to-calculate-them-c2b844ef54b9
 private extension ScreenMetrics {
     var heightInPoints: CGFloat {
         switch self {
@@ -175,18 +176,18 @@ extension UIScreen {
     }
 
     public func defaultKeyboardHeightForCurrentOrientation(
-        defaultOrientationAsPortrait: Bool = true
+        fallbackUnknownOrientationAsPortrait: Bool = true
     ) -> CGFloat {
         let isPortrait = {
             switch UIDevice.current.orientation {
             case .portrait, .portraitUpsideDown:
                 return true
             case .unknown, .faceUp, .faceDown:
-                return defaultOrientationAsPortrait
+                return fallbackUnknownOrientationAsPortrait
             case .landscapeLeft, .landscapeRight:
                 return false
             @unknown default:
-                return defaultOrientationAsPortrait
+                return fallbackUnknownOrientationAsPortrait
             }
         }()
 
