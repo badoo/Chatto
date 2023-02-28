@@ -174,7 +174,12 @@ class DemoChatViewController: UIViewController {
             )
             let keyboardHandler = DefaultKeyboardHandler(presenter: presenter)
 
-            return (presenter, keyboardHandler, nil, nil)
+            return ChatInputContainer(
+                presenter: presenter,
+                keyboardHandlerDelegate: keyboardHandler,
+                collectionHandler: nil,
+                viewPresentationHandler: nil
+            )
         }
 
         let presenter = ExpandableChatInputBarPresenter(
@@ -183,7 +188,12 @@ class DemoChatViewController: UIViewController {
                 chatInputBarAppearance: appearance
             )
 
-        return (presenter, presenter, presenter, nil)
+        return ChatInputContainer(
+            presenter: presenter,
+            keyboardHandlerDelegate: presenter,
+            collectionHandler: presenter,
+            viewPresentationHandler: nil
+        )
     }
 
     private static func createChatInputItems(dataSource: DemoChatDataSource,
@@ -490,12 +500,12 @@ private protocol PresenterChatInputItemProtocol: AnyObject {
 
 extension PhotosChatInputItem: PresenterChatInputItemProtocol {}
 
-typealias ChatInputContainer = (
-    presenter: BaseChatInputBarPresenterProtocol,
-    keyboardHandlerDelegate: KeyboardUpdatesHandlerDelegate,
-    collectionHandler: CollectionViewEventsHandling?,
-    viewPresentationHandler: ViewPresentationEventsHandling?
-)
+struct ChatInputContainer {
+    let presenter: BaseChatInputBarPresenterProtocol
+    let keyboardHandlerDelegate: KeyboardUpdatesHandlerDelegate
+    let collectionHandler: CollectionViewEventsHandling?
+    let viewPresentationHandler: ViewPresentationEventsHandling?
+}
 
 private final class DefaultKeyboardHandler: KeyboardUpdatesHandlerDelegate {
 
