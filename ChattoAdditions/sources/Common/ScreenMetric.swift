@@ -171,12 +171,22 @@ extension UIScreen {
     }
 
     public var defaultKeyboardHeightForCurrentOrientation: CGFloat {
+        return self.defaultKeyboardHeight(isPortrait: UIDevice.current.orientation.isPortrait)
+    }
+
+    public func defaultKeyboardHeightForCurrentOrientation(
+        defaultOrientationAsPortrait: Bool = true
+    ) -> CGFloat {
         let isPortrait = {
             switch UIDevice.current.orientation {
-            case .portrait, .portraitUpsideDown, .unknown:
+            case .portrait, .portraitUpsideDown:
                 return true
-            default:
+            case .unknown, .faceUp, .faceDown:
+                return defaultOrientationAsPortrait
+            case .landscapeLeft, .landscapeRight:
                 return false
+            @unknown default:
+                return defaultOrientationAsPortrait
             }
         }()
 
