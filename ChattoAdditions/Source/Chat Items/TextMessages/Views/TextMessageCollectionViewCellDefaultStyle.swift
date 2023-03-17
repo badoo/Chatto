@@ -47,17 +47,20 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
 
     public struct TextStyle {
         public let font: () -> UIFont
+        public let lineHeight: () -> CGFloat
         public let incomingColor: () -> UIColor
         public let outgoingColor: () -> UIColor
         public let incomingInsets: UIEdgeInsets
         public let outgoingInsets: UIEdgeInsets
         public init(
             font: @autoclosure @escaping () -> UIFont,
+            lineHeight: @autoclosure @escaping () -> CGFloat,
             incomingColor: @autoclosure @escaping () -> UIColor,
             outgoingColor: @autoclosure @escaping () -> UIColor,
             incomingInsets: UIEdgeInsets,
             outgoingInsets: UIEdgeInsets) {
                 self.font = font
+                self.lineHeight = lineHeight
                 self.incomingColor = incomingColor
                 self.outgoingColor = outgoingColor
                 self.incomingInsets = incomingInsets
@@ -87,11 +90,16 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }()
 
     lazy var font: UIFont = self.textStyle.font()
+    lazy var lineHeight: CGFloat = self.textStyle.lineHeight()
     lazy var incomingColor: UIColor = self.textStyle.incomingColor()
     lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
 
     open func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
         return self.font
+    }
+    
+    open func lineHeight(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat {
+        return self.lineHeight
     }
 
     open func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
@@ -161,6 +169,7 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
     static func createDefaultTextStyle() -> TextStyle {
         return TextStyle(
             font: UIFont.systemFont(ofSize: 16),
+            lineHeight: UIFont.systemFont(ofSize: 16).lineHeight,
             incomingColor: UIColor.black,
             outgoingColor: UIColor.white,
             incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
