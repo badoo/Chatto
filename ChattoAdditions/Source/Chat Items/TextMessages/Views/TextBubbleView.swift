@@ -28,6 +28,7 @@ import VoodooLabChatto
 public protocol TextBubbleViewStyleProtocol {
     func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage
     func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage?
+    func bubbleBackgroundColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
     func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
     func lineHeight(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat
     func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor

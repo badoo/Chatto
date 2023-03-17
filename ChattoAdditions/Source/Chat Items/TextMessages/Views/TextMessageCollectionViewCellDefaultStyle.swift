@@ -98,6 +98,10 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
         return self.font
     }
     
+    open func bubbleBackgroundColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
+        return viewModel.isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
+    }
+    
     open func lineHeight(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> CGFloat {
         return self.lineHeight
     }
