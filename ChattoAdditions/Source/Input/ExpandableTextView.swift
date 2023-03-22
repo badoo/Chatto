@@ -52,6 +52,8 @@ open class ExpandableTextView: UITextView {
             self.layoutIfNeeded() // needed?
         }
     }
+    
+    private var lineHeight: CGFloat = 24 // TextStyle.bodyRegular => should be passed through configuration
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -158,6 +160,23 @@ open class ExpandableTextView: UITextView {
         // 4. Paste again: Texview it's smaller than it should be
         self.isScrollEnabled = false
         self.isScrollEnabled = true
+        
+        guard let text = text, let font = font else {
+            attributedText = nil
+            return
+        }
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.minimumLineHeight = lineHeight
+        paragraphStyle.maximumLineHeight = lineHeight
+        let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+        let attributes: [NSAttributedString.Key : Any] = [
+            .foregroundColor: textColor ?? UIColor.white,
+            .font: font,
+            .baselineOffset: baselineOffset,
+            .paragraphStyle: paragraphStyle
+        ]
+        attributedText = NSAttributedString(string: text, attributes: attributes)
     }
 
     // MARK: - UIResponder
