@@ -100,7 +100,21 @@ open class ExpandableTextView: UITextView {
             return self.placeholder.text
         }
         set {
-            self.placeholder.text = newValue
+            guard let font = placeholder.font else {
+                placeholder.text = newValue
+                return
+            }
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.minimumLineHeight = lineHeight
+            paragraphStyle.maximumLineHeight = lineHeight
+            let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+            let attributes: [NSAttributedString.Key : Any] = [
+                .foregroundColor: textColor ?? UIColor.white,
+                .font: font,
+                .baselineOffset: baselineOffset,
+                .paragraphStyle: paragraphStyle
+            ]
+            self.placeholder.attributedText = NSAttributedString(string: newValue, attributes: attributes)
             self.invalidateIntrinsicContentSize()
         }
     }
