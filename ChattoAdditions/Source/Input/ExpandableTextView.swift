@@ -31,7 +31,11 @@ public protocol ExpandableTextViewPlaceholderDelegate: class {
 
 open class ExpandableTextView: UITextView {
 
-    private let placeholder: UITextView = UITextView()
+    private let placeholder: UITextView = {
+        let textView = UITextView()
+        textView.isUserInteractionEnabled = false
+        return textView
+    }()
     public weak var placeholderDelegate: ExpandableTextViewPlaceholderDelegate?
 
     public var pasteActionInterceptor: PasteActionInterceptor?
@@ -109,12 +113,13 @@ open class ExpandableTextView: UITextView {
             paragraphStyle.maximumLineHeight = lineHeight
             let baselineOffset = (lineHeight - font.lineHeight) / 4.0
             let attributes: [NSAttributedString.Key : Any] = [
-                .foregroundColor: textColor ?? UIColor.white,
+                .foregroundColor: placeholder.textColor ?? UIColor.white,
                 .font: font,
                 .baselineOffset: baselineOffset,
                 .paragraphStyle: paragraphStyle
             ]
             self.placeholder.attributedText = NSAttributedString(string: newValue, attributes: attributes)
+            typingAttributes = attributes
             self.invalidateIntrinsicContentSize()
         }
     }
@@ -269,5 +274,16 @@ open class ExpandableTextView: UITextView {
     private func closestPointInTextContainer(to point: CGPoint) -> CGPoint {
         guard self.bounds.contains(point) else { return point }
         return point.clamped(to: self.bounds.inset(by: self.textContainerInset))
+    }
+    
+    open override func caretRect(for position: UITextPosition) -> CGRect {
+        var rect = super.caretRect(for: position)
+        
+        if let font = font {
+            let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+            rect.origin.y = rect.origin.y + baselineOffset
+        }
+        
+        return rect
     }
 }
