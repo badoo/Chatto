@@ -107,9 +107,12 @@ public final class ChatMessageCollectionAdapter: NSObject, ChatMessageCollection
     }
 
     public func setup(in collectionView: UICollectionView) {
+        print("[Investigation]", "ChatMessageCollectionAdapter", "setup(in:)")
+
         collectionView.dataSource = self
 
         if self.configuration.isRegisteringPresentersAutomatically {
+            print("[Investigation]", "ChatMessageCollectionAdapter", "setup(in:)", "isRegisteringPresentersAutomatically")
             self.chatItemPresenterFactory.configure(withCollectionView: collectionView)
         }
 
