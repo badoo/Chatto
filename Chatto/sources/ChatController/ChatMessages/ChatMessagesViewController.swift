@@ -89,6 +89,7 @@ public final class ChatMessagesViewController: UIViewController, ChatMessagesVie
     }
 
     override public func viewDidLoad() {
+        print("[Investigation]", "ChatMessagesViewController", "viewDidLoad")
         super.viewDidLoad()
 
         self.configureMessageAdapter()
@@ -147,6 +148,7 @@ public final class ChatMessagesViewController: UIViewController, ChatMessagesVie
     }
 
     private func configureMessageAdapter() {
+        print("[Investigation]", "ChatMessagesViewController", "configureMessageAdapter")
         self.messagesAdapter.setup(in: self.collectionView)
     }
 

@@ -112,6 +112,7 @@ public final class BaseChatViewController: UIViewController {
     }
 
     override public func viewDidLoad() {
+        print("[Investigation]", "BaseChatViewController", "viewDidLoad")
         super.viewDidLoad()
 
         self.setupCollectionView()
@@ -200,6 +201,7 @@ public final class BaseChatViewController: UIViewController {
     }
 
     private func setupCollectionView() {
+        print("[Investigation]", "BaseChatViewController", "setupCollectionView")
         self.addChild(self.messagesViewController)
         defer { self.messagesViewController.didMove(toParent: self) }
 
