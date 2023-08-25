@@ -281,7 +281,8 @@ public final class BaseChatViewController: UIViewController {
             let diff = lastUsedBounds.height - collectionView.bounds.height
             // When collectionView is scrolled to bottom and height increases,
             // collectionView adjusts its contentOffset automatically
-            let isScrolledToBottom = contentSize.height <= collectionView.bounds.maxY - collectionView.contentInset.bottom
+            let currentBottomPosition = collectionView.bounds.maxY - collectionView.contentInset.bottom
+            let isScrolledToBottom = contentSize.height - currentBottomPosition <= CGFloat.bma_epsilon
             return isScrolledToBottom ? max(0, diff) : diff
         }()
         self.previousBoundsUsedForInsetsAdjustment = collectionView.bounds
