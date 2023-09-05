@@ -111,7 +111,7 @@ open class ExpandableTextView: UITextView {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.minimumLineHeight = lineHeight
             paragraphStyle.maximumLineHeight = lineHeight
-            let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+            let baselineOffset = (lineHeight - font.lineHeight) / LayoutConstants.baselineQuotient
             let attributes: [NSAttributedString.Key : Any] = [
                 .foregroundColor: placeholder.textColor ?? UIColor.white,
                 .font: font,
@@ -188,7 +188,7 @@ open class ExpandableTextView: UITextView {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = lineHeight
         paragraphStyle.maximumLineHeight = lineHeight
-        let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+        let baselineOffset = (lineHeight - font.lineHeight) / LayoutConstants.baselineQuotient
         let attributes: [NSAttributedString.Key : Any] = [
             .foregroundColor: textColor ?? UIColor.white,
             .font: font,
@@ -280,7 +280,7 @@ open class ExpandableTextView: UITextView {
         var rect = super.caretRect(for: position)
         
         if let font = font {
-            let baselineOffset = (lineHeight - font.lineHeight) / 4.0
+            let baselineOffset = (lineHeight - font.lineHeight) / LayoutConstants.baselineQuotient
             rect.origin.y = rect.origin.y + baselineOffset
         }
         
