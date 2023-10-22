@@ -60,6 +60,19 @@ public protocol MessageContentPresenterProtocol {
     func updateMessage(_ newMessage: Any)
 }
 
+public enum MessageContentLoadingStatus {
+    case initial
+    case loading
+    case loaded
+    case cancelled
+}
+
+public protocol MessageContentLoadingPresenterProtocol {
+    /// Re Cached content:
+    /// When cached content is displayed, it should go to loaded state.
+    var contentLoadingStatus: Observable<MessageContentLoadingStatus> { get }
+}
+
 public protocol FailableMessageContentPresenterProtocol: MessageContentPresenterProtocol {
     var contentTransferStatus: Observable<TransferStatus>? { get }
     func handleFailedIconTap()

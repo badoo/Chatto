@@ -47,6 +47,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let initialDecorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     private var decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = []
     private var menuPresenter: ChatItemMenuPresenterProtocol?
+    private let contentLoadingPresenterSetup: ((MessageContentLoadingPresenterProtocol) -> Void)?
 
     public init(
         messageModel: ModelT,
@@ -59,7 +60,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
         accessibilityIdentifier: String?,
         decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
-        cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self
+        cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self,
+        contentLoadingPresenterSetup: ((MessageContentLoadingPresenterProtocol) -> Void)? = nil
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.initialContentFactories = contentFactories
@@ -67,6 +69,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.accessibilityIdentifier = accessibilityIdentifier
         self.cellClass = cellClass
         self.initialDecorationFactories = decorationFactories
+        self.contentLoadingPresenterSetup = contentLoadingPresenterSetup
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -318,6 +321,9 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             failablePresenter.contentTransferStatus?.observe(self, closure: { [weak self] (_, _) in
                 self?.handleContentTransferStatusUpdate()
             })
+        }
+        if let contentLoading = presenter as? MessageContentLoadingPresenterProtocol {
+            self.contentLoadingPresenterSetup?(contentLoading)
         }
         return presenter
     }
