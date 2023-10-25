@@ -47,7 +47,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let initialDecorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     private var decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = []
     private var menuPresenter: ChatItemMenuPresenterProtocol?
-    private let contentLoadingPresenterSetup: ((MessageContentLoadingPresenterProtocol) -> Void)?
+    private let contentPresenterSetup: ((MessageContentPresenterProtocol) -> Void)?
 
     public init(
         messageModel: ModelT,
@@ -61,7 +61,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         accessibilityIdentifier: String?,
         decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
         cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self,
-        contentLoadingPresenterSetup: ((MessageContentLoadingPresenterProtocol) -> Void)? = nil
+        contentPresenterSetup: ((MessageContentPresenterProtocol) -> Void)? = nil
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.initialContentFactories = contentFactories
@@ -69,7 +69,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.accessibilityIdentifier = accessibilityIdentifier
         self.cellClass = cellClass
         self.initialDecorationFactories = decorationFactories
-        self.contentLoadingPresenterSetup = contentLoadingPresenterSetup
+        self.contentPresenterSetup = contentPresenterSetup
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -322,9 +322,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 self?.handleContentTransferStatusUpdate()
             })
         }
-        if let contentLoading = presenter as? MessageContentLoadingPresenterProtocol {
-            self.contentLoadingPresenterSetup?(contentLoading)
-        }
+        self.contentPresenterSetup?(presenter)
         return presenter
     }
 
