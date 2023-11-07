@@ -31,10 +31,16 @@ final class ObservableAsyncStreamTests: XCTestCase {
     func test_GivenStreamFromObservable_WhenObservableUpdates_ThenValueDeliveredToStream() async throws {
         let observable = Observable(0)
         let stream = observable.asyncStream()
+
         async let firstReceivedValue: Int? = stream.first { _ in true }
         observable.value = 1
-        let result = await firstReceivedValue
-        XCTAssertEqual(result, 1)
+        let first = await firstReceivedValue
+        XCTAssertEqual(first, 1)
+
+        async let secondReceivedValue: Int? = stream.first { _ in true }
+        observable.value = 2
+        let second = await secondReceivedValue
+        XCTAssertEqual(second, 2)
     }
 
     func test_WhenObserverDeallocated_ThenStreamCompletes() async throws {
