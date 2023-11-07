@@ -30,7 +30,7 @@ final class ObservableAsyncStreamTests: XCTestCase {
 
     func test_GivenStreamFromObservable_WhenObservableUpdates_ThenValueDeliveredToStream() async throws {
         let observable = Observable(0)
-        let stream = observable.asyncStream()
+        let stream = observable.values
 
         async let firstReceivedValue: Int? = stream.first { _ in true }
         observable.value = 1
@@ -45,7 +45,7 @@ final class ObservableAsyncStreamTests: XCTestCase {
 
     func test_WhenObservableDeallocated_ThenStreamCompletes() async throws {
         var observable: Observable<Void>? = .init(())
-        let stream = observable!.asyncStream()
+        let stream = observable!.values
         let iterateAllStreamValuesTask = Task {
             for await _ in stream {}
         }
