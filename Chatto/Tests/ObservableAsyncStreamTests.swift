@@ -43,7 +43,7 @@ final class ObservableAsyncStreamTests: XCTestCase {
         XCTAssertEqual(second, 2)
     }
 
-    func test_WhenObserverDeallocated_ThenStreamCompletes() async throws {
+    func test_WhenObservableDeallocated_ThenStreamCompletes() async throws {
         var observable: Observable<Void>? = .init(())
         let stream = observable!.asyncStream()
         let iterateAllStreamValuesTask = Task {
