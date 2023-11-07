@@ -150,13 +150,13 @@ private final class AsyncStreamObserver<T>: ObserverProtocol, @unchecked Sendabl
     private var _terminated: Bool = false
     private(set) var terminated: Bool {
         get {
-            lock.lock()
-            defer { lock.unlock() }
+            self.lock.lock()
+            defer { self.lock.unlock() }
             return self._terminated
         }
         set {
-            lock.lock()
-            defer { lock.unlock() }
+            self.lock.lock()
+            defer { self.lock.unlock() }
             self._terminated = newValue
         }
     }
