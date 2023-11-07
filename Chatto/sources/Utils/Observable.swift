@@ -173,7 +173,6 @@ private final class AsyncStreamObserver<T>: ObserverProtocol, @unchecked Sendabl
     }
 
     func notify(_: T, _ new: T) {
-        guard !self.terminated else { return }
         self.continuation.yield(new)
     }
 
