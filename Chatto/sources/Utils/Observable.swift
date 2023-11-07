@@ -134,7 +134,7 @@ private struct Observer<T>: ObserverProtocol {
 
 @available(iOS 13, *)
 extension Observable {
-    public func asyncStream() -> AsyncStream<T> {
+    public var values: AsyncStream<T> {
         AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
             self.addObserver(AsyncStreamObserver(continuation: continuation))
         }
