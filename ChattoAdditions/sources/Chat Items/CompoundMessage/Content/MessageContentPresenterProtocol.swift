@@ -23,6 +23,7 @@
 
 import Chatto
 import UIKit
+import Combine
 
 public final class ViewReference {
 
@@ -67,10 +68,11 @@ public enum MessageContentLoadingStatus {
     case cancelled
 }
 
+@available(iOS 13, *)
 public protocol MessageContentLoadingPresenterProtocol {
     /// Re Cached content:
     /// When cached content is displayed, it should go to loaded state.
-    var contentLoadingStatus: Observable<MessageContentLoadingStatus> { get }
+    var contentLoadingStatus: CurrentValueSubject<MessageContentLoadingStatus, Never> { get }
 }
 
 public protocol FailableMessageContentPresenterProtocol: MessageContentPresenterProtocol {
