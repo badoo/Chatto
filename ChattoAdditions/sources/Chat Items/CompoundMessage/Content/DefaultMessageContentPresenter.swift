@@ -23,6 +23,7 @@
 
 import UIKit
 import Chatto
+import Combine
 
 public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol, MessageContentLoadingPresenterProtocol {
 
@@ -39,7 +40,7 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
                 onContentWasHidden: ActionHandler? = nil,
                 onContentWasTapped_deprecated: ActionHandler? = nil,
                 onMessageUpdate: MessageUpdateClosure? = nil,
-                contentLoadingStatus: Observable<MessageContentLoadingStatus> = .init(.loaded)) {
+                contentLoadingStatus: CurrentValueSubject<MessageContentLoadingStatus, Never>  = .init(.loaded)) {
         self.message = message
 
         self.onBinding = onBinding
@@ -69,7 +70,7 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
 
     // MARK: - MessageContentLoadingPresenterProtocol
 
-    public let contentLoadingStatus: Observable<MessageContentLoadingStatus>
+    public let contentLoadingStatus: CurrentValueSubject<MessageContentLoadingStatus, Never>
 
     // MARK: - MessageContentPresenterProtocol
 
