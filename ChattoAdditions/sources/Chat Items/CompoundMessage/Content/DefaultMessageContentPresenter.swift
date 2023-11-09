@@ -25,6 +25,7 @@ import UIKit
 import Chatto
 import Combine
 
+@available(iOS 13, *)
 public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol, MessageContentLoadingPresenterProtocol {
 
     public typealias ActionHandler = (_ message: MessageType, _ view: ViewType?) -> Void
