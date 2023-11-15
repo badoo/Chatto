@@ -24,6 +24,7 @@
 import Foundation
 import XCTest
 import Chatto
+import Dispatch
 
 @available(iOS 13, *)
 final class ObservableAsyncStreamTests: XCTestCase {
@@ -62,7 +63,7 @@ final class ObservableAsyncStreamTests: XCTestCase {
         try await withThrowingTaskGroup(of: T.self) { group in
             group.addTask { try await operation() }
             group.addTask {
-                try await Task.sleep(nanoseconds: 100_000_000)
+                try await Task.sleep(nanoseconds: NSEC_PER_SEC / 10)
                 throw TimeoutError()
             }
             let result = try await group.next()!
