@@ -52,7 +52,13 @@ final class ObservableAsyncStreamTests: XCTestCase {
         }
         observable = nil
 
-        try await withTimeout { await iterateAllStreamValuesTask.value }
+        try await withTimeout {
+            await withTaskCancellationHandler {
+                await iterateAllStreamValuesTask.value
+            } onCancel: {
+                iterateAllStreamValuesTask.cancel()
+            }
+        }
     }
 
     // MARK: - Timeout utils
