@@ -12,6 +12,7 @@
 		065DDCAA28726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCA928726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift */; };
 		065DDCAC28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCAB28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift */; };
 		065DDCAE2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDCAD2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift */; };
+		06C6737A2AF89729000E7EA5 /* ObservableAsyncStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C673792AF89729000E7EA5 /* ObservableAsyncStreamTests.swift */; };
 		26D653F2251043BD007BC13C /* ReplyFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */; };
 		3565429D203DB99300B29DA1 /* ChatLayoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */; };
 		A40DC13A26F205DB00166C55 /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40DC13926F205DB00166C55 /* KeyboardTracker.swift */; };
@@ -70,6 +71,7 @@
 		065DDCA928726F3F00FAF3B9 /* CollectionUpdateProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionUpdateProviderProtocol.swift; sourceTree = "<group>"; };
 		065DDCAB28726F4D00FAF3B9 /* NewChatMessageCollectionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatMessageCollectionAdapter.swift; sourceTree = "<group>"; };
 		065DDCAD2872882600FAF3B9 /* ChatCollectionViewLayoutModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayoutModelFactory.swift; sourceTree = "<group>"; };
+		06C673792AF89729000E7EA5 /* ObservableAsyncStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ObservableAsyncStreamTests.swift; path = Tests/ObservableAsyncStreamTests.swift; sourceTree = SOURCE_ROOT; };
 		26D653F1251043BD007BC13C /* ReplyFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyFeedbackGenerator.swift; sourceTree = "<group>"; };
 		3565429C203DB99300B29DA1 /* ChatLayoutConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLayoutConfiguration.swift; sourceTree = "<group>"; };
 		55E85D821BE390BE001885AD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				C342D0C31C638FDF008A4605 /* SerialTaskQueueTests.swift */,
+				06C673792AF89729000E7EA5 /* ObservableAsyncStreamTests.swift */,
 				E0878A2D191D859A01D1DEB7 /* ChatController */,
 				E9E5D0A68A700507CA829D11 /* Chat Items */,
 				EA3D58FE22DCC34C00191EDF /* ChatItemCompanionCollectionTests.swift */,
@@ -489,6 +492,7 @@
 				C3383E281BFFA49F00244F5C /* BaseChatViewControllerTestHelpers.swift in Sources */,
 				A410D4BB26C56FF100A48342 /* ChatMessagesViewControllerTests.swift in Sources */,
 				C36281F21BF12A4B004D6BCE /* ChatCollectionViewLayoutTests.swift in Sources */,
+				06C6737A2AF89729000E7EA5 /* ObservableAsyncStreamTests.swift in Sources */,
 				C321C3961BE78835009803D1 /* CollectionChangesTests.swift in Sources */,
 				A410D4BD26C570B100A48342 /* ChatMessagesViewControllerHelpers.swift in Sources */,
 				C321DDBE1BE964DC00DE88CC /* BaseChatItemPresenterTests.swift in Sources */,
