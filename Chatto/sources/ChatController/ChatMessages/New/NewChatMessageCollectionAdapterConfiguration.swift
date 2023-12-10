@@ -23,11 +23,11 @@
 
 import UIKit
 
+@available(iOS 13, *)
 public extension NewChatMessageCollectionAdapter {
     struct Configuration {
         public var autoloadingFractionalThreshold: CGFloat
         public var coalesceUpdates: Bool
-        public var fastUpdates: Bool
         public var isRegisteringPresentersAutomatically: Bool
         public var preferredMaxMessageCount: Int?
         public var preferredMaxMessageCountAdjustment: Int
@@ -35,14 +35,12 @@ public extension NewChatMessageCollectionAdapter {
 
         public init(autoloadingFractionalThreshold: CGFloat,
                     coalesceUpdates: Bool,
-                    fastUpdates: Bool,
                     isRegisteringPresentersAutomatically: Bool,
                     preferredMaxMessageCount: Int?,
                     preferredMaxMessageCountAdjustment: Int,
                     updatesAnimationDuration: TimeInterval) {
             self.autoloadingFractionalThreshold = autoloadingFractionalThreshold
             self.coalesceUpdates = coalesceUpdates
-            self.fastUpdates = fastUpdates
             self.isRegisteringPresentersAutomatically = isRegisteringPresentersAutomatically
             self.preferredMaxMessageCount = preferredMaxMessageCount
             self.preferredMaxMessageCountAdjustment = preferredMaxMessageCountAdjustment
@@ -51,17 +49,24 @@ public extension NewChatMessageCollectionAdapter {
     }
 }
 
+@available(iOS 13, *)
 public extension NewChatMessageCollectionAdapter.Configuration {
     static var `default`: Self {
         return .init(
             autoloadingFractionalThreshold: 0.05,
             coalesceUpdates: true,
-            fastUpdates: true,
             isRegisteringPresentersAutomatically: true,
             preferredMaxMessageCount: 500,
             preferredMaxMessageCountAdjustment: 400,
             updatesAnimationDuration: 0.33
         )
+    }
+}
+
+@available(iOS 13, *)
+public extension CollectionUpdateProvider.Configuration {
+    public init(adapterConfiguration configuration: NewChatMessageCollectionAdapter.Configuration) {
+        self.init(isRegisteringPresentersAutomatically: configuration.isRegisteringPresentersAutomatically)
     }
 }
 
