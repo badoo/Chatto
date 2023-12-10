@@ -499,7 +499,7 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
                         if sSelf.unfinishedBatchUpdatesCount == 0, let onAllBatchUpdatesFinished = self?.onAllBatchUpdatesFinished {
                             DispatchQueue.main.async(execute: onAllBatchUpdatesFinished)
                         }
-
+                        adjustScrollViewToBottom()
                     })
                 }
             )
@@ -511,9 +511,9 @@ extension ChatMessageCollectionAdapter: ChatDataSourceDelegateProtocol {
 
             collectionView.setNeedsLayout()
             collectionView.layoutIfNeeded()
-        }
 
-        adjustScrollViewToBottom()
+            adjustScrollViewToBottom()
+        }
 
         if !usesBatchUpdates || self.configuration.fastUpdates {
             myCompletion()
