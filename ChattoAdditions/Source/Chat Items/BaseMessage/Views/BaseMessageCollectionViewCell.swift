@@ -475,6 +475,14 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return offset >= maxOffset
     }
 
+    public func hideReplyIndicator() {
+        replyIndicator.isHidden = true
+    }
+    
+    public func showReplyIndicator() {
+        replyIndicator.isHidden = false
+    }
+
     // MARK: Selection
 
     private let selectionIndicator = UIImageView(frame: .zero)
