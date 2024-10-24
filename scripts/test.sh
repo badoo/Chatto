@@ -23,5 +23,5 @@ xcodebuild clean build test \
     -workspace $WORKSPACE \
     -scheme $SCHEME \
     -sdk iphonesimulator \
-    -destination 'platform=iOS Simulator,name=iPhone 11' \
+    -destination 'platform=iOS Simulator,name=iPhone 15' \
     -configuration Debug | xcpretty
