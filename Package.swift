@@ -13,9 +13,9 @@ let package = Package(
         .target(
             name: "Chatto",
             dependencies: [],
-            path: "Chatto/Source"),
+            path: "Chatto/sources"),
         .target(
             name: "ChattoAdditions",
             dependencies: ["Chatto"],
-            path: "ChattoAdditions/Source"),
+            path: "ChattoAdditions/sources"),
     ])

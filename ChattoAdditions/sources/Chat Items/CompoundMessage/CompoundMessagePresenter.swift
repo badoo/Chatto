@@ -47,6 +47,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     private let initialDecorationFactories: [AnyMessageDecorationViewFactory<ModelT>]
     private var decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = []
     private var menuPresenter: ChatItemMenuPresenterProtocol?
+    private let contentPresenterSetup: ((MessageContentPresenterProtocol) -> Void)?
 
     public init(
         messageModel: ModelT,
@@ -59,7 +60,8 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         cache: Cache<CompoundBubbleLayoutProvider.Configuration, CompoundBubbleLayoutProvider>,
         accessibilityIdentifier: String?,
         decorationFactories: [AnyMessageDecorationViewFactory<ModelT>] = [],
-        cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self
+        cellClass: CompoundMessageCollectionViewCell.Type = CompoundMessageCollectionViewCell.self,
+        contentPresenterSetup: ((MessageContentPresenterProtocol) -> Void)? = nil
     ) {
         self.compoundCellStyle = compoundCellStyle
         self.initialContentFactories = contentFactories
@@ -67,6 +69,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         self.accessibilityIdentifier = accessibilityIdentifier
         self.cellClass = cellClass
         self.initialDecorationFactories = decorationFactories
+        self.contentPresenterSetup = contentPresenterSetup
         super.init(
             messageModel: messageModel,
             viewModelBuilder: viewModelBuilder,
@@ -319,6 +322,7 @@ open class CompoundMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
                 self?.handleContentTransferStatusUpdate()
             })
         }
+        self.contentPresenterSetup?(presenter)
         return presenter
     }
 

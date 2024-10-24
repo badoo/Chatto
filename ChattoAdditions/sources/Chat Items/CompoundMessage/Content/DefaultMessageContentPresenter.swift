@@ -22,8 +22,9 @@
 // THE SOFTWARE.
 
 import UIKit
+import Chatto
 
-public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol {
+public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>: MessageContentPresenterProtocol, MessageContentLoadingPresenterProtocol {
 
     public typealias ActionHandler = (_ message: MessageType, _ view: ViewType?) -> Void
     public typealias BindingClosure = (_ message: MessageType, _ view: ViewType?) -> Void
@@ -37,7 +38,8 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
                 onContentWillBeShown: ActionHandler? = nil,
                 onContentWasHidden: ActionHandler? = nil,
                 onContentWasTapped_deprecated: ActionHandler? = nil,
-                onMessageUpdate: MessageUpdateClosure? = nil) {
+                onMessageUpdate: MessageUpdateClosure? = nil,
+                contentLoadingStatus: Observable<MessageContentLoadingStatus> = .init(.loaded)) {
         self.message = message
 
         self.onBinding = onBinding
@@ -49,6 +51,7 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
         self.onContentWasTapped_deprecated = onContentWasTapped_deprecated
 
         self.onMessageUpdate = onMessageUpdate
+        self.contentLoadingStatus = contentLoadingStatus
     }
 
     private var message: MessageType
@@ -63,6 +66,10 @@ public final class DefaultMessageContentPresenter<MessageType, ViewType: UIView>
     private let onContentWasTapped_deprecated: ActionHandler?
 
     private let onMessageUpdate: MessageUpdateClosure?
+
+    // MARK: - MessageContentLoadingPresenterProtocol
+
+    public let contentLoadingStatus: Observable<MessageContentLoadingStatus>
 
     // MARK: - MessageContentPresenterProtocol
 
