@@ -66,9 +66,7 @@ extension TextMessageLayoutProviderProtocol {
 
 public struct TextMessageLayoutProvider: Hashable, TextMessageLayoutProviderProtocol {
 
-    private let text: String
-    private let font: UIFont
-    private let paragraphStyle: NSParagraphStyle?
+    private let text: NSAttributedString
     private let textInsets: UIEdgeInsets
     private let textInsetsFromSafeArea: UIEdgeInsets?
     private let numberOfLines: Int
@@ -79,9 +77,33 @@ public struct TextMessageLayoutProvider: Hashable, TextMessageLayoutProviderProt
                 textInsets: UIEdgeInsets,
                 textInsetsFromSafeArea: UIEdgeInsets? = nil,
                 numberOfLines: Int = 0) {
-        self.text = text
-        self.font = font
-        self.paragraphStyle = paragraphStyle
+
+        var attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.font: font,
+            // See https://github.com/badoo/Chatto/issues/129
+            NSAttributedString.Key(rawValue: "NSOriginalFont"): font,
+        ]
+
+        if let paragraphStyle {
+            attributes[.paragraphStyle] = paragraphStyle
+        }
+
+        self.init(
+            attributedString: NSAttributedString(
+                string: text,
+                attributes: attributes
+            ),
+            textInsets: textInsets,
+            textInsetsFromSafeArea: textInsetsFromSafeArea,
+            numberOfLines: numberOfLines
+        )
+    }
+
+    public init(attributedString: NSAttributedString,
+                textInsets: UIEdgeInsets,
+                textInsetsFromSafeArea: UIEdgeInsets? = nil,
+                numberOfLines: Int = 0) {
+        self.text = attributedString
         self.textInsets = textInsets
         self.textInsetsFromSafeArea = textInsetsFromSafeArea
         self.numberOfLines = numberOfLines
@@ -97,15 +119,7 @@ public struct TextMessageLayoutProvider: Hashable, TextMessageLayoutProviderProt
         textContainer.lineFragmentPadding = 0
         textContainer.maximumNumberOfLines = self.numberOfLines
 
-        // See https://github.com/badoo/Chatto/issues/129
-        var textAttributes: [NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.font: self.font,
-            NSAttributedString.Key(rawValue: "NSOriginalFont"): self.font
-        ]
-        if let paragraphStyle = self.paragraphStyle {
-            textAttributes[.paragraphStyle] = paragraphStyle
-        }
-        let textStorage = NSTextStorage(string: self.text, attributes: textAttributes)
+        let textStorage = NSTextStorage(attributedString: self.text)
 
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
