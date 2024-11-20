@@ -51,6 +51,7 @@ public protocol ViewPresentationEventsHandling: AnyObject {
     func onViewWillAppear()
     func onViewDidAppear()
 
+    func onBeforeViewWillDisappear()
     func onViewWillDisappear()
     func onViewDidDisappear()
     func onViewDidLayoutSubviews()
