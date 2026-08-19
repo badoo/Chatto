@@ -10,7 +10,7 @@ jobs:
     test:
         runs-on: macos-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2
             - name: Test Chatto
               run: ./scripts/test.sh chatto
             - name: Coverage for Chatto
